@@ -241,7 +241,7 @@ export const faqs = [
   },
   {
     q: 'Which trailer fits what I need?',
-    a: "Cargo hauls the crew's tools and powers the job. Workstation is a site office with heat, AC and desks from day one. Event brings quiet power to the event. All three run on the same power system.",
+    a: "Cargo hauls the crew's tools and powers the job. Workstation is a site office with heat, AC and desks from day one. Event brings quiet power to your event. All three run on the same power system.",
   },
   {
     q: 'How long will it run my tools?',

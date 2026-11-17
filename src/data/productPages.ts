@@ -129,7 +129,7 @@ export const productPages: Record<ProductId, ProductPage> = {
     overview: {
       intro: ['Get to know Workstation.', 'A site office that shows up with its own power, heat and air.'], // NEW
       // SOURCE: homepage Workstation specs ("Inside: desks, storage, display"). Image is a render.
-      photo: { image: img.office, alt: 'Inside a SPOG Workstation with two desks and a wall display', title: 'A real office on site', body: 'Desks, storage and a display, ready the day it lands.' }, // NEW
+      photo: { image: img.office, alt: 'Inside a SPOG Workstation with two desks and a wall display', title: 'A real office on site', body: 'Desks, storage and a display, built in.' }, // NEW
       tiles: [
         // SOURCE: homepage specs ("Heat and AC: Standard") and the brand guide
         { icon: 'climate', title: 'Heat and AC standard', body: 'Every Workstation comes with heating and cooling.' }, // NEW
@@ -138,7 +138,7 @@ export const productPages: Record<ProductId, ProductPage> = {
         // SOURCE: homepage specs ("Internet: Starlink option"), use case "Rural jobs"
         { icon: 'wifi', title: 'Starlink option', body: 'Keeps email and plans moving where cell service drops out.' }, // NEW
         // PLACEHOLDER SOURCE: spogtrailers.com Workstation page ("optional jobsite lighting and security cameras"). Confirm.
-        { icon: 'camera', title: 'Security cameras', body: 'An option that keeps an eye on the site after the crew leaves.' }, // NEW
+        { icon: 'camera', title: 'Security cameras', body: 'Optional cameras watch the site after the crew leaves.' }, // NEW
       ],
     },
     power: { batteries: [5, 10, 20, 30, 40], defaultBattery: 20, devices: ['computer', 'fridge', 'lightTower', 'airFryer', 'saw', 'welder'] },
@@ -173,13 +173,13 @@ export const productPages: Record<ProductId, ProductPage> = {
       intro: ['Get to know Event.', 'An outdoor screen with its own power on board, for wherever the crowd is.'], // NEW
       tiles: [
         // SOURCE: homepage Event specs ("Built-in LED screen")
-        { icon: 'screen', title: 'Built-in LED screen', body: 'Movie nights, promotions and game days on a screen that travels with the power.' }, // NEW
+        { icon: 'screen', title: 'Built-in LED screen', body: 'For movie nights, promotions and game days.' }, // NEW
         // SOURCE: homepage use case "Events"
         { icon: 'noise', title: 'No generator noise', body: 'Solar and battery power, with nothing rumbling next to the crowd.' }, // NEW
         // PLACEHOLDER SOURCE: spogtrailers.com Event page ("5G internet"). Confirm.
-        { icon: 'wifi', title: '5G internet', body: 'A connection on board for streaming, payments and the show feed.' }, // NEW
+        { icon: 'wifi', title: '5G internet', body: 'Internet on board, wherever the trailer parks.' }, // NEW
         // PLACEHOLDER SOURCE: spogtrailers.com Event page ("360 camera system"). Confirm.
-        { icon: 'camera', title: '360 camera system', body: 'Cameras around the trailer while it is set up and unattended.' }, // NEW
+        { icon: 'camera', title: '360 camera system', body: 'Cameras on every side of the trailer.' }, // NEW
       ],
     },
     power: { batteries: [50, 60, 70, 80, 90, 100], defaultBattery: 70, devices: ['lightTower', 'fridge', 'airFryer', 'computer'] },
