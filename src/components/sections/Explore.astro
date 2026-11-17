@@ -1,0 +1,67 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import { img, hotspots } from '../../data/content';
+const first = hotspots[0];
+---
+<section id="explore" aria-label="Walk the trailer" class="grain relative bg-black">
+  <div class="absolute inset-x-0 top-[60px] z-[4] max-[760px]:static max-[760px]:pb-7 max-[760px]:pt-20">
+    <div class="wrap">
+      <Eyebrow gold="Walk the trailer" />
+      <h2 class="mb-0 mt-3 text-[clamp(36px,4.6vw,70px)] font-black uppercase leading-[.9] tracking-[-.03em] text-white">Every part<br />earns its keep.</h2>
+    </div>
+  </div>
+
+  <div class="relative mx-auto aspect-[1600/1066] max-h-screen w-full" data-explore>
+    <img src={img.explore} alt="SPOG Workstation trailers in the field" class="grade-explore absolute inset-0 size-full object-cover" />
+    <div class="scrim-explore absolute inset-0 z-[1]"></div>
+    {hotspots.map((h, i) => (
+      <button
+        type="button"
+        data-i={i}
+        aria-pressed={i === 0 ? 'true' : 'false'}
+        style={`left:${h.left}%;top:${h.top}%`}
+        class="group absolute z-[3] flex -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center gap-3 border-0 bg-transparent p-0 text-white focus-visible:outline-2 focus-visible:outline-offset-[6px] focus-visible:outline-gold"
+      >
+        <i class="relative block size-[18px] shrink-0 rounded-full bg-gold after:absolute after:-inset-[9px] after:rounded-full after:border-[1.5px] after:border-gold/70 group-aria-pressed:bg-white"></i>
+        <span class="-translate-x-1.5 whitespace-nowrap bg-black/72 px-3 py-2 text-[12px] font-bold uppercase leading-[normal] tracking-[.18em] opacity-0 transition-[opacity,translate] duration-[250ms] group-hover:translate-x-0 group-hover:opacity-100 group-aria-pressed:translate-x-0 group-aria-pressed:opacity-100 max-[760px]:hidden">{h.label}</span>
+      </button>
+    ))}
+  </div>
+
+  <div class="absolute inset-x-0 bottom-11 z-[4] max-[760px]:static max-[760px]:pb-14 max-[760px]:pt-6">
+    <div class="wrap flex items-end justify-between gap-[30px] max-[760px]:flex-col max-[760px]:items-start max-[760px]:gap-6">
+      <div class="flex items-center gap-5" aria-live="polite">
+        <img src={first.image ?? ''} alt="" hidden={!first.image} data-explore-img class="h-[104px] w-[138px] shrink-0 rounded-[12px] border border-white/15 object-cover max-[760px]:h-[72px] max-[760px]:w-[96px]" />
+        <div>
+          <b class="block text-[26px] font-extrabold uppercase tracking-[-.01em] text-white" data-explore-title>{first.title}</b>
+          <span class="block max-w-[480px] text-[#C9C5BF]" data-explore-body>{first.body}</span>
+        </div>
+      </div>
+      <div class="flex gap-1.5">
+        {hotspots.map((_, i) => (
+          <button type="button" data-i={i} aria-label={String(i + 1)} aria-current={i === 0 ? 'true' : 'false'} class="h-[3px] w-9 cursor-pointer border-0 bg-white/30 p-0 aria-[current=true]:bg-gold"></button>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { hotspots } from '../../data/content';
+  const section = document.getElementById('explore')!;
+  const title = section.querySelector('[data-explore-title]')!;
+  const body = section.querySelector('[data-explore-body]')!;
+  const photo = section.querySelector<HTMLImageElement>('[data-explore-img]')!;
+  const pins = section.querySelectorAll<HTMLButtonElement>('[data-explore] [data-i]');
+  const dots = section.querySelectorAll<HTMLButtonElement>('[aria-current][data-i]');
+  function show(i: number) {
+    title.textContent = hotspots[i].title;
+    body.textContent = hotspots[i].body;
+    const src = hotspots[i].image;
+    if (src) photo.src = src;
+    photo.hidden = !src;
+    pins.forEach((p) => p.setAttribute('aria-pressed', String(Number(p.dataset.i) === i)));
+    dots.forEach((d) => d.setAttribute('aria-current', String(Number(d.dataset.i) === i)));
+  }
+  [...pins, ...dots].forEach((el) => el.addEventListener('click', () => show(Number(el.dataset.i))));
+</script>

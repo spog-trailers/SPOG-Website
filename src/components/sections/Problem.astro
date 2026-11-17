@@ -1,0 +1,33 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import Heading from '../ui/Heading.astro';
+import Icon from '../ui/Icon.astro';
+import { problem } from '../../data/content';
+---
+<section aria-label="The problem" class="bg-stone pb-[120px] pt-[130px] text-ink">
+  <div class="wrap grid grid-cols-[5fr_7fr] items-start gap-[60px] max-[960px]:grid-cols-[repeat(1,1fr)] max-[960px]:gap-10">
+    <div>
+      <Eyebrow gold={problem.eyebrow} />
+      <Heading class="mt-4 max-w-[520px]">{problem.heading}</Heading>
+      <p class="mt-[18px] max-w-[600px] text-[19px] text-ink-soft">{problem.sub}</p>
+    </div>
+    <div class="grid auto-rows-fr grid-cols-[repeat(2,1fr)] gap-3 max-[560px]:grid-cols-[repeat(1,1fr)]">
+      <div class="flex min-h-[220px] flex-col justify-between rounded-[20px] bg-ink px-[30px] pb-8 pt-[30px] text-white">
+        <strong class="text-[clamp(40px,4vw,58px)] font-extrabold leading-none tracking-[-.045em] text-gold">{problem.stat.value}</strong>
+        <div>
+          <b class="mt-[26px] block text-[22px] font-semibold tracking-[-.02em] text-white">{problem.stat.title}</b>
+          <span class="mt-1.5 block text-[15.5px] text-[#A8ABB1]">{problem.stat.body}</span>
+        </div>
+      </div>
+      {problem.cards.map((c) => (
+        <div class="flex min-h-[220px] flex-col justify-between rounded-[20px] bg-paper px-[30px] pb-8 pt-[30px]">
+          <Icon name={c.icon} class="size-[34px] stroke-ink stroke-[1.5]" />
+          <div>
+            <b class="mt-[26px] block text-[22px] font-semibold tracking-[-.02em] text-ink">{c.title}</b>
+            <span class="mt-1.5 block text-[15.5px] text-ink-soft">{c.body}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

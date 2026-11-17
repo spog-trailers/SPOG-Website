@@ -1,0 +1,40 @@
+---
+import { highlights } from '../../data/content';
+---
+<section aria-label="Highlights" class="bg-stone pb-[120px] pt-[130px] text-ink">
+  <h2 class="mx-auto my-0 max-w-[900px] text-center text-[clamp(38px,4.8vw,66px)] font-semibold leading-[1.02] tracking-[-.035em] text-ink">Power on board.<br />Work made simple.</h2>
+
+  <div
+    id="rail"
+    class="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2.5 pt-16 [--pad:max(36px,calc((100vw_-_1320px)/2_+_36px))] px-(--pad) scroll-px-(--pad)"
+  >
+    {highlights.map((h) => (
+      <figure class:list={['group relative m-0 aspect-[3/4.1] flex-[0_0_clamp(290px,31vw,440px)] snap-start overflow-hidden rounded-[22px]', h.studio ? 'bg-studio' : 'bg-[#cfcdc9]']}>
+        <img
+          src={h.image}
+          alt={h.alt}
+          class:list={[
+            'absolute inset-0 size-full transition-transform duration-[900ms] ease-[cubic-bezier(.2,.7,.2,1)] group-hover:scale-[1.04]',
+            h.studio ? 'fade-oval-top object-contain px-2.5 pb-[120px] pt-5' : 'object-cover',
+          ]}
+        />
+        <figcaption class="absolute inset-x-2 bottom-2 rounded-[14px] bg-stone px-[22px] pb-[22px] pt-5">
+          <b class="block text-[24px] font-semibold leading-[1.15] tracking-[-.02em] text-ink">{h.title}</b>
+          <span class="mt-1 block text-[15.5px] text-ink-soft">{h.body}</span>
+        </figcaption>
+      </figure>
+    ))}
+  </div>
+
+  <div class="mx-auto mt-[18px] flex max-w-[1320px] justify-end gap-2.5 px-9">
+    <button type="button" aria-label="Previous" data-rail="-460" class="size-11 cursor-pointer rounded-full border-0 bg-stone-2 text-[22px] leading-none text-ink hover:bg-[#d6d3ce]">&#8249;</button>
+    <button type="button" aria-label="Next" data-rail="460" class="size-11 cursor-pointer rounded-full border-0 bg-stone-2 text-[22px] leading-none text-ink hover:bg-[#d6d3ce]">&#8250;</button>
+  </div>
+</section>
+
+<script>
+  const rail = document.getElementById('rail');
+  document.querySelectorAll<HTMLButtonElement>('[data-rail]').forEach((b) =>
+    b.addEventListener('click', () => rail?.scrollBy({ left: Number(b.dataset.rail), behavior: 'smooth' })),
+  );
+</script>

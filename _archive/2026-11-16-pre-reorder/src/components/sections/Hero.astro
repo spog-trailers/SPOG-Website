@@ -1,0 +1,35 @@
+---
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import { img } from '../../data/content';
+---
+<!-- PHOTO: replace with a crew working out of a SPOG on a Tri-State site. 16:9, subject right of center. -->
+<header id="top" class="grain relative flex h-screen min-h-[720px] items-end">
+  <div
+    class="absolute inset-0 animate-sunrise bg-cover bg-[52%_72%] bg-no-repeat"
+    style={`background-image:url('${img.hero}')`}
+    role="img"
+    aria-label="SPOG trailers on a lot at sunrise, solar wings open"
+  ></div>
+  <div class="scrim-hero absolute inset-0 z-[1]"></div>
+
+  <div class="absolute left-9 top-[100px] z-[3] flex items-center gap-4">
+    <i class="block size-2.5 animate-blink rounded-full bg-gold shadow-[0_0_0_6px_rgb(238_161_20/.2)]"></i>
+    <Eyebrow gold="07:00" text="Site arrival" />
+  </div>
+
+  <div class="wrap relative z-[3] w-full pb-16">
+    <h1 class="m-0 animate-rise-1 text-[clamp(60px,10.4vw,170px)] font-black uppercase leading-[.84] tracking-[-.045em] text-white">
+      Built for<br />the work day.
+    </h1>
+    <div class="mt-[34px] flex animate-rise-2 flex-wrap items-end justify-between gap-[30px]">
+      <p class="m-0 max-w-[440px] text-[18px] text-white/82">
+        Solar trailers that show up with the power already in them. For the crew and the site office.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <Button href="#cta" variant="gold" arrow>Reserve yours</Button>
+        <Button href="#explore">Walk the trailer</Button>
+      </div>
+    </div>
+  </div>
+</header>

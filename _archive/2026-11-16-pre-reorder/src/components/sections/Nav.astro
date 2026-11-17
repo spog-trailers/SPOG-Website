@@ -1,0 +1,15 @@
+---
+import Button from '../ui/Button.astro';
+import { img, navLinks } from '../../data/content';
+---
+<nav aria-label="Main" class="fixed inset-x-0 top-[env(safe-area-inset-top,0px)] z-30 h-16 border-b border-line bg-black/72 backdrop-blur-[16px]">
+  <div class="wrap flex h-full items-center gap-10">
+    <a href="#top"><img src={img.logoWhite} alt="SPOG Solar Power Off Grid" class="h-6 w-auto" /></a>
+    <ul class="flex gap-[30px] max-[900px]:hidden">
+      {navLinks.map((l) => (
+        <li><a href={l.href} class="text-[12px] font-semibold uppercase tracking-[.16em] text-[#C7CAD0] no-underline hover:text-white">{l.label}</a></li>
+      ))}
+    </ul>
+    <Button href="#cta" variant="gold" size="sm" class="ml-auto">Reserve</Button>
+  </div>
+</nav>

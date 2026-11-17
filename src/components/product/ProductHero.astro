@@ -1,0 +1,63 @@
+---
+import Button from '../ui/Button.astro';
+import { lineupEntry, type ProductPage } from '../../data/productPages';
+
+// Rivian-style product hero: the model name set huge, one line on what it does, two actions.
+// "photo": full-bleed photo with the name bottom-left.
+// "studio": studio render in a framed plate on the right, the name running over its edge.
+// No stats here on purpose. They live in the Power section and the spec table.
+interface Props { page: ProductPage }
+const { page } = Astro.props;
+const p = lineupEntry(page.id);
+const nameStyle = `font-size:min(270px,${page.heroFit}vw);animation-delay:.2s`;
+const lineStyle = 'animation-delay:.55s';
+---
+{page.hero.kind === 'photo' ? (
+  <header id="top" class="grain relative flex h-svh min-h-[680px] items-end overflow-hidden bg-night">
+    <img
+      src={page.hero.image}
+      alt={page.hero.alt}
+      fetchpriority="high"
+      style={`object-position:${page.hero.position ?? '50% 50%'}`}
+      class="absolute inset-0 size-full animate-settle object-cover brightness-[.82] contrast-[1.08] saturate-[.9]"
+    />
+    <div class="scrim-hero absolute inset-0 z-[1]"></div>
+    <div class="wrap relative z-[3] w-full pb-14 max-[640px]:pb-28">
+      <h1 class="m-0 animate-rise-1 whitespace-nowrap font-black uppercase leading-[.8] tracking-[-.055em] text-white" style={nameStyle}>
+        <span class="sr-only">SPOG </span>{p.name}
+      </h1>
+      <div class="mt-9 flex animate-rise-2 flex-wrap items-end justify-between gap-7" style={lineStyle}>
+        <div class="max-w-[640px]">
+          <p class="m-0 text-[clamp(22px,2.3vw,32px)] font-semibold leading-[1.15] tracking-[-.025em] text-white">{p.tag}</p>
+          <p class="mb-0 mt-2.5 text-[16px] text-white/72">{page.hero.proof}</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <Button href="#cta" variant="gold" arrow>{p.cta}</Button>
+          <Button href="#walkthrough">Book a walkthrough</Button>
+        </div>
+      </div>
+    </div>
+  </header>
+) : (
+  <header id="top" class="relative h-svh min-h-[680px] overflow-hidden bg-paper text-ink max-[900px]:h-auto">
+    <!-- Studio render in a framed plate. Its backdrop is a lit gradient, so it can't float on a flat color without a halo. -->
+    <div class="wrap flex h-full items-stretch gap-10 pb-10 pt-[118px] max-[900px]:flex-col max-[900px]:gap-7 max-[900px]:pb-28">
+      <div class="relative z-[2] flex min-w-0 flex-1 flex-col justify-between gap-10 max-[900px]:contents">
+        <h1 class="m-0 animate-rise-1 whitespace-nowrap font-black uppercase leading-[.8] tracking-[-.055em] text-ink max-[900px]:relative max-[900px]:z-[2]" style={nameStyle}>
+          <span class="sr-only">SPOG </span>{p.name}
+        </h1>
+        <div class="animate-rise-2 max-[900px]:order-last" style={lineStyle}>
+          <p class="m-0 max-w-[540px] text-[clamp(22px,2.3vw,32px)] font-semibold leading-[1.15] tracking-[-.025em] text-ink">{p.tag}</p>
+          <p class="mb-0 mt-2.5 max-w-[540px] text-[16px] text-ink-soft">{page.hero.proof}</p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <Button href="#cta" variant="gold" arrow>{p.cta}</Button>
+            <Button href="#walkthrough" variant="ink">Book a walkthrough</Button>
+          </div>
+        </div>
+      </div>
+      <div class="relative aspect-square h-full shrink-0 overflow-hidden rounded-[28px] bg-studio max-[900px]:-mt-[9vw] max-[900px]:h-auto max-[900px]:w-[min(100%,62svh)] max-[900px]:self-end">
+        <img src={page.hero.image} alt={page.hero.alt} fetchpriority="high" class="size-full animate-settle object-cover" />
+      </div>
+    </div>
+  </header>
+)}

@@ -1,0 +1,45 @@
+/*
+  Scroll-driven effects for the SPOG homepage.
+
+  This file is served as-is from /public and linked in src/layouts/Base.astro.
+  Do not move it into src/styles: the production CSS minifier rewrites
+  `animation` + `animation-timeline` into a single shorthand that browsers
+  reject, and the effects silently stop working.
+
+  .drift      background photo slowly settles as the section scrolls past
+  .lit-words  statement words light up one by one; the 4th turns gold
+*/
+@keyframes spog-drift { from { transform: scale(1.12) translateY(-2%); } to { transform: scale(1.02) translateY(2%); } }
+@keyframes spog-lit { to { color: #fff; } }
+@keyframes spog-lit-gold { to { color: #EEA114; } }
+
+@supports (animation-timeline: view()) {
+  .drift img, .drift video {
+    animation-name: spog-drift;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+  }
+  .lit-words span {
+    animation-name: spog-lit;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: view();
+    animation-range: entry 60% cover 52%;
+  }
+  .lit-words span:nth-child(2) { animation-range: entry 75% cover 58%; }
+  .lit-words span:nth-child(3) { animation-range: entry 90% cover 64%; }
+  .lit-words span:nth-child(4) { animation-name: spog-lit-gold; animation-range: entry 105% cover 70%; }
+}
+
+@supports not (animation-timeline: view()) {
+  .lit-words span { color: #fff !important; }
+  .lit-words span:nth-child(4) { color: #EEA114 !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drift img, .drift video { animation: none !important; }
+  .lit-words span { animation: none !important; color: #fff !important; }
+  .lit-words span:nth-child(4) { color: #EEA114 !important; }
+}

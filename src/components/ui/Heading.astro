@@ -1,0 +1,10 @@
+---
+/** Section heading used across light and dark sections. */
+interface Props { as?: 'h2' | 'h3'; center?: boolean; class?: string }
+const { as: Tag = 'h2', center = false, class: extra = '' } = Astro.props;
+---
+<Tag class:list={[
+  'm-0 font-semibold text-[clamp(36px,4.6vw,62px)] leading-[1.03] tracking-[-.035em]',
+  center && 'mx-auto max-w-[900px] text-center',
+  extra,
+]}><slot /></Tag>

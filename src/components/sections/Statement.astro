@@ -1,0 +1,39 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import { img, statement, numbers } from '../../data/content';
+---
+<!-- PHOTO: wide shot of a SPOG on a Tri-State site at first light. 21:9. -->
+<!-- PLACEHOLDER: the loop is a concept render from spogtrailers.com. The poster image shows for reduced motion. -->
+<!-- Self-powered: the statement words light up on scroll, then the three key numbers sit under them. -->
+<section aria-label="Self-powered" class="grain relative flex min-h-[110vh] items-center justify-center overflow-hidden bg-black px-6 py-[18vh]">
+  <div class="drift absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+    <video class="grade-dim size-full object-cover" autoplay muted loop playsinline preload="metadata" poster={img.statementPoster} data-motion-video>
+      <source src={img.statementVideo} type="video/mp4" />
+    </video>
+  </div>
+  <div class="scrim-statement absolute inset-0 z-[1]"></div>
+
+  <div class="relative z-[3] flex w-full flex-col items-center">
+    <Eyebrow gold="Self-powered" text="Solar on board" />
+    <p class="lit-words mb-0 mt-7 max-w-[1100px] text-center text-[clamp(44px,7.4vw,112px)] font-extrabold leading-[.98] tracking-[-.045em]">
+      {statement.map((w, i) => <>{i > 0 && ' '}<span class="text-white/22">{w}</span></>)}
+    </p>
+
+    <ul class="mt-[14vh] grid w-full max-w-[1100px] grid-cols-[repeat(3,1fr)] text-center max-[760px]:grid-cols-[repeat(1,1fr)] max-[760px]:gap-[44px]">
+      {numbers.map((n) => (
+        <li class="px-5 py-2.5 not-first:border-l not-first:border-line max-[760px]:not-first:border-0">
+          <small class="block text-[15px] font-medium text-bone/80">{n.label}</small>
+          <strong class:list={['my-2 block whitespace-nowrap text-[clamp(46px,5.6vw,88px)] font-extrabold leading-none tracking-[-.05em]', n.gold ? 'text-gold-metal' : 'text-steel']}>{n.value}</strong>
+          <span class="text-[15px] text-bone/70">{n.note}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<script>
+  // Respect reduced motion: stop the loop and leave the poster frame.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll<HTMLVideoElement>('[data-motion-video]').forEach((v) => { v.removeAttribute('autoplay'); v.pause(); });
+  }
+</script>

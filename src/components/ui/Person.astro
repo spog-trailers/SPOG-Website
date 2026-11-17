@@ -1,0 +1,12 @@
+---
+/** Initials avatar + name + role, used under testimonials. */
+interface Props { initials: string; name: string; role: string; class?: string }
+const { initials, name, role, class: extra = 'mt-10' } = Astro.props;
+---
+<div class:list={['inline-flex items-center gap-3.5 text-left', extra]}>
+  <div class="grid size-[52px] place-items-center rounded-full border border-line bg-[linear-gradient(135deg,#3a3d44,#1b1d22)] text-[17px] font-bold text-gold">{initials}</div>
+  <div>
+    <b class="block text-[16px] text-white">{name}</b>
+    <span class="text-[14px] text-mute">{role}</span>
+  </div>
+</div>

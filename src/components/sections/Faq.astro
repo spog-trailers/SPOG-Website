@@ -1,0 +1,35 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import Heading from '../ui/Heading.astro';
+import Icon from '../ui/Icon.astro';
+import { faqs as homeFaqs, phone } from '../../data/content';
+
+interface Props { items?: typeof homeFaqs; heading?: string }
+const { items: faqs = homeFaqs, heading = 'Questions crews ask.' } = Astro.props;
+---
+<!-- PLACEHOLDER: answers are drawn from existing homepage copy. Confirm each before launch. -->
+<section id="faq" aria-label="Questions" class="bg-stone pb-[120px] pt-[130px] text-ink">
+  <div class="wrap grid grid-cols-[5fr_7fr] items-start gap-[60px] max-[960px]:grid-cols-[repeat(1,1fr)] max-[960px]:gap-10">
+    <div>
+      <Eyebrow gold="FAQ" />
+      <Heading class="mt-4 max-w-[480px]">{heading}</Heading>
+      <p class="mt-[18px] max-w-[440px] text-[19px] text-ink-soft">Something else on your mind? Call the shop and talk to the people who build it.</p>
+      <a href={phone.href} class="mt-8 inline-block rounded-[9px] bg-ink px-[22px] py-[15px] text-[15px] font-semibold text-white no-underline hover:bg-black">Call {phone.display}</a>
+    </div>
+
+    <div class="grid gap-3">
+      {faqs.map((f, i) => (
+        <details class="group rounded-[20px] bg-paper" open={i === 0}>
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-6 px-[30px] py-[26px] text-[20px] font-semibold leading-[1.25] tracking-[-.02em] text-ink [&::-webkit-details-marker]:hidden">
+            {f.q}
+            <Icon name="plus" class="size-6 shrink-0 stroke-ink stroke-2 transition-transform duration-300 group-open:rotate-45" />
+          </summary>
+          <div class="-mt-1.5 px-[30px] pb-7 text-[16.5px] leading-[1.6] text-ink-soft">
+            <p class="m-0 max-w-[640px]">{f.a}</p>
+            {f.link && <a href={f.link.href} class="mt-3 inline-block font-semibold text-ink underline underline-offset-[5px]">{f.link.label} &rarr;</a>}
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

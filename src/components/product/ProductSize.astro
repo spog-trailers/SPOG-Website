@@ -1,0 +1,115 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import Heading from '../ui/Heading.astro';
+import { lineupEntry, specRows, type ProductPage } from '../../data/productPages';
+import { drawing, viewBox } from '../../scripts/sizeDrawing';
+
+// Rivian's "Size it up", reworked for trailers: the trailer drawn to scale behind a full-size
+// pickup, so the length reads in a glance. Only the length is labeled. The spec table sits
+// underneath (id="specs").
+interface Props { page: ProductPage }
+const { page } = Astro.props;
+const p = lineupEntry(page.id);
+const { lengths, defaultLength } = page.size;
+const maxLength = lengths[lengths.length - 1];
+const lengthRange = (p.stats as [string, string][]).find(([k]) => k === 'Length')?.[1] ?? `${lengths[0]} to ${maxLength} ft`;
+const rows = specRows(page.id);
+---
+<section id="size" aria-label="Size and specs" class="border-t border-line bg-black pb-[120px] pt-[130px] text-bone max-[640px]:pb-20 max-[640px]:pt-20">
+  <div class="wrap">
+    <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-8">
+      <div>
+        <Eyebrow gold="Size it up" />
+        <Heading class="mt-4 text-white">{lengthRange}.</Heading>
+        <p class="mb-0 mt-[18px] max-w-[460px] text-[19px] text-mute">Drawn to scale behind a full-size pickup. Pick a length.</p>
+      </div>
+      <div class="flex flex-wrap gap-1.5" role="group" aria-label="Trailer length">
+        {lengths.map((l) => (
+          <button
+            type="button"
+            data-ft={l}
+            aria-pressed={String(l === defaultLength)}
+            class="h-10 min-w-[58px] cursor-pointer border-[1.5px] border-white/20 bg-transparent px-3 text-[13px] font-bold tracking-[.04em] text-bone hover:border-white aria-pressed:border-white aria-pressed:bg-white aria-pressed:text-black"
+          >{l} ft</button>
+        ))}
+      </div>
+    </div>
+
+    <figure class="relative m-0 mt-16 max-[640px]:mt-12">
+      <svg
+        id="size-drawing"
+        viewBox={viewBox(maxLength)}
+        data-max={maxLength}
+        class="block h-auto w-full overflow-visible"
+        role="img"
+        aria-labelledby="size-readout"
+        set:html={drawing(defaultLength, maxLength)}
+      />
+      <figcaption class="mt-6 flex flex-wrap items-baseline justify-between gap-4 border-t border-line pt-5">
+        <span class="text-[14px] text-mute"><i class="mr-2 inline-block h-[2px] w-5 bg-[#6b6e75] align-middle"></i>Full-size pickup, about 19 ft</span>
+        <span id="size-readout" aria-live="polite" class="text-[15px] font-semibold text-white">
+          <i class="mr-2 inline-block h-[2px] w-5 bg-gold align-middle"></i><span data-readout>{defaultLength} ft</span> {p.name}
+        </span>
+      </figcaption>
+    </figure>
+
+    <div id="specs" class="mt-24 grid grid-cols-[4fr_8fr] items-start gap-14 max-[900px]:mt-16 max-[900px]:grid-cols-[repeat(1,1fr)] max-[900px]:gap-8">
+      <div>
+        <h3 class="m-0 text-[clamp(28px,2.6vw,36px)] font-semibold leading-[1.1] tracking-[-.025em] text-white">Specs</h3>
+        <p class="mb-0 mt-3 max-w-[340px] text-[16.5px] text-mute">Have a question about a spec? Ask on your walkthrough.</p>
+      </div>
+      <dl class="m-0 grid grid-cols-[repeat(2,1fr)] gap-x-12 border-t border-panel-line max-[640px]:grid-cols-[repeat(1,1fr)]">
+        {rows.map(([k, v]) => (
+          <div class="flex justify-between gap-6 border-b border-panel-line py-[18px] text-[16px]">
+            <dt class="text-mute">{k}</dt>
+            <dd class="m-0 text-right font-semibold text-white">{v}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  #size-drawing { fill: none; stroke-linejoin: round; stroke-linecap: round; }
+  #size-drawing path, #size-drawing circle, #size-drawing rect { vector-effect: non-scaling-stroke; }
+  #size-drawing .sd-ground { stroke: rgb(255 255 255 / .16); stroke-width: 1; }
+  #size-drawing .sd-truck { stroke: #6b6e75; stroke-width: 1.4; }
+  #size-drawing .sd-trailer { stroke: #fff; stroke-width: 1.6; }
+  #size-drawing .sd-solar { stroke: rgb(255 255 255 / .75); stroke-width: 1; fill: rgb(255 255 255 / .1); }
+  #size-drawing .sd-dim { stroke: var(--color-gold); stroke-width: 1.6; }
+</style>
+
+<script>
+  import { drawing } from '../../scripts/sizeDrawing';
+  const section = document.getElementById('size')!;
+  const svg = document.getElementById('size-drawing')!;
+  const readout = section.querySelector<HTMLElement>('[data-readout]')!;
+  const buttons = [...section.querySelectorAll<HTMLButtonElement>('[data-ft]')];
+  const max = Number(svg.dataset.max);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let current = Number(buttons.find((b) => b.getAttribute('aria-pressed') === 'true')?.dataset.ft ?? max);
+  let frame = 0;
+
+  function go(target: number) {
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.ft) === target)));
+    readout.textContent = `${target} ft`;
+    cancelAnimationFrame(frame);
+    if (reduce) {
+      current = target;
+      svg.innerHTML = drawing(target, max);
+      return;
+    }
+    const from = current;
+    const start = performance.now();
+    const step = (now: number) => {
+      const t = Math.min(1, (now - start) / 520);
+      const e = 1 - Math.pow(1 - t, 3);
+      current = from + (target - from) * e;
+      svg.innerHTML = drawing(t < 1 ? Math.round(current * 10) / 10 : target, max);
+      if (t < 1) frame = requestAnimationFrame(step);
+    };
+    frame = requestAnimationFrame(step);
+  }
+  buttons.forEach((b) => b.addEventListener('click', () => go(Number(b.dataset.ft))));
+</script>

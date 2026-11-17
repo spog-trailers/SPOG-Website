@@ -1,0 +1,32 @@
+---
+/**
+ * Square, tracked uppercase button.
+ * variant: "gold" (filled), "outline" (white outline on dark) or "ink" (dark outline on light)
+ * size: "md" (50px) or "sm" (38px, used in the nav)
+ */
+interface Props {
+  href: string;
+  variant?: 'gold' | 'outline' | 'ink';
+  size?: 'md' | 'sm';
+  arrow?: boolean;
+  class?: string;
+}
+const { href, variant = 'outline', size = 'md', arrow = false, class: extra = '' } = Astro.props;
+
+const base =
+  'inline-flex items-center gap-[14px] font-bold text-[12px] leading-[normal] uppercase tracking-[.2em] no-underline border-[1.5px] cursor-pointer';
+const sizes = { md: 'h-[50px] px-[26px]', sm: 'h-[38px] px-[18px]' };
+const variants = {
+  gold: 'bg-gold border-gold text-black hover:bg-white hover:border-white',
+  outline: 'bg-transparent border-white/70 text-white hover:bg-white hover:text-black hover:border-white',
+  ink: 'bg-transparent border-ink text-ink hover:bg-ink hover:text-white',
+};
+---
+<a href={href} class:list={[base, sizes[size], variants[variant], extra]}>
+  <slot />
+  {arrow && (
+    <svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true">
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  )}
+</a>

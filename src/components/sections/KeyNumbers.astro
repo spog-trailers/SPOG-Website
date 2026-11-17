@@ -1,0 +1,14 @@
+---
+import { numbers } from '../../data/content';
+---
+<section aria-label="Key numbers" class="relative overflow-hidden bg-black px-6 py-[140px] text-center">
+  <ul class="relative z-[3] mx-auto grid max-w-[1100px] grid-cols-[repeat(3,1fr)] max-[760px]:grid-cols-[repeat(1,1fr)] max-[760px]:gap-[50px]">
+    {numbers.map((n) => (
+      <li class="px-5 py-2.5 not-first:border-l not-first:border-line max-[760px]:not-first:border-0">
+        <small class="block text-[15px] font-medium text-mute">{n.label}</small>
+        <strong class:list={['my-2 block whitespace-nowrap text-[clamp(46px,5.6vw,88px)] font-extrabold leading-none tracking-[-.05em]', n.gold ? 'text-gold-metal' : 'text-steel']}>{n.value}</strong>
+        <span class="text-[15px] text-mute">{n.note}</span>
+      </li>
+    ))}
+  </ul>
+</section>

@@ -1,0 +1,23 @@
+---
+import Heading from '../ui/Heading.astro';
+import Icon from '../ui/Icon.astro';
+import { guarantees } from '../../data/content';
+---
+<section aria-label="Guarantee" class="bg-stone pb-[120px] pt-[130px] text-ink">
+  <div class="wrap">
+    <Heading center>Backed in writing.</Heading>
+    <p class="mx-auto mt-[18px] max-w-[600px] text-center text-[19px] text-ink-soft">If something needs work, we come to you.</p>
+    <div class="mt-[60px] grid grid-cols-[repeat(4,1fr)] gap-3 max-[1000px]:grid-cols-[repeat(2,1fr)] max-[560px]:grid-cols-[repeat(1,1fr)]">
+      {guarantees.map((g) => (
+        <div class="rounded-[20px] bg-paper px-7 pb-8 pt-[34px] text-left">
+          <Icon name={g.icon} class="inline align-baseline size-[38px] stroke-gold stroke-[1.5]" />
+          <b class="mb-2 mt-[30px] block text-[21px] font-semibold leading-[1.2] tracking-[-.02em] text-ink">{g.title}</b>
+          <span class="text-[15.5px] text-ink-soft">{g.body}</span>
+        </div>
+      ))}
+    </div>
+    <div class="mt-10 flex justify-center">
+      <a href="#" class="rounded-[9px] bg-ink px-[22px] py-[15px] text-[15px] font-semibold text-white no-underline">Read the warranty</a>
+    </div>
+  </div>
+</section>

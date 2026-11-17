@@ -1,0 +1,86 @@
+---
+import { lineupEntry, type ProductPage } from '../../data/productPages';
+
+// Rivian-style floating section bar. Hidden over the hero. Once the hero scrolls away it
+// slides in and the main masthead tucks away, so only one bar sits at the top.
+// On phones it becomes a full-width strip of links; the MobileBar carries the buttons there.
+interface Props { page: ProductPage }
+const { page } = Astro.props;
+const p = lineupEntry(page.id);
+const links: [string, string][] = [
+  ...(page.overview ? [['Overview', '#overview'] as [string, string]] : []),
+  ['Power', '#power'],
+  ['Size', '#size'],
+  ['Specs', '#specs'],
+  ['Lineup', '#lineup'],
+  ['FAQ', '#faq'],
+];
+const btn = 'flex h-10 shrink-0 items-center border-[1.5px] px-4 text-[11px] font-bold uppercase leading-[normal] tracking-[.18em] no-underline';
+---
+<nav
+  id="subnav"
+  aria-label={`${p.name} sections`}
+  class="pointer-events-none fixed inset-x-0 top-[calc(env(safe-area-inset-top,0px)+12px)] z-[31] flex -translate-y-3 justify-center px-4 opacity-0 transition duration-300 data-[show]:pointer-events-auto data-[show]:translate-y-0 data-[show]:opacity-100 max-[640px]:top-[env(safe-area-inset-top,0px)] max-[640px]:px-0"
+>
+  <div class="flex max-w-full items-center gap-1 rounded-[14px] border border-line bg-black/82 p-1.5 backdrop-blur-[16px] max-[640px]:w-full max-[640px]:rounded-none max-[640px]:border-x-0 max-[640px]:border-t-0">
+    <a href="#top" class="shrink-0 px-3 text-[12px] font-black uppercase tracking-[.14em] text-white no-underline max-[640px]:hidden">
+      SPOG <span class="text-gold">{p.name}</span>
+    </a>
+    <ul class="no-scrollbar flex min-w-0 overflow-x-auto">
+      {links.map(([label, href]) => (
+        <li class="shrink-0">
+          <a
+            href={href}
+            data-spy
+            class="block rounded-[9px] px-3.5 py-[11px] text-[11.5px] font-semibold uppercase tracking-[.16em] text-[#A9AEB7] no-underline hover:text-white aria-[current=true]:bg-white/10 aria-[current=true]:text-white"
+          >{label}</a>
+        </li>
+      ))}
+    </ul>
+    <a href="#walkthrough" class={`${btn} ml-2 border-white/60 text-white hover:border-white hover:bg-white hover:text-black max-[1000px]:hidden`}>Walkthrough</a>
+    <a href="#cta" class={`${btn} border-gold bg-gold text-black hover:border-white hover:bg-white max-[640px]:hidden`}>Reserve</a>
+  </div>
+</nav>
+
+<style is:global>
+  html { scroll-padding-top: 84px; }
+  html[data-subnav] #masthead { translate: 0 -110% !important; }
+</style>
+
+<script>
+  const nav = document.getElementById('subnav')!;
+  const hero = document.getElementById('top');
+  if (hero) {
+    new IntersectionObserver(
+      ([e]) => {
+        const show = !e.isIntersecting;
+        nav.toggleAttribute('data-show', show);
+        document.documentElement.toggleAttribute('data-subnav', show);
+      },
+      { rootMargin: '-120px 0px 0px 0px' },
+    ).observe(hero);
+  }
+
+  // Highlight the section in view
+  const links = [...nav.querySelectorAll<HTMLAnchorElement>('[data-spy]')];
+  const byId = new Map(links.map((a) => [a.hash.slice(1), a]));
+  const list = nav.querySelector('ul')!;
+  const spy = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const active = byId.get(e.target.id);
+        links.forEach((a) => a.setAttribute('aria-current', String(a === active)));
+        // On phones the link strip scrolls sideways. Keep the active link in view.
+        if (active && list.scrollWidth > list.clientWidth) {
+          list.scrollTo({ left: active.parentElement!.offsetLeft - list.offsetLeft - 16, behavior: 'smooth' });
+        }
+      });
+    },
+    { rootMargin: '-45% 0px -50% 0px' },
+  );
+  byId.forEach((_, id) => {
+    const el = document.getElementById(id);
+    if (el) spy.observe(el);
+  });
+</script>

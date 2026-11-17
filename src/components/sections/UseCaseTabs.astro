@@ -1,0 +1,70 @@
+---
+import { useCases } from '../../data/content';
+---
+<section id="jobs" aria-label="Use cases" class="bg-stone pb-[120px] pt-[130px] text-ink">
+  <h2 class="mx-auto my-0 max-w-[900px] text-center text-[clamp(38px,4.8vw,66px)] font-semibold leading-[1.02] tracking-[-.035em] text-ink">One power system. Many jobs.</h2>
+  <p class="mx-auto mt-[18px] max-w-[620px] text-center text-[20px] text-ink-soft">Find the setup that fits what you do.</p>
+
+  <div class="mx-auto mt-[46px] flex justify-center px-5">
+    <div role="tablist" aria-label="Use cases" class="no-scrollbar inline-flex max-w-full gap-1 overflow-x-auto rounded-[14px] bg-white p-1.5" data-tabs>
+      {useCases.map((u, i) => (
+        <button
+          role="tab"
+          id={`tab-${u.id}`}
+          aria-controls={`panel-${u.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          class="cursor-pointer whitespace-nowrap rounded-[10px] border-0 bg-transparent px-[18px] py-3 text-[15px] font-semibold leading-[normal] text-ink hover:bg-stone focus-visible:outline-2 focus-visible:outline-gold aria-selected:bg-stone-2"
+        >{u.tab}</button>
+      ))}
+    </div>
+  </div>
+
+  <div class="mx-auto mt-[34px] max-w-[1320px] px-9">
+    {useCases.map((u, i) => (
+      <div
+        id={`panel-${u.id}`}
+        role="tabpanel"
+        aria-labelledby={`tab-${u.id}`}
+        hidden={i !== 0}
+        class:list={[
+          'relative flex min-h-[600px] items-stretch overflow-hidden rounded-[26px] max-[760px]:min-h-0 max-[760px]:flex-col',
+          u.studio ? 'bg-studio' : 'bg-black',
+        ]}
+      >
+        <img
+          src={u.image}
+          alt={u.alt}
+          style={u.position ? `object-position:${u.position}` : undefined}
+          class:list={[
+            'absolute inset-0 size-full max-[760px]:relative max-[760px]:h-[300px]',
+            u.studio ? 'fade-oval left-[30%] w-[70%] object-contain p-10 max-[760px]:left-0 max-[760px]:w-full' : 'object-cover',
+          ]}
+        />
+        <div class="relative z-[1] m-2 flex w-[min(440px,calc(100%_-_16px))] flex-col justify-between gap-10 rounded-[18px] bg-stone px-10 pb-10 pt-[42px] max-[760px]:w-auto">
+          <div>
+            <small class="text-[17px] font-medium text-ink-soft">{u.tab}</small>
+            <h3 class="mb-4 mt-[14px] text-[30px] font-semibold leading-[1.1] tracking-[-.025em] text-ink">{u.title}</h3>
+            <p class="m-0 text-[16.5px] leading-[1.6] text-ink-soft">{u.body}</p>
+          </div>
+          <a href={u.href} class="self-start rounded-[9px] bg-ink px-5 py-[15px] text-[15px] font-semibold text-white no-underline hover:bg-black">{u.cta}</a>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((list) => {
+    const tabs = list.querySelectorAll<HTMLButtonElement>('[role=tab]');
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach((t) => {
+          t.setAttribute('aria-selected', 'false');
+          document.getElementById(t.getAttribute('aria-controls')!)!.hidden = true;
+        });
+        tab.setAttribute('aria-selected', 'true');
+        document.getElementById(tab.getAttribute('aria-controls')!)!.hidden = false;
+      });
+    });
+  });
+</script>

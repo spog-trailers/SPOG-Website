@@ -1,0 +1,42 @@
+---
+import { img, navLinks, announcement } from '../../data/content';
+// Two-line nav buttons: a small label says who the button is for, the action sits under it.
+const navBtn = 'flex h-11 flex-col justify-center border-[1.5px] px-4 leading-[normal] no-underline';
+---
+<div
+  id="masthead"
+  class="fixed inset-x-0 top-[env(safe-area-inset-top,0px)] z-30 transition-transform duration-300 ease-out data-[tucked]:-translate-y-[34px]"
+>
+  <a href={announcement.href} class="flex h-[34px] items-center justify-center gap-3 border-b border-line bg-black px-4 text-[11px] font-semibold uppercase tracking-[.2em] text-bone no-underline hover:text-white">
+    <b class="font-semibold text-gold">{announcement.gold}</b>
+    <span class="max-[640px]:hidden">{announcement.text}</span>
+    <span class="underline underline-offset-4">{announcement.cta} &rarr;</span>
+  </a>
+  <nav aria-label="Main" class="h-16 border-b border-line bg-black/72 backdrop-blur-[16px]">
+    <div class="wrap flex h-full items-center gap-10 max-[640px]:px-5">
+      <a href="/"><img src={img.logoWhite} alt="SPOG Solar Power Off Grid" class="h-6 w-auto" /></a>
+      <ul class="flex gap-[30px] max-[1180px]:hidden">
+        {navLinks.map((l) => (
+          <li><a href={l.href} class="text-[12px] font-semibold uppercase tracking-[.16em] text-[#C7CAD0] no-underline hover:text-white">{l.label}</a></li>
+        ))}
+      </ul>
+      <div class="ml-auto flex gap-2.5">
+        <a href="#walkthrough" class={`${navBtn} border-white/70 text-white hover:border-white hover:bg-white hover:text-black max-[640px]:hidden`}>
+          <small class="text-[8.5px] font-semibold uppercase tracking-[.22em] opacity-70">See it run</small>
+          <span class="text-[11.5px] font-bold uppercase tracking-[.18em]">Book a walkthrough</span>
+        </a>
+        <a href="#cta" class={`${navBtn} border-gold bg-gold text-black hover:border-white hover:bg-white`}>
+          <small class="text-[8.5px] font-semibold uppercase tracking-[.22em] opacity-70">2027 lineup</small>
+          <span class="text-[11.5px] font-bold uppercase tracking-[.18em]">Reserve</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<script>
+  const masthead = document.getElementById('masthead')!;
+  const tuck = () => masthead.toggleAttribute('data-tucked', window.scrollY > 40);
+  tuck();
+  window.addEventListener('scroll', tuck, { passive: true });
+</script>

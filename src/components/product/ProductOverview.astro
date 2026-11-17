@@ -1,0 +1,50 @@
+---
+import Icon from '../ui/Icon.astro';
+import type { ProductPage } from '../../data/productPages';
+
+// "Get to know" block from the Rivian page: one big sentence, then the features.
+// One photo card (when the product has a usable photo) plus light feature tiles with line icons.
+// Without a photo the tiles run four across.
+interface Props { page: ProductPage }
+const { page } = Astro.props;
+const o = page.overview!;
+const photo = o.photo;
+---
+<section id="overview" aria-label={o.intro[0]} class="bg-stone pb-[120px] pt-[120px] text-ink max-[640px]:pb-20 max-[640px]:pt-20">
+  <div class="wrap">
+    <h2 class="m-0 max-w-[920px] text-[clamp(30px,3.7vw,52px)] font-semibold leading-[1.08] tracking-[-.032em]">
+      {o.intro[0]} <span class="text-ink-soft">{o.intro[1]}</span>
+    </h2>
+
+    <div class:list={[
+      'mt-14 grid gap-3',
+      photo
+        ? 'grid-cols-[repeat(3,1fr)] max-[960px]:grid-cols-[repeat(2,1fr)] max-[560px]:grid-cols-[repeat(1,1fr)]'
+        : 'grid-cols-[repeat(4,1fr)] max-[1100px]:grid-cols-[repeat(2,1fr)] max-[560px]:grid-cols-[repeat(1,1fr)]',
+    ]}>
+      {photo && (
+        <figure class="m-0 flex flex-col overflow-hidden rounded-[20px] bg-paper min-[961px]:row-span-2 max-[960px]:col-span-2 max-[560px]:col-span-1">
+          <div class:list={['relative min-h-[340px] flex-1 overflow-hidden', photo.studio ? 'bg-studio' : 'bg-black']}>
+            <img
+              src={photo.image}
+              alt={photo.alt}
+              loading="lazy"
+              class="absolute inset-0 size-full object-cover"
+            />
+          </div>
+          <figcaption class="px-8 pb-8 pt-7">
+            <b class="block text-[22px] font-semibold leading-[1.2] tracking-[-.02em]">{photo.title}</b>
+            <span class="mt-2 block text-[16px] leading-[1.55] text-ink-soft">{photo.body}</span>
+          </figcaption>
+        </figure>
+      )}
+      {o.tiles.map((t) => (
+        <div class="flex min-h-[250px] flex-col rounded-[20px] bg-paper px-8 pb-8 pt-8">
+          <Icon name={t.icon} class="size-[34px] stroke-ink stroke-[1.5]" />
+          <h3 class="m-0 mt-auto pt-10 text-[22px] font-semibold leading-[1.2] tracking-[-.02em]">{t.title}</h3>
+          <p class="mb-0 mt-2 text-[16px] leading-[1.55] text-ink-soft">{t.body}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/sections/Nav.astro';
+import Close from '../components/sections/Close.astro';
+import Faq from '../components/sections/Faq.astro';
+import Footer from '../components/sections/Footer.astro';
+import MobileBar from '../components/sections/MobileBar.astro';
+import ProductSubnav from '../components/product/ProductSubnav.astro';
+import ProductHero from '../components/product/ProductHero.astro';
+import ProductOverview from '../components/product/ProductOverview.astro';
+import ProductPower from '../components/product/ProductPower.astro';
+import ProductStatement from '../components/product/ProductStatement.astro';
+import ProductSize from '../components/product/ProductSize.astro';
+import ProductLineup from '../components/product/ProductLineup.astro';
+import { productIds, productPages, productFaqs, type ProductId } from '../data/productPages';
+
+export function getStaticPaths() {
+  return productIds.map((product) => ({ params: { product } }));
+}
+
+const page = productPages[Astro.params.product as ProductId];
+// Event's close borrows from the approved line "Own the night. Power it with the sun."
+const closeHeading: [string, string] | undefined = page.id === 'event' ? ['Own', 'the night.'] : undefined;
+---
+<!--
+  Product page (/cargo, /workstation, /event). Built on the Rivian R1T page, see
+  docs/product-page-teardown-2026-11-16.md. Content lives in src/data/productPages.ts.
+
+  Section rhythm (never two photo sections side by side):
+    Hero (photo, or studio gray for Cargo) -> Overview (light) -> Power (dark)
+    -> Statement (photo) -> Size + Specs (dark) -> Lineup (light) -> Close (dark)
+    -> FAQ (light) -> Footer (dark)
+  Overview and Statement are optional per product.
+-->
+<Base title={page.title} description={page.description}>
+  <Nav />
+  <ProductSubnav page={page} />
+  <ProductHero page={page} />
+  {page.overview && <ProductOverview page={page} />}
+  <ProductPower page={page} />
+  {page.statement && <ProductStatement page={page} />}
+  <ProductSize page={page} />
+  <ProductLineup current={page.id} />
+  <Close trailer={page.walkthroughTrailer} heading={closeHeading} />
+  <Faq items={productFaqs} heading={page.faqHeading} />
+  <Footer />
+  <MobileBar />
+</Base>

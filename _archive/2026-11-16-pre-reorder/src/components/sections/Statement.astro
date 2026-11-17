@@ -1,0 +1,13 @@
+---
+import { img, statement } from '../../data/content';
+---
+<!-- PHOTO: wide shot of a SPOG on a Tri-State site at first light. 21:9. -->
+<section aria-label="Statement" class="grain relative flex min-h-[110vh] items-center justify-center overflow-hidden bg-black px-6 py-[20vh]">
+  <div class="drift absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+    <img src={img.statementBg} alt="" class="grade-dim size-full object-cover object-[50%_62%]" />
+  </div>
+  <div class="scrim-statement absolute inset-0 z-[1]"></div>
+  <p class="lit-words relative z-[3] m-0 max-w-[1100px] text-center text-[clamp(44px,7.4vw,112px)] font-extrabold leading-[.98] tracking-[-.045em]">
+    {statement.map((w, i) => <>{i > 0 && ' '}<span class="text-white/22">{w}</span></>)}
+  </p>
+</section>

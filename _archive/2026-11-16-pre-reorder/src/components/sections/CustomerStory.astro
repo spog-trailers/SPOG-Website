@@ -1,0 +1,28 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import Person from '../ui/Person.astro';
+import { img, story } from '../../data/content';
+---
+<!-- PLACEHOLDER testimonial + video. Link the play button to the hosted video. -->
+<section aria-label="Customer story" class="grain relative flex min-h-[88vh] items-center overflow-hidden bg-night">
+  <div class="drift absolute inset-y-0 right-0 z-0 w-[68%] overflow-hidden max-[760px]:w-full" aria-hidden="true">
+    <img src={img.storyBg} alt="" class="fade-left grade-story size-full object-cover object-[50%_55%] max-[760px]:[mask-image:none] max-[760px]:[-webkit-mask-image:none]" />
+  </div>
+  <div class="scrim-story absolute inset-0 z-[1]"></div>
+
+  <div class="wrap relative z-[3] grid w-full grid-cols-[1.1fr_1fr] items-center gap-10 max-[860px]:grid-cols-[repeat(1,1fr)]">
+    <div>
+      <Eyebrow gold="Customer story" />
+      <blockquote class="mb-0 mt-[22px] text-[clamp(30px,3.4vw,50px)] font-light leading-[1.12] tracking-[-.03em] text-white">
+        <b class="font-extrabold">{story.bold}</b>{story.rest}
+      </blockquote>
+      <Person initials={story.initials} name={story.name} role={story.role} class="mt-[34px]" />
+    </div>
+    <button type="button" aria-label={`Play ${story.name}'s story`} class="group flex cursor-pointer flex-col items-center gap-4 justify-self-center border-0 bg-transparent text-white max-[860px]:justify-self-start">
+      <i class="grid size-24 place-items-center rounded-full border-[1.5px] border-white/50 bg-white/14 backdrop-blur-[12px] transition-[transform,background] duration-300 group-hover:scale-[1.08] group-hover:border-gold group-hover:bg-gold">
+        <span class="ml-1.5 size-0 border-y-[14px] border-l-[22px] border-y-transparent border-l-white"></span>
+      </i>
+      <span class="text-[12px] font-bold uppercase tracking-[.2em]">{story.videoLabel}&nbsp; {story.videoLength}</span>
+    </button>
+  </div>
+</section>

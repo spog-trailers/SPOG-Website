@@ -1,0 +1,38 @@
+---
+import Button from '../ui/Button.astro';
+import Heading from '../ui/Heading.astro';
+import { products } from '../../data/content';
+---
+<section id="specs" aria-label="Choose your SPOG" class="bg-black py-[130px] text-bone">
+  <div class="wrap">
+    <Heading center class="text-white">Pick your SPOG.</Heading>
+    <p class="mx-auto mt-[18px] max-w-[600px] text-center text-[19px] text-mute">Same power system. Built for two different jobs.</p>
+
+    <div class="mt-16 grid grid-cols-[repeat(2,1fr)] gap-4 max-[900px]:grid-cols-[repeat(1,1fr)]">
+      {products.map((p) => (
+        <article class="flex flex-col overflow-hidden rounded-[24px] border border-[#1f1f22] bg-panel">
+          <div class="relative aspect-[16/10] overflow-hidden bg-studio">
+            <img src={p.image} alt={p.alt} class:list={['absolute inset-0 size-full', p.studio ? 'fade-oval object-contain p-6' : 'object-cover']} />
+            <span class="absolute left-[18px] top-[18px] rounded-full bg-black/72 px-[11px] py-[7px] text-[11px] font-bold uppercase tracking-[.18em] text-gold">{p.badge}</span>
+          </div>
+          <div class="flex flex-1 flex-col px-9 pb-[38px] pt-[34px]">
+            <h3 class="m-0 text-[38px] font-extrabold leading-none tracking-[-.035em] text-white">{p.name}</h3>
+            <p class="mb-[26px] mt-2 text-mute">{p.tag}</p>
+            <ul class="mb-8 border-t border-panel-line">
+              {p.specs.map(([k, v]) => (
+                <li class="flex justify-between gap-5 border-b border-panel-line py-[14px] text-[15.5px]">
+                  <span class="text-mute">{k}</span><b class="text-right font-semibold text-white">{v}</b>
+                </li>
+              ))}
+            </ul>
+            <div class="mt-auto flex flex-wrap gap-2.5">
+              <Button href="#cta" variant="gold">{p.cta}</Button>
+              <Button href="#">Full specs</Button>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+    <a href="#" class="mt-[34px] block text-center text-[15px] font-semibold text-bone underline underline-offset-[5px]">Compare every spec &rarr;</a>
+  </div>
+</section>

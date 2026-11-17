@@ -1,0 +1,24 @@
+---
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import { img } from '../../data/content';
+---
+<!-- PHOTO: Middletown shop floor, welder or electrician at work. 4:5 portrait, sits on the right. -->
+<section id="built" class="grain relative flex min-h-[88vh] items-center overflow-hidden bg-night">
+  <div class="drift absolute inset-y-0 right-0 z-0 w-[68%] overflow-hidden max-[760px]:w-full" aria-hidden="true">
+    <img src={img.builtBg} alt="" class="fade-left grade-built size-full object-cover object-[40%_50%] max-[760px]:[mask-image:none] max-[760px]:[-webkit-mask-image:none]" />
+  </div>
+  <div class="scrim-built absolute inset-0 z-[1]"></div>
+
+  <div class="wrap relative z-[3] w-full">
+    <Eyebrow gold="Middletown, New York" />
+    <h2 class="mb-0 mt-[18px] max-w-[1000px] text-[clamp(38px,5vw,78px)] font-light leading-[1.04] tracking-[-.035em] text-white">
+      <b class="font-black uppercase tracking-[-.04em]">Built by our own crew.</b> Every weld, every wire, every panel, in one shop you can walk through.
+    </h2>
+    <Button href="#" arrow class="mt-10">Meet the crew</Button>
+    <div class="mt-[50px] flex flex-wrap gap-10">
+      <Eyebrow text="41.4459° N, 74.4229° W" />
+      <Eyebrow text="Buy American Act standards" />
+    </div>
+  </div>
+</section>

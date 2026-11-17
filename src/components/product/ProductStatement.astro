@@ -1,0 +1,23 @@
+---
+import Button from '../ui/Button.astro';
+import type { ProductPage } from '../../data/productPages';
+
+// Full-bleed photo break, like Rivian's "Designed to get out there". Uses the shared photo
+// grade, grain and the statement scrim. The second headline line takes the gold accent.
+interface Props { page: ProductPage }
+const { page } = Astro.props;
+const s = page.statement!;
+---
+<section aria-label={`${s.heading[0]} ${s.heading[1]}`} class="grain drift relative flex min-h-[88svh] items-center justify-center overflow-hidden bg-night py-28 text-center">
+  <img src={s.image} alt={s.alt} loading="lazy" style={`object-position:${s.position ?? '50% 50%'}`} class="grade-story absolute inset-0 size-full object-cover" />
+  <div class="scrim-statement absolute inset-0 z-[1]"></div>
+  <div class="wrap relative z-[3]">
+    <h2 class="m-0 text-[clamp(46px,8vw,128px)] font-black uppercase leading-[.86] tracking-[-.05em] text-white">
+      {s.heading[0]}<br /><span class="text-gold">{s.heading[1]}</span>
+    </h2>
+    <p class="mx-auto mb-0 mt-7 max-w-[560px] text-[19px] text-bone/85">{s.body}</p>
+    <div class="mt-9 flex justify-center">
+      <Button href="#walkthrough" arrow>See it run on your site</Button>
+    </div>
+  </div>
+</section>

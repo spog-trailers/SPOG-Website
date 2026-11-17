@@ -1,0 +1,15 @@
+---
+import Stars from '../ui/Stars.astro';
+import Person from '../ui/Person.astro';
+import { review } from '../../data/content';
+---
+<!-- PLACEHOLDER testimonial: replace with a real Launch Offer buyer, with written permission. -->
+<section id="reviews" aria-label="Customer review" class="bg-black py-[130px] text-center text-bone">
+  <div class="wrap">
+    <Stars class="justify-center" />
+    <blockquote class="mx-auto mb-0 mt-7 max-w-[1000px] text-[clamp(30px,3.8vw,54px)] font-semibold leading-[1.12] tracking-[-.03em] text-white">
+      &ldquo;{review.lead} <em class="not-italic text-gold">{review.highlight}</em>&rdquo;
+    </blockquote>
+    <Person initials={review.initials} name={review.name} role={review.role} />
+  </div>
+</section>

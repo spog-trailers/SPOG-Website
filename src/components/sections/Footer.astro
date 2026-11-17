@@ -1,0 +1,31 @@
+---
+import { img, phone, footerColumns } from '../../data/content';
+---
+<footer class="border-t border-line bg-black pb-10 pt-20 text-[14px] text-[#7B808A] max-[640px]:pb-[110px]">
+  <div class="wrap">
+    <div class="grid grid-cols-[2fr_1fr_1fr_1fr] gap-10 max-[800px]:grid-cols-[repeat(2,1fr)]">
+      <div>
+        <img src={img.logoWhite} alt="SPOG" class="h-[30px] w-auto" />
+        <p class="mb-2.5 mt-[18px] text-[11px] font-semibold uppercase tracking-[.24em] text-gold">Powering the Builders of America</p>
+        <p class="my-3.5">Middletown, New York<br /><a href={phone.href} class="text-inherit no-underline">{phone.display}</a></p>
+      </div>
+      {footerColumns.map((col) => (
+        <div>
+          <h5 class="mb-4 mt-0 text-[12px] font-bold uppercase tracking-[.18em] text-white">{col.title}</h5>
+          <ul class="grid gap-2.5">
+            {col.links.map(([label, href]) => (
+              <li><a href={href} class="text-[#A9AEB7] no-underline hover:text-white">{label}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <div class="mt-[60px] flex flex-wrap justify-between gap-5 border-t border-line pt-[26px] text-[12px]">
+      <span>&copy; {new Date().getFullYear()} SPOG Trailers</span>
+      <nav aria-label="Legal" class="flex gap-[22px]">
+        <a href="#" class="text-[#A9AEB7] no-underline hover:text-white">Terms</a>
+        <a href="#" class="text-[#A9AEB7] no-underline hover:text-white">Privacy</a>
+      </nav>
+    </div>
+  </div>
+</footer>

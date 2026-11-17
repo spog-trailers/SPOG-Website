@@ -1,0 +1,24 @@
+---
+import Stars from '../ui/Stars.astro';
+import { proof } from '../../data/content';
+const [l1, l2, l3, l4, l5] = proof.logos;
+---
+<!-- PLACEHOLDER: rating, owner count and logos are invented. Replace with real ones (with permission). -->
+<section aria-label="Social proof" class="border-b border-line bg-black py-[34px]">
+  <div class="wrap grid grid-cols-[auto_1fr] items-center gap-14 max-[900px]:grid-cols-[repeat(1,1fr)] max-[900px]:gap-[26px]">
+    <div class="flex items-center gap-4 border-r border-line pr-14 max-[900px]:border-0 max-[900px]:p-0">
+      <strong class="text-[44px] font-extrabold leading-none tracking-[-.04em] text-white">{proof.score}</strong>
+      <div>
+        <Stars />
+        <small class="mt-1 block text-[13px] text-mute">{proof.caption}</small>
+      </div>
+    </div>
+    <div aria-label="Customer logos" class="flex flex-nowrap items-center justify-between gap-[clamp(18px,2.4vw,40px)] opacity-62 max-[1100px]:flex-wrap max-[1100px]:justify-start">
+      <span class="whitespace-nowrap text-[17px] font-black leading-none tracking-[-.02em] text-white">{l1}</span>
+      <span class="whitespace-nowrap text-[15px] font-light uppercase leading-none tracking-[.28em] text-white">{l2}</span>
+      <span class="whitespace-nowrap border-2 border-white px-[10px] py-[6px] text-[13px] font-bold leading-none tracking-[.06em] text-white">{l3}</span>
+      <span class="whitespace-nowrap text-[18px] font-semibold italic leading-none tracking-[-.03em] text-white">{l4}</span>
+      <span class="whitespace-nowrap text-[13px] font-extrabold uppercase leading-none tracking-[.2em] text-white">Tri<i class="not-italic text-gold">/</i>State Roofing</span>
+    </div>
+  </div>
+</section>

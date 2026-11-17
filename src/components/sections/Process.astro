@@ -1,0 +1,23 @@
+---
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import Heading from '../ui/Heading.astro';
+import { steps } from '../../data/content';
+---
+<section id="process" aria-label="How it works" class="bg-black py-[130px] text-bone">
+  <div class="wrap">
+    <Eyebrow gold="How it works" />
+    <Heading class="mt-4 text-white">From walkthrough to working trailer.</Heading>
+    <ol class="relative mt-[70px] grid grid-cols-[repeat(4,1fr)] before:absolute before:inset-x-0 before:top-[44px] before:h-px before:bg-line max-[860px]:grid-cols-[repeat(2,1fr)] max-[860px]:gap-y-[50px] max-[860px]:before:hidden">
+      {steps.map((s) => (
+        <li class="relative pr-[30px]">
+          <span class:list={['relative block w-max bg-black pr-[18px] text-[80px] font-extralight leading-none tracking-[-.05em]', s.key ? 'text-gold' : 'text-white']}>{s.n}</span>
+          <b class="mb-2 mt-[26px] block text-[20px] font-bold uppercase tracking-[.02em] text-white">{s.title}</b>
+          <span class="block text-[15.5px] text-mute">{s.body}</span>
+          {s.link && <a href={s.link.href} class="mt-4 inline-block text-[14px] font-semibold text-bone underline underline-offset-[5px] hover:text-white">{s.link.label} &rarr;</a>}
+          {s.cta && <Button href="#cta" variant="gold" size="sm" arrow class="mt-5">{s.cta}</Button>}
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

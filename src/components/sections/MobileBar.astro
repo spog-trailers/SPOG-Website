@@ -1,0 +1,24 @@
+---
+// Phone-only action bar. Appears once the hero scrolls away and hides again at the Close section,
+// so it never covers the hero buttons or the forms.
+const btn = 'flex h-12 flex-1 items-center justify-center border-[1.5px] text-[11.5px] font-bold uppercase leading-[normal] tracking-[.16em] no-underline';
+---
+<div
+  id="mobilebar"
+  class="fixed inset-x-0 bottom-0 z-30 hidden translate-y-full gap-2 border-t border-line bg-black/88 px-4 pb-[calc(12px+env(safe-area-inset-bottom,0px))] pt-3 backdrop-blur-[16px] transition-transform duration-300 data-[show]:translate-y-0 max-[640px]:flex"
+>
+  <a href="#walkthrough" class={`${btn} border-white/70 text-white`}>Walkthrough</a>
+  <a href="#cta" class={`${btn} border-gold bg-gold text-black`}>Reserve</a>
+</div>
+
+<script>
+  const bar = document.getElementById('mobilebar')!;
+  const hero = document.getElementById('top');
+  const close = document.getElementById('cta');
+  const inView = new Map<Element, boolean>();
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => inView.set(e.target, e.isIntersecting));
+    bar.toggleAttribute('data-show', ![...inView.values()].some(Boolean));
+  });
+  [hero, close].forEach((el) => el && io.observe(el));
+</script>

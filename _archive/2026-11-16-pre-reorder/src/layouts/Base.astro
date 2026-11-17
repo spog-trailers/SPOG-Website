@@ -1,0 +1,34 @@
+---
+// Montserrat weights exactly as the approved design loads them.
+// No 700 is loaded on purpose: anything set to bold renders at 800, matching the approved mockup.
+import '@fontsource/montserrat/300.css';
+import '@fontsource/montserrat/400.css';
+import '@fontsource/montserrat/500.css';
+import '@fontsource/montserrat/600.css';
+import '@fontsource/montserrat/800.css';
+import '@fontsource/montserrat/900.css';
+import '../styles/global.css';
+
+interface Props { title?: string; description?: string }
+const {
+  title = 'SPOG Trailers | Solar power trailers for contractor crews',
+  description = 'Solar trailers built in Middletown, New York for contractor crews and site offices across the Tri-State.',
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/scroll-effects.css" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/images/field-workstation-sunrise.jpg" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

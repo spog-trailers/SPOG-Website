@@ -1,0 +1,100 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import Heading from '../ui/Heading.astro';
+import { devices, lineupEntry, type ProductPage } from '../../data/productPages';
+import { formatHours, runHours } from '../../scripts/runtime';
+
+// Replaces Rivian's drive-modes section. The shared SPOG message is the power system, so this
+// section shows what the battery runs. Figures are SPOG's own runtime guide, shown as stat
+// tiles instead of bars because they range from under 2 hours to hundreds.
+interface Props { page: ProductPage }
+const { page } = Astro.props;
+const p = lineupEntry(page.id);
+const headline = (p.stats as [string, string][]).filter(([k]) => k === 'Battery' || k === 'Solar up to');
+const { batteries, defaultBattery } = page.power;
+const list = page.power.devices.map((id) => ({ id, ...devices[id] }));
+const cols = list.length === 4 ? 'grid-cols-[repeat(4,1fr)] max-[1100px]:grid-cols-[repeat(2,1fr)]' : 'grid-cols-[repeat(3,1fr)] max-[900px]:grid-cols-[repeat(2,1fr)]';
+---
+<section id="power" aria-label="Power" class="bg-black py-[130px] text-bone max-[640px]:py-20">
+  <div class="wrap">
+    <div class="grid grid-cols-[repeat(2,1fr)] items-end gap-14 max-[900px]:grid-cols-[repeat(1,1fr)] max-[900px]:gap-10">
+      <div>
+        <Eyebrow gold="Power" text="One system across the lineup" />
+        <Heading class="mt-4 text-white">What it runs.</Heading>
+        <p class="mb-0 mt-[18px] max-w-[460px] text-[19px] text-mute">Pick a battery size to see how long each one runs on a full charge.</p>
+      </div>
+      <dl class="m-0 flex flex-wrap gap-y-6 border-t border-line">
+        {headline.map(([k, v]) => (
+          <div class="pr-10 pt-5 not-first:border-l not-first:border-line not-first:pl-10 max-[560px]:w-full max-[560px]:pr-0 max-[560px]:not-first:border-l-0 max-[560px]:not-first:border-t max-[560px]:not-first:pl-0">
+            <dt class="text-[11.5px] font-semibold uppercase tracking-[.18em] text-mute">{k}</dt>
+            <dd class="text-steel m-0 mt-2 whitespace-nowrap text-[clamp(28px,3.2vw,48px)] font-black leading-[1.05] tracking-[-.04em]">{v}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <div class="mt-16 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-line pt-6">
+      <span id="power-label" class="text-[11.5px] font-semibold uppercase tracking-[.18em] text-mute">Battery size</span>
+      <div class="flex flex-wrap gap-1.5" role="group" aria-labelledby="power-label">
+        {batteries.map((b) => (
+          <button
+            type="button"
+            data-kwh={b}
+            aria-pressed={String(b === defaultBattery)}
+            class="h-10 cursor-pointer border-[1.5px] border-white/20 bg-transparent px-4 text-[13px] font-bold tracking-[.04em] text-bone hover:border-white aria-pressed:border-white aria-pressed:bg-white aria-pressed:text-black"
+          >{b} kWh</button>
+        ))}
+      </div>
+    </div>
+
+    <ul class:list={['mt-6 grid gap-3 max-[560px]:grid-cols-[repeat(1,1fr)]', cols]} aria-live="polite">
+      {list.map((d) => {
+        const f = formatHours(runHours(defaultBattery, d.kw));
+        return (
+          <li class="rounded-[20px] border border-panel-line bg-panel px-7 pb-7 pt-6" data-kw={d.kw}>
+            <span class="text-[12px] font-semibold uppercase tracking-[.16em] text-mute">{d.name}</span>
+            <b class="mt-5 flex items-baseline gap-2 font-black leading-none text-white">
+              <span data-value class="text-[clamp(40px,4.4vw,62px)] tracking-[-.045em] tabular-nums transition-opacity duration-200">{f.value}</span>
+              <span class="text-[17px] font-semibold tracking-normal text-mute">hrs</span>
+            </b>
+            <span data-days class="mt-2.5 block min-h-[1.5em] text-[14.5px] text-mute">{f.days}</span>
+          </li>
+        );
+      })}
+    </ul>
+
+    <p class="mb-0 mt-7 max-w-[820px] text-[14px] leading-[1.6] text-mute">
+      Continuous use on a full battery, one device at a time, before any solar recharge. From the SPOG runtime guide.
+      <a href="#sheet" class="whitespace-nowrap font-semibold text-bone underline underline-offset-4 hover:text-white">Get the run-time sheet &rarr;</a>
+    </p>
+  </div>
+</section>
+
+<script>
+  import { formatHours, runHours } from '../../scripts/runtime';
+  const section = document.getElementById('power')!;
+  const buttons = [...section.querySelectorAll<HTMLButtonElement>('[data-kwh]')];
+  const tiles = [...section.querySelectorAll<HTMLElement>('[data-kw]')];
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function show(kwh: number) {
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.kwh) === kwh)));
+    tiles.forEach((t) => {
+      const f = formatHours(runHours(kwh, Number(t.dataset.kw)));
+      const value = t.querySelector<HTMLElement>('[data-value]')!;
+      const days = t.querySelector<HTMLElement>('[data-days]')!;
+      if (reduce) {
+        value.textContent = f.value;
+        days.textContent = f.days;
+        return;
+      }
+      value.style.opacity = '0';
+      setTimeout(() => {
+        value.textContent = f.value;
+        days.textContent = f.days;
+        value.style.opacity = '1';
+      }, 160);
+    });
+  }
+  buttons.forEach((b) => b.addEventListener('click', () => show(Number(b.dataset.kwh))));
+</script>
