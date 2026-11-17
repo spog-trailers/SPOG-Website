@@ -16,7 +16,7 @@
  * The v1 showcase data further down (cargo, workstation, event, garage, relief, camper) feeds
  * the held Show* components, kept as starting points for the product pages.
  */
-import { img, products, nextUp, guarantees } from './content';
+import { img, products, nextUp, guarantees, shoot } from './content';
 import type { Feature } from './features';
 
 /** How each trailer's name is set. Same font, different weight, tracking, case and slant. */
@@ -50,8 +50,8 @@ export const cards: {
   image: string; alt: string; position: string; look: Look; size: number;
 }[] = [
   { id: 'cargo', name: 'Cargo', category: 'Utility trailer', status: 'Available now', live: true, href: '/cargo', image: img.cargoFront, alt: 'SPOG Cargo trailer from the front, solar roof and light mast', position: '50% 50%', look: 'studio', size: 10 },
-  { id: 'workstation', name: 'Workstation', category: 'Mobile office', status: 'Available now', live: true, href: '/workstation', image: img.hero, alt: 'SPOG Workstation trailers on a lot at sunrise, solar wings open', position: '62% 62%', look: 'work', size: 7.6 },
-  { id: 'event', name: 'Event', category: 'LED screen trailer', status: 'Buy it or rent it', live: true, href: '/event', image: img.eventMovieNight, alt: 'Crowd on a lawn at night watching a movie on a SPOG Event trailer', position: '30% 64%', look: 'event', size: 8.4 },
+  { id: 'workstation', name: 'Workstation', category: 'Mobile office', status: 'Available now', live: true, href: '/workstation', image: shoot.wsNavyStudio, alt: 'Navy SPOG Workstation in the Middletown shop', position: '50% 66%', look: 'work', size: 7.6 },
+  { id: 'event', name: 'Event', category: 'LED screen trailer', status: 'Buy it or rent it', live: true, href: '/event', image: shoot.eventNightCrowd, alt: 'SPOG Event trailer lit up at night with a crowd on the lawn', position: '30% 62%', look: 'event', size: 8.4 },
   { id: 'garage', name: 'Garage', category: 'Enclosed car hauler', status: 'Coming next', live: false, image: img.garageEv, alt: 'Electric car inside a lit SPOG Garage trailer', position: '55% 50%', look: 'garage', size: 8.4 },
   { id: 'relief', name: 'Disaster Relief', category: 'Emergency power', status: 'Coming next', live: false, image: img.disasterSolar, alt: 'SPOG Disaster Relief trailer with solar panels deployed at a damaged site', position: '50% 50%', look: 'relief', size: 7.4 },
   { id: 'camper', name: 'Camper', category: 'Off-grid camper', status: 'Coming next', live: false, image: img.camperCampfire, alt: 'SPOG Camper trailer by a campfire in the mountains', position: '68% 55%', look: 'camper', size: 9.6 },
@@ -60,10 +60,8 @@ export const cards: {
 /**
  * What every SPOG shares (Nate's five: power, freedom, utility, quality, American made), as
  * feature cards after Rivian, Tesla and Pebble (see FeatureCards.astro). Shared facts only,
- * no specs for one trailer, per the homepage rule. Any SPOG photo is honest here, because the
- * values apply to every trailer. Quality and American made are plates (type, no photo): the
- * open-wall trailer already shows in the Freedom crop, and Built right below uses the shop
- * floor. Swap in Robert's shots when they exist.
+ * no specs for one trailer, per the homepage rule. Photos are Nate's (2026-11-17). Any SPOG
+ * photo is honest here, because the values apply to every trailer.
  */
 export const valuesHead = {
   kicker: 'Every SPOG', // NEW
@@ -75,9 +73,9 @@ export const values: Feature[] = [
     id: 'power',
     title: 'Power',
     line: 'Up to 100 kWh on board.', // SOURCE (homepage numbers)
-    image: img.cardWing,
-    alt: 'Solar panel raised on the roof of a SPOG trailer',
-    position: '50% 30%',
+    image: shoot.wsAerialMast,
+    alt: 'SPOG trailer from above, solar panels across the roof',
+    position: '50% 50%',
     panel: {
       intro: 'Every SPOG carries its own solar and battery. The panels refill the battery wherever the trailer parks.', // NEW
       stats: [['Battery across the lineup', 'Up to 100 kWh']], // SOURCE (homepage numbers)
@@ -87,9 +85,9 @@ export const values: Feature[] = [
     id: 'freedom',
     title: 'Freedom',
     line: 'Works wherever you park it.', // NEW
-    image: img.statementBg,
-    alt: 'SPOG trailer parked under a red rock wall with its side opened',
-    position: '80% 50%',
+    image: shoot.wsRuralSunset,
+    alt: 'SPOG trailer parked by a farm field at sunset',
+    position: '40% 50%',
     panel: {
       intro: 'No hookup and no fuel run. Pull in, open the panels and the power is already there.', // NEW, from the homepage statement
     },
@@ -98,9 +96,9 @@ export const values: Feature[] = [
     id: 'utility',
     title: 'Utility',
     line: 'Built to work.', // NEW
-    image: '/images/bg-built-side-panel.jpg',
-    alt: 'Side of a SPOG trailer with a spare tire and a gear rail',
-    position: '40% 50%',
+    image: shoot.wsLotMastSide,
+    alt: 'White SPOG trailer on a lot with its mast raised',
+    position: '58% 60%',
     panel: {
       intro: 'Built to work, from the job site to the campsite. Each trailer is laid out for the people who use it.', // NEW
     },
@@ -108,10 +106,12 @@ export const values: Feature[] = [
   {
     id: 'quality',
     title: 'Quality',
-    line: 'Service that comes to you.', // SOURCE (v2 pillar line, guarantees)
-    plate: { mark: ['3-year', 'structural', 'warranty'] }, // SOURCE (guarantees)
+    line: 'Engineered before it\'s built.', // NEW, from Nate's photo label
+    image: shoot.engineeringCad,
+    alt: 'Engineer working on a trailer frame in CAD',
+    position: '30% 50%',
     panel: {
-      intro: 'Every SPOG is built to last, and backed after it leaves the shop.', // NEW
+      intro: 'Every SPOG is engineered in CAD before it\'s built, then backed by a 3-year structural warranty and service that comes to you.', // NEW, facts SOURCE (guarantees, Nate's photo label)
       points: guarantees.slice(0, 3).map((g) => ({ title: g.title, body: g.body })), // SOURCE (guarantees)
     },
   },
@@ -119,7 +119,9 @@ export const values: Feature[] = [
     id: 'made',
     title: 'American made',
     line: 'Built in Middletown, New York.', // SOURCE (Built)
-    plate: { mark: ['41.45\u00b0 N', '74.42\u00b0 W'] }, // Middletown, New York
+    image: shoot.shopWelding,
+    alt: 'Welder joining a steel trailer frame in the SPOG shop',
+    position: '35% 50%',
     panel: {
       intro: 'Welded, wired and finished in Middletown, New York.', // NEW, fact SOURCE (Built)
       link: { label: 'Meet the shop', href: '#built' }, // NEW

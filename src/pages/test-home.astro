@@ -9,6 +9,7 @@ import Close from '../components/sections/Close.astro';
 import Footer from '../components/sections/Footer.astro';
 import MobileBar from '../components/sections/MobileBar.astro';
 import { hero, values, valuesHead } from '../data/testHome';
+import { shoot } from '../data/content';
 ---
 <!--
   TEST HOMEPAGE v2 (draft, 2026-11-17). The live homepage at / is untouched. Not indexed.
@@ -34,7 +35,7 @@ import { hero, values, valuesHead } from '../data/testHome';
   <TestHero />
   <LineupCards />
   <FeatureCards id="values" label="What every SPOG is built on" kicker={valuesHead.kicker} heading={valuesHead.heading} features={values} tone="dark" />
-  <Built />
+  <Built image={shoot.wsFlagShop} position="62% 50%" />
   <Close heading={hero.heading as [string, string]} />
   <Footer />
   <MobileBar />

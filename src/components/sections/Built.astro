@@ -2,11 +2,14 @@
 import Button from '../ui/Button.astro';
 import Eyebrow from '../ui/Eyebrow.astro';
 import { img } from '../../data/content';
+// `image` lets the test homepage try a new photo. The default keeps the live homepage as it is.
+interface Props { image?: string; position?: string }
+const { image = img.builtBg, position } = Astro.props;
 ---
 <!-- PHOTO: Middletown shop floor, welder or electrician at work. 4:5 portrait, sits on the right. -->
 <section id="built" class="grain relative flex min-h-[88vh] items-center overflow-hidden bg-night">
   <div class="drift absolute inset-y-0 right-0 z-0 w-[68%] overflow-hidden max-[760px]:w-full" aria-hidden="true">
-    <img src={img.builtBg} alt="" class="fade-left grade-built size-full object-cover object-[40%_50%] max-[760px]:[mask-image:none] max-[760px]:[-webkit-mask-image:none]" />
+    <img src={image} alt="" style={position ? `object-position:${position}` : undefined} class:list={["fade-left grade-built size-full object-cover", !position && "object-[40%_50%]", "max-[760px]:[mask-image:none] max-[760px]:[-webkit-mask-image:none]"]} />
   </div>
   <div class="scrim-built absolute inset-0 z-[1]"></div>
 

@@ -23,6 +23,8 @@ export interface Feature {
     media?: { src: string; alt: string; width: number; height: number; natural?: boolean };
     stats?: [string, string][];
     points?: { title: string; body: string }[];
+    /** More photos under the detail, two across, as in Rivian's panels. */
+    more?: { src: string; alt: string; position?: string }[];
     link?: { label: string; href: string };
   };
 }

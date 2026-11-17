@@ -2,16 +2,18 @@
 import Button from '../ui/Button.astro';
 import WorkTitle from './WorkTitle.astro';
 import { remote } from '../../data/workstationPage';
-// The second buyer (remote workers), kept to one quiet band after the GC story so it doesn't
-// pull focus. Links to its own landing page once that exists.
+import { srcset } from '../../data/content';
+// The second buyer (remote workers), kept to one band after the GC story so it doesn't pull
+// focus: a big photo and a short pitch. Links to its own landing page once that exists.
 ---
-<section id="remote" aria-label="Remote office" class="border-t border-stone-2 bg-stone pb-[100px] pt-[100px] text-ink max-[640px]:pb-16 max-[640px]:pt-16">
-  <div class="wrap flex flex-wrap items-end justify-between gap-x-16 gap-y-8">
-    <WorkTitle kicker={remote.kicker} lines={remote.heading} size="md" />
-    <div class="max-w-[440px]">
-      <p class="m-0 text-[17px] leading-[1.6] text-ink-soft">{remote.body}</p>
+<section id="remote" aria-label="Remote office" class="border-t border-stone-2 bg-stone pb-[120px] pt-[120px] text-ink max-[640px]:pb-16 max-[640px]:pt-16">
+  <div class="wrap grid grid-cols-[minmax(0,7fr)_minmax(0,5fr)] items-center gap-16 max-[900px]:grid-cols-[minmax(0,1fr)] max-[900px]:gap-10">
+    <img src={remote.image} srcset={srcset(remote.image)} sizes="(max-width: 900px) 100vw, 56vw" alt={remote.alt} loading="lazy" class="block aspect-[3/2] w-full rounded-[18px] object-cover max-[640px]:rounded-[14px]" />
+    <div>
+      <WorkTitle kicker={remote.kicker} lines={remote.heading} size="md" />
+      <p class="mb-0 mt-6 max-w-[440px] text-[17px] leading-[1.6] text-ink-soft">{remote.body}</p>
       <!-- PLACEHOLDER: point at the remote office landing page once it's built. -->
-      <Button href={remote.href} variant="ink" class="mt-6">{remote.cta}</Button>
+      <Button href={remote.href} variant="ink" class="mt-7">{remote.cta}</Button>
     </div>
   </div>
 </section>

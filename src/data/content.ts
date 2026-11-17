@@ -32,6 +32,43 @@ export const img = {
   statementPoster: '/images/statement-solar-unfold.jpg',
 };
 
+/**
+ * Real SPOG photos Nate added on 2026-11-17. Each is a 2400 px web copy with a `-1200` copy
+ * next to it for cards and phones (see `small`). Full-size originals are in _photos-original/
+ * (git-ignored). Held back on purpose: the Joby hangar shot (needs Joby's written permission),
+ * a navy Workstation with a customer's BSW branding (needs their permission) and an Event
+ * render with a basketball broadcast on the screen (rights).
+ */
+export const shoot = {
+  wsHeroVideo: '/images/ws-hero-drone.mp4', // 10 s drone loop, cut from 0:10 to 0:20 where the clip has no burned-in text
+  wsHeroPoster: '/images/ws-hero-drone.jpg',
+  wsAerialMast: '/images/ws-aerial-mast.jpg', // from above: roof solar, mast up, parking lot
+  wsLotMastSide: '/images/ws-lot-mast-side.jpg', // side view on a lot, mast up, blue sky
+  wsMastTall: '/images/ws-mast-tall.jpg', // portrait, telescopic mast fully extended
+  wsSecurityMast: '/images/ws-security-mast-closeup.jpg', // lights and cameras on the mast, in the shop
+  wsStarlink: '/images/ws-starlink.jpg', // Starlink dish and cameras on the mast
+  wsHvac: '/images/ws-hvac.jpg', // heat and AC unit in a side compartment
+  wsInteriorOffice: '/images/ws-interior-office.jpg', // finished office, desks and monitors
+  wsInteriorBase: '/images/ws-interior-base.jpg', // plywood interior, rubber floor
+  wsInteriorPremium: '/images/ws-interior-premium.jpg', // wood walls, warm LED trim
+  wsGenerator: '/images/ws-generator-hookup.jpg', // portable generator plugged into the trailer
+  wsRuralSunset: '/images/ws-rural-sunset.jpg', // dark trailer at sunset by a farm field
+  wsDusk: '/images/ws-dusk.jpg', // dark trailer at dusk. A Tesla Cybertruck is in the frame.
+  wsNavyStudio: '/images/ws-navy-studio.jpg', // navy Workstation in the shop, side view
+  wsNavyDoors: '/images/ws-navy-doors-open.jpg', // navy Workstation, doors open
+  wsFlagShop: '/images/ws-flag-shop.jpg', // white Workstation in the shop under an American flag
+  wsWarehouseMast: '/images/ws-warehouse-mast.jpg', // white Workstation with mast in the NY shop
+  shopWelding: '/images/shop-welding.jpg', // welder at work, built by hand in America
+  engineeringCad: '/images/engineering-cad.jpg', // engineer at CAD screens, trailer frame
+  eventDayWings: '/images/event-day-wings.jpg', // Event trailer, wings open, daytime
+  eventNightCrowd: '/images/event-night-crowd.jpg', // Event trailer lit at night, crowd on the lawn. Screen faces away.
+};
+
+/** The 1200 px copy of a photo from `shoot`, for cards and phones. Older images have none. */
+export const small = (src: string) => (Object.values(shoot).includes(src) && src.endsWith('.jpg') ? src.replace(/\.jpg$/, '-1200.jpg') : src);
+/** srcset for a `shoot` photo (1200 and 2400 px), or undefined for older single-size images. */
+export const srcset = (src: string) => (small(src) !== src ? `${small(src)} 1200w, ${src} 2400w` : undefined);
+
 export const phone = { display: '1 (855) 720-2290', href: 'tel:18557202290' };
 
 // Absolute paths so the nav works on the homepage and the product pages.

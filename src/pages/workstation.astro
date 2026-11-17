@@ -5,6 +5,8 @@ import ProductSubnav from '../components/product/ProductSubnav.astro';
 import WorkHero from '../components/work/WorkHero.astro';
 import FeatureCards from '../components/features/FeatureCards.astro';
 import WorkEquation from '../components/work/WorkEquation.astro';
+import WorkOptions from '../components/work/WorkOptions.astro';
+import WorkPhoto from '../components/work/WorkPhoto.astro';
 import ProductPower from '../components/product/ProductPower.astro';
 import ProductSize from '../components/product/ProductSize.astro';
 import WorkRemote from '../components/work/WorkRemote.astro';
@@ -13,7 +15,7 @@ import Faq from '../components/sections/Faq.astro';
 import Footer from '../components/sections/Footer.astro';
 import MobileBar from '../components/sections/MobileBar.astro';
 import { productFaqs } from '../data/productPages';
-import { ws, page, close, subnavLinks, features, featuresHead } from '../data/workstationPage';
+import { ws, page, close, subnavLinks, features, featuresHead, showcase, statement } from '../data/workstationPage';
 ---
 <!--
   WORKSTATION PAGE (2026-11-17). Written for general contractors and subs. Its own page,
@@ -26,8 +28,12 @@ import { ws, page, close, subnavLinks, features, featuresHead } from '../data/wo
   sections with a lot of space for the pitch (Ring), one dark chapter for the numbers (Cybertruck).
 
   Order and rhythm (never two photo sections next to each other):
-    Hero P, Feature cards L (white), What it replaces L (stone),
-    Power D, Size + Specs D, Remote office L (stone), Close D, FAQ L, Footer D
+    Hero P (drone video), Feature cards L (white), Showcase P (navy Workstation in the shop),
+    What it replaces L (stone), Options L (white, big photo rows), Power D,
+    Statement P ("Powering the Builders of America."), Size + Specs D,
+    Remote office L (stone, big photo), Close D, FAQ L, Footer D
+  Photos run big, as on the reference pages (Nate, 2026-11-17), for the product, the
+  features and the add-ons.
   The feature cards follow Rivian's "Get to know", Tesla's "Meet Model Y" and Pebble's feature
   section (2026-11-17). They replaced the Ring-style outcome row and the Inside section.
 
@@ -38,8 +44,11 @@ import { ws, page, close, subnavLinks, features, featuresHead } from '../data/wo
   <ProductSubnav page={page} links={subnavLinks} />
   <WorkHero />
   <FeatureCards id="overview" label="Get to know Workstation" kicker={featuresHead.kicker} heading={featuresHead.heading} features={features} look="work" tone="light" />
+  <WorkPhoto image={showcase.image} alt={showcase.alt} position={showcase.position} caption={showcase.caption} />
   <WorkEquation />
+  <WorkOptions />
   <ProductPower page={page} look="work" />
+  <WorkPhoto image={statement.image} alt={statement.alt} position={statement.position} heading={statement.heading} align="top" />
   <ProductSize page={page} look="work" />
   <WorkRemote />
   <Close trailer="Workstation" heading={close} />

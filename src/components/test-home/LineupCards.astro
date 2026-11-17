@@ -5,6 +5,7 @@ import { cards, wordmark, firstWordDialog } from '../../data/testHome';
 // photo grade and the name. Swipe or use the arrows. Coming-next cards open a small signup.
 const btn = 'inline-flex h-[44px] items-center justify-center border-[1.5px] px-[22px] text-[11.5px] font-bold uppercase leading-[normal] tracking-[.2em] no-underline cursor-pointer max-[560px]:flex-1 max-[560px]:px-3';
 const field = 'h-[52px] w-full rounded-[10px] border border-panel-line bg-black px-4 text-[16px] text-white placeholder:text-[#8a8a8a] focus-visible:border-gold';
+import { srcset } from '../../data/content';
 ---
 <section id="lineup" aria-label="The lineup" class="bg-stone pb-16 pt-12 max-[640px]:pb-12 max-[640px]:pt-8">
   <div class="relative">
@@ -13,7 +14,7 @@ const field = 'h-[52px] w-full rounded-[10px] border border-panel-line bg-black 
         const studio = c.look === 'studio';
         return (
           <li class="@container relative aspect-[16/9] w-[min(1000px,68vw)] shrink-0 snap-start overflow-hidden rounded-[18px] bg-night max-[760px]:aspect-[4/5] max-[760px]:w-[86vw]" data-card data-look={c.look}>
-            <img src={c.image} alt={c.alt} loading="lazy" style={`object-position:${c.position}`} class="lc-img absolute inset-0 size-full object-cover" />
+            <img src={c.image} srcset={srcset(c.image)} sizes="(max-width: 760px) 86vw, min(1000px, 68vw)" alt={c.alt} loading="lazy" style={`object-position:${c.position}`} class="lc-img absolute inset-0 size-full object-cover" />
             <div class="lc-scrim absolute inset-0"></div>
             {c.look === 'relief' && (
               <div class="pointer-events-none absolute inset-[18px]" aria-hidden="true">

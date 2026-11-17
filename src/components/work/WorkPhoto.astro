@@ -1,0 +1,24 @@
+---
+import { srcset } from '../../data/content';
+/**
+ * Full-width photo break in the work look, as big as the reference pages run them. Either a
+ * heading (heavy uppercase, bottom left) or a small caption. Never put two of these, or any
+ * other photo section, next to each other.
+ */
+// align: where the words sit. "top" puts a heading in the sky when the subject fills the bottom.
+interface Props { id?: string; image: string; alt: string; position?: string; heading?: string; caption?: string; align?: 'top' | 'bottom' }
+const { id, image, alt, position = '50% 50%', heading, caption, align = 'bottom' } = Astro.props;
+const top = align === 'top';
+---
+<section id={id} aria-label={heading ?? caption ?? alt} class:list={["relative flex h-[min(94vh,980px)] min-h-[540px] overflow-hidden", top ? "items-start" : "items-end", " bg-night text-white max-[640px]:h-[78svh] max-[640px]:min-h-[460px]"]}>
+  <img src={image} srcset={srcset(image)} sizes="100vw" alt={alt} loading="lazy" class="absolute inset-0 size-full object-cover" style={`object-position:${position}`} />
+  <div class:list={['absolute inset-0', top ? 'bg-[linear-gradient(to_bottom,rgb(0_0_0/.5)_0%,rgb(0_0_0/.12)_34%,rgb(0_0_0/0)_50%)]' : heading ? 'bg-[linear-gradient(to_top,rgb(0_0_0/.72)_0%,rgb(0_0_0/.25)_38%,rgb(0_0_0/0)_60%)]' : 'bg-[linear-gradient(to_top,rgb(0_0_0/.45)_0%,rgb(0_0_0/0)_28%)]']}></div>
+  <div class:list={['wrap relative z-[2] w-full', top ? 'pt-[120px] max-[640px]:pt-[90px]' : 'pb-14 max-[640px]:pb-10']}>
+    {heading && <h2 class="m-0 max-w-[1100px] text-[clamp(38px,5.6vw,88px)] font-black uppercase leading-[.9] tracking-[-.05em]">{heading}</h2>}
+    {caption && (
+      <span class="flex items-center gap-3 text-[11.5px] font-semibold uppercase tracking-[.24em] text-white/80">
+        <i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>{caption}
+      </span>
+    )}
+  </div>
+</section>

@@ -1,0 +1,40 @@
+---
+import WorkTitle from './WorkTitle.astro';
+import { options, optionsHead } from '../../data/workstationPage';
+import { small, srcset } from '../../data/content';
+// Options and add-ons, after the accessory sections on the Rivian and Tesla pages: one big
+// photo per option, alternating sides, with a short line next to it. The photo takes two
+// thirds of the row so the add-on is the first thing you see.
+---
+<section id="options" aria-label="Options" class="bg-white pb-[140px] pt-[130px] text-ink max-[640px]:pb-20 max-[640px]:pt-20">
+  <div class="wrap">
+    <WorkTitle kicker={optionsHead.kicker} lines={optionsHead.heading} />
+  </div>
+  <div class="wrap mt-16 grid gap-[110px] max-[900px]:mt-12 max-[900px]:gap-16">
+    {options.map((o, i) => (
+      <article class:list={['grid items-center gap-x-16 gap-y-8 max-[900px]:grid-cols-[minmax(0,1fr)]', i % 2 ? 'grid-cols-[minmax(0,4fr)_minmax(0,8fr)]' : 'grid-cols-[minmax(0,8fr)_minmax(0,4fr)]']}>
+        <div class:list={['grid gap-3', o.more && 'grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] max-[640px]:grid-cols-[minmax(0,1fr)]', i % 2 && 'min-[901px]:order-2']}>
+          <img
+            src={o.image}
+            srcset={srcset(o.image)}
+            sizes="(max-width: 900px) 100vw, 62vw"
+            alt={o.alt}
+            loading="lazy"
+            class="block aspect-[4/3] h-full w-full rounded-[18px] object-cover max-[640px]:rounded-[14px]"
+            style={`object-position:${o.position}`}
+          />
+          {o.more && (
+            <img src={small(o.more.src)} alt={o.more.alt} loading="lazy" class="block h-full w-full rounded-[18px] object-cover max-[640px]:hidden" />
+          )}
+        </div>
+        <div>
+          <span class="flex items-center gap-3 text-[11.5px] font-semibold uppercase tracking-[.24em] text-ink-soft">
+            <i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>Option
+          </span>
+          <h3 class="m-0 mt-5 text-[clamp(30px,3vw,44px)] font-black uppercase leading-[.92] tracking-[-.045em] text-coal">{o.title}</h3>
+          <p class="mb-0 mt-5 max-w-[400px] text-[17px] leading-[1.6] text-ink-soft">{o.body}</p>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

@@ -5,12 +5,16 @@ import { hero, ws } from '../../data/workstationPage';
 // Work look hero: warm daylight photo, the name set huge in heavy uppercase (same type as the
 // lineup card on the test homepage), the promise, two actions and the three numbers a GC asks
 // about first, Cybertruck style along the bottom. id="top" drives the floating section bar.
+// The background is Nate's drone loop. The poster shows for reduced motion.
 ---
 <section id="top" aria-label={ws.name} class="grain relative flex min-h-[max(100svh,720px)] items-end overflow-hidden bg-night pb-14 pt-[150px] text-white max-[640px]:min-h-[100svh] max-[640px]:pb-10 max-[640px]:pt-[130px]">
-  <div class="absolute inset-0">
-    <img src={hero.image} alt={hero.alt} fetchpriority="high" class="size-full object-cover object-[60%_62%] brightness-[.74] sepia-[.14] contrast-[1.1] saturate-[.9]" />
-  </div>
-  <div class="absolute inset-0 z-[1] bg-[linear-gradient(to_top,rgb(0_0_0/.9)_0%,rgb(0_0_0/.6)_40%,rgb(0_0_0/.22)_72%,rgb(0_0_0/.1)_100%),linear-gradient(to_bottom,rgb(0_0_0/.55)_0%,rgb(0_0_0/0)_22%)]"></div>
+  <video
+    class="absolute inset-0 size-full object-cover object-[50%_55%] brightness-[.7] contrast-[1.06]"
+    autoplay muted loop playsinline preload="metadata" poster={hero.poster} aria-label={hero.alt} data-motion-video
+  >
+    <source src={hero.video} type="video/mp4" />
+  </video>
+  <div class="absolute inset-0 z-[1] bg-[linear-gradient(to_top,rgb(0_0_0/.9)_0%,rgb(0_0_0/.6)_40%,rgb(0_0_0/.22)_72%,rgb(0_0_0/.1)_100%),linear-gradient(to_right,rgb(0_0_0/.5)_0%,rgb(0_0_0/0)_55%),linear-gradient(to_bottom,rgb(0_0_0/.55)_0%,rgb(0_0_0/0)_22%)]"></div>
 
   <div class="wrap relative z-[3] w-full @container">
     <Eyebrow gold={hero.eyebrow.gold} text={hero.eyebrow.text} />
@@ -36,3 +40,9 @@ import { hero, ws } from '../../data/workstationPage';
     </div>
   </div>
 </section>
+
+<script>
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll<HTMLVideoElement>('[data-motion-video]').forEach((v) => { v.removeAttribute('autoplay'); v.pause(); });
+  }
+</script>
