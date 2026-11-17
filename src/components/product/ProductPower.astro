@@ -7,8 +7,10 @@ import { formatHours, runHours } from '../../scripts/runtime';
 // Replaces Rivian's drive-modes section. The shared SPOG message is the power system, so this
 // section shows what the battery runs. Figures are SPOG's own runtime guide, shown as stat
 // tiles instead of bars because they range from under 2 hours to hundreds.
-interface Props { page: ProductPage }
-const { page } = Astro.props;
+// look="work" sets the heading in the heavy uppercase of the Cargo and Workstation pages.
+interface Props { page: ProductPage; look?: 'default' | 'work' }
+const { page, look = 'default' } = Astro.props;
+const work = look === 'work' ? 'font-black! uppercase leading-[.92]! tracking-[-.045em]!' : '';
 const p = lineupEntry(page.id);
 const headline = (p.stats as [string, string][]).filter(([k]) => k === 'Battery' || k === 'Solar up to');
 const { batteries, defaultBattery } = page.power;
@@ -20,7 +22,7 @@ const cols = list.length === 4 ? 'grid-cols-[repeat(4,1fr)] max-[1100px]:grid-co
     <div class="grid grid-cols-[repeat(2,1fr)] items-end gap-14 max-[900px]:grid-cols-[repeat(1,1fr)] max-[900px]:gap-10">
       <div>
         <Eyebrow gold="Power" text="One system across the lineup" />
-        <Heading class="mt-4 text-white">What it runs.</Heading>
+        <Heading class={work ? `mt-4 text-white ${work}` : "mt-4 text-white"}>What it runs.</Heading>
         <p class="mb-0 mt-[18px] max-w-[460px] text-[19px] text-mute">Pick a battery size to see how long each one runs on a full charge.</p>
       </div>
       <dl class="m-0 flex flex-wrap gap-y-6 border-t border-line">

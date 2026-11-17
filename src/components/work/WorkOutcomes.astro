@@ -1,0 +1,17 @@
+---
+import Icon from '../ui/Icon.astro';
+import { outcomes } from '../../data/workstationPage';
+// After Ring's benefit row: four outcomes, a thin line icon each, centered, a lot of air.
+---
+<section id="overview" aria-labelledby="overview-title" class="bg-white pb-[110px] pt-[120px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
+  <h2 id="overview-title" class="sr-only">Why crews run the job from a Workstation</h2>
+  <ul class="wrap m-0 grid list-none grid-cols-[repeat(4,1fr)] gap-x-10 gap-y-14 p-0 max-[1000px]:grid-cols-[repeat(2,1fr)] max-[520px]:grid-cols-[repeat(1,1fr)] max-[520px]:gap-y-11">
+    {outcomes.map((o) => (
+      <li class="flex flex-col items-center text-center">
+        <Icon name={o.icon} class="size-10 stroke-coal stroke-[1.4]" />
+        <b class="mt-5 block text-[17px] font-bold tracking-[-.01em] text-coal">{o.title}</b>
+        <span class="mt-2 block max-w-[250px] text-[15px] leading-[1.6] text-ink-soft">{o.body}</span>
+      </li>
+    ))}
+  </ul>
+</section>

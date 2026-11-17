@@ -1,0 +1,26 @@
+---
+/**
+ * Section title in the work look (Cargo and Workstation): a gold bar and a small kicker, then
+ * the heading in heavy uppercase. The gold is the bar only, because gold text on white is too
+ * light to read.
+ * size: "lg" for chapter openers, "md" for quieter bands.
+ */
+interface Props { kicker?: string; lines: string[]; as?: 'h2' | 'h3'; size?: 'lg' | 'md'; tone?: 'light' | 'dark'; class?: string }
+const { kicker, lines, as: Tag = 'h2', size = 'lg', tone = 'light', class: extra = '' } = Astro.props;
+const sizes = { lg: 'text-[clamp(36px,4.6vw,66px)]', md: 'text-[clamp(30px,3.2vw,46px)]' };
+---
+<div class={extra}>
+  {kicker && (
+    <span class:list={['flex items-center gap-3 text-[11.5px] font-semibold uppercase tracking-[.24em]', tone === 'light' ? 'text-ink-soft' : 'text-mute']}>
+      <i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>{kicker}
+    </span>
+  )}
+  <Tag class:list={[
+    'm-0 font-black uppercase leading-[.92] tracking-[-.045em]',
+    kicker && 'mt-5',
+    sizes[size],
+    tone === 'light' ? 'text-coal' : 'text-white',
+  ]}>
+    {lines.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}
+  </Tag>
+</div>

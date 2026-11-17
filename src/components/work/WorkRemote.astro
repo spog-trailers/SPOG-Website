@@ -1,0 +1,17 @@
+---
+import Button from '../ui/Button.astro';
+import WorkTitle from './WorkTitle.astro';
+import { remote } from '../../data/workstationPage';
+// The second buyer (remote workers), kept to one quiet band after the GC story so it doesn't
+// pull focus. Links to its own landing page once that exists.
+---
+<section id="remote" aria-label="Remote office" class="border-t border-stone-2 bg-stone pb-[100px] pt-[100px] text-ink max-[640px]:pb-16 max-[640px]:pt-16">
+  <div class="wrap flex flex-wrap items-end justify-between gap-x-16 gap-y-8">
+    <WorkTitle kicker={remote.kicker} lines={remote.heading} size="md" />
+    <div class="max-w-[440px]">
+      <p class="m-0 text-[17px] leading-[1.6] text-ink-soft">{remote.body}</p>
+      <!-- PLACEHOLDER: point at the remote office landing page once it's built. -->
+      <Button href={remote.href} variant="ink" class="mt-6">{remote.cta}</Button>
+    </div>
+  </div>
+</section>

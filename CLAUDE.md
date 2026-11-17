@@ -22,6 +22,9 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 | `src/pages/test-home.astro` | Draft homepage at `/test-home` with a look per buyer (see "Test homepage"). Not indexed. Rhythm map in the top comment. |
 | `src/components/test-home/`, `src/data/testHome.ts` | Test homepage sections and their copy. Every line is marked NEW or SOURCE. |
 | `docs/homepage-teardown-2026-11-16.md` | Competitor research behind the current section order |
+| `src/pages/test-workstation.astro` | Draft Workstation page at `/test-workstation`, written for GCs (see "Workstation page draft"). Not indexed. Rhythm in the top comment. |
+| `src/components/work/`, `src/data/workstationPage.ts` | The work look (Cargo and Workstation) and the Workstation draft's copy. Every line is marked NEW, SOURCE or PLACEHOLDER. |
+| `docs/product-page-teardown-workstation-2026-11-17.md` | Ring Jobsite Security, Cybertruck, Rivian R2 and R1S research behind the Workstation draft |
 | `src/pages/[product].astro` | Product pages at `/cargo`, `/workstation`, `/event`, one template. Section order and rhythm in the comment at the top. |
 | `src/data/productPages.ts` | Product page content: hero, feature tiles, runtime devices, statement photo, lengths. Every line is marked NEW, SOURCE or PLACEHOLDER. |
 | `src/components/product/` | Product page sections (Hero, Subnav, Overview, Power, Statement, Size, Lineup). Close, Faq, Nav, Footer and MobileBar are shared with the homepage. |
@@ -71,6 +74,22 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
   - **Camper:** natural light, sentence case.
 - Coming-next cards have no Reserve. "Get first word" opens a small signup dialog with the trailer picked. Reserve on a card preselects that trailer in the walkthrough form.
 - Nate liked the v1 Garage and Disaster Relief looks. The v1 showcases (`Show*.astro`, `SpecPlate`) are held, unrendered, as starting points for the product pages.
+
+## Workstation page draft (2026-11-17)
+
+- `/test-workstation` is the first page written for one buyer (GCs and subs). The live `/workstation` still uses the shared template and is untouched. On the test homepage, the Workstation card's "Learn more" points at the draft (marked TEMPORARY in `testHome.ts`).
+- References from Nate:
+  - Rivian R1T, R2 and R1S.
+  - Tesla Cybertruck.
+  - Ring Jobsite Security, which he loves for being "simple. Lots of whitespace. Very clean."
+- **The work look**, shared with Cargo later:
+  - heavy uppercase headings with a gold bar before a small gray label (`WorkTitle`)
+  - mostly light sections with a lot of space
+  - one dark chapter for the numbers
+  - gold is never used as text on white, because it's too light to read
+- **Order:** Hero (name, promise, three stats), Outcomes (Ring's four columns), What it replaces (the "One trailer. Three problems solved." sum), Inside (render plus a list where each row opens), Power, Size and Specs, Remote office band, Close ("Open on day one."), FAQ.
+- **Shared sections take props with safe defaults.** `ProductSubnav` takes `links`, and `ProductPower` and `ProductSize` take `look="work"`. Without them, the live product pages render exactly as before.
+- **Runtime devices** on this page are computer, light tower, saw and welder. The fridge is left off because it has the same draw as the computer, so it shows the same hours.
 
 ## Planned sitemap (Nate, 2026-11-17, not built yet)
 
@@ -137,6 +156,7 @@ Everything below was invented for the mockup and must be replaced with real, app
 - Product page photos: Cargo and Workstation statement photos are Red Rocks placeholders (the Cargo one may not show a Cargo). The Event dusk render shows a video game on the screen, so check rights or swap the screen image.
 - The Garage render (`garage-ev-inside.jpg`) shows a Tesla Model S inside. Swap it for a neutral car before launch.
 - Test homepage: every line marked NEW in `testHome.ts`, including the card categories, status lines and the five pillars.
+- Workstation draft: every line marked NEW in `workstationPage.ts`. The Security tile and the cameras row are PLACEHOLDER SOURCE (old site), so confirm cameras are offered. The remote office button opens the walkthrough form until its landing page exists. The interior render is only 695 px wide, so replace it with a real interior photo.
 - Specs conflict between this site and spogtrailers.com (Cargo 8 to 35 ft, 5 to 64 kWh and up to 5,000W on the old site). The homepage numbers are used until the official spec sheet settles it.
 
 ## Photography needed (Robert's shot list)

@@ -1,0 +1,37 @@
+---
+import Icon from '../ui/Icon.astro';
+import WorkTitle from './WorkTitle.astro';
+import { inside } from '../../data/workstationPage';
+// Ring's product block: the picture on one side, a short pitch and a list of what's inside on
+// the other, each row opening to one line. The render is small (695 px wide), so it sits in a
+// frame at its own size instead of running full width.
+---
+<section id="inside" aria-label="Inside the office" class="bg-white pb-[130px] pt-[130px] text-ink max-[640px]:pb-20 max-[640px]:pt-20">
+  <div class="wrap grid grid-cols-[minmax(0,6fr)_minmax(0,5fr)] items-center gap-20 max-[1000px]:grid-cols-[minmax(0,1fr)] max-[1000px]:gap-12">
+    <figure class="m-0 rounded-[18px] bg-stone p-4 max-[640px]:p-2.5">
+      <img src={inside.image} alt={inside.alt} loading="lazy" width="695" height="360" class="block aspect-[695/360] h-auto w-full rounded-[10px] object-cover" />
+      <figcaption class="flex items-center gap-3 px-1.5 pb-0.5 pt-4 text-[11px] font-semibold uppercase tracking-[.22em] text-ink-soft">
+        <i class="block h-[3px] w-[18px] bg-gold" aria-hidden="true"></i>{inside.caption}
+      </figcaption>
+    </figure>
+
+    <div>
+      <WorkTitle kicker={inside.kicker} lines={inside.heading} size="md" />
+      <p class="mb-0 mt-6 max-w-[460px] text-[17px] leading-[1.6] text-ink-soft">{inside.body}</p>
+      <ul class="m-0 mt-9 list-none border-t border-stone-2 p-0">
+        {inside.rows.map((r) => (
+          <li class="border-b border-stone-2">
+            <details class="ws-row group">
+              <summary class="flex cursor-pointer list-none items-center gap-4 py-[15px] text-[15.5px] font-semibold text-coal [&::-webkit-details-marker]:hidden">
+                <Icon name={r.icon} class="size-[22px] shrink-0 stroke-coal stroke-[1.6]" />
+                <span class="flex-1">{r.title}</span>
+                <svg viewBox="0 0 24 24" class="size-[18px] shrink-0 fill-none stroke-ink-soft stroke-2 transition-transform duration-200 group-open:rotate-180" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+              </summary>
+              <p class="m-0 pb-[18px] pl-[38px] pr-8 text-[15px] leading-[1.6] text-ink-soft">{r.body}</p>
+            </details>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

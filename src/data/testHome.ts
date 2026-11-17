@@ -49,7 +49,7 @@ export const cards: {
   image: string; alt: string; position: string; look: Look; size: number;
 }[] = [
   { id: 'cargo', name: 'Cargo', category: 'Utility trailer', status: 'Available now', live: true, href: '/cargo', image: img.cargoFront, alt: 'SPOG Cargo trailer from the front, solar roof and light mast', position: '50% 50%', look: 'studio', size: 10 },
-  { id: 'workstation', name: 'Workstation', category: 'Mobile office', status: 'Available now', live: true, href: '/workstation', image: img.hero, alt: 'SPOG Workstation trailers on a lot at sunrise, solar wings open', position: '62% 62%', look: 'work', size: 7.6 },
+  { id: 'workstation', name: 'Workstation', category: 'Mobile office', status: 'Available now', live: true, href: '/test-workstation' /* TEMPORARY: draft page. Back to /workstation once chosen. */, image: img.hero, alt: 'SPOG Workstation trailers on a lot at sunrise, solar wings open', position: '62% 62%', look: 'work', size: 7.6 },
   { id: 'event', name: 'Event', category: 'LED screen trailer', status: 'Buy it or rent it', live: true, href: '/event', image: img.eventMovieNight, alt: 'Crowd on a lawn at night watching a movie on a SPOG Event trailer', position: '30% 64%', look: 'event', size: 8.4 },
   { id: 'garage', name: 'Garage', category: 'Enclosed car hauler', status: 'Coming next', live: false, image: img.garageEv, alt: 'Electric car inside a lit SPOG Garage trailer', position: '55% 50%', look: 'garage', size: 8.4 },
   { id: 'relief', name: 'Disaster Relief', category: 'Emergency power', status: 'Coming next', live: false, image: img.disasterSolar, alt: 'SPOG Disaster Relief trailer with solar panels deployed at a damaged site', position: '50% 50%', look: 'relief', size: 7.4 },

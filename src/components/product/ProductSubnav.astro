@@ -4,10 +4,11 @@ import { lineupEntry, type ProductPage } from '../../data/productPages';
 // Rivian-style floating section bar. Hidden over the hero. Once the hero scrolls away it
 // slides in and the main masthead tucks away, so only one bar sits at the top.
 // On phones it becomes a full-width strip of links; the MobileBar carries the buttons there.
-interface Props { page: ProductPage }
-const { page } = Astro.props;
+// `links` lets a bespoke page (like the Workstation draft) list its own sections.
+interface Props { page: ProductPage; links?: [string, string][] }
+const { page, links: custom } = Astro.props;
 const p = lineupEntry(page.id);
-const links: [string, string][] = [
+const links: [string, string][] = custom ?? [
   ...(page.overview ? [['Overview', '#overview'] as [string, string]] : []),
   ['Power', '#power'],
   ['Size', '#size'],
