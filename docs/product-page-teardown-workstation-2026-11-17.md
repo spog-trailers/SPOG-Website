@@ -50,14 +50,34 @@ The page is about 33,700 px.
 
 The page is about 20,000 px. It has the same structure as R1T, but opens with a carousel of tall photo cards with the feature name set large on each ("Captain's chairs", "Charging and range").
 
+## Feature sections (added later on 2026-11-17)
+
+Nate asked for the feature sections on the product pages and the homepage to work like these three. All were used in Chrome as a visitor would.
+
+- **Pebble ([pebblelife.com](https://pebblelife.com/), "Intelligent technology. Adventure made easy.").**
+  - A centered headline, then three tall video cards, each with a light caption panel inset at the bottom (name plus one short line, such as "Arrive. Tap. You're home.").
+  - Hovering a card widens it over about 0.8 s while the others shrink to pale slivers. Its caption opens to a paragraph.
+  - An "Explore all features" button sits below.
+- **Rivian R1T ("Get to know the R1T").**
+  - One sentence on the left, then a row of tall photo cards you can swipe, with the name set large on each and arrows below.
+  - Hovering shows a "+" and lifts the card.
+  - Clicking opens a large panel (the URL becomes `?modal=towing`). The panel holds the name and a short intro, a big photo, gray number tiles (11,000 lb, 1,764 lb), then alternating photo and text rows.
+- **Tesla Model Y ("Meet Model Y").**
+  - A centered heading and one line, then a carousel of photo cards with the name at the bottom left and a "+" that is always visible. Dots and an arrow sit below.
+  - Clicking opens a panel with the photo on top and the name laid over it, then a centered statement and more photos as you scroll.
+
+SPOG's version is `FeatureCards.astro`:
+- **From Rivian and Tesla.** The swipeable row, the always-visible "+", and the panel with the photo, the numbers and the detail.
+- **From Pebble.** The name plus one short outcome line on each card.
+- **SPOG's own.** Previous and Next inside the panel, so you can read every feature without closing it.
+- **Left out.** Pebble's hover-to-widen doesn't work on phones or with a row of five, and the panel's photo and text rows wait for real photos.
+
 ## What the SPOG Workstation draft took
 
 The draft is at `/test-workstation`.
 
-- **From Ring.**
-  - The top half of the page is light, with the space and calm Nate asked for. The numbers and the close are dark, like the end of the Cybertruck page.
-  - Four outcome columns sit right under the hero, written as outcomes for a GC: open on day one, power before temp power, no generator, and signal past the grid.
-  - The product block shows the picture on one side and a list of features on the other, with each row opening to one line.
+- **From Ring.** The top half of the page is light, with the space and calm Nate asked for. The numbers and the close are dark, like the end of the Cybertruck page.
+- **From the feature sections above.** Five feature cards right after the hero, each pairing a feature with its GC outcome (solar and battery, the office, no generator, heat and AC, Starlink). They replaced a first pass that used Ring's four outcome columns and Ring's product block.
 - **From Cybertruck.**
   - The three numbers a GC asks about first sit along the bottom of the hero.
   - Stat rows use thin dividers.
