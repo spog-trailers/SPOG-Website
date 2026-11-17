@@ -5,3 +5,6 @@ dist/
 .DS_Store
 .claude/settings.local.json
 .claude/.cc-writes
+
+# Full-size photo and video originals. Web copies live in public/images.
+_photos-original/

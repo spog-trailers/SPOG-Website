@@ -22,11 +22,11 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 | `src/pages/test-home.astro` | Draft homepage at `/test-home` with a look per buyer (see "Test homepage"). Not indexed. Rhythm map in the top comment. |
 | `src/components/test-home/`, `src/data/testHome.ts` | Test homepage sections and their copy. Every line is marked NEW or SOURCE. |
 | `docs/homepage-teardown-2026-11-16.md` | Competitor research behind the current section order |
-| `src/pages/test-workstation.astro` | Draft Workstation page at `/test-workstation`, written for GCs (see "Workstation page draft"). Not indexed. Rhythm in the top comment. |
-| `src/components/features/FeatureCards.astro`, `src/data/features.ts` | Feature cards (after Rivian's "Get to know", Tesla's "Meet Model Y" and Pebble's feature section): a row of tall cards you can swipe, each opening a panel with the photo, numbers and detail. Used on `/test-workstation` and `/test-home`. Several can share a page. |
+| `src/pages/workstation.astro` | The Workstation page at `/workstation`, written for GCs (see "Workstation page"). Rhythm in the top comment. The old draft URL `/test-workstation` redirects here (`astro.config.mjs`). |
+| `src/components/features/FeatureCards.astro`, `src/data/features.ts` | Feature cards (after Rivian's "Get to know", Tesla's "Meet Model Y" and Pebble's feature section): a row of tall cards you can swipe, each opening a panel with the photo, numbers and detail. Used on `/workstation` and `/test-home`. Several can share a page. |
 | `src/components/work/`, `src/data/workstationPage.ts` | The work look (Cargo and Workstation) and the Workstation draft's copy. Every line is marked NEW, SOURCE or PLACEHOLDER. |
 | `docs/product-page-teardown-workstation-2026-11-17.md` | Ring Jobsite Security, Cybertruck, Rivian R2 and R1S research behind the Workstation draft, plus the Pebble, Rivian and Model Y feature sections behind the feature cards |
-| `src/pages/[product].astro` | Product pages at `/cargo`, `/workstation`, `/event`, one template. Section order and rhythm in the comment at the top. |
+| `src/pages/[product].astro` | Product pages at `/cargo` and `/event`, one shared template (Workstation has its own page). Section order and rhythm in the comment at the top. |
 | `src/data/productPages.ts` | Product page content: hero, feature tiles, runtime devices, statement photo, lengths. Every line is marked NEW, SOURCE or PLACEHOLDER. |
 | `src/components/product/` | Product page sections (Hero, Subnav, Overview, Power, Statement, Size, Lineup). Close, Faq, Nav, Footer and MobileBar are shared with the homepage. |
 | `src/scripts/sizeDrawing.ts`, `src/scripts/runtime.ts` | The to-scale trailer and pickup drawing, and the runtime math (hours = kWh / kW) |
@@ -76,9 +76,9 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 - Coming-next cards have no Reserve. "Get first word" opens a small signup dialog with the trailer picked. Reserve on a card preselects that trailer in the walkthrough form.
 - Nate liked the v1 Garage and Disaster Relief looks. The v1 showcases (`Show*.astro`, `SpecPlate`) are held, unrendered, as starting points for the product pages.
 
-## Workstation page draft (2026-11-17)
+## Workstation page (2026-11-17)
 
-- `/test-workstation` is the first page written for one buyer (GCs and subs). The live `/workstation` still uses the shared template and is untouched. On the test homepage, the Workstation card's "Learn more" points at the draft (marked TEMPORARY in `testHome.ts`).
+- `/workstation` is the first page written for one buyer (GCs and subs). It started as a draft at `/test-workstation`. Nate liked it more than the template version, so it replaced it the same day, and the draft URL redirects. Cargo and Event still use the shared template until their own pages are built.
 - References from Nate:
   - Rivian R1T, R2 and R1S.
   - Tesla Cybertruck.
@@ -109,7 +109,7 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 
 Each product page is written for its own buyer. The single shared `[product].astro` template gets replaced.
 
-## Product pages
+## Product pages (shared template, Cargo and Event)
 
 - Order: Nav, Subnav (floating section bar that replaces the masthead after the hero), Hero, Overview (light), Power (dark), Statement (photo), Size + Specs (dark), Lineup (light), Close (dark), Faq (light), Footer, MobileBar. Overview and Statement are optional per product.
 - Headline numbers and short specs come from `products` in `content.ts`. Don't retype them in `productPages.ts`, so a correction lands in one place.

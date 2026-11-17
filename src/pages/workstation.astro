@@ -16,8 +16,9 @@ import { productFaqs } from '../data/productPages';
 import { ws, page, close, subnavLinks, features, featuresHead } from '../data/workstationPage';
 ---
 <!--
-  WORKSTATION PAGE DRAFT (2026-11-17). Written for general contractors and subs.
-  The live /workstation page (shared template) is untouched. Not indexed.
+  WORKSTATION PAGE (2026-11-17). Written for general contractors and subs. Its own page,
+  replacing the shared product template for Workstation (Nate liked the draft more). The old
+  draft URL /test-workstation redirects here (astro.config.mjs).
   Research: docs/product-page-teardown-workstation-2026-11-17.md (Ring, Cybertruck, Rivian R2 and R1S).
   Copy and its approval status live in src/data/workstationPage.ts.
 
@@ -32,7 +33,7 @@ import { ws, page, close, subnavLinks, features, featuresHead } from '../data/wo
 
   Keep the ids top, cta, walkthrough, sheet and faq so Nav, Subnav, MobileBar and Close work.
 -->
-<Base title={ws.title} description={ws.description} noindex>
+<Base title={ws.title} description={ws.description}>
   <Nav />
   <ProductSubnav page={page} links={subnavLinks} />
   <WorkHero />

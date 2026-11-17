@@ -1,6 +1,6 @@
 /**
- * Workstation product page draft at /test-workstation (2026-11-17). The live /workstation page
- * (shared template) is untouched until Nate picks a direction.
+ * Workstation product page at /workstation (2026-11-17). Started as the draft at
+ * /test-workstation, which now redirects here.
  *
  * Written for general contractors and subs. Nate wants this page to lean heavily into the GC
  * benefit, with its own look (see docs/product-page-teardown-workstation-2026-11-17.md).
@@ -26,7 +26,7 @@ const spec = (k: string) => (p.specs as [string, string][]).find(([key]) => key 
 export const ws = {
   name: p.name,
   cta: p.cta, // SOURCE
-  title: 'SPOG Workstation | Solar power site office trailer (draft)', // NEW
+  title: 'SPOG Workstation | Solar power site office trailer', // NEW
   description: 'A site office with its own solar, battery, heat and AC, for general contractors and subs. Built in Middletown, New York.', // NEW
 };
 

@@ -14,8 +14,9 @@ import ProductSize from '../components/product/ProductSize.astro';
 import ProductLineup from '../components/product/ProductLineup.astro';
 import { productIds, productPages, productFaqs, type ProductId } from '../data/productPages';
 
+// Workstation has its own page (src/pages/workstation.astro). This template serves Cargo and Event.
 export function getStaticPaths() {
-  return productIds.map((product) => ({ params: { product } }));
+  return productIds.filter((product) => product !== 'workstation').map((product) => ({ params: { product } }));
 }
 
 const page = productPages[Astro.params.product as ProductId];
