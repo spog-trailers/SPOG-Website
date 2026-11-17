@@ -67,7 +67,7 @@ export const cargo = {
 export const workstation = {
   lane: 'For the job site', // NEW
   body: 'Heat, AC, desks and optional Starlink ride on the trailer. The super runs the job from day one instead of waiting on a generator hookup.', // SOURCE (useCases, office)
-  inside: 'Inside: desks, storage and a display', // NEW, from the Workstation specs
+  inside: 'Desks, storage and a display inside', // NEW, from the Workstation specs
   plate: [...product('workstation').stats, ['Heat and AC', 'Standard']] as [string, string][], // SOURCE
 };
 
