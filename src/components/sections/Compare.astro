@@ -4,14 +4,20 @@ import Eyebrow from '../ui/Eyebrow.astro';
 import Heading from '../ui/Heading.astro';
 import { products, nextUp } from '../../data/content';
 const field = 'rounded-[10px] border border-panel-line bg-black px-4 py-[14px] text-[16px] text-white placeholder:text-[#8a8a8a] focus-visible:border-gold';
+// "5 to 20 kWh" -> ["5 to 20", "kWh"], so the unit can be set smaller beside the number
+const splitUnit = (v: string): [string, string] => {
+  const m = v.match(/^(.*?)\s?(kWh|W|ft)$/);
+  return m ? [m[1], m[2]] : [v, ''];
+};
 ---
 <!--
   The 2027 lineup, Tesla-style. Trailers you can order now get full rows and Reserve buttons.
   Future trailers sit underneath, smaller, with an interest signup instead.
 
-  Each lineup row: the name set huge across the top, the photo and spec panel sliding up over
-  the bottom of the letters. Photo side alternates per row. A product with no photo yet
-  (image: '') renders as a shorter typographic row.
+  Each lineup row: the name set huge across the top, the photo and a quiet panel sliding up over
+  the bottom of the letters. Photo side alternates per row. The panel is kept minimal on purpose:
+  who it's for, one line, three numbers, Reserve and a link to the product page (the full specs
+  live there). A product with no photo yet (image: '') renders as a shorter typographic row.
 -->
 <section id="specs" aria-label="The 2027 lineup" class="bg-black py-[130px] text-bone">
   <div class="wrap">
@@ -19,7 +25,7 @@ const field = 'rounded-[10px] border border-panel-line bg-black px-4 py-[14px] t
     <p class="mx-auto mt-[18px] max-w-[600px] text-center text-[19px] text-mute">Three trailers you can order now, all on one power system.</p>
 
     <Eyebrow gold="Available now" text="The 2027 lineup" class="mt-16 block" />
-    <div class="mt-5 grid gap-4">
+    <div class="mt-6 grid gap-6">
       {products.map((p, i) => (
         <article id={p.id} class="@container overflow-hidden rounded-[24px] border border-[#1f1f22] bg-panel" style={`--fit:${p.fit}cqw`}>
           <h3 class:list={[
@@ -28,42 +34,39 @@ const field = 'rounded-[10px] border border-panel-line bg-black px-4 py-[14px] t
           ]}>{p.name}</h3>
 
           {p.image ? (
-            <div class="relative z-[1] -mt-[3.4cqw] grid grid-cols-[1.35fr_1fr] bg-panel max-[900px]:grid-cols-[minmax(0,1fr)]">
+            <div class="relative z-[1] -mt-[3.4cqw] grid grid-cols-[1.25fr_1fr] bg-panel max-[900px]:grid-cols-[minmax(0,1fr)]">
               <div class:list={['relative', i % 2 && 'order-2 max-[900px]:order-none']}>
                 <img src={p.image} alt={p.alt} style={`object-position:${p.position}`} class="block aspect-[5/4] size-full object-cover" />
-                <span class="absolute bottom-[18px] left-[18px] rounded-full bg-black/72 px-[11px] py-[7px] text-[11px] font-bold uppercase tracking-[.18em] text-gold">{p.badge}</span>
               </div>
 
-              <div class="flex flex-col justify-center px-[clamp(24px,3.4cqw,52px)] py-[clamp(28px,3.4cqw,48px)]">
-                <p class="m-0 text-[clamp(22px,2.2cqw,30px)] font-semibold leading-[1.15] tracking-[-.025em] text-white">{p.tag}</p>
+              <div class="flex flex-col justify-center px-[clamp(28px,4.6cqw,72px)] py-[clamp(40px,4.6cqw,72px)]">
+                <span class="text-[11.5px] font-semibold uppercase tracking-[.22em] text-gold">{p.badge}</span>
+                <p class="mb-0 mt-4 text-[clamp(22px,2.2cqw,30px)] font-semibold leading-[1.15] tracking-[-.025em] text-white">{p.tag}</p>
 
-                <dl class="mb-0 mt-[26px] grid grid-cols-[repeat(3,1fr)] border-y border-panel-line">
-                  {p.stats.map(([k, v]) => (
-                    <div class="py-[18px] pr-3 not-first:border-l not-first:border-panel-line not-first:pl-4">
-                      <dt class="whitespace-nowrap text-[11.5px] font-semibold uppercase tracking-[.14em] text-mute max-[560px]:whitespace-normal max-[560px]:text-[10.5px]">{k}</dt>
-                      <dd class="m-0 mt-1.5 whitespace-nowrap text-[clamp(17px,1.9cqw,24px)] font-extrabold leading-[1.15] tracking-[-.02em] text-white max-[560px]:whitespace-normal max-[560px]:text-[16px]">{v}</dd>
-                    </div>
-                  ))}
+                <dl class="mb-0 mt-[clamp(32px,3.6cqw,52px)] flex flex-wrap gap-x-[clamp(22px,2.8cqw,44px)] gap-y-6">
+                  {p.stats.map(([k, v]) => {
+                    const [num, unit] = splitUnit(v);
+                    return (
+                      <div>
+                        <dt class="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[.16em] text-mute">{k}</dt>
+                        <dd class="m-0 mt-2 whitespace-nowrap text-[clamp(18px,1.8cqw,23px)] font-extrabold leading-[1.15] tracking-[-.02em] text-white">
+                          {num}{unit && <span class="ml-[.2em] text-[.68em] font-semibold tracking-normal text-bone/70">{unit}</span>}
+                        </dd>
+                      </div>
+                    );
+                  })}
                 </dl>
 
-                <ul class="mb-8">
-                  {p.specs.map(([k, v]) => (
-                    <li class="flex justify-between gap-5 border-b border-panel-line py-[14px] text-[15.5px]">
-                      <span class="text-mute">{k}</span><b class="text-right font-semibold text-white">{v}</b>
-                    </li>
-                  ))}
-                </ul>
-
-                <div class="flex flex-wrap gap-2.5">
+                <div class="mt-[clamp(36px,4cqw,56px)] flex flex-wrap items-center gap-x-8 gap-y-4">
                   <Button href="#cta" variant="gold">{p.cta}</Button>
-                  <Button href={`/${p.id}`}>Full specs</Button>
+                  <a href={`/${p.id}`} class="text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-white no-underline underline-offset-[6px] hover:underline">Explore {p.name} &rarr;</a>
                 </div>
               </div>
             </div>
           ) : (
             <div class="relative z-[1] -mt-[3.4cqw] grid grid-cols-[1.35fr_1fr] items-end gap-8 border-t border-panel-line bg-panel px-[clamp(24px,3.4cqw,52px)] py-[clamp(28px,3.4cqw,48px)] max-[900px]:grid-cols-[minmax(0,1fr)]">
               <div>
-                <span class="inline-block rounded-full bg-black/72 px-[11px] py-[7px] text-[11px] font-bold uppercase tracking-[.18em] text-gold">{p.badge}</span>
+                <span class="text-[11.5px] font-semibold uppercase tracking-[.22em] text-gold">{p.badge}</span>
                 <p class="mb-0 mt-5 text-[clamp(22px,2.2cqw,30px)] font-semibold leading-[1.15] tracking-[-.025em] text-white">{p.tag}</p>
                 <p class="mb-0 mt-3 max-w-[560px] text-[16.5px] text-mute">{p.body}</p>
               </div>
