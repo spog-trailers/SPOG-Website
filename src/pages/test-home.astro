@@ -3,12 +3,12 @@ import Base from '../layouts/Base.astro';
 import Nav from '../components/sections/Nav.astro';
 import TestHero from '../components/test-home/TestHero.astro';
 import LineupCards from '../components/test-home/LineupCards.astro';
-import Pillars from '../components/test-home/Pillars.astro';
+import FeatureCards from '../components/features/FeatureCards.astro';
 import Built from '../components/sections/Built.astro';
 import Close from '../components/sections/Close.astro';
 import Footer from '../components/sections/Footer.astro';
 import MobileBar from '../components/sections/MobileBar.astro';
-import { hero } from '../data/testHome';
+import { hero, values, valuesHead } from '../data/testHome';
 ---
 <!--
   TEST HOMEPAGE v2 (draft, 2026-11-17). The live homepage at / is untouched. Not indexed.
@@ -20,7 +20,8 @@ import { hero } from '../data/testHome';
   product pages, each with its own look.
 
   Order and rhythm (never two photo sections next to each other):
-    Hero P, Lineup cards L, Pillars D, Built P, Close D
+    Hero P, Lineup cards L, Values D (feature cards), Built P, Close D
+  The values are feature cards after Rivian, Tesla and Pebble (2026-11-17), replacing the five text pillars.
 
   Held, not rendered (v1 showcases, kept as starting points for the product pages):
     ShowCargo, ShowWorkstation, ShowEvent, ShowGarage, ShowRelief, ShowCamper, SpecPlate.
@@ -32,7 +33,7 @@ import { hero } from '../data/testHome';
   <Nav />
   <TestHero />
   <LineupCards />
-  <Pillars />
+  <FeatureCards id="values" label="What every SPOG is built on" kicker={valuesHead.kicker} heading={valuesHead.heading} features={values} tone="dark" />
   <Built />
   <Close heading={hero.heading as [string, string]} />
   <Footer />

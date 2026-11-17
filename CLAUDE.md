@@ -23,6 +23,7 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 | `src/components/test-home/`, `src/data/testHome.ts` | Test homepage sections and their copy. Every line is marked NEW or SOURCE. |
 | `docs/homepage-teardown-2026-11-16.md` | Competitor research behind the current section order |
 | `src/pages/test-workstation.astro` | Draft Workstation page at `/test-workstation`, written for GCs (see "Workstation page draft"). Not indexed. Rhythm in the top comment. |
+| `src/components/features/FeatureCards.astro`, `src/data/features.ts` | Feature cards (after Rivian's "Get to know", Tesla's "Meet Model Y" and Pebble's feature section): a row of tall cards you can swipe, each opening a panel with the photo, numbers and detail. Used on `/test-workstation` and `/test-home`. Several can share a page. |
 | `src/components/work/`, `src/data/workstationPage.ts` | The work look (Cargo and Workstation) and the Workstation draft's copy. Every line is marked NEW, SOURCE or PLACEHOLDER. |
 | `docs/product-page-teardown-workstation-2026-11-17.md` | Ring Jobsite Security, Cybertruck, Rivian R2 and R1S research behind the Workstation draft |
 | `src/pages/[product].astro` | Product pages at `/cargo`, `/workstation`, `/event`, one template. Section order and rhythm in the comment at the top. |
@@ -65,7 +66,7 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 
 - `/test-home` tries Nate's idea of one brand with a different look per buyer, the way Tesla's Roadster differs from the Model Y. The live homepage at `/` is untouched. The nav carries a temporary "Test home page" link (marked in `navLinks`). Remove it once a version is chosen.
 - **The homepage rule (Nate, v2):** the homepage only talks about what every SPOG shares (power, freedom, utility, quality, American made) and shows each trailer once at a high level. Feature selling and buyer-specific messaging go on the product pages. v1 put six full showcases on the homepage, and Nate found it too busy.
-- v2 order: Hero (brand promise, approved by Nate), Lineup cards, Pillars, Built, Close.
+- v2 order: Hero (brand promise, approved by Nate), Lineup cards, Values (feature cards for power, freedom, utility, quality and American made), Built, Close. Quality and American made are type-only cards so no photo repeats (Freedom's crop already shows the open-wall trailer, and Built uses the shop floor).
 - **Lineup cards** follow Tesla's homepage card row. Each card has a category, the name in that trailer's own type (`wordmark` in `testHome.ts`), one status line and the buttons. The look per trailer lives in the photo grade and the name:
   - **Cargo and Workstation:** heavy uppercase, warm daylight. They share one utility look.
   - **Event:** night, with a thin wide name.
@@ -87,7 +88,9 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
   - light sections with a lot of space for the pitch (top half)
   - one dark chapter for the numbers, then the dark close
   - gold is never used as text on white, because it's too light to read
-- **Order:** Hero (name, promise, three stats), Outcomes (Ring's four columns), What it replaces (the "One trailer. Three problems solved." sum), Inside (render plus a list where each row opens), Power, Size and Specs, Remote office band, Close ("Open on day one."), FAQ.
+- **Order:** Hero (name, promise, three stats), Feature cards ("Get to know Workstation", five cards: solar and battery, the office, no generator, heat and AC, Starlink), What it replaces (the "One trailer. Three problems solved." sum), Power, Size and Specs, Remote office band, Close ("Open on day one."), FAQ.
+- **Feature cards replaced the Ring-style outcome row and the Inside section** on 2026-11-17, at Nate's request. Each card pairs a feature with its GC outcome line. Security isn't a card until cameras are confirmed.
+- **Photos on the Workstation cards.** The two photo cards (solar wing, trailers on a lot) show hardware every SPOG shares, from the Red Rocks shoot, with neutral alt text. The office, heat and AC, and Starlink cards are dark plates with a line drawing until Robert's shots exist. The office render shows inside its panel at its own size.
 - **Shared sections take props with safe defaults.** `ProductSubnav` takes `links`, and `ProductPower` and `ProductSize` take `look="work"`. Without them, the live product pages render exactly as before.
 - **Runtime devices** on this page are computer, light tower, saw and welder. The fridge is left off because it has the same draw as the computer, so it shows the same hours.
 
@@ -156,7 +159,7 @@ Everything below was invented for the mockup and must be replaced with real, app
 - Product page photos: Cargo and Workstation statement photos are Red Rocks placeholders (the Cargo one may not show a Cargo). The Event dusk render shows a video game on the screen, so check rights or swap the screen image.
 - The Garage render (`garage-ev-inside.jpg`) shows a Tesla Model S inside. Swap it for a neutral car before launch.
 - Test homepage: every line marked NEW in `testHome.ts`, including the card categories, status lines and the five pillars.
-- Workstation draft: every line marked NEW in `workstationPage.ts`. The Security tile and the cameras row are PLACEHOLDER SOURCE (old site), so confirm cameras are offered. The remote office button opens the walkthrough form until its landing page exists. The interior render is only 695 px wide, so replace it with a real interior photo.
+- Workstation draft: every line marked NEW in `workstationPage.ts`. The Security tile is PLACEHOLDER SOURCE (old site), so confirm cameras are offered. The remote office button opens the walkthrough form until its landing page exists. The interior render is only 695 px wide, so replace it with a real interior photo.
 - Specs conflict between this site and spogtrailers.com (Cargo 8 to 35 ft, 5 to 64 kWh and up to 5,000W on the old site). The homepage numbers are used until the official spec sheet settles it.
 
 ## Photography needed (Robert's shot list)
@@ -169,6 +172,8 @@ The dark half of the page reuses one Red Rocks photo. Replace with:
 4. Residential crews tab: Cargo on a real driveway
 5. Highlights cards: roof solar close-up, crew charging tools, gear inside the trailer
 6. Customer story: the actual customer on their site
+7. Workstation feature cards, 3:4 portrait: the office interior with a super at the desk, the heat and AC unit or controls, and the Starlink dish on the roof. Also a Workstation solar wing open on a real site, to replace the Red Rocks crop.
+8. Homepage value cards, 3:4 portrait: a warranty or service moment (a SPOG tech on a customer site) for Quality, and a Middletown exterior or welder for American made.
 
 ## Next steps (suggested)
 

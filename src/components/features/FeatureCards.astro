@@ -1,0 +1,247 @@
+---
+import Eyebrow from '../ui/Eyebrow.astro';
+import Icon from '../ui/Icon.astro';
+import WorkTitle from '../work/WorkTitle.astro';
+import type { Feature } from '../../data/features';
+/**
+ * Feature cards, after Rivian ("Get to know the R1T"), Tesla ("Meet Model Y") and Pebble
+ * ("Intelligent technology"). See src/data/features.ts.
+ * - Rivian and Tesla: a row of tall cards you can swipe, a "+" on each, and a large panel that
+ *   opens over the page with the photo, the numbers and the detail.
+ * - Pebble: the name plus one short outcome line on every card.
+ * look: "work" sets names in the heavy uppercase of the Cargo and Workstation pages,
+ *       "brand" uses the homepage's type.
+ * tone: section background, "light" (white) or "dark" (black). The panel is always white.
+ * Every instance scopes its queries to its own root, so several can share a page.
+ */
+interface Props {
+  id: string;
+  label: string;
+  kicker: string;
+  heading: string[];
+  features: Feature[];
+  look?: 'work' | 'brand';
+  tone?: 'light' | 'dark';
+}
+const { id, label, kicker, heading, features, look = 'brand', tone = 'light' } = Astro.props;
+const dark = tone === 'dark';
+const work = look === 'work';
+const edge = 'px-[max(36px,calc((100vw_-_1320px)/2_+_36px))] scroll-px-[max(36px,calc((100vw_-_1320px)/2_+_36px))] max-[640px]:px-5 max-[640px]:scroll-px-5';
+const nameType = work ? 'font-black uppercase tracking-[-.04em] leading-[.95]' : 'font-semibold tracking-[-.03em] leading-[1.05]';
+const ctrl = dark
+  ? 'border-white/25 text-white hover:border-white disabled:opacity-30'
+  : 'border-coal/20 text-coal hover:border-coal disabled:opacity-30';
+---
+<section id={id} aria-label={label} data-fc class:list={['overflow-hidden pb-[110px] pt-[120px] max-[640px]:pb-16 max-[640px]:pt-20', dark ? 'bg-black text-bone' : 'bg-white text-ink']}>
+  <div class="wrap">
+    {work ? (
+      <WorkTitle kicker={kicker} lines={heading} tone={dark ? 'dark' : 'light'} />
+    ) : (
+      <div>
+        <Eyebrow gold={kicker} />
+        <h2 class:list={['m-0 mt-4 max-w-[920px] text-[clamp(36px,4.6vw,62px)] font-semibold leading-[1.03] tracking-[-.035em]', dark ? 'text-white' : 'text-coal']}>
+          {heading.map((l, i) => <Fragment>{i > 0 && ' '}{l}</Fragment>)}
+        </h2>
+      </div>
+    )}
+  </div>
+
+  <ul data-fc-track class:list={['no-scrollbar m-0 mt-14 flex list-none snap-x snap-mandatory gap-3 overflow-x-auto p-0 max-[640px]:mt-10', edge]}>
+    {features.map((f) => (
+      <li data-fc-card class="shrink-0 snap-start">
+        <button
+          type="button"
+          data-fc-open={f.id}
+          aria-haspopup="dialog"
+          aria-label={`${f.title}. ${f.line} Open details`}
+          class="group relative block aspect-[3/4] w-[min(400px,76vw)] cursor-pointer overflow-hidden rounded-[18px] border-0 bg-coal p-0 text-left text-white outline-offset-4 focus-visible:outline-2 focus-visible:outline-gold"
+        >
+          {f.image ? (
+            <img src={f.image} alt="" loading="lazy" class="absolute inset-0 size-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(.2,.6,.2,1)] group-hover:scale-[1.045]" style={`object-position:${f.position ?? '50% 50%'}`} />
+          ) : (
+            <span aria-hidden="true" class="fc-plate absolute inset-0">
+              {f.plate?.icon && <Icon name={f.plate.icon} class="absolute left-1/2 top-[38%] w-[52%] -translate-x-1/2 -translate-y-1/2 stroke-white/45 stroke-[.45] transition-transform duration-[900ms] group-hover:scale-[1.05]" />}
+              {f.plate?.mark && (
+                <span class="absolute left-7 top-8 block text-[clamp(30px,3.4vw,46px)] font-light leading-[1.1] tracking-[-.02em] text-white/85">
+                  {f.plate.mark.map((m) => <span class="block">{m}</span>)}
+                  <i class="mt-5 block h-[3px] w-[26px] bg-gold"></i>
+                </span>
+              )}
+            </span>
+          )}
+          <span aria-hidden="true" class="absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0/.82)_0%,rgb(0_0_0/.35)_32%,rgb(0_0_0/0)_55%)]"></span>
+          <span aria-hidden="true" class="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-white text-coal transition-colors duration-200 group-hover:bg-gold">
+            <svg viewBox="0 0 24 24" class="size-[18px] fill-none stroke-current stroke-2"><path d="M12 5v14M5 12h14" /></svg>
+          </span>
+          <span class="absolute inset-x-0 bottom-0 block px-7 pb-7 max-[640px]:px-5 max-[640px]:pb-6">
+            <b class:list={['block text-[clamp(24px,2.2vw,30px)]', nameType]}>{f.title}</b>
+            <span class="mt-2 block text-[15.5px] leading-[1.45] text-white/80">{f.line}</span>
+          </span>
+        </button>
+      </li>
+    ))}
+  </ul>
+
+  <div data-fc-controls class="wrap mt-7 flex items-center justify-between gap-6">
+    <div class="flex gap-2" aria-hidden="true">
+      {features.map((_, i) => <i data-fc-dot class:list={['block h-[3px] w-6 rounded-full transition-colors', dark ? 'bg-white/20 data-[on]:bg-white' : 'bg-coal/15 data-[on]:bg-coal']} data-on={i === 0 ? '' : undefined}></i>)}
+    </div>
+    <div class="flex gap-2">
+      <button type="button" data-fc-step="-1" aria-label="Previous" disabled class:list={['flex size-11 cursor-pointer items-center justify-center rounded-full border-[1.5px] bg-transparent', ctrl]}>
+        <svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+      </button>
+      <button type="button" data-fc-step="1" aria-label="Next" class:list={['flex size-11 cursor-pointer items-center justify-center rounded-full border-[1.5px] bg-transparent', ctrl]}>
+        <svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+      </button>
+    </div>
+  </div>
+
+  <dialog data-fc-dialog aria-label={label} class="fc-dialog m-auto max-h-[calc(100dvh_-_48px)] w-[min(1080px,calc(100vw_-_48px))] max-w-none overflow-y-auto overscroll-contain rounded-[22px] border-0 bg-white p-0 text-ink backdrop:bg-black/70 backdrop:backdrop-blur-[3px] max-[640px]:h-dvh max-[640px]:max-h-none max-[640px]:w-full max-[640px]:rounded-none">
+    <div class="sticky top-0 z-[2] h-0">
+      <button type="button" data-fc-close aria-label="Close" class="absolute right-5 top-5 flex size-11 cursor-pointer items-center justify-center rounded-full border-0 bg-coal text-white hover:bg-gold hover:text-coal max-[640px]:right-4 max-[640px]:top-4">
+        <svg viewBox="0 0 24 24" class="size-[18px] fill-none stroke-current stroke-2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+      </button>
+    </div>
+    {features.map((f, i) => {
+      const media = f.panel.media ?? (f.image ? { src: f.image, alt: f.alt ?? '', width: 0, height: 0 } : undefined);
+      const prev = features[(i - 1 + features.length) % features.length];
+      const next = features[(i + 1) % features.length];
+      return (
+        <article data-fc-panel={f.id} hidden aria-labelledby={`${id}-${f.id}-title`}>
+          <header class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-end gap-x-14 gap-y-5 px-14 pb-11 pt-16 max-[860px]:grid-cols-[minmax(0,1fr)] max-[640px]:px-6 max-[640px]:pb-8 max-[640px]:pt-20">
+            <div>
+              <span class="flex items-center gap-3 text-[11.5px] font-semibold uppercase tracking-[.22em] text-ink-soft"><i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>{f.line}</span>
+              <h3 id={`${id}-${f.id}-title`} tabindex="-1" class:list={['m-0 mt-4 text-coal outline-none text-[clamp(40px,5vw,72px)]', nameType]}>{f.title}</h3>
+            </div>
+            <p class="m-0 max-w-[460px] text-[17.5px] leading-[1.6] text-ink-soft">{f.panel.intro}</p>
+          </header>
+
+          {media && (media.width && media.natural ? (
+            <figure class="m-0 bg-stone px-14 py-10 max-[640px]:px-4 max-[640px]:py-6">
+              <img src={media.src} alt={media.alt} loading="lazy" width={media.width} height={media.height} class="mx-auto block h-auto w-full rounded-[10px]" style={`max-width:${media.width}px`} />
+            </figure>
+          ) : (
+            <img src={media.src} alt={media.alt} loading="lazy" class="block aspect-[16/8] w-full object-cover max-[640px]:aspect-[4/3]" style={`object-position:${f.position ?? '50% 50%'}`} />
+          ))}
+          {!media && f.plate?.icon && (
+            <div class="fc-plate flex h-[260px] items-center justify-center max-[640px]:h-[200px]" aria-hidden="true">
+              <Icon name={f.plate.icon} class="h-[62%] stroke-white/50 stroke-[.5]" />
+            </div>
+          )}
+
+          {(f.panel.stats || f.panel.points || f.panel.link) && (
+            <div class="px-14 pb-4 pt-12 max-[640px]:px-6 max-[640px]:pt-9">
+              {f.panel.stats && (
+                <dl class="m-0 grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-3">
+                  {f.panel.stats.map(([k, v]) => (
+                    <div class="flex flex-col-reverse items-center gap-2 rounded-[14px] bg-stone px-6 py-9 text-center">
+                      <dt class="text-[13px] text-ink-soft">{k}</dt>
+                      <dd class="m-0 text-[clamp(30px,3.4vw,46px)] font-black leading-none tracking-[-.04em] text-coal">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+              {f.panel.points && (
+                <ul class:list={['m-0 grid list-none grid-cols-[repeat(2,minmax(0,1fr))] gap-x-14 p-0 max-[640px]:grid-cols-[minmax(0,1fr)]', f.panel.stats && 'mt-12']}>
+                  {f.panel.points.map((pt) => (
+                    <li class="border-t border-stone-2 py-6">
+                      <b class="block text-[17px] font-bold text-coal">{pt.title}</b>
+                      <span class="mt-2 block text-[15.5px] leading-[1.6] text-ink-soft">{pt.body}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {f.panel.link && (
+                <a href={f.panel.link.href} data-fc-leave class="mt-9 inline-flex h-[50px] items-center gap-[14px] border-[1.5px] border-coal px-[26px] text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-coal no-underline hover:bg-coal hover:text-white">
+                  {f.panel.link.label}
+                  <svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                </a>
+              )}
+            </div>
+          )}
+
+          <nav aria-label="More features" class="mt-10 flex items-stretch justify-between gap-3 border-t border-stone-2 px-14 py-6 max-[640px]:px-6">
+            <button type="button" data-fc-go={prev.id} class="cursor-pointer border-0 bg-transparent p-0 text-left text-ink-soft hover:text-coal">
+              <span class="block text-[11px] font-semibold uppercase tracking-[.2em]">&larr; Previous</span>
+              <span class="mt-1 block text-[15px] font-semibold text-coal">{prev.title}</span>
+            </button>
+            <button type="button" data-fc-go={next.id} class="cursor-pointer border-0 bg-transparent p-0 text-right text-ink-soft hover:text-coal">
+              <span class="block text-[11px] font-semibold uppercase tracking-[.2em]">Next &rarr;</span>
+              <span class="mt-1 block text-[15px] font-semibold text-coal">{next.title}</span>
+            </button>
+          </nav>
+        </article>
+      );
+    })}
+  </dialog>
+</section>
+
+<style is:global>
+  html:has(.fc-dialog[open]) { overflow: hidden; }
+  .fc-plate { background: radial-gradient(ellipse 80% 60% at 50% 30%, #26272b 0%, #121214 60%, #0a0a0b 100%); }
+  .fc-dialog[open] { animation: fc-in .38s cubic-bezier(.2, .7, .2, 1) both; }
+  .fc-dialog[open]::backdrop { animation: fc-fade .3s ease both; }
+  @keyframes fc-in { from { opacity: 0; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: none; } }
+  @keyframes fc-fade { from { opacity: 0; } to { opacity: 1; } }
+</style>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('[data-fc]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('[data-fc-track]')!;
+    const cards = [...track.querySelectorAll<HTMLElement>('[data-fc-card]')];
+    const dots = [...root.querySelectorAll<HTMLElement>('[data-fc-dot]')];
+    const [prevBtn, nextBtn] = [...root.querySelectorAll<HTMLButtonElement>('[data-fc-step]')];
+    const controls = root.querySelector<HTMLElement>('[data-fc-controls]')!;
+    const dialog = root.querySelector<HTMLDialogElement>('[data-fc-dialog]')!;
+    const panels = [...dialog.querySelectorAll<HTMLElement>('[data-fc-panel]')];
+    let opener: HTMLElement | null = null;
+
+    // Carousel
+    const step = () => (cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth);
+    const sync = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      controls.hidden = max <= 2;
+      prevBtn.disabled = track.scrollLeft <= 2;
+      nextBtn.disabled = track.scrollLeft >= max - 2;
+      const on = track.scrollLeft >= max - 2 ? cards.length - 1 : Math.round(track.scrollLeft / step());
+      dots.forEach((d, i) => d.toggleAttribute('data-on', i === on));
+    };
+    [prevBtn, nextBtn].forEach((b) =>
+      b.addEventListener('click', () => track.scrollBy({ left: Number(b.dataset.fcStep) * step(), behavior: reduce ? 'auto' : 'smooth' })),
+    );
+    track.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    sync();
+
+    // Panel
+    const show = (id: string) => {
+      panels.forEach((p) => (p.hidden = p.dataset.fcPanel !== id));
+      dialog.scrollTop = 0;
+    };
+    root.querySelectorAll<HTMLElement>('[data-fc-open]').forEach((card) =>
+      card.addEventListener('click', () => {
+        opener = card;
+        show(card.dataset.fcOpen!);
+        dialog.showModal();
+      }),
+    );
+    dialog.querySelectorAll<HTMLElement>('[data-fc-go]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const id = b.dataset.fcGo!;
+        show(id);
+        opener = root.querySelector<HTMLElement>(`[data-fc-open="${id}"]`);
+        dialog.querySelector<HTMLElement>(`[data-fc-panel="${id}"] h3`)?.focus();
+      }),
+    );
+    dialog.querySelector('[data-fc-close]')!.addEventListener('click', () => dialog.close());
+    // A click on the dim area outside the panel lands on the dialog itself
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    // Links inside the panel (like "See what it runs") close it first so the page can scroll
+    dialog.querySelectorAll('[data-fc-leave]').forEach((a) => a.addEventListener('click', () => dialog.close()));
+    dialog.addEventListener('close', () => opener?.focus({ preventScroll: true }));
+  });
+</script>

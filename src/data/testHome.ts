@@ -16,7 +16,8 @@
  * The v1 showcase data further down (cargo, workstation, event, garage, relief, camper) feeds
  * the held Show* components, kept as starting points for the product pages.
  */
-import { img, products, nextUp } from './content';
+import { img, products, nextUp, guarantees } from './content';
+import type { Feature } from './features';
 
 /** How each trailer's name is set. Same font, different weight, tracking, case and slant. */
 export const wordmark: Record<string, string> = {
@@ -56,18 +57,75 @@ export const cards: {
   { id: 'camper', name: 'Camper', category: 'Off-grid camper', status: 'Coming next', live: false, image: img.camperCampfire, alt: 'SPOG Camper trailer by a campfire in the mountains', position: '68% 55%', look: 'camper', size: 9.6 },
 ];
 
-/** What every SPOG shares. Nate's five: power, freedom, utility, quality, American made. */
-export const pillars = {
-  eyebrow: 'Every SPOG', // NEW
-  heading: 'What every trailer is built on.', // NEW
-  items: [
-    { title: 'Power', body: 'Up to 100 kWh of battery on board, refilled by its own solar panels.' }, // NEW, 100 kWh SOURCE (numbers)
-    { title: 'Freedom', body: 'No hookup and no fuel run, so it works wherever you park it.' }, // NEW
-    { title: 'Utility', body: 'Built to work, from the job site to the campsite.' }, // NEW
-    { title: 'Quality', body: 'A 3-year structural warranty and service that comes to you.' }, // NEW, facts SOURCE (guarantees)
-    { title: 'American made', body: 'Welded, wired and finished in Middletown, New York.' }, // NEW, fact SOURCE (Built)
-  ],
+/**
+ * What every SPOG shares (Nate's five: power, freedom, utility, quality, American made), as
+ * feature cards after Rivian, Tesla and Pebble (see FeatureCards.astro). Shared facts only,
+ * no specs for one trailer, per the homepage rule. Any SPOG photo is honest here, because the
+ * values apply to every trailer. Quality and American made are plates (type, no photo): the
+ * open-wall trailer already shows in the Freedom crop, and Built right below uses the shop
+ * floor. Swap in Robert's shots when they exist.
+ */
+export const valuesHead = {
+  kicker: 'Every SPOG', // NEW
+  heading: ['What every trailer', 'is built on.'], // NEW
 };
+
+export const values: Feature[] = [
+  {
+    id: 'power',
+    title: 'Power',
+    line: 'Up to 100 kWh on board.', // SOURCE (homepage numbers)
+    image: img.cardWing,
+    alt: 'Solar panel raised on the roof of a SPOG trailer',
+    position: '50% 30%',
+    panel: {
+      intro: 'Every SPOG carries its own solar and battery. The panels refill the battery wherever the trailer parks.', // NEW
+      stats: [['Battery across the lineup', 'Up to 100 kWh']], // SOURCE (homepage numbers)
+    },
+  },
+  {
+    id: 'freedom',
+    title: 'Freedom',
+    line: 'Works wherever you park it.', // NEW
+    image: img.statementBg,
+    alt: 'SPOG trailer parked under a red rock wall with its side opened',
+    position: '80% 50%',
+    panel: {
+      intro: 'No hookup and no fuel run. Pull in, open the panels and the power is already there.', // NEW, from the homepage statement
+    },
+  },
+  {
+    id: 'utility',
+    title: 'Utility',
+    line: 'Built to work.', // NEW
+    image: '/images/bg-built-side-panel.jpg',
+    alt: 'Side of a SPOG trailer with a spare tire and a gear rail',
+    position: '40% 50%',
+    panel: {
+      intro: 'Built to work, from the job site to the campsite. Each trailer is laid out for the people who use it.', // NEW
+    },
+  },
+  {
+    id: 'quality',
+    title: 'Quality',
+    line: 'Service that comes to you.', // SOURCE (v2 pillar line, guarantees)
+    plate: { mark: ['3-year', 'structural', 'warranty'] }, // SOURCE (guarantees)
+    panel: {
+      intro: 'Every SPOG is built to last, and backed after it leaves the shop.', // NEW
+      points: guarantees.slice(0, 3).map((g) => ({ title: g.title, body: g.body })), // SOURCE (guarantees)
+    },
+  },
+  {
+    id: 'made',
+    title: 'American made',
+    line: 'Built in Middletown, New York.', // SOURCE (Built)
+    plate: { mark: ['41.45\u00b0 N', '74.42\u00b0 W'] }, // Middletown, New York
+    panel: {
+      intro: 'Welded, wired and finished in Middletown, New York.', // NEW, fact SOURCE (Built)
+      link: { label: 'Meet the shop', href: '#built' }, // NEW
+    },
+  },
+];
 
 export const firstWordDialog = {
   heading: 'Get first word.', // NEW

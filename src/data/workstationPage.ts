@@ -17,6 +17,7 @@
  */
 import { img, products } from './content';
 import { productPages, type ProductPage } from './productPages';
+import type { Feature } from './features';
 
 const p = products.find((x) => x.id === 'workstation')!;
 const stat = (k: string) => (p.stats as [string, string][]).find(([key]) => key === k)![1];
@@ -43,12 +44,80 @@ export const hero = {
   ] as [string, string][], // SOURCE (products)
 };
 
-/** Ring-style row under the hero. Outcomes for the GC, one line each. */
-export const outcomes = [
-  { icon: 'desk', title: 'Open on day one', body: 'The office works the day it lands, with no wait on a hookup.' }, // NEW
-  { icon: 'battery', title: 'Power before temp power', body: 'Ground-up builds often have no power until service comes in. Bring your own.' }, // NEW, from useCases (commercial)
-  { icon: 'noise', title: 'No generator', body: 'No utility hookup, no generator noise and no fuel run before work.' }, // SOURCE (brand kit line plus homepage statement)
-  { icon: 'wifi', title: 'Signal past the grid', body: 'The Starlink option keeps the phone ringing where cell service drops out.' }, // SOURCE (useCases, rural), trimmed
+/**
+ * "Get to know" cards right after the hero, after Rivian's R1T, Tesla's Model Y and Pebble's
+ * feature sections (see FeatureCards.astro). Each card is a feature plus the GC outcome it
+ * delivers, and the panel holds the detail.
+ * PHOTOS: there's no confirmed Workstation photo except the hero. The two photo cards show
+ * hardware every SPOG shares (solar wing, trailers on a lot) from the Red Rocks shoot, with
+ * neutral alt text. The three plates are waiting on Robert's shots (see CLAUDE.md).
+ * Security is left off until cameras are confirmed.
+ */
+export const featuresHead = {
+  kicker: 'Get to know Workstation', // NEW
+  heading: ['Power, heat and air', 'from day one.'], // NEW
+};
+
+export const features: Feature[] = [
+  {
+    id: 'power',
+    title: 'Solar and battery',
+    line: 'Power before temp power.', // NEW
+    image: img.cardWing,
+    alt: 'Solar panel raised on the roof of a SPOG trailer',
+    position: '50% 30%',
+    panel: {
+      // NEW, from useCases (commercial) and the old Workstation tile
+      intro: "Ground-up builds often have no power until service comes in. Workstation brings its own, and the solar refills the battery while the office runs.",
+      stats: [['Battery', stat('Battery')], ['Solar up to', stat('Solar up to')]], // SOURCE (products)
+      link: { label: 'See what it runs', href: '#power' }, // NEW
+    },
+  },
+  {
+    id: 'office',
+    title: 'The office',
+    line: 'Open on day one.', // NEW
+    plate: { icon: 'desk' },
+    panel: {
+      intro: 'Desks, storage, a display for the plans, and heat and AC standard. Site meetings and paperwork move off the tailgate and into the office.', // NEW
+      // PHOTO: 695 x 360 render from spogtrailers.com, shown at its own size. Replace with a real interior photo.
+      media: { src: img.office, alt: 'Inside a SPOG Workstation with desks, chairs, storage and a wall display showing drawings', width: 695, height: 360, natural: true },
+      points: [
+        { title: 'Desks and storage', body: 'Built-in desks and storage for plans, files and laptops.' }, // SOURCE (products specs)
+        { title: 'Wall display', body: 'A display for drawings, schedules and site meetings.' }, // SOURCE (products specs, "display")
+      ],
+    },
+  },
+  {
+    id: 'generator',
+    title: 'No generator',
+    line: 'No fuel run before work.', // SOURCE (homepage statement)
+    image: img.statementBg,
+    alt: 'Two SPOG trailers parked with their solar panels raised',
+    position: '32% 50%',
+    panel: {
+      intro: 'No utility hookup, no generator noise and no fuel run before work. The power is already on the trailer when it lands.', // first line SOURCE (brand kit), second NEW
+    },
+  },
+  {
+    id: 'climate',
+    title: 'Heat and AC',
+    line: 'Standard on every Workstation.', // SOURCE (brand guide)
+    plate: { icon: 'climate' },
+    panel: {
+      intro: 'Every Workstation comes with heating and cooling, so the office works in July and in January.', // first half SOURCE (brand guide), second half NEW
+      stats: [['Heat and AC', spec('Heat and AC')]], // SOURCE (products)
+    },
+  },
+  {
+    id: 'starlink',
+    title: 'Starlink option',
+    line: 'Signal past the grid.', // NEW
+    plate: { icon: 'wifi' },
+    panel: {
+      intro: 'The Starlink option keeps email, plans and the phone working where cell service drops out.', // SOURCE (useCases, rural), reworded
+    },
+  },
 ];
 
 /** The GC equation. Heading is the approved brand line (Office Trailer + Generator + Security = SPOG). */
@@ -63,25 +132,6 @@ export const equation = {
     { icon: 'camera', title: 'Security', body: 'Optional cameras and jobsite lighting watch the site after the crew leaves.' }, // NEW
   ],
   result: { label: 'Equals', body: 'All three in one tow.' }, // NEW
-};
-
-/** Ring's product block: the office render with a list of what's inside. */
-export const inside = {
-  kicker: 'Inside', // NEW
-  heading: ['A real office', 'on site.'], // NEW
-  body: 'Desks, storage, a display for the plans, and heat and AC standard. Site meetings and paperwork move off the tailgate and into the office.', // NEW
-  // PHOTO: 695 x 360 render from spogtrailers.com. Too small to run wide. Replace with a real interior photo.
-  image: img.office,
-  alt: 'Inside a SPOG Workstation with desks, chairs, storage and a wall display showing drawings',
-  caption: 'Inside a Workstation', // NEW
-  rows: [
-    { icon: 'desk', title: 'Desks and storage', body: 'Built-in desks and storage for plans, files and laptops.' }, // SOURCE (products specs)
-    { icon: 'screen', title: 'Wall display', body: 'A display for drawings, schedules and site meetings.' }, // SOURCE (products specs, "display")
-    { icon: 'climate', title: 'Heat and AC standard', body: 'Every Workstation comes with heating and cooling.' }, // SOURCE (brand guide)
-    { icon: 'wifi', title: 'Starlink option', body: 'Keeps email and plans moving where cell service drops out.' }, // SOURCE (products specs, useCases rural)
-    // PLACEHOLDER SOURCE: spogtrailers.com Workstation page. Confirm cameras are offered.
-    { icon: 'camera', title: 'Security cameras option', body: 'Optional cameras watch the site after the crew leaves.' }, // NEW
-  ],
 };
 
 /**
@@ -108,7 +158,6 @@ export const close: [string, string] = ['Open on', 'day one.']; // NEW, echoes t
 
 export const subnavLinks: [string, string][] = [
   ['Overview', '#overview'],
-  ['Office', '#inside'],
   ['Power', '#power'],
   ['Size', '#size'],
   ['Specs', '#specs'],

@@ -3,9 +3,8 @@ import Base from '../layouts/Base.astro';
 import Nav from '../components/sections/Nav.astro';
 import ProductSubnav from '../components/product/ProductSubnav.astro';
 import WorkHero from '../components/work/WorkHero.astro';
-import WorkOutcomes from '../components/work/WorkOutcomes.astro';
+import FeatureCards from '../components/features/FeatureCards.astro';
 import WorkEquation from '../components/work/WorkEquation.astro';
-import WorkInside from '../components/work/WorkInside.astro';
 import ProductPower from '../components/product/ProductPower.astro';
 import ProductSize from '../components/product/ProductSize.astro';
 import WorkRemote from '../components/work/WorkRemote.astro';
@@ -14,7 +13,7 @@ import Faq from '../components/sections/Faq.astro';
 import Footer from '../components/sections/Footer.astro';
 import MobileBar from '../components/sections/MobileBar.astro';
 import { productFaqs } from '../data/productPages';
-import { ws, page, close, subnavLinks } from '../data/workstationPage';
+import { ws, page, close, subnavLinks, features, featuresHead } from '../data/workstationPage';
 ---
 <!--
   WORKSTATION PAGE DRAFT (2026-11-17). Written for general contractors and subs.
@@ -26,8 +25,10 @@ import { ws, page, close, subnavLinks } from '../data/workstationPage';
   sections with a lot of space for the pitch (Ring), one dark chapter for the numbers (Cybertruck).
 
   Order and rhythm (never two photo sections next to each other):
-    Hero P, Outcomes L (white), What it replaces L (stone), Inside L (white),
+    Hero P, Feature cards L (white), What it replaces L (stone),
     Power D, Size + Specs D, Remote office L (stone), Close D, FAQ L, Footer D
+  The feature cards follow Rivian's "Get to know", Tesla's "Meet Model Y" and Pebble's feature
+  section (2026-11-17). They replaced the Ring-style outcome row and the Inside section.
 
   Keep the ids top, cta, walkthrough, sheet and faq so Nav, Subnav, MobileBar and Close work.
 -->
@@ -35,9 +36,8 @@ import { ws, page, close, subnavLinks } from '../data/workstationPage';
   <Nav />
   <ProductSubnav page={page} links={subnavLinks} />
   <WorkHero />
-  <WorkOutcomes />
+  <FeatureCards id="overview" label="Get to know Workstation" kicker={featuresHead.kicker} heading={featuresHead.heading} features={features} look="work" tone="light" />
   <WorkEquation />
-  <WorkInside />
   <ProductPower page={page} look="work" />
   <ProductSize page={page} look="work" />
   <WorkRemote />
