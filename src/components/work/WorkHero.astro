@@ -27,9 +27,9 @@ import { hero, ws } from '../../data/workstationPage';
       </div>
       <dl class="m-0 flex border-t border-white/25 max-[640px]:justify-between">
         {hero.stats.map(([k, v]) => (
-          <div class="flex flex-col-reverse gap-2.5 pr-7 pt-5 not-first:border-l not-first:border-white/20 not-first:pl-7 max-[640px]:pr-3 max-[640px]:not-first:pl-3">
+          <div class="flex flex-col-reverse gap-2.5 pr-7 pt-5 not-first:border-l not-first:border-white/20 not-first:pl-7 max-[640px]:pr-2.5 max-[640px]:not-first:pl-2.5">
             <dt class="text-[11px] font-semibold uppercase tracking-[.18em] text-white/60 max-[640px]:text-[9.5px] max-[640px]:tracking-[.12em]">{k}</dt>
-            <dd class="m-0 whitespace-nowrap text-[clamp(22px,2.2vw,30px)] font-black leading-none tracking-[-.04em] max-[640px]:text-[16.5px]">{v}</dd>
+            <dd class="m-0 whitespace-nowrap text-[clamp(22px,2.2vw,30px)] font-black leading-none tracking-[-.04em] max-[640px]:text-[clamp(13px,3.9vw,16.5px)]">{v}</dd>
           </div>
         ))}
       </dl>

@@ -55,7 +55,7 @@ The page is about 20,000 px. It has the same structure as R1T, but opens with a 
 The draft is at `/test-workstation`.
 
 - **From Ring.**
-  - The page is mostly light, with the space and calm Nate asked for.
+  - The top half of the page is light, with the space and calm Nate asked for. The numbers and the close are dark, like the end of the Cybertruck page.
   - Four outcome columns sit right under the hero, written as outcomes for a GC: open on day one, power before temp power, no generator, and signal past the grid.
   - The product block shows the picture on one side and a list of features on the other, with each row opening to one line.
 - **From Cybertruck.**

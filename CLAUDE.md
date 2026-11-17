@@ -84,8 +84,8 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
   - Ring Jobsite Security, which he loves for being "simple. Lots of whitespace. Very clean."
 - **The work look**, shared with Cargo later:
   - heavy uppercase headings with a gold bar before a small gray label (`WorkTitle`)
-  - mostly light sections with a lot of space
-  - one dark chapter for the numbers
+  - light sections with a lot of space for the pitch (top half)
+  - one dark chapter for the numbers, then the dark close
   - gold is never used as text on white, because it's too light to read
 - **Order:** Hero (name, promise, three stats), Outcomes (Ring's four columns), What it replaces (the "One trailer. Three problems solved." sum), Inside (render plus a list where each row opens), Power, Size and Specs, Remote office band, Close ("Open on day one."), FAQ.
 - **Shared sections take props with safe defaults.** `ProductSubnav` takes `links`, and `ProductPower` and `ProductSize` take `look="work"`. Without them, the live product pages render exactly as before.

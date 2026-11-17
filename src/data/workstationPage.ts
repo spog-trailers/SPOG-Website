@@ -25,15 +25,15 @@ const spec = (k: string) => (p.specs as [string, string][]).find(([key]) => key 
 export const ws = {
   name: p.name,
   cta: p.cta, // SOURCE
-  title: 'SPOG Workstation | Solar power site office trailer (draft)',
-  description: 'A site office with its own solar, battery, heat and AC, built for general contractors. Built in Middletown, New York.',
+  title: 'SPOG Workstation | Solar power site office trailer (draft)', // NEW
+  description: 'A site office with its own solar, battery, heat and AC, for general contractors and subs. Built in Middletown, New York.', // NEW
 };
 
 export const hero = {
   // PHOTO: the Red Rocks sunrise shot, the only wide Workstation photo. Replace with Robert's site office shot.
   image: img.hero,
   alt: 'SPOG Workstation trailers on a lot at sunrise, solar wings open',
-  eyebrow: { gold: 'Workstation', text: 'For general contractors and subs' }, // NEW
+  eyebrow: { gold: 'Mobile office', text: 'For general contractors and subs' }, // NEW (category matches the test homepage card)
   tag: p.tag, // SOURCE (homepage lineup tag)
   body: 'Heat, AC, desks and its own solar power ride on the trailer. The super runs the job from day one.', // NEW, adapted from useCases (office)
   stats: [
