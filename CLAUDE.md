@@ -61,16 +61,16 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 ## Test homepage (draft, 2026-11-17)
 
 - `/test-home` tries Nate's idea of one brand with a different look per buyer, the way Tesla's Roadster differs from the Model Y. The live homepage at `/` is untouched. The nav carries a temporary "Test home page" link (marked in `navLinks`). Remove it once a version is chosen.
-- Order: Hero (brand promise), Lineup (all six trailers, plus the shared power numbers), Cargo, Workstation, Why crews switch, Event, Garage, Disaster Relief, Camper (with the first-word signup), Process, Guarantee, Built, Faq, Close.
-- Fixed everywhere: Montserrat, the color tokens, the nav, button shapes and `wrap`. What changes per trailer:
-  - **Work (Cargo, Workstation):** daylight, heavy uppercase, a spec "data plate".
-  - **Event:** night, a breathing screen glow, thin wide name, a marquee.
-  - **Garage:** black, a light beam, a slanted metal name, gold hairlines, after the Roadster page.
-  - **Disaster Relief:** cool grade, field grid, framed corners, a readiness plate.
-  - **Camper:** light, centered, sentence case.
-  - The lineup tiles set each name in that trailer's own type (`wordmark` in `testHome.ts`).
-- Coming-next trailers get no specs and no Reserve, only "Get first word". Garage and Disaster Relief buttons preselect the trailer in the signup form.
-- The Event "Ask about renting" button points at the walkthrough form until rental terms exist.
+- **The homepage rule (Nate, v2):** the homepage only talks about what every SPOG shares (power, freedom, utility, quality, American made) and shows each trailer once at a high level. Feature selling and buyer-specific messaging go on the product pages. v1 put six full showcases on the homepage, and Nate found it too busy.
+- v2 order: Hero (brand promise, approved by Nate), Lineup cards, Pillars, Built, Close.
+- **Lineup cards** follow Tesla's homepage card row. Each card has a category, the name in that trailer's own type (`wordmark` in `testHome.ts`), one status line and the buttons. The look per trailer lives in the photo grade and the name:
+  - **Cargo and Workstation:** heavy uppercase, warm daylight. They share one utility look.
+  - **Event:** night, with a thin wide name.
+  - **Garage:** black vignette, a slanted metal name and a gold hairline.
+  - **Disaster Relief:** a cool grade, a field grid and gold corner brackets.
+  - **Camper:** natural light, sentence case.
+- Coming-next cards have no Reserve. "Get first word" opens a small signup dialog with the trailer picked. Reserve on a card preselects that trailer in the walkthrough form.
+- Nate liked the v1 Garage and Disaster Relief looks. The v1 showcases (`Show*.astro`, `SpecPlate`) are held, unrendered, as starting points for the product pages.
 
 ## Planned sitemap (Nate, 2026-11-17, not built yet)
 
@@ -136,7 +136,7 @@ Everything below was invented for the mockup and must be replaced with real, app
 - Product page lengths: Cargo 12/16/20 ft and Event 24/31 ft stops are guesses between documented endpoints. Workstation stops come from the old configurator and Hybrid Fleet page.
 - Product page photos: Cargo and Workstation statement photos are Red Rocks placeholders (the Cargo one may not show a Cargo). The Event dusk render shows a video game on the screen, so check rights or swap the screen image.
 - The Garage render (`garage-ev-inside.jpg`) shows a Tesla Model S inside. Swap it for a neutral car before launch.
-- Test homepage: every line marked NEW in `testHome.ts`, the "See it run your tools on a walkthrough" link, and the Event rental button (no terms yet).
+- Test homepage: every line marked NEW in `testHome.ts`, including the card categories, status lines and the five pillars.
 - Specs conflict between this site and spogtrailers.com (Cargo 8 to 35 ft, 5 to 64 kWh and up to 5,000W on the old site). The homepage numbers are used until the official spec sheet settles it.
 
 ## Photography needed (Robert's shot list)

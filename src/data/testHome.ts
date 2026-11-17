@@ -1,19 +1,22 @@
 /**
- * Test homepage at /test-home (draft, 2026-11-17). The live homepage is untouched.
+ * Test homepage at /test-home (draft v2, 2026-11-17). The live homepage is untouched.
  *
- * One brand, a different look per buyer: Work (Cargo, Workstation), Event, Garage,
- * Disaster Relief and Camper. Montserrat, the color tokens, the nav and the button shapes
- * stay the same everywhere. What changes is the photo grade, how the name is set,
- * the light, the motion and the copy rhythm.
+ * v2 after Nate's review: the homepage only talks about what every SPOG shares (power,
+ * freedom, utility, quality, American made) and shows each trailer once, Tesla style, as a
+ * clean card in its own look. Feature selling moves to the product pages.
+ *
+ * Looks: Work (Cargo, Workstation share it), Event, Garage, Disaster Relief, Camper.
+ * Montserrat, the color tokens, the nav and the button shapes stay the same everywhere.
  *
  * Copy marks:
  *   NEW     written for this draft, needs Nate's approval
  *   SOURCE  reused from content.ts, the brand kit's approved lines or the marketing plan
- * Stats come only from `products` in content.ts. Coming-next trailers get no specs and no Reserve.
+ * Coming-next trailers get no specs and no Reserve, only "Get first word".
+ *
+ * The v1 showcase data further down (cargo, workstation, event, garage, relief, camper) feeds
+ * the held Show* components, kept as starting points for the product pages.
  */
-import { img, products, nextUp, numbers, problem } from './content';
-
-export { numbers, problem };
+import { img, products, nextUp } from './content';
 
 /** How each trailer's name is set. Same font, different weight, tracking, case and slant. */
 export const wordmark: Record<string, string> = {
@@ -32,28 +35,45 @@ export const hero = {
   eyebrow: { gold: 'Solar Power Off Grid', text: 'Built in Middletown, New York' }, // NEW
   heading: ['Bring your', 'own power.'], // NEW
   sub: "Trailers that carry their own solar and battery, for the job site, the event and the places the grid doesn't reach.", // NEW
-  primary: 'Find your SPOG', // NEW
+  primary: 'See the lineup', // NEW
 };
 
-export const lineup = {
-  eyebrow: 'The lineup', // NEW
-  heading: 'Find your SPOG.', // NEW
-  sub: 'Every trailer runs on the same solar and battery system. Pick the one built for your work.', // NEW
-  groups: [
-    { label: 'On the job site', ids: ['cargo', 'workstation'] }, // NEW
-    { label: 'At the event', ids: ['event'] }, // NEW
-    { label: 'Coming next', ids: ['garage', 'relief', 'camper'] },
+/**
+ * The lineup row, after Tesla's homepage cards: a category label, the name in that trailer's
+ * own type, one status line and the buttons. Nothing else. `category` and `status` are NEW.
+ * `size` is the name's font size in % of the card width, so every name fits its card.
+ */
+export type Look = 'studio' | 'work' | 'event' | 'garage' | 'relief' | 'camper';
+export const cards: {
+  id: string; name: string; category: string; status: string; live: boolean; href?: string;
+  image: string; alt: string; position: string; look: Look; size: number;
+}[] = [
+  { id: 'cargo', name: 'Cargo', category: 'Utility trailer', status: 'Available now', live: true, href: '/cargo', image: img.cargoFront, alt: 'SPOG Cargo trailer from the front, solar roof and light mast', position: '50% 50%', look: 'studio', size: 10 },
+  { id: 'workstation', name: 'Workstation', category: 'Mobile office', status: 'Available now', live: true, href: '/workstation', image: img.hero, alt: 'SPOG Workstation trailers on a lot at sunrise, solar wings open', position: '62% 62%', look: 'work', size: 7.6 },
+  { id: 'event', name: 'Event', category: 'LED screen trailer', status: 'Buy it or rent it', live: true, href: '/event', image: img.eventMovieNight, alt: 'Crowd on a lawn at night watching a movie on a SPOG Event trailer', position: '30% 64%', look: 'event', size: 8.4 },
+  { id: 'garage', name: 'Garage', category: 'Enclosed car hauler', status: 'Coming next', live: false, image: img.garageEv, alt: 'Electric car inside a lit SPOG Garage trailer', position: '55% 50%', look: 'garage', size: 8.4 },
+  { id: 'relief', name: 'Disaster Relief', category: 'Emergency power', status: 'Coming next', live: false, image: img.disasterSolar, alt: 'SPOG Disaster Relief trailer with solar panels deployed at a damaged site', position: '50% 50%', look: 'relief', size: 7.4 },
+  { id: 'camper', name: 'Camper', category: 'Off-grid camper', status: 'Coming next', live: false, image: img.camperCampfire, alt: 'SPOG Camper trailer by a campfire in the mountains', position: '68% 55%', look: 'camper', size: 9.6 },
+];
+
+/** What every SPOG shares. Nate's five: power, freedom, utility, quality, American made. */
+export const pillars = {
+  eyebrow: 'Every SPOG', // NEW
+  heading: 'What every trailer is built on.', // NEW
+  items: [
+    { title: 'Power', body: 'Up to 100 kWh of battery on board, refilled by its own solar panels.' }, // NEW, 100 kWh SOURCE (numbers)
+    { title: 'Freedom', body: 'No hookup and no fuel run, so it works wherever you park it.' }, // NEW
+    { title: 'Utility', body: 'Built to work, from the job site to the campsite.' }, // NEW
+    { title: 'Quality', body: 'A 3-year structural warranty and service that comes to you.' }, // NEW, facts SOURCE (guarantees)
+    { title: 'American made', body: 'Welded, wired and finished in Middletown, New York.' }, // NEW, fact SOURCE (Built)
   ],
 };
 
-/** Lineup tiles. `for` lines are NEW. */
-export const tiles: Record<string, { name: string; for: string; live: boolean; image: string; alt: string; position: string }> = {
-  cargo: { name: 'Cargo', for: 'For the crew', live: true, image: img.cargo34, alt: 'SPOG Cargo trailer', position: '50% 45%' },
-  workstation: { name: 'Workstation', for: 'For the site office', live: true, image: img.hero, alt: 'SPOG Workstation trailers on a lot at sunrise', position: '62% 62%' },
-  event: { name: 'Event', for: 'For venues and hosts', live: true, image: img.eventMovieNight, alt: 'Crowd watching an outdoor movie on a SPOG Event trailer', position: '28% 60%' },
-  garage: { name: 'Garage', for: 'For the car', live: false, image: img.garageEv, alt: 'Electric car inside a lit SPOG Garage trailer', position: '55% 50%' },
-  relief: { name: 'Disaster Relief', for: 'For relief teams', live: false, image: img.disasterSolar, alt: 'SPOG Disaster Relief trailer with solar panels deployed', position: '50% 50%' },
-  camper: { name: 'Camper', for: 'For off-grid nights', live: false, image: img.camperCampfire, alt: 'SPOG Camper trailer by a campfire', position: '70% 55%' },
+export const firstWordDialog = {
+  heading: 'Get first word.', // NEW
+  sub: nextUp.sub, // SOURCE
+  cta: nextUp.cta, // SOURCE
+  options: nextUp.products.map((p) => p.name),
 };
 
 // ---------- Work: Cargo and Workstation. Daylight, heavy type, a spec plate like a trailer's data plate.
@@ -69,10 +89,6 @@ export const workstation = {
   body: 'Heat, AC, desks and optional Starlink ride on the trailer. The super runs the job from day one instead of waiting on a generator hookup.', // SOURCE (useCases, office)
   inside: 'Desks, storage and a display inside', // NEW, from the Workstation specs
   plate: [...product('workstation').stats, ['Heat and AC', 'Standard']] as [string, string][], // SOURCE
-};
-
-export const jobsite = {
-  eyebrow: { gold: 'For the job site', text: 'Why crews switch' }, // NEW
 };
 
 // ---------- Event. Night, light from the screen, wide thin type, a marquee of the nights it runs.
