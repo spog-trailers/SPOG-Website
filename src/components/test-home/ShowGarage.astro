@@ -1,0 +1,43 @@
+---
+import Icon from '../ui/Icon.astro';
+import { garage, wordmark } from '../../data/testHome';
+// Garage look, the closest to Tesla's Roadster page: pure black, one beam of light across the
+// floor, the name slanted and metal, a thin gold rule, a row of features split by hairlines and
+// a small outlined button. Coming next: no specs and no Reserve, only the signup.
+// PLACEHOLDER: render from spogtrailers.com. It shows a Tesla Model S inside.
+---
+<section id="show-garage" aria-label="Garage, coming next" class="relative overflow-hidden bg-black pb-[110px] pt-[150px] text-bone max-[640px]:pb-20 max-[640px]:pt-24">
+  <div class="gr-beam pointer-events-none absolute -left-[20%] top-[58%] h-[260px] w-[140%] -rotate-[14deg] bg-[linear-gradient(to_bottom,rgb(255_255_255/0),rgb(255_255_255/.09)_45%,rgb(255_255_255/.14)_50%,rgb(255_255_255/.09)_55%,rgb(255_255_255/0))] blur-[18px]" aria-hidden="true"></div>
+
+  <div class="wrap relative z-[1] grid grid-cols-[5fr_7fr] items-center gap-12 max-[900px]:grid-cols-[repeat(1,1fr)] max-[900px]:gap-12">
+    <div class="max-[900px]:order-2">
+      <span class="text-[11px] font-semibold uppercase tracking-[.32em] text-mute">Coming next&nbsp;&nbsp;/&nbsp;&nbsp;{garage.eyebrow}</span>
+      <h2 class:list={['m-0 mt-6 pl-[.1em] text-[clamp(52px,6.4vw,92px)] leading-none', wordmark.garage]}>{garage.name}</h2>
+      <i class="mt-7 block h-px w-[min(280px,70%)] bg-[linear-gradient(90deg,var(--color-gold),rgb(238_161_20/0))]"></i>
+      <p class="mb-0 mt-7 max-w-[360px] text-[17px] leading-[1.65] text-bone/75">{garage.body}</p>
+      <a href="#first-word" data-pick={garage.name} class="mt-9 inline-flex h-[38px] items-center border-[1.5px] border-white/70 bg-black/40 px-[18px] text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-white no-underline hover:border-white hover:bg-white hover:text-black">{garage.cta}</a>
+    </div>
+    <figure class="m-0 max-[900px]:order-1">
+      <img
+        src={garage.image}
+        alt={garage.alt}
+        loading="lazy"
+        class="block aspect-[16/10] w-full object-cover brightness-[.92] contrast-[1.08] [mask-image:radial-gradient(ellipse_72%_70%_at_52%_50%,#000_52%,transparent_100%)]"
+      />
+    </figure>
+  </div>
+
+  <ul class="wrap relative z-[1] mt-20 grid list-none grid-cols-[repeat(3,1fr)] p-0 max-[640px]:mt-14 max-[640px]:grid-cols-[repeat(1,1fr)] max-[640px]:gap-8">
+    {garage.features.map((f) => (
+      <li class="flex flex-col items-center gap-4 text-center not-first:border-l not-first:border-gold/35 max-[640px]:not-first:border-l-0">
+        <Icon name={f.icon} class="size-[30px] stroke-white stroke-[1.4]" />
+        <span class="text-[11.5px] font-normal uppercase tracking-[.26em] text-bone/85">{f.label}</span>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .gr-beam { animation: gr-sweep 14s ease-in-out infinite alternate; }
+  @keyframes gr-sweep { from { translate: -4% 0; opacity: .75; } to { translate: 4% -18px; opacity: 1; } }
+</style>

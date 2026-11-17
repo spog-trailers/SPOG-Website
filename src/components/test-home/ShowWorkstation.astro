@@ -1,0 +1,41 @@
+---
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import SpecPlate from './SpecPlate.astro';
+import { img } from '../../data/content';
+import { workstation, product } from '../../data/testHome';
+const p = product('workstation');
+// Work look, photo version: full-bleed daylight with the warm site grade, the name set huge and
+// heavy across the frame, the data plate on glass. Same family as Cargo, louder.
+// Skips the Workstation studio render on purpose (its door decal breaks the naming rule).
+---
+<section id="show-workstation" aria-label="Workstation" class="grain relative flex min-h-screen items-end overflow-hidden bg-night pb-[90px] pt-[160px] text-white max-[640px]:pb-16">
+  <div class="drift absolute inset-0 overflow-hidden">
+    <img src={img.hero} alt="SPOG Workstation trailers on a lot at sunrise, solar wings open" loading="lazy" class="size-full object-cover object-[62%_60%] brightness-[.74] sepia-[.16] contrast-[1.12] saturate-[.88]" />
+  </div>
+  <div class="absolute inset-0 z-[1] bg-[linear-gradient(to_top,rgb(0_0_0/.9)_0%,rgb(0_0_0/.45)_38%,rgb(0_0_0/.1)_62%),linear-gradient(to_bottom,#000_0%,rgb(0_0_0/0)_16%)]"></div>
+
+  <div class="wrap relative z-[3] w-full">
+    <Eyebrow gold={workstation.lane} text="Available now" />
+    <h2 class="m-0 mt-5 text-[min(150px,9.8vw)] font-black uppercase leading-[.84] tracking-[-.05em] text-white">{p.name}</h2>
+
+    <div class="mt-10 grid grid-cols-[7fr_5fr] items-end gap-12 max-[900px]:grid-cols-[repeat(1,1fr)] max-[900px]:gap-9">
+      <div>
+        <span class="text-[11.5px] font-semibold uppercase tracking-[.22em] text-gold">{p.badge}</span>
+        <p class="mb-0 mt-3 max-w-[560px] text-[clamp(26px,2.6vw,36px)] font-semibold leading-[1.1] tracking-[-.03em]">{p.tag}</p>
+        <p class="mb-0 mt-3 max-w-[520px] text-[17px] text-white/78">{workstation.body}</p>
+        <div class="mt-8 flex flex-wrap items-center gap-x-7 gap-y-4">
+          <Button href="#cta" variant="gold">{p.cta}</Button>
+          <a href="/workstation" class="text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-white no-underline underline-offset-[6px] hover:underline">Explore Workstation &rarr;</a>
+        </div>
+      </div>
+      <div>
+        <figure class="m-0 overflow-hidden border-[1.5px] border-b-0 border-white/25">
+          <img src={img.office} alt="Inside a SPOG Workstation: desks, storage and a display" loading="lazy" class="block aspect-[16/7] w-full object-cover" />
+          <figcaption class="bg-black/55 px-5 py-2.5 text-[10.5px] font-semibold uppercase tracking-[.22em] text-bone/70 backdrop-blur-[10px]">{workstation.inside}</figcaption>
+        </figure>
+        <SpecPlate name={p.name} rows={workstation.plate} tone="glass" />
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,38 @@
+---
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import { img } from '../../data/content';
+import { hero } from '../../data/testHome';
+---
+<!--
+  Brand-level hero. It speaks for every trailer (the power is on board), not for one buyer.
+  PLACEHOLDER: the loop is a concept render from spogtrailers.com. The poster shows for reduced motion.
+-->
+<header id="top" class="grain relative flex h-screen min-h-[720px] items-end overflow-hidden bg-night">
+  <video
+    class="absolute inset-0 size-full object-cover brightness-[.66] saturate-[.9] sepia-[.12] contrast-[1.06]"
+    autoplay muted loop playsinline preload="metadata" poster={img.statementPoster} data-motion-video
+  >
+    <source src={img.statementVideo} type="video/mp4" />
+  </video>
+  <div class="scrim-hero absolute inset-0 z-[1]"></div>
+  <div class="wrap relative z-[3] w-full pb-16">
+    <Eyebrow gold={hero.eyebrow.gold} text={hero.eyebrow.text} class="block animate-rise-1" />
+    <h1 class="m-0 mt-6 animate-rise-1 text-[clamp(60px,10.4vw,170px)] font-black uppercase leading-[.84] tracking-[-.045em] text-white">
+      {hero.heading[0]}<br />{hero.heading[1]}
+    </h1>
+    <div class="mt-[34px] flex animate-rise-2 flex-wrap items-end justify-between gap-[30px]">
+      <p class="m-0 max-w-[460px] text-[18px] text-white/82">{hero.sub}</p>
+      <div class="flex flex-wrap gap-3">
+        <Button href="#lineup" variant="gold" arrow>{hero.primary}</Button>
+        <Button href="#walkthrough">Book a walkthrough</Button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll<HTMLVideoElement>('[data-motion-video]').forEach((v) => { v.removeAttribute('autoplay'); v.pause(); });
+  }
+</script>

@@ -1,0 +1,46 @@
+---
+import { relief, wordmark } from '../../data/testHome';
+// Disaster Relief look: duty and readiness. Cool, desaturated photo, a faint field grid, framed
+// corners like a field display, a status light, a readiness plate and the shop's coordinates.
+// No agency names, seals or logos, and nothing that suggests a government contract.
+// PLACEHOLDER: render from spogtrailers.com.
+const corner = 'pointer-events-none absolute size-6 border-gold';
+---
+<section id="show-relief" aria-label="Disaster Relief, coming next" class="grain relative flex min-h-screen items-center overflow-hidden bg-night py-[130px] text-bone max-[640px]:py-20">
+  <img src={relief.image} alt={relief.alt} loading="lazy" class="absolute inset-0 size-full object-cover object-[62%_50%] brightness-[.55] saturate-[.5] contrast-[1.18]" />
+  <div class="absolute inset-0 z-[1] bg-[linear-gradient(to_right,rgb(5_5_5/.94)_14%,rgb(5_5_5/.6)_48%,rgb(5_5_5/.12)_82%),linear-gradient(to_bottom,#000_0%,rgb(0_0_0/0)_14%,rgb(0_0_0/0)_86%,#000_100%)] max-[900px]:bg-[linear-gradient(to_bottom,#000_0%,rgb(5_5_5/.72)_30%,rgb(5_5_5/.86)_100%)]"></div>
+  <div class="absolute inset-0 z-[1] opacity-[.07]" style="background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);background-size:64px 64px" aria-hidden="true"></div>
+
+  <div class="wrap relative z-[3] w-full">
+    <div class="relative max-w-[600px] px-10 py-11 max-[640px]:px-6 max-[640px]:py-8">
+      <i class:list={[corner, 'left-0 top-0 border-l-2 border-t-2']}></i>
+      <i class:list={[corner, 'right-0 top-0 border-r-2 border-t-2']}></i>
+      <i class:list={[corner, 'bottom-0 left-0 border-b-2 border-l-2']}></i>
+      <i class:list={[corner, 'bottom-0 right-0 border-b-2 border-r-2']}></i>
+
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] font-semibold uppercase tracking-[.24em]">
+        <span class="flex items-center gap-2 text-white"><i class="size-2 animate-blink rounded-full bg-gold"></i>Coming next</span>
+        <span class="text-bone/45">/</span>
+        <span class="text-bone/70">{relief.eyebrow}</span>
+      </div>
+      <h2 class:list={['m-0 mt-6 text-[clamp(44px,5.6vw,84px)] leading-[.88] text-white', wordmark.relief]}>Disaster<br />Relief</h2>
+      <p class="mb-0 mt-6 text-[clamp(22px,2.2vw,30px)] font-semibold leading-[1.15] tracking-[-.02em] text-white">{relief.tagline}</p>
+      <p class="mb-0 mt-3 max-w-[440px] text-[17px] text-bone/75">{relief.body}</p>
+
+      <dl class="m-0 mt-8 border-y border-white/20">
+        {relief.plate.map(([k, v]) => (
+          <div class="flex items-baseline justify-between gap-6 py-3 not-last:border-b not-last:border-white/10">
+            <dt class="text-[11px] font-semibold uppercase tracking-[.22em] text-bone/60">{k}</dt>
+            <dd class="m-0 whitespace-nowrap text-[13px] font-extrabold uppercase tracking-[.14em] text-white max-[640px]:tracking-[.06em]">{v}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <a href="#first-word" data-pick={relief.name} class="mt-8 inline-flex h-[50px] items-center border-[1.5px] border-white bg-white px-[26px] text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-black no-underline hover:border-gold hover:bg-gold">{relief.cta}</a>
+    </div>
+  </div>
+
+  <span class="absolute bottom-8 right-9 z-[3] text-right text-[10.5px] font-semibold uppercase leading-[1.8] tracking-[.24em] text-bone/55 tabular-nums max-[640px]:hidden">
+    {relief.origin}<br />{relief.coords}
+  </span>
+</section>

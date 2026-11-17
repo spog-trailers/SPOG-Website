@@ -1,0 +1,61 @@
+---
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import { img } from '../../data/content';
+import { event, product } from '../../data/testHome';
+const p = product('event');
+// Event look, after Tesla's Roadster page: night, one light source (the screen, which breathes),
+// the name set thin and wide in the sky, everything centered, and a marquee of the nights it runs.
+// Uses the real movie-night photo, not the dusk render (that one shows a video game on the screen).
+---
+<section id="show-event" aria-label="Event" class="relative flex min-h-[120vh] flex-col overflow-hidden bg-night text-white">
+  <div class="absolute inset-0">
+    <img src={img.eventMovieNight} alt="Crowd on a lawn at night watching a movie on a SPOG Event trailer" loading="lazy" class="size-full object-cover object-[30%_100%] brightness-[.9] saturate-[1.08]" />
+    <div class="ev-glow absolute left-[27%] top-[60%] size-[min(900px,140vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgb(255_244_226/.42)_0%,rgb(238_161_20/.12)_30%,rgb(0_0_0/0)_62%)] mix-blend-screen"></div>
+  </div>
+  <div class="absolute inset-0 z-[1] bg-[linear-gradient(to_bottom,#000_0%,rgb(0_0_0/.62)_18%,rgb(0_0_0/.2)_46%,rgb(0_0_0/.25)_70%,rgb(0_0_0/.9)_92%,#000_100%)]"></div>
+
+  <div class="wrap relative z-[3] flex w-full flex-1 flex-col items-center pt-[15vh] text-center">
+    <Eyebrow gold={event.eyebrow.gold} text={event.eyebrow.text} />
+    <h2 class="ev-name m-0 mt-7 indent-[.3em] text-[clamp(64px,14vw,230px)] font-light uppercase leading-[.9] tracking-[.3em] text-white">{p.name}</h2>
+    <p class="mb-0 mt-6 text-[clamp(24px,2.6vw,38px)] font-semibold leading-[1.1] tracking-[-.025em]">{event.tagline}</p>
+    <p class="mb-0 mt-3 max-w-[540px] text-[17px] text-white/78">{event.body}</p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <Button href="#cta" variant="gold">{p.cta}</Button>
+      <!-- PLACEHOLDER: no rental terms yet (delivery, travel area, who runs the screen). Points at the walkthrough form. -->
+      <Button href="#walkthrough">{event.rent}</Button>
+    </div>
+    <p class="mb-0 mt-4 text-[14px] text-white/60">{event.buyRent}</p>
+    <a href="/event" class="mt-5 text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-white no-underline underline-offset-[6px] hover:underline">Explore Event &rarr;</a>
+
+    <dl class="mb-0 mt-auto flex flex-wrap justify-center gap-x-12 gap-y-5 pb-10 pt-[30vh] max-[640px]:pt-[24vh]">
+      {(p.stats as [string, string][]).map(([k, v]) => (
+        <div>
+          <dt class="text-[10.5px] font-semibold uppercase tracking-[.24em] text-white/60">{k}</dt>
+          <dd class="m-0 mt-1.5 whitespace-nowrap text-[20px] font-light tracking-[.06em]">{v}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+
+  <div class="relative z-[3] overflow-hidden border-y border-white/12 py-4" aria-hidden="true">
+    <div class="ev-marquee flex w-max">
+      {[0, 1].map(() => (
+        <span class="flex shrink-0">
+          {event.marquee.map((m) => (
+            <span class="flex items-center gap-10 pr-10 text-[13px] font-light uppercase tracking-[.36em] text-white/70 whitespace-nowrap">{m}<i class="size-1 rounded-full bg-gold"></i></span>
+          ))}
+        </span>
+      ))}
+    </div>
+  </div>
+  <p class="sr-only">{event.marquee.join(', ')}</p>
+</section>
+
+<style>
+  .ev-glow { animation: ev-breathe 5.5s ease-in-out infinite; }
+  @keyframes ev-breathe { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+  .ev-name { text-shadow: 0 0 60px rgb(255 240 220 / .25); }
+  .ev-marquee { animation: ev-scroll 46s linear infinite; }
+  @keyframes ev-scroll { to { transform: translateX(-50%); } }
+</style>

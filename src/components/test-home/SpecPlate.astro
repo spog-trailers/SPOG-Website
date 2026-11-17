@@ -1,0 +1,27 @@
+---
+/**
+ * Work-track detail: specs set like the data plate riveted to a trailer frame.
+ * tone "light" for stone sections, "glass" over photos.
+ */
+interface Props { name: string; rows: [string, string][]; tone?: 'light' | 'glass'; class?: string }
+const { name, rows, tone = 'light', class: extra = '' } = Astro.props;
+const light = tone === 'light';
+---
+<div class:list={[
+  'border-[1.5px]',
+  light ? 'border-ink/25 bg-paper text-ink' : 'border-white/25 bg-black/55 text-white backdrop-blur-[10px]',
+  extra,
+]}>
+  <div class:list={['flex items-center justify-between gap-4 border-b-[1.5px] px-5 py-3 text-[10.5px] font-semibold uppercase tracking-[.24em]', light ? 'border-ink/25 text-ink-soft' : 'border-white/25 text-bone/70']}>
+    <span>SPOG {name}</span>
+    <span>Middletown, NY</span>
+  </div>
+  <dl class="m-0 px-5">
+    {rows.map(([k, v]) => (
+      <div class:list={['flex items-baseline justify-between gap-6 py-3.5 not-last:border-b', light ? 'border-ink/12' : 'border-white/12']}>
+        <dt class:list={['text-[11px] font-semibold uppercase tracking-[.18em]', light ? 'text-ink-soft' : 'text-bone/65']}>{k}</dt>
+        <dd class="m-0 whitespace-nowrap text-[17px] font-extrabold tracking-[-.01em] tabular-nums">{v}</dd>
+      </div>
+    ))}
+  </dl>
+</div>

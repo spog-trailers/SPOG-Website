@@ -1,0 +1,49 @@
+---
+import { camper, firstWord, wordmark } from '../../data/testHome';
+// Camper look: quiet and expensive. Light stone, centered, sentence case at a medium weight,
+// a wide photo with soft corners and a lot of room. The signup for all three coming-next
+// trailers sits under it (id="first-word"). The Garage and Disaster Relief buttons preselect it.
+// PLACEHOLDER: render from spogtrailers.com.
+const field = 'h-[52px] rounded-[10px] border border-ink/15 bg-paper px-4 text-[16px] text-ink placeholder:text-ink-soft/70 focus-visible:border-gold';
+---
+<section id="show-camper" aria-label="Camper, coming next" class="bg-stone pb-[120px] pt-[140px] text-ink max-[640px]:pb-20 max-[640px]:pt-24">
+  <div class="wrap">
+    <div class="mx-auto max-w-[760px] text-center">
+      <span class="text-[11px] font-semibold uppercase tracking-[.32em] text-ink-soft">Coming next&nbsp;&nbsp;/&nbsp;&nbsp;{camper.eyebrow}</span>
+      <h2 class:list={['m-0 mt-6 text-[clamp(68px,9vw,140px)] leading-[.95] text-ink', wordmark.camper]}>{camper.name}</h2>
+      <p class="mx-auto mb-0 mt-6 max-w-[560px] text-[clamp(22px,2vw,28px)] font-medium leading-[1.3] tracking-[-.015em]">{camper.tagline}</p>
+      <p class="mx-auto mb-0 mt-3 max-w-[460px] text-[17px] text-ink-soft">{camper.body}</p>
+    </div>
+
+    <figure class="cp-photo m-0 mt-16 overflow-hidden rounded-[32px] max-[640px]:mt-12 max-[640px]:rounded-[20px]">
+      <img src={camper.image} alt={camper.alt} loading="lazy" class="block aspect-[21/9] w-full object-cover object-[60%_55%] max-[640px]:aspect-[4/3]" />
+    </figure>
+
+    <div id="first-word" class="mt-20 grid grid-cols-[5fr_7fr] items-end gap-10 border-t border-ink/15 pt-12 max-[900px]:grid-cols-[repeat(1,1fr)] max-[900px]:gap-7 max-[640px]:mt-14">
+      <div>
+        <h3 class="m-0 max-w-[440px] text-[clamp(24px,2.2vw,30px)] font-semibold leading-[1.15] tracking-[-.025em]">{firstWord.heading}</h3>
+        <p class="mb-0 mt-3 max-w-[420px] text-[16.5px] text-ink-soft">{firstWord.sub}</p>
+      </div>
+      <!-- TODO: connect to GoHighLevel (tag the lead with the trailer they picked). Read the GHL SOP in Notion first. -->
+      <form class="flex flex-wrap gap-2" onsubmit="return false" aria-label="Get first word on coming trailers">
+        <label for="fw-email" class="sr-only">Email</label>
+        <input id="fw-email" type="email" autocomplete="email" placeholder="you@company.com" class={`${field} min-w-[220px] flex-1`} />
+        <label for="fw-trailer" class="sr-only">Trailer</label>
+        <select id="fw-trailer" class={`${field} min-w-[190px] cursor-pointer max-[560px]:w-full`}>
+          <option value="">Which trailer?</option>
+          {firstWord.options.map((o) => <option>{o}</option>)}
+          <option>All of them</option>
+        </select>
+        <button type="button" class="h-[52px] cursor-pointer border-[1.5px] border-ink bg-ink px-[22px] text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-white hover:bg-transparent hover:text-ink max-[560px]:w-full">{firstWord.cta}</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  // "Get first word" on Garage and Disaster Relief preselects that trailer in the form.
+  const select = document.getElementById('fw-trailer') as HTMLSelectElement | null;
+  document.querySelectorAll<HTMLAnchorElement>('a[data-pick]').forEach((a) =>
+    a.addEventListener('click', () => { if (select) select.value = a.dataset.pick ?? ''; }),
+  );
+</script>

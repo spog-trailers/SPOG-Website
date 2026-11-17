@@ -1,0 +1,32 @@
+---
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import SpecPlate from './SpecPlate.astro';
+import { cargo, product } from '../../data/testHome';
+const p = product('cargo');
+// Work look, light version: Rivian's showroom move (huge name, the trailer over it) on stone,
+// heavy uppercase, the data plate, square buttons. The render sits in a framed studio plate
+// because its backdrop is a lit gradient that halos on any other background.
+---
+<section id="show-cargo" aria-label="Cargo" class="overflow-hidden bg-stone pb-[120px] pt-[120px] text-ink max-[640px]:pb-20 max-[640px]:pt-20">
+  <div class="wrap @container">
+    <Eyebrow gold={cargo.lane} text="Available now" />
+    <h2 class="m-0 mt-6 text-[25cqw] leading-[.76] text-ink font-black uppercase tracking-[-.055em] max-[900px]:text-[28cqw]">{p.name}</h2>
+
+    <div class="relative z-[1] -mt-[5cqw] grid grid-cols-[7fr_5fr] items-start gap-12 max-[900px]:grid-cols-[repeat(1,1fr)] max-[900px]:gap-10">
+      <div class="aspect-[4/3] overflow-hidden rounded-[24px] bg-studio shadow-[0_30px_60px_-30px_rgb(0_0_0/.35)]">
+        <img src={p.image} alt={p.alt} class="size-full object-cover" style="object-position:50% 40%" loading="lazy" />
+      </div>
+      <div class="pt-[calc(5cqw+36px)] max-[900px]:pt-0">
+        <span class="text-[11.5px] font-semibold uppercase tracking-[.22em] text-gold">{p.badge}</span>
+        <p class="mb-0 mt-3 text-[clamp(26px,2.6vw,36px)] font-semibold leading-[1.1] tracking-[-.03em]">{p.tag}</p>
+        <p class="mb-0 mt-3 max-w-[440px] text-[17px] text-ink-soft">{cargo.body}</p>
+        <SpecPlate name={p.name} rows={cargo.plate} class="mt-8" />
+        <div class="mt-8 flex flex-wrap items-center gap-x-7 gap-y-4">
+          <Button href="#cta" variant="gold">{p.cta}</Button>
+          <a href="/cargo" class="text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-ink no-underline underline-offset-[6px] hover:underline">Explore Cargo &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

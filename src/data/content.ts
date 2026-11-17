@@ -41,6 +41,7 @@ export const navLinks = [
   { label: 'Event', href: '/event' },
   { label: 'Coming next', href: '/#next' },
   { label: 'FAQ', href: '/#faq' },
+  { label: 'Test home page', href: '/test-home' }, // TEMPORARY: draft homepage for review. Remove when decided.
 ];
 
 // Thin bar above the nav. Tucks away once the page scrolls.

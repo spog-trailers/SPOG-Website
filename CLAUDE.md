@@ -19,6 +19,8 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 | Path | What it is |
 |---|---|
 | `src/pages/index.astro` | Homepage. Section order, the rhythm map and the list of held sections live in the comment at the top. |
+| `src/pages/test-home.astro` | Draft homepage at `/test-home` with a look per buyer (see "Test homepage"). Not indexed. Rhythm map in the top comment. |
+| `src/components/test-home/`, `src/data/testHome.ts` | Test homepage sections and their copy. Every line is marked NEW or SOURCE. |
 | `docs/homepage-teardown-2026-11-16.md` | Competitor research behind the current section order |
 | `src/pages/[product].astro` | Product pages at `/cargo`, `/workstation`, `/event`, one template. Section order and rhythm in the comment at the top. |
 | `src/data/productPages.ts` | Product page content: hero, feature tiles, runtime devices, statement photo, lengths. Every line is marked NEW, SOURCE or PLACEHOLDER. |
@@ -55,6 +57,35 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 - Photo sections share one warm grade (`grade-*` utilities), the `grain` overlay and a scrim (`scrim-*`). Reuse those for new photo sections.
 - Light sections use `bg-stone` with `bg-paper` cards. Dark sections use `bg-black`.
 - Container is the `wrap` utility (1320px max, 36px gutters).
+
+## Test homepage (draft, 2026-11-17)
+
+- `/test-home` tries Nate's idea of one brand with a different look per buyer, the way Tesla's Roadster differs from the Model Y. The live homepage at `/` is untouched. The nav carries a temporary "Test home page" link (marked in `navLinks`). Remove it once a version is chosen.
+- Order: Hero (brand promise), Lineup (all six trailers, plus the shared power numbers), Cargo, Workstation, Why crews switch, Event, Garage, Disaster Relief, Camper (with the first-word signup), Process, Guarantee, Built, Faq, Close.
+- Fixed everywhere: Montserrat, the color tokens, the nav, button shapes and `wrap`. What changes per trailer:
+  - **Work (Cargo, Workstation):** daylight, heavy uppercase, a spec "data plate".
+  - **Event:** night, a breathing screen glow, thin wide name, a marquee.
+  - **Garage:** black, a light beam, a slanted metal name, gold hairlines, after the Roadster page.
+  - **Disaster Relief:** cool grade, field grid, framed corners, a readiness plate.
+  - **Camper:** light, centered, sentence case.
+  - The lineup tiles set each name in that trailer's own type (`wordmark` in `testHome.ts`).
+- Coming-next trailers get no specs and no Reserve, only "Get first word". Garage and Disaster Relief buttons preselect the trailer in the signup form.
+- The Event "Ask about renting" button points at the walkthrough form until rental terms exist.
+
+## Planned sitemap (Nate, 2026-11-17, not built yet)
+
+- **Home**
+- **Cargo**
+- **Workstation:** includes a section on using it as a remote office (nomads, influencers), linking to its own landing page.
+- **Event:** mostly about buying or renting it for your own events. A section covers buying one to rent out as an income stream, linking to its own landing page.
+- **Garage**
+- **Disaster Relief**
+- **RV**
+- **About:** factory, build quality, service.
+- **Contact**
+- **Support:** dropdown with Blog, FAQ, Warranty and Service.
+
+Each product page is written for its own buyer. The single shared `[product].astro` template gets replaced.
 
 ## Product pages
 
@@ -104,6 +135,8 @@ Everything below was invented for the mockup and must be replaced with real, app
 - Product pages: every line marked NEW in `productPages.ts` needs approval, and so does the copy written into `src/components/product/` (section headings, the runtime footnote, button labels). Feature tiles marked PLACEHOLDER SOURCE (Workstation security cameras, Event 5G internet and 360 cameras) come from the old site and need confirming.
 - Product page lengths: Cargo 12/16/20 ft and Event 24/31 ft stops are guesses between documented endpoints. Workstation stops come from the old configurator and Hybrid Fleet page.
 - Product page photos: Cargo and Workstation statement photos are Red Rocks placeholders (the Cargo one may not show a Cargo). The Event dusk render shows a video game on the screen, so check rights or swap the screen image.
+- The Garage render (`garage-ev-inside.jpg`) shows a Tesla Model S inside. Swap it for a neutral car before launch.
+- Test homepage: every line marked NEW in `testHome.ts`, the "See it run your tools on a walkthrough" link, and the Event rental button (no terms yet).
 - Specs conflict between this site and spogtrailers.com (Cargo 8 to 35 ft, 5 to 64 kWh and up to 5,000W on the old site). The homepage numbers are used until the official spec sheet settles it.
 
 ## Photography needed (Robert's shot list)

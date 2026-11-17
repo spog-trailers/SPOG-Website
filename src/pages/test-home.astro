@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/sections/Nav.astro';
+import TestHero from '../components/test-home/TestHero.astro';
+import LineupIndex from '../components/test-home/LineupIndex.astro';
+import ShowCargo from '../components/test-home/ShowCargo.astro';
+import ShowWorkstation from '../components/test-home/ShowWorkstation.astro';
+import JobsitePain from '../components/test-home/JobsitePain.astro';
+import ShowEvent from '../components/test-home/ShowEvent.astro';
+import ShowGarage from '../components/test-home/ShowGarage.astro';
+import ShowRelief from '../components/test-home/ShowRelief.astro';
+import ShowCamper from '../components/test-home/ShowCamper.astro';
+import Process from '../components/sections/Process.astro';
+import Guarantee from '../components/sections/Guarantee.astro';
+import Built from '../components/sections/Built.astro';
+import Faq from '../components/sections/Faq.astro';
+import Close from '../components/sections/Close.astro';
+import Footer from '../components/sections/Footer.astro';
+import MobileBar from '../components/sections/MobileBar.astro';
+---
+<!--
+  TEST HOMEPAGE (draft, 2026-11-17). The live homepage at / is untouched. Not indexed.
+  Copy and its approval status live in src/data/testHome.ts.
+
+  One brand, a look per buyer. Every trailer gets its own showcase, like Tesla and Rivian.
+  On-sale trailers get Reserve and specs. Coming-next trailers get a signup only.
+    Brand  Hero, Lineup (all six + the shared power numbers), Process to Close
+    Work   Cargo, Workstation, JobsitePain   daylight, heavy type, data plate
+    Event  Event                             night, screen glow, thin wide type, marquee
+    Garage Garage                            black, light beam, slanted metal name
+    Relief Disaster Relief                   cool grade, field grid, framed corners
+    Camper Camper + first-word signup        light, centered, sentence case
+
+  Section rhythm (never two photo sections next to each other):
+    Hero P, Lineup D, Cargo L, Workstation P, JobsitePain D, Event P, Garage D,
+    Disaster Relief P, Camper L, Process D, Guarantee L, Built P, Faq L, Close D
+  Keep the ids top, cta, walkthrough, sheet and faq so Nav, MobileBar and Close work.
+-->
+<Base title="Test homepage | SPOG Trailers" noindex>
+  <Nav />
+  <TestHero />
+  <LineupIndex />
+  <ShowCargo />
+  <ShowWorkstation />
+  <JobsitePain />
+  <ShowEvent />
+  <ShowGarage />
+  <ShowRelief />
+  <ShowCamper />
+  <Process />
+  <Guarantee />
+  <Built />
+  <Faq />
+  <Close />
+  <Footer />
+  <MobileBar />
+</Base>
