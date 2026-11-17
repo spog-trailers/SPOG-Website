@@ -190,7 +190,7 @@ export const hotspots = [
 ];
 
 export const numbers = [
-  { label: 'Battery up to', value: '40 kWh', note: 'across the lineup' },
+  { label: 'Battery up to', value: '100 kWh', note: 'across the lineup' }, // Event tops out at 100 kWh
   { label: 'Fuel per day', value: '0 gal', note: 'on solar recharge', gold: true },
   { label: 'Structural warranty', value: '3 yrs', note: 'with mobile service' },
 ];
