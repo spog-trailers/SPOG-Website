@@ -11,7 +11,7 @@ import { srcset } from '../../data/content';
  * with a 24px gutter up to 1920px. Each card has its icon next to its name.
  * Videos stay unloaded (preload none) until a card scrolls into view, play muted while it's on
  * screen and pause when it leaves. With reduced motion they stay on their poster.
- * A card without a video shows its still, dimmed, with a tag saying what Robert needs to shoot.
+ * A card without a video shows its photo. One with a `note` is dimmed under a tag saying what's missing.
  * Desktop shows three across. Under 900px the row swipes.
  */
 const gutter = 'mx-auto max-w-[1920px] px-6 max-[640px]:px-5';
@@ -34,7 +34,7 @@ const row = 'm-0 mt-14 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-4 
                 <source src={c.video} type="video/mp4" />
               </video>
             ) : (
-              <img src={c.poster} srcset={srcset(c.poster)} sizes="(max-width: 900px) 80vw, 33vw" alt={c.alt} loading="lazy" style={c.position && `object-position:${c.position}`} class="absolute inset-0 size-full object-cover brightness-[.5] saturate-[.7]" />
+              <img src={c.poster} srcset={srcset(c.poster)} sizes="(max-width: 900px) 80vw, 33vw" alt={c.alt} loading="lazy" style={c.position && `object-position:${c.position}`} class:list={['absolute inset-0 size-full object-cover', c.note && 'brightness-[.5] saturate-[.7]']} />
             )}
             {c.note && (
               <p class="absolute inset-x-4 bottom-4 m-0 rounded-[10px] border border-dashed border-white/45 bg-black/55 px-4 py-3 backdrop-blur-[6px]">

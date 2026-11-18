@@ -1,22 +1,42 @@
 ---
 import Eyebrow from '../ui/Eyebrow.astro';
-import { img, statement, numbers } from '../../data/content';
+import { img, statement, numbers as homeNumbers } from '../../data/content';
+// Props let the test homepage 2 bring its own words, video and numbers. The defaults keep the
+// live homepage exactly as it was. `words` should be four pieces: they light up one by one on
+// scroll and the fourth turns gold (public/scroll-effects.css). `lazy` holds the video until the
+// section comes near, for pages that already have other videos.
+interface Props {
+  eyebrow?: { gold: string; text?: string };
+  words?: string[];
+  video?: string;
+  poster?: string;
+  numbers?: typeof homeNumbers;
+  lazy?: boolean;
+}
+const {
+  eyebrow = { gold: 'Self-powered', text: 'Solar on board' },
+  words = statement,
+  video = img.statementVideo,
+  poster = img.statementPoster,
+  numbers = homeNumbers,
+  lazy = false,
+} = Astro.props;
 ---
 <!-- PHOTO: wide shot of a SPOG on a Tri-State site at first light. 21:9. -->
 <!-- PLACEHOLDER: the loop is a concept render from spogtrailers.com. The poster image shows for reduced motion. -->
 <!-- Self-powered: the statement words light up on scroll, then the three key numbers sit under them. -->
 <section aria-label="Self-powered" class="grain relative flex min-h-[110vh] items-center justify-center overflow-hidden bg-black px-6 py-[18vh]">
   <div class="drift absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
-    <video class="grade-dim size-full object-cover" autoplay muted loop playsinline preload="metadata" poster={img.statementPoster} data-motion-video>
-      <source src={img.statementVideo} type="video/mp4" />
+    <video class="grade-dim size-full object-cover" autoplay={!lazy} muted loop playsinline preload={lazy ? 'none' : 'metadata'} poster={poster} data-motion-video data-statement-lazy={lazy || undefined}>
+      <source src={video} type="video/mp4" />
     </video>
   </div>
   <div class="scrim-statement absolute inset-0 z-[1]"></div>
 
   <div class="relative z-[3] flex w-full flex-col items-center">
-    <Eyebrow gold="Self-powered" text="Solar on board" />
+    <Eyebrow gold={eyebrow.gold} text={eyebrow.text} />
     <p class="lit-words mb-0 mt-7 max-w-[1100px] text-center text-[clamp(44px,7.4vw,112px)] font-extrabold leading-[.98] tracking-[-.045em]">
-      {statement.map((w, i) => <>{i > 0 && ' '}<span class="text-white/22">{w}</span></>)}
+      {words.map((w, i) => <>{i > 0 && ' '}<span class="text-white/22">{w}</span></>)}
     </p>
 
     <ul class="mt-[14vh] grid w-full max-w-[1100px] grid-cols-[repeat(3,1fr)] text-center max-[760px]:grid-cols-[repeat(1,1fr)] max-[760px]:gap-[44px]">
@@ -33,7 +53,13 @@ import { img, statement, numbers } from '../../data/content';
 
 <script>
   // Respect reduced motion: stop the loop and leave the poster frame.
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (still) {
     document.querySelectorAll<HTMLVideoElement>('[data-motion-video]').forEach((v) => { v.removeAttribute('autoplay'); v.pause(); });
+  }
+  // A lazy loop plays only while its section is on screen.
+  const lazyVideo = document.querySelector<HTMLVideoElement>('[data-statement-lazy]');
+  if (lazyVideo && !still && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => (e.isIntersecting ? lazyVideo.play().catch(() => {}) : lazyVideo.pause()), { threshold: 0.15 }).observe(lazyVideo);
   }
 </script>

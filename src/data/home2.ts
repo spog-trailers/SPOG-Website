@@ -90,7 +90,15 @@ export type Solution = {
 };
 export const solutions: { heading: string[]; cards: Solution[] } = {
   heading: ['One trailer.', 'Three problems solved.'], // SOURCE (approved Workstation line)
+  // Order (Nate, 2026-11-18): the Power video sits in the middle, flanked by the two photos.
   cards: [
+    {
+      id: 'security', icon: 'camera', title: 'Security',
+      line: 'Lock up your gear and leave it on site.', // NEW
+      body: 'Keep your tools in a locked trailer and add cameras and lights that watch the site overnight. Your crew skips the load-out at the end of the day.', // NEW. CONFIRM which cameras ship at V1.
+      poster: shoot.wsSecurityMast, position: '50% 40%',
+      alt: 'Lights and cameras on the mast of a SPOG trailer', // a night shot of the mast at work would be stronger
+    },
     {
       id: 'power', icon: 'battery', title: 'Power',
       line: 'Power where you need it.', // NATE, minus "ever" from his "wherever" (the guardrail on "anywhere" claims). Easy to put back.
@@ -99,21 +107,11 @@ export const solutions: { heading: string[]; cards: Solution[] } = {
       alt: 'Crew welding beside an open SPOG trailer, then a close-up of the welder',
     },
     {
-      id: 'security', icon: 'camera', title: 'Security',
-      line: 'Lock up your gear and leave it on site.', // NEW
-      body: 'Keep your tools in a locked trailer and add cameras and lights that watch the site overnight. Your crew skips the load-out at the end of the day.', // NEW. CONFIRM which cameras ship at V1.
-      poster: shoot.wsSecurityMast, position: '50% 40%',
-      alt: 'Lights and cameras on the mast of a SPOG trailer',
-      note: { tag: 'Video needed from Robert', shot: 'The mast cameras and lights keeping watch at night' }, // PLACEHOLDER
-    },
-    {
       id: 'comfort', icon: 'climate', title: 'Comfort',
       line: 'Work in comfort on site.', // NEW
       body: 'Take calls and review plans in a room with heat and AC. It comes standard on the Workstation and is available on Cargo.', // NEW, facts from Nate
-      video: '/images/solution-comfort.mp4', poster: '/images/solution-comfort.jpg',
-      alt: 'Desk, chair and two monitors inside a SPOG Workstation',
-      // PLACEHOLDER: from the remote-office shoot. It shows the wood-slat interior, which may be an option.
-      note: { tag: 'Stand-in video', shot: 'A crew member working inside with the heat or AC running' },
+      poster: shoot.wsHvac, position: '60% 50%', // Nate's pick (2026-11-18)
+      alt: 'Heat and AC unit in an open side compartment of a white SPOG Workstation',
     },
   ],
 };
@@ -136,6 +134,23 @@ export const future = {
     { id: 'garage', name: 'Garage', look: 'garage', line: soon('Garage').body, image: soon('Garage').image, alt: soon('Garage').alt, position: '55% 50%', size: 15 }, // the render shows a Tesla inside, swap before launch
     { id: 'relief', name: 'Disaster Relief', look: 'relief', line: soon('Disaster Relief').body, image: soon('Disaster Relief').image, alt: soon('Disaster Relief').alt, position: '50% 50%', size: 13 },
     { id: 'camper', name: 'Camper', look: 'camper', line: 'Camp on solar power, with walls that fold out.', image: soon('Camper').image, alt: soon('Camper').alt, position: '68% 55%', size: 16 }, // NEW line, written without "off-grid" (guardrail)
+  ],
+};
+
+/**
+ * Self-powered statement, in the look of the live homepage's "Pull in. Plug in." band. Nate likes
+ * the look and not the copy (2026-11-18). The four pieces light up on scroll and the last turns
+ * gold. Background is his snowy drone shot of a Workstation on tow, at 0.75x, smoothed and looped.
+ * The live homepage's "100 kWh across the lineup" number is left out (stale).
+ */
+export const statement = {
+  eyebrow: { gold: 'Self-powered', text: 'Solar on board' }, // SOURCE
+  words: ['Bring', 'your', 'own', 'power.'], // SOURCE (Nate approved "Bring your own power." on 2026-11-17)
+  video: '/images/statement-snow-tow.mp4', poster: '/images/statement-snow-tow.jpg', // a Rivian tows it, check that's fine before launch
+  numbers: [
+    { label: 'Length up to', value: '20 ft', note: 'built at 10 or 20 ft' }, // NEW wording, Nate's sizes
+    { label: 'Fuel per day', value: '0 gal', note: 'on solar recharge', gold: true }, // SOURCE (live homepage). CONFIRM with Joe, the snow footage makes it read as a winter claim.
+    { label: 'Structural warranty', value: '3 yrs', note: 'with mobile service' }, // SOURCE
   ],
 };
 
