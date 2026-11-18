@@ -126,14 +126,16 @@ export const solutions: { heading: string[]; cards: Solution[] } = {
 const soon = (name: string) => nextUp.products.find((p) => p.name === name)!;
 export const future = {
   heading: 'Our future lineup.', // NEW, after "Our 2027 lineup."
-  sub: nextUp.sub, // SOURCE
-  cta: nextUp.cta, // SOURCE ("Get first word")
-  dialogHeading: 'Get first word.', // NEW (from /test-home)
+  sub: "Tell us which one you want and we'll let you know when it's ready.", // NEW, from nextUp.sub without "first word"
+  cta: 'Join the waitlist', // NATE (2026-11-18)
+  dialogHeading: 'Join the waitlist.', // NATE
+  // Nate (2026-11-18): say plainly that these are renderings of trailers that don't exist yet.
+  disclaimer: "Images are concept renderings. Garage, Disaster Relief and Camper aren't built or for sale yet.", // NEW wording, NATE's direction
   cards: [
     // `size` is the name's font size in % of the card width. PLACEHOLDER: all three one-liners need approval.
-    { id: 'garage', name: 'Garage', look: 'garage', category: 'Enclosed car hauler', line: soon('Garage').body, image: soon('Garage').image, alt: soon('Garage').alt, position: '55% 50%', size: 15 }, // the render shows a Tesla inside, swap before launch
-    { id: 'relief', name: 'Disaster Relief', look: 'relief', category: 'Emergency power', line: soon('Disaster Relief').body, image: soon('Disaster Relief').image, alt: soon('Disaster Relief').alt, position: '50% 50%', size: 13 },
-    { id: 'camper', name: 'Camper', look: 'camper', category: 'Solar camper', line: 'Camp on solar power, with walls that fold out.', image: soon('Camper').image, alt: soon('Camper').alt, position: '68% 55%', size: 16 }, // NEW category and line, written without "off-grid" (guardrail)
+    { id: 'garage', name: 'Garage', look: 'garage', line: soon('Garage').body, image: soon('Garage').image, alt: soon('Garage').alt, position: '55% 50%', size: 15 }, // the render shows a Tesla inside, swap before launch
+    { id: 'relief', name: 'Disaster Relief', look: 'relief', line: soon('Disaster Relief').body, image: soon('Disaster Relief').image, alt: soon('Disaster Relief').alt, position: '50% 50%', size: 13 },
+    { id: 'camper', name: 'Camper', look: 'camper', line: 'Camp on solar power, with walls that fold out.', image: soon('Camper').image, alt: soon('Camper').alt, position: '68% 55%', size: 16 }, // NEW line, written without "off-grid" (guardrail)
   ],
 };
 

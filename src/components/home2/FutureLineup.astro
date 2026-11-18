@@ -5,24 +5,27 @@ import { srcset } from '../../data/content';
 /**
  * Our future lineup: Garage, Disaster Relief and Camper, one compact card each in the looks Nate
  * liked on /test-home (Garage black with a slanted metal name, Disaster Relief with the field grid
- * and gold corners, Camper in natural light). No specs and no Reserve. "Get first word" opens a
+ * and gold corners, Camper in natural light). No specs and no Reserve. "Join the waitlist" opens a
  * small signup with that trailer picked. Light section, after the dark feature cards.
- * The lineup strip and the footer's Coming Next link jump here (#future).
+ * Runs wider than the page container, like the solution cards. A small note under the row says
+ * the images are concept renderings (Nate, 2026-11-18).
+ * The lineup strip and the footer's Future lineup link jump here (#future).
  */
 const btn = 'inline-flex h-[44px] cursor-pointer items-center justify-center border-[1.5px] border-white/80 bg-black/30 px-[22px] text-[11.5px] font-bold uppercase leading-[normal] tracking-[.2em] text-white backdrop-blur-[6px] hover:border-white hover:bg-white hover:text-black';
 const field = 'h-[52px] w-full rounded-[10px] border border-panel-line bg-black px-4 text-[16px] text-white placeholder:text-[#8a8a8a] focus-visible:border-gold';
-const row = 'm-0 mt-12 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-4 p-0 max-[900px]:no-scrollbar max-[900px]:-mx-9 max-[900px]:flex max-[900px]:snap-x max-[900px]:snap-mandatory max-[900px]:overflow-x-auto max-[900px]:px-9 max-[900px]:scroll-px-9 max-[640px]:mt-9 max-[640px]:gap-3';
+const gutter = 'mx-auto max-w-[1920px] px-6 max-[640px]:px-5';
+const row = 'm-0 mt-12 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-4 p-0 max-[900px]:no-scrollbar max-[900px]:-mx-6 max-[900px]:flex max-[900px]:snap-x max-[900px]:snap-mandatory max-[900px]:overflow-x-auto max-[900px]:px-6 max-[900px]:scroll-px-6 max-[640px]:-mx-5 max-[640px]:mt-9 max-[640px]:gap-3 max-[640px]:px-5 max-[640px]:scroll-px-5';
 ---
 <section id="future" aria-label="Our future lineup" class="bg-stone pb-[110px] pt-[110px] text-ink max-[640px]:pb-16 max-[640px]:pt-16">
-  <div class="wrap">
+  <div class={gutter}>
     <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-3">
       <h2 class="m-0 text-[clamp(32px,3.6vw,48px)] font-semibold leading-[1.05] tracking-[-.035em] text-coal">{future.heading}</h2>
       <p class="m-0 max-w-[440px] text-[16.5px] leading-[1.55] text-ink-soft">{future.sub}</p>
     </div>
     <ul class={row}>
       {future.cards.map((c) => (
-        <li class="@container relative aspect-[1/1] min-w-0 overflow-hidden rounded-[18px] bg-night max-[900px]:aspect-[4/5] max-[900px]:w-[min(78vw,420px)] max-[900px]:shrink-0 max-[900px]:snap-start" data-look={c.look}>
-          <img src={c.image} srcset={srcset(c.image)} sizes="(max-width: 900px) 78vw, 420px" alt={c.alt} loading="lazy" style={`object-position:${c.position}`} class="fl-img absolute inset-0 size-full object-cover" />
+        <li class="@container relative aspect-[1/1] min-w-0 overflow-hidden rounded-[18px] bg-night max-[900px]:aspect-[4/5] max-[900px]:w-[min(80vw,440px)] max-[900px]:shrink-0 max-[900px]:snap-start" data-look={c.look}>
+          <img src={c.image} srcset={srcset(c.image)} sizes="(max-width: 900px) 80vw, 33vw" alt={c.alt} loading="lazy" style={`object-position:${c.position}`} class="fl-img absolute inset-0 size-full object-cover" />
           <div class="fl-scrim absolute inset-0"></div>
           {c.look === 'relief' && (
             <div class="pointer-events-none absolute inset-[16px]" aria-hidden="true">
@@ -32,8 +35,7 @@ const row = 'm-0 mt-12 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-4 
               <i class="absolute bottom-0 right-0 size-5 border-b-2 border-r-2 border-gold"></i>
             </div>
           )}
-          <div class="relative z-[1] flex h-full flex-col justify-between p-[clamp(22px,7cqw,34px)] text-white">
-            <span class="text-[14.5px] font-semibold tracking-[-.005em] text-white/90">{c.category}</span>
+          <div class="relative z-[1] flex h-full flex-col justify-end p-[clamp(22px,6cqw,40px)] text-white">
             <div>
               <h3 class:list={['fl-name m-0 leading-[.95]', wordmark[c.id], c.look === 'garage' && 'pl-[.08em]']} style={`font-size:${c.size}cqw`}>
                 {c.look === 'relief' ? <>Disaster<br />Relief</> : c.name}
@@ -46,6 +48,10 @@ const row = 'm-0 mt-12 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-4 
         </li>
       ))}
     </ul>
+    <p class="mb-0 mt-5 flex items-start gap-2.5 text-[13px] leading-[1.5] text-ink-soft max-[640px]:mt-4 max-[640px]:text-[12.5px]">
+      <svg viewBox="0 0 20 20" class="mt-px size-4 shrink-0 fill-none stroke-current stroke-[1.5]" aria-hidden="true"><circle cx="10" cy="10" r="8" /><path d="M10 9v5M10 6.2v.1" stroke-linecap="round" /></svg>
+      {future.disclaimer}
+    </p>
   </div>
 </section>
 
@@ -87,7 +93,7 @@ const row = 'm-0 mt-12 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-4 
 </style>
 
 <script>
-  // "Get first word" opens the signup with that trailer picked.
+  // "Join the waitlist" opens the signup with that trailer picked.
   const dialog = document.getElementById('fl-dialog') as HTMLDialogElement | null;
   const pick = document.getElementById('fl-trailer') as HTMLSelectElement | null;
   if (dialog && pick) {
