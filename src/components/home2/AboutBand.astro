@@ -2,14 +2,21 @@
 import Button from '../ui/Button.astro';
 import Eyebrow from '../ui/Eyebrow.astro';
 import { about } from '../../data/home2';
-import { srcset } from '../../data/content';
-// Mini about, in the look of the Built section (photo on the right, fading into the dark).
+// Mini about, in the look of the Built section (picture on the right, fading into the dark).
+// The picture is a slowed, looping shop video (Nate, 2026-11-18). It loads when the section comes
+// near, plays while it's on screen and stays on its poster with reduced motion.
 // It carries the factory, the warranty and the service in one place. Keep the id "built",
 // because the American made card links here.
 ---
 <section id="built" aria-label="Built in Middletown, New York" class="grain relative flex min-h-[88vh] items-center overflow-hidden bg-night py-24">
   <div class="drift absolute inset-y-0 right-0 z-0 w-[68%] overflow-hidden max-[760px]:w-full" aria-hidden="true">
-    <img src={about.image} srcset={srcset(about.image)} sizes="(max-width: 760px) 100vw, 68vw" alt="" loading="lazy" style={`object-position:${about.position}`} class="fade-left grade-built size-full object-cover max-[760px]:[mask-image:none] max-[760px]:[-webkit-mask-image:none]" />
+    <video
+      data-about-video muted loop playsinline preload="none" poster={about.poster}
+      style={`object-position:${about.position}`}
+      class="fade-left grade-built size-full object-cover max-[760px]:[mask-image:none] max-[760px]:[-webkit-mask-image:none]"
+    >
+      <source src={about.video} type="video/mp4" />
+    </video>
   </div>
   <div class="scrim-built absolute inset-0 z-[1]"></div>
 
@@ -22,3 +29,14 @@ import { srcset } from '../../data/content';
     <Button href={about.cta.href} arrow class="mt-10">{about.cta.label}</Button>
   </div>
 </section>
+
+<script>
+  const video = document.querySelector<HTMLVideoElement>('[data-about-video]');
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (video && 'IntersectionObserver' in window) {
+    new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting && !still.matches) video.play().catch(() => {}); else video.pause(); },
+      { threshold: 0.2 },
+    ).observe(video);
+  }
+</script>

@@ -2,10 +2,17 @@
 import { img, navLinks, announcement } from '../../data/content';
 // Two-line nav buttons: a small label says who the button is for, the action sits under it.
 const navBtn = 'flex h-11 flex-col justify-center border-[1.5px] px-4 leading-[normal] no-underline';
-// `cta` is the gold button and `lineupHref` is where the announcement bar points. The defaults
-// keep every existing page as it was. The test homepage 2 passes its own.
-interface Props { cta?: { small: string; label: string; href: string }; lineupHref?: string }
-const { cta = { small: '2027 lineup', label: 'Reserve', href: '#cta' }, lineupHref = announcement.href } = Astro.props;
+// `cta` is the gold button, `demo` the outlined one, `lineupHref` is where the announcement bar
+// points and `links` are the nav links. Leave out `small` for a one-line button. The defaults keep
+// every existing page as it was. The test homepage 2 and /demo pass their own.
+type NavButton = { small?: string; label: string; href: string };
+interface Props { cta?: NavButton; demo?: NavButton; lineupHref?: string; links?: { label: string; href: string }[] }
+const {
+  cta = { small: '2027 lineup', label: 'Reserve', href: '#cta' },
+  demo = { small: 'See it run', label: 'Book a walkthrough', href: '#walkthrough' },
+  lineupHref = announcement.href,
+  links = navLinks,
+} = Astro.props;
 ---
 <div
   id="masthead"
@@ -19,18 +26,18 @@ const { cta = { small: '2027 lineup', label: 'Reserve', href: '#cta' }, lineupHr
   <nav aria-label="Main" class="h-16 border-b border-line bg-black/72 backdrop-blur-[16px]">
     <div class="wrap flex h-full items-center gap-10 max-[1320px]:gap-7 max-[640px]:px-5">
       <a href="/" class="shrink-0"><img src={img.logoWhite} alt="SPOG Solar Power Off Grid" class="h-6 w-auto" /></a>
-      <ul class="flex gap-[30px] whitespace-nowrap max-[1320px]:gap-5 max-[1190px]:hidden">
-        {navLinks.map((l) => (
+      <ul class="flex gap-[30px] whitespace-nowrap max-[1320px]:gap-5 max-[1240px]:gap-4 max-[1190px]:hidden">
+        {links.map((l) => (
           <li><a href={l.href} class="text-[12px] font-semibold uppercase tracking-[.16em] text-[#C7CAD0] no-underline hover:text-white">{l.label}</a></li>
         ))}
       </ul>
       <div class="ml-auto flex gap-2.5 whitespace-nowrap">
-        <a href="#walkthrough" class={`${navBtn} border-white/70 text-white hover:border-white hover:bg-white hover:text-black max-[640px]:hidden`}>
-          <small class="text-[8.5px] font-semibold uppercase tracking-[.22em] opacity-70">See it run</small>
-          <span class="text-[11.5px] font-bold uppercase tracking-[.18em]">Book a walkthrough</span>
+        <a href={demo.href} class={`${navBtn} border-white/70 text-white hover:border-white hover:bg-white hover:text-black max-[640px]:hidden`}>
+          {demo.small && <small class="text-[8.5px] font-semibold uppercase tracking-[.22em] opacity-70">{demo.small}</small>}
+          <span class="text-[11.5px] font-bold uppercase tracking-[.18em]">{demo.label}</span>
         </a>
         <a href={cta.href} class={`${navBtn} border-gold bg-gold text-black hover:border-white hover:bg-white`}>
-          <small class="text-[8.5px] font-semibold uppercase tracking-[.22em] opacity-70">{cta.small}</small>
+          {cta.small && <small class="text-[8.5px] font-semibold uppercase tracking-[.22em] opacity-70">{cta.small}</small>}
           <span class="text-[11.5px] font-bold uppercase tracking-[.18em]">{cta.label}</span>
         </a>
       </div>

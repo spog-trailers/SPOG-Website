@@ -71,16 +71,12 @@ const wordmark: Record<string, string> = {
   </div>
 
   <div class="border-y border-line bg-black">
-    <div class="wrap flex flex-wrap items-center justify-between gap-x-10 gap-y-5 py-8 max-[640px]:py-7">
-      <p class="m-0 flex flex-wrap items-center gap-x-5 gap-y-2">
-        <span class="flex items-center gap-3 text-[11.5px] font-semibold uppercase tracking-[.24em] text-mute"><i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>{lineup.next.kicker}</span>
-        <span class="text-[clamp(18px,1.6vw,22px)] font-semibold tracking-[-.02em] text-white">{lineup.next.line}</span>
-      </p>
-      <a href={lineup.next.href} class="inline-flex h-[44px] items-center gap-[14px] border-[1.5px] border-white/70 px-[22px] text-[11.5px] font-bold uppercase leading-[normal] tracking-[.2em] text-white no-underline hover:border-white hover:bg-white hover:text-black">
-        {lineup.next.cta}
-        <svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-      </a>
-    </div>
+    <a href={lineup.next.href} class="wrap group flex items-center justify-between gap-6 py-8 text-white no-underline max-[640px]:py-7">
+      <span class="text-[clamp(18px,1.6vw,22px)] font-semibold tracking-[-.02em]">{lineup.next.line}</span>
+      <span class="grid size-[44px] shrink-0 place-items-center border-[1.5px] border-white/70 transition-colors group-hover:border-white group-hover:bg-white group-hover:text-black" aria-hidden="true">
+        <svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </span>
+    </a>
   </div>
 </section>
 

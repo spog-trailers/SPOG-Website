@@ -3,15 +3,15 @@
 // so it never covers the hero buttons or the forms. Any section marked data-hide-mobilebar
 // hides it too (the lineup on the test homepage 2 has its own buttons in the same spot).
 const btn = 'flex h-12 flex-1 items-center justify-center border-[1.5px] text-[11.5px] font-bold uppercase leading-[normal] tracking-[.16em] no-underline';
-// `cta` is the gold button. The default keeps every existing page as it was.
-interface Props { cta?: { label: string; href: string } }
-const { cta = { label: 'Reserve', href: '#cta' } } = Astro.props;
+// `cta` is the gold button and `secondary` the outlined one. The defaults keep every existing page as it was.
+interface Props { cta?: { label: string; href: string }; secondary?: { label: string; href: string } }
+const { cta = { label: 'Reserve', href: '#cta' }, secondary = { label: 'Walkthrough', href: '#walkthrough' } } = Astro.props;
 ---
 <div
   id="mobilebar"
   class="fixed inset-x-0 bottom-0 z-30 hidden translate-y-full gap-2 border-t border-line bg-black/88 px-4 pb-[calc(12px+env(safe-area-inset-bottom,0px))] pt-3 backdrop-blur-[16px] transition-transform duration-300 data-[show]:translate-y-0 max-[640px]:flex"
 >
-  <a href="#walkthrough" class={`${btn} border-white/70 text-white`}>Walkthrough</a>
+  <a href={secondary.href} class={`${btn} border-white/70 text-white`}>{secondary.label}</a>
   <a href={cta.href} class={`${btn} border-gold bg-gold text-black`}>{cta.label}</a>
 </div>
 

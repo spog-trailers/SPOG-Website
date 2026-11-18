@@ -11,7 +11,7 @@
  *   CONFIRM      a number someone still has to confirm before launch
  *   PLACEHOLDER  stands in until the real thing exists
  */
-import { closing, phone, shoot } from './content';
+import { closing, phone, shoot, nextUp, navLinks as siteLinks } from './content';
 import type { Feature } from './features';
 
 export const hero = {
@@ -58,7 +58,7 @@ export const lineup = {
     },
     {
       id: 'workstation', name: 'Workstation', tone: 'studio' as Tone, href: '/workstation',
-      line: 'The site office that works the day it lands.', // SOURCE
+      line: 'The site office that works the day it lands.', // SOURCE. Nate wants a new line (2026-11-18, "sounds so AI"). Ten options went to him in chat.
       facts: ['From $15,000', '10 or 20 ft', 'Built-in climate control'], // NATE
       image: '/images/lineup-workstation.webp', width: 1700, height: 783,
       alt: 'Navy SPOG Workstation trailer with two doors and steps',
@@ -67,35 +67,73 @@ export const lineup = {
     {
       id: 'event', name: 'Event', tone: 'night' as Tone, href: '/event',
       line: 'Own the night. Power it with the sun.', // SOURCE
-      facts: ['Buy from $150,000, or rent one', '20 ft', 'Up to 40 kWh', 'Built-in LED screen'], // NATE. CONFIRM 40 kWh with Joe (the Product Wiki lists Event at 50 to 100 kWh)
+      facts: ['Buy from $150,000, or rent', '20 ft', 'Built-in LED screen'], // NATE (2026-11-18: battery figure dropped, shorter price line)
       image: '/images/lineup-event.webp', width: 1800, height: 1055,
       alt: 'Black SPOG Event trailer with its solar wings open',
       fit: [15, 38], shot: [94, 76], lap: 0.3,
     },
   ],
-  // The Coming Next page isn't built yet, so the tile points at the Coming next block on the live homepage.
-  next: { kicker: 'Coming next', line: 'Garage, Disaster Relief and Camper are next.', cta: "See what's next", href: '/#next' }, // NEW
+  // The strip under the lineup jumps to "Our future lineup" further down this page (Nate, 2026-11-18).
+  next: { line: 'See our future lineup', href: '#future' }, // NATE (his direction, "see our future product line")
 };
 
-/** Three problems, one card each (Nate, 2026-11-18): power, security and comfort. */
-export const problem = {
+/**
+ * What a SPOG solves, one card each (Nate, 2026-11-18): power, security and comfort. Each card says
+ * the fix, not the pain (his note on the first build), and carries a short looping video, after the
+ * video cards on rivian.com. Videos are cut from Nate's 2026-11-17 footage (see CLAUDE.md).
+ * `note` puts a visible tag on the card while its video is missing or a stand-in.
+ */
+export type Solution = {
+  id: string; title: string; line: string; body: string;
+  video?: string; poster: string; alt: string; position?: string;
+  note?: { tag: string; shot: string };
+};
+export const solutions: { heading: string[]; cards: Solution[] } = {
   heading: ['One trailer.', 'Three problems solved.'], // SOURCE (approved Workstation line)
   cards: [
     {
-      icon: 'battery', title: 'Power',
-      line: "Stop guessing where you'll get your power.", // NATE
-      body: "Today it comes from a gas generator, a fuel run, a truck left idling or the homeowner's outlet. Each one costs you money, time or goodwill.", // NEW
+      id: 'power', title: 'Power',
+      line: 'Power where you need it.', // NATE, minus "ever" from his "wherever" (the guardrail on "anywhere" claims). Easy to put back.
+      body: "Solar panels charge the battery on board, so you can run your tools and lights without a generator, a fuel run or the homeowner's outlet.", // NEW
+      video: '/images/solution-power.mp4', poster: '/images/solution-power.jpg', // Nate's welding clip, close-up only
+      alt: 'Welder at work in front of an open SPOG trailer',
     },
     {
-      icon: 'camera', title: 'Security',
-      line: 'Stop hauling your gear home every night.', // NEW
-      body: 'A job site is an easy target after dark, so crews lose the end of the day loading tools out and the start of the next one loading them back in.', // NEW
+      id: 'security', title: 'Security',
+      line: 'Lock up your gear and leave it on site.', // NEW
+      body: 'Keep your tools in a locked trailer and add cameras and lights that watch the site overnight. Your crew skips the load-out at the end of the day.', // NEW. CONFIRM which cameras ship at V1.
+      poster: shoot.wsSecurityMast, position: '50% 40%',
+      alt: 'Lights and cameras on the mast of a SPOG trailer',
+      note: { tag: 'Video needed from Robert', shot: 'The mast cameras and lights keeping watch at night' }, // PLACEHOLDER
     },
     {
-      icon: 'climate', title: 'Comfort',
-      line: 'Stop working through the heat and the cold.', // NEW
-      body: 'Plans, calls and paperwork end up in a hot truck cab or a cold site office. Heat and AC come standard on the Workstation and are available on Cargo.', // NEW, facts from Nate
+      id: 'comfort', title: 'Comfort',
+      line: 'Work in comfort on site.', // NEW
+      body: 'Take calls and review plans in a room with heat and AC. It comes standard on the Workstation and is available on Cargo.', // NEW, facts from Nate
+      video: '/images/solution-comfort.mp4', poster: '/images/solution-comfort.jpg',
+      alt: 'Desk, chair and two monitors inside a SPOG Workstation',
+      // PLACEHOLDER: from the remote-office shoot. It shows the wood-slat interior, which may be an option.
+      note: { tag: 'Stand-in video', shot: 'A crew member working inside with the heat or AC running' },
     },
+  ],
+};
+
+/**
+ * Our future lineup (Nate, 2026-11-18): Garage, Disaster Relief and Camper, one compact card each in
+ * the looks he liked on /test-home. No specs, no prices and no Reserve, only a signup. The lineup
+ * strip and the footer jump here until the Coming Next page exists.
+ */
+const soon = (name: string) => nextUp.products.find((p) => p.name === name)!;
+export const future = {
+  heading: 'Our future lineup.', // NEW, after "Our 2027 lineup."
+  sub: nextUp.sub, // SOURCE
+  cta: nextUp.cta, // SOURCE ("Get first word")
+  dialogHeading: 'Get first word.', // NEW (from /test-home)
+  cards: [
+    // `size` is the name's font size in % of the card width. PLACEHOLDER: all three one-liners need approval.
+    { id: 'garage', name: 'Garage', look: 'garage', category: 'Enclosed car hauler', line: soon('Garage').body, image: soon('Garage').image, alt: soon('Garage').alt, position: '55% 50%', size: 15 }, // the render shows a Tesla inside, swap before launch
+    { id: 'relief', name: 'Disaster Relief', look: 'relief', category: 'Emergency power', line: soon('Disaster Relief').body, image: soon('Disaster Relief').image, alt: soon('Disaster Relief').alt, position: '50% 50%', size: 13 },
+    { id: 'camper', name: 'Camper', look: 'camper', category: 'Solar camper', line: 'Camp on solar power, with walls that fold out.', image: soon('Camper').image, alt: soon('Camper').alt, position: '68% 55%', size: 16 }, // NEW category and line, written without "off-grid" (guardrail)
   ],
 };
 
@@ -161,15 +199,19 @@ export const values: Feature[] = [
   },
 ];
 
-/** Mini about. Carries the factory, the warranty and the service, since the Guarantee block was cut. */
+/**
+ * Mini about. Carries the factory, the warranty and the service, since the Guarantee block was cut.
+ * The background is a slowed, looping shop video (Nate, 2026-11-18): his warehouse fly-through,
+ * then a welder working on a frame on the shop floor, both at half speed, cross-faded into one loop.
+ */
 export const about = {
   eyebrow: 'Middletown, New York',
   lead: 'Built in Middletown, New York,', // NATE (heading, first half)
-  rest: 'and backed in writing.', // NATE (heading, second half)
-  body: "Every SPOG comes out of our shop in Middletown, built by a crew that comes from commercial construction. It's backed by a 3-year structural warranty, and our mobile service fleet comes to your site if something needs work.", // NEW, terms kept for V1
+  rest: 'and backed by a 3-year structural warranty.', // NATE (2026-11-18)
+  body: "Every SPOG comes out of our shop in Middletown, built by a crew that comes from commercial construction. If something needs work, our mobile service fleet comes to your site.", // NEW, terms kept for V1
   cta: { label: 'See the factory', href: '#' }, // PLACEHOLDER: the About page isn't built yet
-  image: shoot.wsFlagShop,
-  position: '62% 50%',
+  video: '/images/about-shop-loop.mp4', poster: '/images/about-shop-loop.jpg',
+  position: '50% 50%',
 };
 
 /**
@@ -193,12 +235,15 @@ export const close = {
   walkthrough: { tab: 'Book a walkthrough', ...closing.walkthrough }, // SOURCE
 };
 
+/** The site nav, with "Coming next" pointing at this page's own future lineup instead of the live homepage. */
+export const navLinks = siteLinks.map((l) => (l.href === '/#next' ? { label: 'Future lineup', href: '#future' } : l)); // NATE (2026-11-18)
+
 /**
  * Footer links in the order of the sitemap (Nate, 2026-11-18).
  * PLACEHOLDER: every "#" is a page that isn't built yet.
  */
 export const footerColumns = [
-  { title: 'Trailers', links: [['Cargo', '/cargo'], ['Workstation', '/workstation'], ['Event', '/event'], ['Coming Next', '/#next']] },
+  { title: 'Trailers', links: [['Cargo', '/cargo'], ['Workstation', '/workstation'], ['Event', '/event'], ['Future lineup', '#future']] },
   { title: 'Company', links: [['About', '#built'], ['Reviews', '#'], ['Become a Dealer', '#']] },
   { title: 'Support', links: [['FAQ', '/#faq'], ['Contact', '#walkthrough'], ['Warranty', '#'], ['Blog', '#']] },
 ];
