@@ -95,18 +95,18 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 - **Shared sections take props with safe defaults.** `ProductSubnav` takes `links`, and `ProductPower` and `ProductSize` take `look="work"`. Without them, the live product pages render exactly as before.
 - **Runtime devices** on this page are computer, light tower, saw and welder. The fridge is left off because it has the same draw as the computer, so it shows the same hours.
 
-## Planned sitemap (Nate, 2026-11-17, not built yet)
+## Sitemap (Nate, 2026-11-18, not built yet)
 
-- **Home**
+The source of truth is the "Sitemap" item under "Website Build" in Notion's Company Roadmap. It replaces the 2026-11-17 plan, which gave Garage, Disaster Relief and RV their own pages.
+
+- **Home:** about 75% Cargo and Workstation, since most visitors are contractors shopping for those. Event keeps a lineup card. Homepage copy v1 is on the "Home Page" item in the same Notion board.
 - **Cargo**
 - **Workstation:** includes a section on using it as a remote office (nomads, influencers), linking to its own landing page.
 - **Event:** mostly about buying or renting it for your own events. A section covers buying one to rent out as an income stream, linking to its own landing page.
-- **Garage**
-- **Disaster Relief**
-- **RV**
-- **About:** factory, build quality, service.
-- **Contact**
-- **Support:** dropdown with Blog, FAQ, Warranty and Service.
+- **Coming Next:** one page for Garage, Disaster Relief and Camper, with a short blurb and a waitlist form for each. The homepage gets one tile that links here.
+- **About:** the factory is the feature (build quality, the crew, service).
+- **Reviews**
+- **Support:** dropdown with FAQ, Contact, Warranty and Blog.
 
 Each product page is written for its own buyer. The single shared `[product].astro` template gets replaced.
 
