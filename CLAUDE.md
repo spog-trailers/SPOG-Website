@@ -22,7 +22,8 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 | `src/pages/test-home.astro` | Draft homepage at `/test-home` with a look per buyer (see "Test homepage"). Not indexed. Rhythm map in the top comment. |
 | `src/components/test-home/`, `src/data/testHome.ts` | Test homepage sections and their copy. Every line is marked NEW or SOURCE. |
 | `src/pages/test-home-2.astro` | Second draft homepage at `/test-home-2` (see "Test homepage 2"). Not indexed. Rhythm map in the top comment. |
-| `src/components/home2/`, `src/data/home2.ts` | Test homepage 2 sections (proof strip, lineup scroll, problem cards, about band, close with two forms) and their copy. Every line is marked NATE, SOURCE, NEW, CONFIRM or PLACEHOLDER. |
+| `src/components/home2/`, `src/data/home2.ts` | Test homepage 2 sections (proof strip, lineup scroll, solution video cards, future lineup, about band with the shop video, close with two forms) and their copy. Every line is marked NATE, SOURCE, NEW, CONFIRM or PLACEHOLDER. |
+| `src/pages/demo.astro`, `src/data/demo.ts` | Book a demo page at `/demo`, where "Book a demo" in the Test 2 nav lands: in-person demo, virtual demo or call now. Not indexed. |
 | `scripts/cutout.py` | Cuts a trailer out of its photo for the lineup panels (see Gotchas). |
 | `docs/homepage-teardown-2026-11-16.md` | Competitor research behind the current section order |
 | `src/pages/workstation.astro` | The Workstation page at `/workstation`, written for GCs (see "Workstation page"). Rhythm in the top comment. The old draft URL `/test-workstation` redirects here (`astro.config.mjs`). |
@@ -84,7 +85,12 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 
 - `/test-home-2` is the homepage Nate wrote in Notion after the 2026-11-18 team call (the "Home Page" item under Website Build in the Company Roadmap). `/` and `/test-home` are untouched, because he wants to keep each version. The nav link is "Test 2".
 - **What changed from `/test-home`:** only Cargo, Workstation and Event get space, and about 75% of the page speaks to contractors. Garage, Disaster Relief and Camper shrink to one "Coming next" strip.
-- **Order:** Hero (background video, "The trailer that powers your job."), Proof strip, Lineup (sticky scroll) with the Coming next strip, Problem (three cards: power, security, comfort), What SPOG is made of (feature cards), About band, Close (two forms), Footer. Cut at Nate's call: Built different, Guarantee, How it works and the run-time sheet.
+- **Order:** Hero (background video, "The trailer that powers your job."), Proof strip (a real US flag badge), Lineup (sticky scroll) with the "See our future lineup" strip, Solutions (three video cards: power, security, comfort), What SPOG is made of (feature cards), Our future lineup (Garage, Disaster Relief, Camper), About band (shop video), Close (two forms), Footer. Cut at Nate's call: Built different, Guarantee, How it works and the run-time sheet.
+- **Nav on this page (Nate, 2026-11-18):** two one-line buttons, "Book a demo" (to `/demo`) and "Design yours", with no small labels. The phone action bar matches. The "Coming next" nav and footer links read "Future lineup" and jump to `#future` on this page. Nav takes `demo` and `links`, MobileBar takes `secondary`. Other pages keep their defaults.
+- **Solutions (`SolutionCards.astro`)** say the fix, not the pain (Nate, 2026-11-18), with a looping video per card after the video cards on rivian.com. Videos load only when a card scrolls into view and pause when it leaves. A card's `note` puts a visible tag on it while its video is missing or a stand-in.
+- **Our future lineup (`FutureLineup.astro`)** is one compact row in the /test-home looks (Garage, Disaster Relief, Camper), with "Get first word" opening a signup. No specs, prices or Reserve. Nate dropped the "Coming next" wording on this page.
+- **About band** runs `about-shop-loop.mp4`, Nate's warehouse fly-through and the welder on the shop floor at half speed (see Gotchas for how it was made).
+- **Book a demo (`/demo`)** offers an in-person demo, a virtual demo and a call. The first two open a form under the cards (no endpoint yet). The hero and close on Test 2 still say "Book a walkthrough".
 - **Kept from `/test-home` because Nate likes them:** the hero look (`TestHero`, now with props), the feature cards and the look of the Built band.
 - **Lineup (`LineupScroll.astro`)** follows the second section on rivian.com. The section pins to the screen and steps through Cargo, Workstation and Event as you scroll:
   - Each panel has the name set huge behind the trailer, one sentence, one line of facts split by thin dividers, then "Explore" (product page) and "Design yours".
@@ -92,7 +98,7 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
   - Cargo and Workstation stand on studio gray. Event goes to night, its own look.
   - Without JavaScript, with reduced motion or on a very short screen, the panels stack as three full screens.
   - Mark any other section `data-hide-mobilebar` to hide the phone action bar while it's on screen, as the lineup does.
-- **Prices on the lineup panels are Nate's** (2026-11-18): Cargo from $10,000, Workstation from $15,000, Event buy from $150,000 or rent. Never add or change a price without him. This is the only place on the site that shows prices.
+- **Prices on the lineup panels are Nate's** (2026-11-18): Cargo from $10,000, Workstation from $15,000, Event "Buy from $150,000, or rent". The Event panel has no battery figure. Never add or change a price without him. This is the only place on the site that shows prices.
 - **"Design your trailer" is a build request form for now.** Links to `#design` open that form in the close, and links to `#walkthrough` open the walkthrough form in the same card. A link with `data-trailer="Cargo"` also picks that trailer. Point "Design" at the configurator only once real pricing is approved.
 - **Shared sections take props with safe defaults**, so the other pages render as before: `TestHero` (copy, buttons, heading size), `FeatureCards` (a `kicker` slot), `Nav` (`cta`, `lineupHref`), `MobileBar` (`cta`) and `Footer` (`columns`, `full`).
 - **"Harness" stays** in the Power card line. Nate chose it over the copy rule, and it's marked in `home2.ts`. He also chose the blunt "Other companies cut corners with staples and glue."
@@ -153,7 +159,8 @@ Each product page is written for its own buyer. The single shared `[product].ast
 
 ## Gotchas
 
-- **New photos.** Don't commit camera originals (they run 10 to 360 MB). Put originals in `_photos-original/<date>/`, then make web copies in `public/images/`: `sips -s format jpeg -Z 2400` (it reads .CR3 raw files too and bakes in rotation), then `ffmpeg -map_metadata -1 -q:v 4` for the 2400 px copy and `-vf scale=1200:-2` for the `-1200` copy. That strips location data. sips needs an unsandboxed shell. Videos: `ffmpeg -an -vf scale=1600:-2 -c:v libx264 -crf 30 -movflags +faststart`, cut to a stretch with no burned-in text. Add the result to `shoot` in `content.ts`.
+- **New photos.** Don't commit camera originals (they run 10 to 360 MB). Put originals in `_photos-original/<date>/`, then make web copies in `public/images/`: `sips -s format jpeg -Z 2400` (it reads .CR3 raw files too and bakes in rotation), then `ffmpeg -map_metadata -1 -q:v 4` for the 2400 px copy and `-vf scale=1200:-2` for the `-1200` copy. That strips location data. sips needs an unsandboxed shell. Videos: `ffmpeg -an -map_metadata -1 -vf scale=1600:-2 -c:v libx264 -crf 30 -movflags +faststart`, cut to a stretch with no burned-in text. Add the result to `shoot` in `content.ts`.
+- **Slowed and looped videos.** Nate wants slow motion without stutter. Slow with `setpts=2*PTS` and fill the gaps with `minterpolate=fps=30:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1`, so every frame is new rather than repeated. Join clips with `xfade`. For a seamless loop, cross-fade the end of the joined video into its own first second and trim that second off the front. `about-shop-loop.mp4` was made this way. The card videos are cropped to 4:5 (`crop=864:1080:x:0`).
 
 - **Cut-out trailers for the lineup.** `scripts/cutout.py` lifts the trailer out of a photo with Apple's Vision (setup and usage are at the top of the file). It runs on the Mac and needs an unsandboxed shell. Check the edges, then retouch by hand. On 2026-11-18 the Workstation cut-out (from `ws-navy-studio.jpg`) had the wall lettering and mast head above the roof erased. The Event one (from `event-day-wings.jpg`) had the table, jacks and tongue erased, and its left wing fades out where the photo cut it off. Clean side profiles on a plain wall from Rob would replace all three.
 
@@ -195,9 +202,13 @@ Everything below was invented for the mockup and must be replaced with real, app
 - Test homepage 2 (`home2.ts`):
   - Every line marked NEW needs approval.
   - The three customer quotes in the proof strip. The slots show as empty dashed boxes until real quotes are signed off.
-  - "Up to 40 kWh" on the Cargo and Event panels, to confirm with Joe. The Product Wiki lists Cargo at 5 to 20 kWh and Event at 50 to 100 kWh.
+  - "Up to 40 kWh" on the Cargo panel, to confirm with Joe. The Product Wiki lists Cargo at 5 to 20 kWh. (Event's figure was dropped.)
+  - The Workstation panel line "The site office that works the day it lands." Nate wants a new one (it also runs on the live homepage in `content.ts`).
+  - Solution cards: the Security card has no video yet (tagged "Video needed from Robert"). The Comfort card runs a stand-in from the remote-office shoot, showing the wood-slat interior, which may be an option. The Power card is the welding close-up.
+  - Our future lineup: the three one-liners and the "Solar camper" label. The Garage render shows a Tesla inside.
+  - `/demo`: every line marked NEW in `demo.ts`, and both forms need endpoints (GoHighLevel, or a calendar booking).
   - The Cargo cut-out is a render. The lineup needs a real Cargo photo.
-  - "See the factory" and the footer's About, Reviews, Become a Dealer, Warranty and Blog links point nowhere until those pages exist. "See what's next" points at the Coming next block on the live homepage until the Coming Next page exists.
+  - "See the factory" and the footer's About, Reviews, Become a Dealer, Warranty and Blog links point nowhere until those pages exist. "See our future lineup" jumps to the row on this page until the Coming Next page exists.
   - The build request form and the walkthrough form have no endpoints yet. Wire them to GoHighLevel.
   - Which cameras ship at V1, for the Security card.
 - Specs conflict between this site and spogtrailers.com (Cargo 8 to 35 ft, 5 to 64 kWh and up to 5,000W on the old site). The homepage numbers are used until the official spec sheet settles it.
@@ -212,8 +223,9 @@ The dark half of the page reuses one Red Rocks photo. Replace with:
 4. Residential crews tab: Cargo on a real driveway
 5. Highlights cards: roof solar close-up, crew charging tools, gear inside the trailer
 6. Customer story: the actual customer on their site
-7. Done 2026-11-17 (Nate's photos): Workstation office interior, heat and AC unit, Starlink, security mast, welding, CAD. Still nice to have: a super working at the desk, and the Workstation on a real job site.
-8. Done 2026-11-17: homepage value cards. Still nice to have: a SPOG tech on a customer site for Quality.
+7. Videos for the Test 2 solution cards (4:5 crop friendly, 5 to 10 seconds, no burned-in text): the security mast's cameras and lights working at night, and a crew member working inside a Workstation with the heat or AC running. A Power shot without other brands' vehicles in frame would also help.
+8. Done 2026-11-17 (Nate's photos): Workstation office interior, heat and AC unit, Starlink, security mast, welding, CAD. Still nice to have: a super working at the desk, and the Workstation on a real job site.
+9. Done 2026-11-17: homepage value cards. Still nice to have: a SPOG tech on a customer site for Quality.
 
 ## Next steps (suggested)
 
