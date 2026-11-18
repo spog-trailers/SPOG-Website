@@ -1,0 +1,32 @@
+---
+import { proof } from '../../data/home2';
+/**
+ * Thin strip under the hero: the Built in the USA badge and three short customer quotes.
+ * PLACEHOLDER: there are no approved quotes yet. A slot without a quote shows as an empty,
+ * dashed box that only names who the quote will come from, so nothing here is made up.
+ * Fill `quote` and `name` in src/data/home2.ts and the slot turns into a real quote.
+ */
+---
+<section aria-label="Built in the USA" class="border-b border-line bg-black py-7">
+  <div class="wrap grid grid-cols-[auto_repeat(3,minmax(0,1fr))] items-stretch gap-4 max-[960px]:grid-cols-[repeat(1,minmax(0,1fr))]">
+    <p class="m-0 flex items-center gap-3 pr-8 text-[11.5px] font-semibold uppercase tracking-[.24em] text-white max-[960px]:pb-1">
+      <svg viewBox="0 0 28 20" class="h-[18px] w-auto shrink-0" aria-hidden="true">
+        <rect width="28" height="20" rx="2" class="fill-white/10" />
+        <rect width="12" height="10" rx="1" class="fill-gold" />
+        <path d="M14 3h12M14 7h12M2 13h24M2 17h24" class="stroke-white/70" stroke-width="1.6" />
+      </svg>
+      {proof.badge}
+    </p>
+    {proof.slots.map((s) => s.quote ? (
+      <figure class="m-0 rounded-[12px] bg-panel px-5 py-4">
+        <blockquote class="m-0 text-[15px] leading-[1.45] text-bone">&ldquo;{s.quote}&rdquo;</blockquote>
+        <figcaption class="mt-2 text-[12px] text-mute">{s.name}, {s.who}</figcaption>
+      </figure>
+    ) : (
+      <div class="rounded-[12px] border border-dashed border-white/20 px-5 py-4">
+        <span class="block text-[11px] font-semibold uppercase tracking-[.2em] text-mute">{s.who}</span>
+        <span class="mt-1.5 block text-[14.5px] text-white/45">Customer quote to come</span>
+      </div>
+    ))}
+  </div>
+</section>

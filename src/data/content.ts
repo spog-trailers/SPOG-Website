@@ -78,7 +78,9 @@ export const navLinks = [
   { label: 'Event', href: '/event' },
   { label: 'Coming next', href: '/#next' },
   { label: 'FAQ', href: '/#faq' },
-  { label: 'Test home page', href: '/test-home' }, // TEMPORARY: draft homepage for review. Remove when decided.
+  // TEMPORARY: the two draft homepages, for review. Short labels so seven links fit. Remove when one is chosen.
+  { label: 'Test 1', href: '/test-home' }, // first draft (2026-11-17), a look per buyer
+  { label: 'Test 2', href: '/test-home-2' }, // second draft (2026-11-18), "Test homepage 2"
 ];
 
 // Thin bar above the nav. Tucks away once the page scrolls.

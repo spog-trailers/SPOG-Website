@@ -1,0 +1,245 @@
+---
+import { lineup } from '../../data/home2';
+/**
+ * The lineup as a sticky scroll, after the second section on rivian.com (Nate, 2026-11-18).
+ * The section pins to the screen and steps through Cargo, Workstation and Event as you scroll,
+ * so a visitor sees all three before the page moves on. Each panel follows Rivian's formula:
+ * the name set huge behind the trailer, one sentence, one line of facts, then two buttons.
+ *
+ * - The trailers are cut-outs (public/images/lineup-*.webp), so the name can sit behind them.
+ * - Cargo and Workstation stand on a studio gray. Event goes to night, its own look.
+ * - Without JavaScript, with reduced motion or on a very short screen, the panels simply
+ *   stack as three full screens. The script adds data-lu-ready to switch on the pinned version.
+ * - "Design yours" picks that trailer in the build request form in the close (#design).
+ */
+const btn = 'inline-flex h-[50px] items-center justify-center gap-[14px] border-[1.5px] px-[26px] text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] no-underline max-[560px]:h-[46px] max-[560px]:flex-1 max-[560px]:px-3 max-[560px]:tracking-[.16em]';
+const wordmark: Record<string, string> = {
+  cargo: 'font-black uppercase tracking-[-.045em]',
+  workstation: 'font-black uppercase tracking-[-.045em]',
+  event: 'font-light uppercase tracking-[.3em] indent-[.3em]',
+};
+---
+<section id="lineup" aria-label="The 2027 lineup" data-lu data-hide-mobilebar class="lu relative">
+  <div data-lu-track class="lu-track" style={`--n:${lineup.panels.length}`}>
+    <div data-lu-view data-tone={lineup.panels[0].tone} class="lu-view relative">
+      <header class="lu-head wrap absolute inset-x-0 z-[5] flex items-end justify-between gap-x-8 gap-y-3 max-[640px]:flex-col max-[640px]:items-start">
+        <h2 class="m-0 text-[clamp(18px,1.9vw,26px)] font-semibold leading-none tracking-[-.02em]">{lineup.heading}</h2>
+        <nav aria-label="Trailers in the lineup">
+          <ol class="m-0 flex list-none gap-7 p-0 max-[640px]:gap-5">
+            {lineup.panels.map((p, i) => (
+              <li>
+                <a href={`#lineup-${p.id}`} data-lu-tab aria-current={i === 0 ? 'true' : undefined} class="lu-tab block pb-2 text-[11.5px] font-semibold uppercase tracking-[.2em] text-inherit no-underline">{p.name}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </header>
+
+      {lineup.panels.map((p, i) => {
+        const night = p.tone === 'night';
+        return (
+          <article
+            id={`lineup-${p.id}`}
+            data-lu-panel
+            data-on={i === 0 ? '' : undefined}
+            data-tone={p.tone}
+            aria-labelledby={`lineup-${p.id}-name`}
+            class="lu-panel"
+            style={`--fw:${p.fit[0]};--fh:${p.fit[1]};--sw:${p.shot[0]};--sh:${p.shot[1]};--ar:${(p.width / p.height).toFixed(3)};--lap:${p.lap}`}
+          >
+            <div class="lu-stage">
+              <h3 id={`lineup-${p.id}-name`} class:list={['lu-name', wordmark[p.id]]}>{p.name}</h3>
+              <div class="lu-shot">
+                <img src={p.image} width={p.width} height={p.height} alt={p.alt} loading="lazy" decoding="async" />
+              </div>
+            </div>
+
+            <div class="lu-copy wrap w-full text-center">
+              <p class="m-0 text-[clamp(20px,2.1vw,30px)] font-semibold leading-[1.15] tracking-[-.025em]">{p.line}</p>
+              <ul class="lu-facts m-0 mt-4 flex list-none flex-wrap justify-center gap-y-1 p-0 text-[15px] font-medium max-[640px]:mt-3 max-[640px]:text-[14px]">
+                {p.facts.map((f) => <li>{f}</li>)}
+              </ul>
+              <div class="mt-7 flex flex-wrap justify-center gap-3 max-[640px]:mt-5 max-[560px]:gap-2">
+                <a href={p.href} class:list={[btn, night ? 'border-white/70 text-white hover:border-white hover:bg-white hover:text-black' : 'border-ink text-ink hover:bg-ink hover:text-white']}>{lineup.explore} <span class="max-[560px]:sr-only">{p.name}</span></a>
+                <a href="#design" data-trailer={p.name} class={`${btn} border-gold bg-gold text-black hover:border-white hover:bg-white`}>{lineup.design}</a>
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+
+  <div class="border-y border-line bg-black">
+    <div class="wrap flex flex-wrap items-center justify-between gap-x-10 gap-y-5 py-8 max-[640px]:py-7">
+      <p class="m-0 flex flex-wrap items-center gap-x-5 gap-y-2">
+        <span class="flex items-center gap-3 text-[11.5px] font-semibold uppercase tracking-[.24em] text-mute"><i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>{lineup.next.kicker}</span>
+        <span class="text-[clamp(18px,1.6vw,22px)] font-semibold tracking-[-.02em] text-white">{lineup.next.line}</span>
+      </p>
+      <a href={lineup.next.href} class="inline-flex h-[44px] items-center gap-[14px] border-[1.5px] border-white/70 px-[22px] text-[11.5px] font-bold uppercase leading-[normal] tracking-[.2em] text-white no-underline hover:border-white hover:bg-white hover:text-black">
+        {lineup.next.cta}
+        <svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* One panel is one screen: the stage takes the room left over by the copy under it. */
+  .lu-panel {
+    position: relative;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    height: max(100svh, 640px);
+    padding: 126px 0 clamp(26px, 5svh, 54px);
+    overflow: hidden;
+    container-type: size;
+  }
+  .lu-panel[data-tone='studio'] {
+    background: radial-gradient(ellipse 72% 60% at 50% 44%, #e9e7e4 0%, #d4d2cf 52%, #bcbab7 100%);
+    color: var(--color-ink);
+  }
+  /* Night: a warm pool of light behind the trailer, so its dark body still reads. */
+  .lu-panel[data-tone='night'] {
+    background: radial-gradient(ellipse 64% 56% at 50% 46%, #8f867a 0%, #4d4944 32%, #1d1c1c 66%, #0a0a0b 100%);
+    color: #fff;
+  }
+  .lu-panel[data-tone='night'] .lu-shot img { filter: brightness(1.16) contrast(1.04); }
+
+  .lu-head { top: 82px; color: var(--color-ink); transition: color .5s ease; }
+  .lu-view[data-tone='night'] .lu-head { color: #fff; }
+  .lu-tab { opacity: .5; border-bottom: 3px solid transparent; transition: opacity .3s ease, border-color .3s ease; }
+  .lu-tab:hover { opacity: .85; }
+  .lu-tab[aria-current='true'] { opacity: 1; border-bottom-color: var(--color-gold); }
+
+  /* The name, with the trailer riding up over its lower part. The stage is a size container,
+     so the name and the trailer are sized in % of the stage and always fit inside it. */
+  .lu-stage {
+    --fs: min(calc(var(--fw) * 1cqw), calc(var(--fh) * 1cqh));
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    container-type: size;
+  }
+  .lu-name { margin: 0; white-space: nowrap; font-size: var(--fs); line-height: .8; color: #fff; }
+  [data-tone='night'] .lu-name { text-shadow: 0 0 70px rgb(255 236 210 / .28); }
+  .lu-shot {
+    position: relative;
+    z-index: 1;
+    flex: none;
+    width: min(calc(var(--sw) * 1cqw), calc(var(--sh) * 1cqh * var(--ar)));
+    margin-top: calc(var(--fs) * var(--lap) * var(--lap-m, 1) * -1);
+  }
+  .lu-shot img { display: block; width: 100%; height: auto; }
+  /* Soft shadow on the floor, since a cut-out has none. */
+  .lu-shot::after {
+    content: '';
+    position: absolute;
+    inset: auto 5% -3% 5%;
+    z-index: -1;
+    height: 10%;
+    background: radial-gradient(ellipse 50% 50% at 50% 50%, rgb(0 0 0 / .42), rgb(0 0 0 / 0) 70%);
+    filter: blur(8px);
+  }
+
+  .lu-facts li { padding-inline: 16px; }
+  .lu-facts li + li { border-left: 1px solid color-mix(in srgb, currentColor 34%, transparent); }
+
+  /* Phones: the name is small there, so the trailer covers less of it, and the facts stack. */
+  @media (max-width: 640px) {
+    .lu-panel { padding-top: 146px; }
+    .lu-head { top: 80px; }
+    .lu-shot { --lap-m: .55; }
+    .lu-facts { flex-direction: column; align-items: center; gap: 2px; }
+    .lu-facts li + li { border-left: 0; }
+  }
+
+  /* Pinned version, switched on by the script. */
+  .lu[data-lu-ready] .lu-track { height: calc(var(--n) * 100svh + 40svh); }
+  .lu[data-lu-ready] .lu-view { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+  .lu[data-lu-ready] .lu-panel {
+    position: absolute;
+    inset: 0;
+    height: auto;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .55s ease, visibility 0s linear .55s;
+  }
+  .lu[data-lu-ready] .lu-panel[data-on] { visibility: visible; opacity: 1; transition: opacity .55s ease, visibility 0s; }
+  .lu[data-lu-ready] .lu-shot,
+  .lu[data-lu-ready] .lu-name,
+  .lu[data-lu-ready] .lu-copy { transition: transform .9s cubic-bezier(.2, .7, .2, 1); }
+  .lu[data-lu-ready] .lu-shot { transform: translateX(9cqw); }
+  .lu[data-lu-ready] .lu-name { transform: translateX(-4cqw); }
+  .lu[data-lu-ready] .lu-copy { transform: translateY(18px); }
+  .lu[data-lu-ready] [data-past] .lu-shot { transform: translateX(-9cqw); }
+  .lu[data-lu-ready] [data-past] .lu-name { transform: translateX(4cqw); }
+  .lu[data-lu-ready] [data-on] .lu-shot,
+  .lu[data-lu-ready] [data-on] .lu-name,
+  .lu[data-lu-ready] [data-on] .lu-copy { transform: none; }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-lu]');
+  if (root) {
+    const track = root.querySelector<HTMLElement>('[data-lu-track]')!;
+    const view = root.querySelector<HTMLElement>('[data-lu-view]')!;
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-lu-panel]')];
+    const tabs = [...root.querySelectorAll<HTMLAnchorElement>('[data-lu-tab]')];
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const tall = window.matchMedia('(min-height: 560px)');
+    const pinned = () => root.hasAttribute('data-lu-ready');
+    let on = -1;
+
+    const show = (i: number) => {
+      if (i === on) return;
+      on = i;
+      panels.forEach((p, n) => {
+        p.toggleAttribute('data-on', n === i);
+        p.toggleAttribute('data-past', n < i);
+        p.inert = pinned() && n !== i;
+      });
+      tabs.forEach((t, n) => (n === i ? t.setAttribute('aria-current', 'true') : t.removeAttribute('aria-current')));
+      view.dataset.tone = panels[i].dataset.tone;
+    };
+
+    // How far the pinned view has travelled through its track, cut into one step per panel.
+    const span = () => track.offsetHeight - view.offsetHeight;
+    const sync = () => {
+      if (!pinned()) return;
+      const p = span() > 0 ? Math.min(1, Math.max(0, -track.getBoundingClientRect().top / span())) : 0;
+      show(Math.min(panels.length - 1, Math.floor(p * panels.length)));
+    };
+
+    const setup = () => {
+      const want = tall.matches && !calm.matches;
+      if (want === pinned()) return;
+      root.toggleAttribute('data-lu-ready', want);
+      on = -1;
+      if (want) sync();
+      else panels.forEach((p) => { p.inert = false; p.removeAttribute('data-past'); });
+    };
+
+    tabs.forEach((t, i) =>
+      t.addEventListener('click', (e) => {
+        if (!pinned()) return;
+        e.preventDefault();
+        const top = track.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: top + (i === 0 ? 0 : (span() * (i + 0.5)) / panels.length), behavior: 'smooth' });
+      }),
+    );
+
+    let queued = false;
+    window.addEventListener('scroll', () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => { queued = false; sync(); });
+    }, { passive: true });
+    window.addEventListener('resize', sync);
+    tall.addEventListener('change', setup);
+    calm.addEventListener('change', setup);
+    setup();
+  }
+</script>

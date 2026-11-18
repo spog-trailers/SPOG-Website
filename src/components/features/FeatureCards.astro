@@ -14,6 +14,7 @@ import { small, srcset } from '../../data/content';
  *       "brand" uses the homepage's type.
  * tone: section background, "light" (white) or "dark" (black). The panel is always white.
  * Every instance scopes its queries to its own root, so several can share a page.
+ * Slot "kicker": optional markup in place of the small label above the heading (brand look).
  */
 interface Props {
   id: string;
@@ -39,7 +40,7 @@ const ctrl = dark
       <WorkTitle kicker={kicker} lines={heading} tone={dark ? 'dark' : 'light'} />
     ) : (
       <div>
-        <Eyebrow gold={kicker} />
+        {Astro.slots.has('kicker') ? <slot name="kicker" /> : <Eyebrow gold={kicker} />}
         <h2 class:list={['m-0 mt-4 max-w-[920px] text-[clamp(36px,4.6vw,62px)] font-semibold leading-[1.03] tracking-[-.035em]', dark ? 'text-white' : 'text-coal']}>
           {heading.map((l, i) => <Fragment>{i > 0 && ' '}{l}</Fragment>)}
         </h2>

@@ -1,5 +1,8 @@
 ---
 import { img, phone, footerColumns } from '../../data/content';
+// `columns` and `full` (street address and email) default to the footer every page has today.
+interface Props { columns?: { title: string; links: string[][] }[]; full?: boolean }
+const { columns = footerColumns, full = false } = Astro.props;
 ---
 <footer class="border-t border-line bg-black pb-10 pt-20 text-[14px] text-[#7B808A] max-[640px]:pb-[110px]">
   <div class="wrap">
@@ -7,9 +10,13 @@ import { img, phone, footerColumns } from '../../data/content';
       <div>
         <img src={img.logoWhite} alt="SPOG" class="h-[30px] w-auto" />
         <p class="mb-2.5 mt-[18px] text-[11px] font-semibold uppercase tracking-[.24em] text-gold">Powering the Builders of America</p>
-        <p class="my-3.5">Middletown, New York<br /><a href={phone.href} class="text-inherit no-underline">{phone.display}</a></p>
+        {full ? (
+          <p class="my-3.5">SPOG Trailers<br />2618 Route 302, Middletown, NY 10941<br /><a href={phone.href} class="text-inherit no-underline hover:text-white">{phone.display}</a><br /><a href="mailto:info@spogtrailers.com" class="text-inherit no-underline hover:text-white">info@spogtrailers.com</a></p>
+        ) : (
+          <p class="my-3.5">Middletown, New York<br /><a href={phone.href} class="text-inherit no-underline">{phone.display}</a></p>
+        )}
       </div>
-      {footerColumns.map((col) => (
+      {columns.map((col) => (
         <div>
           <h5 class="mb-4 mt-0 text-[12px] font-bold uppercase tracking-[.18em] text-white">{col.title}</h5>
           <ul class="grid gap-2.5">

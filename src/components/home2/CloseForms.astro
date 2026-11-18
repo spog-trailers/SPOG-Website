@@ -1,0 +1,139 @@
+---
+import Button from '../ui/Button.astro';
+import Eyebrow from '../ui/Eyebrow.astro';
+import { close, hero } from '../../data/home2';
+/**
+ * Close for the test homepage 2. It repeats the hero line, then offers the same two steps as
+ * the hero: design your trailer (the hard step) and book a walkthrough (the soft step).
+ * One card on the right holds both forms, and the buttons anywhere on the page pick which one
+ * shows: links to #design open the build request, links to #walkthrough open the walkthrough.
+ * A link with data-trailer="Cargo" also picks that trailer in both forms.
+ *
+ * "Design your trailer" is a build request for now. Point it at the configurator once real
+ * pricing is approved (/configure/cargo still runs on made-up sample prices).
+ * Keep the ids cta, design and walkthrough so Nav, MobileBar and the lineup keep working.
+ */
+const field = 'w-full rounded-[10px] border border-panel-line bg-black px-4 py-[14px] text-[16px] text-white placeholder:text-[#8a8a8a] focus-visible:border-gold';
+const label = 'mb-1.5 block text-[11px] font-semibold uppercase tracking-[.18em] text-mute';
+const tab = 'h-11 cursor-pointer rounded-[9px] border-0 bg-transparent px-2 text-[11.5px] font-bold uppercase leading-[normal] tracking-[.16em] text-mute hover:text-white aria-selected:bg-white aria-selected:text-black max-[420px]:text-[10.5px] max-[420px]:tracking-[.1em]';
+const send = 'col-span-full mt-2 h-[50px] cursor-pointer border-[1.5px] border-white bg-white text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-black hover:border-gold hover:bg-gold';
+const { design, walkthrough } = close;
+---
+<section id="cta" aria-label="Design your trailer or book a walkthrough" class="relative overflow-hidden border-t border-line bg-black pb-[110px] pt-[120px] max-[640px]:pb-20 max-[640px]:pt-20">
+  <div class="wrap grid grid-cols-[1.05fr_1fr] items-start gap-[70px] max-[960px]:grid-cols-[repeat(1,1fr)] max-[960px]:gap-14">
+    <div>
+      <Eyebrow gold={close.eyebrow} text="Built in Middletown" />
+      <h2 class="mb-0 mt-4 text-[clamp(40px,5.2vw,84px)] font-black uppercase leading-[.86] tracking-[-.05em] text-white max-[960px]:text-[clamp(40px,9.4vw,84px)]">
+        {close.heading.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}
+      </h2>
+      <p class="mb-0 mt-8 max-w-[460px] text-[18px] leading-[1.55] text-bone">{close.body}</p>
+      <div class="mt-9 flex flex-wrap gap-3">
+        <Button href={hero.primary.href} variant="gold" arrow>{hero.primary.label}</Button>
+        <Button href={hero.secondary.href}>{hero.secondary.label}</Button>
+      </div>
+      <a href={close.call.href} class="mt-7 inline-block text-[15.5px] text-mute underline decoration-white/30 underline-offset-4 hover:text-white">{close.call.label}</a>
+    </div>
+
+    <div data-cf class="relative rounded-[24px] border border-[#1f1f22] bg-panel px-9 pb-9 pt-7 max-[560px]:px-5 max-[560px]:pb-7 max-[560px]:pt-5">
+      <span id="design" class="absolute -top-6" aria-hidden="true"></span>
+      <span id="walkthrough" class="absolute -top-6" aria-hidden="true"></span>
+
+      <div role="tablist" aria-label="Choose how to start" class="grid grid-cols-[repeat(2,minmax(0,1fr))] gap-1 rounded-[12px] bg-black p-1">
+        <button type="button" role="tab" id="cf-tab-design" aria-controls="cf-design" aria-selected="true" data-cf-tab="design" class={tab}>{design.tab}</button>
+        <button type="button" role="tab" id="cf-tab-walkthrough" aria-controls="cf-walkthrough" aria-selected="false" data-cf-tab="walkthrough" class={tab}>{walkthrough.tab}</button>
+      </div>
+
+      <div role="tabpanel" id="cf-design" aria-labelledby="cf-tab-design" data-cf-panel="design" class="pt-8">
+        <h3 class="m-0 text-[30px] font-semibold leading-[1.1] tracking-[-.025em] text-white">{design.title}</h3>
+        <p class="mb-0 mt-2.5 text-[16.5px] text-mute">{design.body}</p>
+        <!-- TODO: connect this form to GoHighLevel. Read the GoHighLevel SOP in Notion first. -->
+        <form class="mt-7 grid grid-cols-[repeat(2,1fr)] gap-x-3 gap-y-4 max-[560px]:grid-cols-[repeat(1,1fr)]" onsubmit="return false">
+          <div>
+            <label for="ds-trailer" class={label}>Trailer</label>
+            <select id="ds-trailer" name="trailer" data-cf-trailer class={`${field} cursor-pointer`}>
+              {design.trailers.map((t) => <option>{t}</option>)}
+            </select>
+          </div>
+          <div>
+            <label for="ds-length" class={label}>Length</label>
+            <select id="ds-length" name="length" class={`${field} cursor-pointer`}>
+              {design.lengths.map((l) => <option>{l}</option>)}
+            </select>
+          </div>
+          <div class="col-span-full">
+            <label for="ds-notes" class={label}>What do you need it to do?</label>
+            <textarea id="ds-notes" name="notes" rows="3" class={`${field} resize-y`}></textarea>
+          </div>
+          <div><label for="ds-name" class={label}>Name</label><input id="ds-name" name="name" autocomplete="name" class={field} /></div>
+          <div><label for="ds-company" class={label}>Company</label><input id="ds-company" name="company" autocomplete="organization" class={field} /></div>
+          <div><label for="ds-email" class={label}>Email</label><input id="ds-email" name="email" type="email" autocomplete="email" class={field} /></div>
+          <div><label for="ds-phone" class={label}>Phone</label><input id="ds-phone" name="phone" type="tel" autocomplete="tel" class={field} /></div>
+          <button type="button" class={send}>{design.cta}</button>
+        </form>
+      </div>
+
+      <div role="tabpanel" id="cf-walkthrough" aria-labelledby="cf-tab-walkthrough" data-cf-panel="walkthrough" hidden class="pt-8">
+        <h3 class="m-0 text-[30px] font-semibold leading-[1.1] tracking-[-.025em] text-white">{walkthrough.title}</h3>
+        <p class="mb-0 mt-2.5 text-[16.5px] text-mute">{walkthrough.body}</p>
+        <!-- TODO: connect this form to GoHighLevel. Read the GoHighLevel SOP in Notion first. -->
+        <form class="mt-7 grid grid-cols-[repeat(2,1fr)] gap-x-3 gap-y-4 max-[560px]:grid-cols-[repeat(1,1fr)]" onsubmit="return false">
+          <div><label for="wt-name" class={label}>Name</label><input id="wt-name" name="name" autocomplete="name" class={field} /></div>
+          <div><label for="wt-company" class={label}>Company</label><input id="wt-company" name="company" autocomplete="organization" class={field} /></div>
+          <div><label for="wt-email" class={label}>Email</label><input id="wt-email" name="email" type="email" autocomplete="email" class={field} /></div>
+          <div><label for="wt-phone" class={label}>Phone</label><input id="wt-phone" name="phone" type="tel" autocomplete="tel" class={field} /></div>
+          <div>
+            <label for="wt-trailer" class={label}>Trailer</label>
+            <select id="wt-trailer" name="trailer" data-cf-trailer class={`${field} cursor-pointer`}>
+              {walkthrough.trailers.map((t) => <option>{t}</option>)}
+            </select>
+          </div>
+          <div><label for="wt-town" class={label}>Town or ZIP</label><input id="wt-town" name="town" autocomplete="postal-code" class={field} /></div>
+          <button type="button" class={send}>{walkthrough.cta}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const card = document.querySelector<HTMLElement>('[data-cf]');
+  if (card) {
+    type Mode = 'design' | 'walkthrough';
+    const tabs = [...card.querySelectorAll<HTMLButtonElement>('[data-cf-tab]')];
+    const panels = [...card.querySelectorAll<HTMLElement>('[data-cf-panel]')];
+    const trailers = [...card.querySelectorAll<HTMLSelectElement>('[data-cf-trailer]')];
+    const dsTrailer = card.querySelector<HTMLSelectElement>('#ds-trailer')!;
+    const dsLength = card.querySelector<HTMLSelectElement>('#ds-length')!;
+
+    const setMode = (mode: Mode) => {
+      tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.cfTab === mode)));
+      panels.forEach((p) => (p.hidden = p.dataset.cfPanel !== mode));
+    };
+    // Event only comes in 20 ft, so the 10 ft choice switches off for it.
+    const fitLength = () => {
+      const ten = [...dsLength.options].find((o) => o.text.startsWith('10'));
+      if (!ten) return;
+      ten.disabled = dsTrailer.value === 'Event';
+      if (ten.disabled && ten.selected) dsLength.value = '20 ft';
+    };
+    const pickTrailer = (name: string) => {
+      trailers.forEach((s) => { if ([...s.options].some((o) => o.text === name)) s.value = name; });
+      fitLength();
+    };
+    const fromHash = (hash: string) => {
+      if (hash === '#design' || hash === '#walkthrough') setMode(hash.slice(1) as Mode);
+    };
+
+    tabs.forEach((t) => t.addEventListener('click', () => setMode(t.dataset.cfTab as Mode)));
+    dsTrailer.addEventListener('change', fitLength);
+    document.addEventListener('click', (e) => {
+      const a = (e.target as Element).closest<HTMLAnchorElement>('a[href$="#design"], a[href$="#walkthrough"]');
+      if (!a) return;
+      fromHash(a.hash);
+      if (a.dataset.trailer) pickTrailer(a.dataset.trailer);
+    });
+    window.addEventListener('hashchange', () => fromHash(location.hash));
+    fromHash(location.hash);
+    fitLength();
+  }
+</script>

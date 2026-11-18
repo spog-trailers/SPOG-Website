@@ -1,0 +1,27 @@
+---
+import Icon from '../ui/Icon.astro';
+import { problem } from '../../data/home2';
+// The problem as three cards, one per thing a SPOG fixes on a job site (Nate, 2026-11-18):
+// power, security and comfort. Light section, so it sits between the dark strips around it.
+---
+<section id="problem" aria-label="Three problems solved" class="bg-stone pb-[120px] pt-[120px] text-ink max-[640px]:pb-16 max-[640px]:pt-16">
+  <div class="wrap">
+    <h2 class="m-0 max-w-[920px] text-[clamp(36px,4.6vw,62px)] font-semibold leading-[1.03] tracking-[-.035em] text-coal">
+      {problem.heading.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}
+    </h2>
+    <ul class="m-0 mt-14 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-4 p-0 max-[900px]:grid-cols-[repeat(1,minmax(0,1fr))] max-[640px]:mt-10">
+      {problem.cards.map((c) => (
+        <li class="flex flex-col rounded-[18px] bg-paper px-8 pb-9 pt-8 max-[640px]:px-6 max-[640px]:pb-7 max-[640px]:pt-6">
+          <div class="flex items-center justify-between gap-4">
+            <span class="flex items-center gap-3 text-[11.5px] font-semibold uppercase tracking-[.24em] text-ink-soft">
+              <i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>{c.title}
+            </span>
+            <Icon name={c.icon} class="size-8 shrink-0 stroke-coal stroke-[1.4]" />
+          </div>
+          <h3 class="mb-0 mt-12 text-[clamp(24px,2.2vw,31px)] font-semibold leading-[1.12] tracking-[-.03em] text-coal max-[900px]:mt-8">{c.line}</h3>
+          <p class="mb-0 mt-4 text-[16px] leading-[1.6] text-ink-soft">{c.body}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
