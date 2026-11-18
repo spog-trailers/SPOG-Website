@@ -8,10 +8,11 @@ import SolutionCards from '../components/home2/SolutionCards.astro';
 import FeatureCards from '../components/features/FeatureCards.astro';
 import FutureLineup from '../components/home2/FutureLineup.astro';
 import AboutBand from '../components/home2/AboutBand.astro';
+import Faq from '../components/sections/Faq.astro';
 import CloseForms from '../components/home2/CloseForms.astro';
 import Footer from '../components/sections/Footer.astro';
 import MobileBar from '../components/sections/MobileBar.astro';
-import { hero, madeOf, values, footerColumns, navLinks } from '../data/home2';
+import { hero, madeOf, values, footerColumns, navLinks, faqs } from '../data/home2';
 ---
 <!--
   TEST HOMEPAGE 2 (draft, 2026-11-18). The live homepage at / and /test-home are untouched. Not indexed.
@@ -26,7 +27,7 @@ import { hero, madeOf, values, footerColumns, navLinks } from '../data/home2';
     Hero P (background video), Proof strip D (thin, with the US flag), Lineup L L D (sticky scroll,
     Event at night) with the "See our future lineup" strip D, Solutions L (three video cards),
     What SPOG is made of D (feature cards), Our future lineup L (Garage, Disaster Relief, Camper),
-    About P, Close D
+    About P, FAQ L (from the live homepage), Close D
   Cut at Nate's call: Built different, Guarantee, How it works and the run-time sheet.
 
   Kept from /test-home because Nate likes them: the hero look, the feature cards and the Built band.
@@ -52,6 +53,7 @@ import { hero, madeOf, values, footerColumns, navLinks } from '../data/home2';
   </FeatureCards>
   <FutureLineup />
   <AboutBand />
+  <Faq items={faqs} />
   <CloseForms />
   <Footer columns={footerColumns} full />
   <MobileBar cta={{ label: 'Design yours', href: '#design' }} secondary={{ label: 'Book a demo', href: '/demo' }} />

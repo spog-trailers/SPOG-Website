@@ -11,7 +11,7 @@
  *   CONFIRM      a number someone still has to confirm before launch
  *   PLACEHOLDER  stands in until the real thing exists
  */
-import { closing, phone, shoot, nextUp, navLinks as siteLinks } from './content';
+import { closing, phone, shoot, nextUp, navLinks as siteLinks, faqs as siteFaqs } from './content';
 import type { Feature } from './features';
 
 export const hero = {
@@ -84,7 +84,7 @@ export const lineup = {
  * `note` puts a visible tag on the card while its video is missing or a stand-in.
  */
 export type Solution = {
-  id: string; title: string; line: string; body: string;
+  id: string; icon: string; title: string; line: string; body: string;
   video?: string; poster: string; alt: string; position?: string;
   note?: { tag: string; shot: string };
 };
@@ -92,14 +92,14 @@ export const solutions: { heading: string[]; cards: Solution[] } = {
   heading: ['One trailer.', 'Three problems solved.'], // SOURCE (approved Workstation line)
   cards: [
     {
-      id: 'power', title: 'Power',
+      id: 'power', icon: 'battery', title: 'Power',
       line: 'Power where you need it.', // NATE, minus "ever" from his "wherever" (the guardrail on "anywhere" claims). Easy to put back.
       body: "Solar panels charge the battery on board, so you can run your tools and lights without a generator, a fuel run or the homeowner's outlet.", // NEW
-      video: '/images/solution-power.mp4', poster: '/images/solution-power.jpg', // Nate's welding clip, close-up only
-      alt: 'Welder at work in front of an open SPOG trailer',
+      video: '/images/solution-power.mp4', poster: '/images/solution-power.jpg', // Nate's full welding clip at 0.75x, smoothed (2026-11-18)
+      alt: 'Crew welding beside an open SPOG trailer, then a close-up of the welder',
     },
     {
-      id: 'security', title: 'Security',
+      id: 'security', icon: 'camera', title: 'Security',
       line: 'Lock up your gear and leave it on site.', // NEW
       body: 'Keep your tools in a locked trailer and add cameras and lights that watch the site overnight. Your crew skips the load-out at the end of the day.', // NEW. CONFIRM which cameras ship at V1.
       poster: shoot.wsSecurityMast, position: '50% 40%',
@@ -107,7 +107,7 @@ export const solutions: { heading: string[]; cards: Solution[] } = {
       note: { tag: 'Video needed from Robert', shot: 'The mast cameras and lights keeping watch at night' }, // PLACEHOLDER
     },
     {
-      id: 'comfort', title: 'Comfort',
+      id: 'comfort', icon: 'climate', title: 'Comfort',
       line: 'Work in comfort on site.', // NEW
       body: 'Take calls and review plans in a room with heat and AC. It comes standard on the Workstation and is available on Cargo.', // NEW, facts from Nate
       video: '/images/solution-comfort.mp4', poster: '/images/solution-comfort.jpg',
@@ -235,8 +235,21 @@ export const close = {
   walkthrough: { tab: 'Book a walkthrough', ...closing.walkthrough }, // SOURCE
 };
 
-/** The site nav, with "Coming next" pointing at this page's own future lineup instead of the live homepage. */
-export const navLinks = siteLinks.map((l) => (l.href === '/#next' ? { label: 'Future lineup', href: '#future' } : l)); // NATE (2026-11-18)
+/** The site nav, with "Coming next" and FAQ pointing at this page's own sections instead of the live homepage. */
+export const navLinks = siteLinks.map((l) =>
+  l.href === '/#next' ? { label: 'Future lineup', href: '#future' } : l.href === '/#faq' ? { ...l, href: '#faq' } : l,
+); // NATE (2026-11-18)
+
+/**
+ * The FAQ from the live homepage (Nate, 2026-11-18: "bring back the FAQ section"). Same questions
+ * and answers. PLACEHOLDER: every answer still needs sign-off. The run-time sheet isn't on this
+ * page, so that answer points at the demo page instead.
+ */
+export const faqs = siteFaqs.map((f) =>
+  f.link?.href === '#sheet'
+    ? { q: f.q, a: "It depends on the tools and the battery size. Book a demo and we'll show you the run time for the tools you use.", link: { label: 'Book a demo', href: '/demo' } } // NEW
+    : f,
+);
 
 /**
  * Footer links in the order of the sitemap (Nate, 2026-11-18).
@@ -245,5 +258,5 @@ export const navLinks = siteLinks.map((l) => (l.href === '/#next' ? { label: 'Fu
 export const footerColumns = [
   { title: 'Trailers', links: [['Cargo', '/cargo'], ['Workstation', '/workstation'], ['Event', '/event'], ['Future lineup', '#future']] },
   { title: 'Company', links: [['About', '#built'], ['Reviews', '#'], ['Become a Dealer', '#']] },
-  { title: 'Support', links: [['FAQ', '/#faq'], ['Contact', '#walkthrough'], ['Warranty', '#'], ['Blog', '#']] },
+  { title: 'Support', links: [['FAQ', '#faq'], ['Contact', '#walkthrough'], ['Warranty', '#'], ['Blog', '#']] },
 ];

@@ -1,4 +1,5 @@
 ---
+import Icon from '../ui/Icon.astro';
 import { solutions } from '../../data/home2';
 import { srcset } from '../../data/content';
 /**
@@ -6,21 +7,24 @@ import { srcset } from '../../data/content';
  * looping video, after the video cards on rivian.com. Light section, so it sits between the dark
  * lineup strip and the dark feature cards.
  *
+ * The section runs wider than the page container (Nate: less margin, let the visuals shine),
+ * with a 24px gutter up to 1920px. Each card has its icon next to its name.
  * Videos stay unloaded (preload none) until a card scrolls into view, play muted while it's on
  * screen and pause when it leaves. With reduced motion they stay on their poster.
  * A card without a video shows its still, dimmed, with a tag saying what Robert needs to shoot.
  * Desktop shows three across. Under 900px the row swipes.
  */
-const row = 'm-0 mt-14 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-4 p-0 max-[900px]:no-scrollbar max-[900px]:-mx-9 max-[900px]:flex max-[900px]:snap-x max-[900px]:snap-mandatory max-[900px]:overflow-x-auto max-[900px]:px-9 max-[900px]:scroll-px-9 max-[640px]:mt-10 max-[640px]:gap-3';
+const gutter = 'mx-auto max-w-[1920px] px-6 max-[640px]:px-5';
+const row = 'm-0 mt-14 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-4 p-0 max-[900px]:no-scrollbar max-[900px]:-mx-6 max-[900px]:flex max-[900px]:snap-x max-[900px]:snap-mandatory max-[900px]:overflow-x-auto max-[900px]:px-6 max-[900px]:scroll-px-6 max-[640px]:-mx-5 max-[640px]:mt-10 max-[640px]:gap-3 max-[640px]:px-5 max-[640px]:scroll-px-5';
 ---
 <section id="solutions" aria-label="Three problems solved" class="bg-stone pb-[120px] pt-[120px] text-ink max-[640px]:pb-16 max-[640px]:pt-16">
-  <div class="wrap">
+  <div class={gutter}>
     <h2 class="m-0 max-w-[920px] text-[clamp(36px,4.6vw,62px)] font-semibold leading-[1.03] tracking-[-.035em] text-coal">
       {solutions.heading.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}
     </h2>
     <ul class={row}>
       {solutions.cards.map((c) => (
-        <li class="flex min-w-0 flex-col max-[900px]:w-[min(78vw,420px)] max-[900px]:shrink-0 max-[900px]:snap-start">
+        <li class="flex min-w-0 flex-col max-[900px]:w-[min(80vw,440px)] max-[900px]:shrink-0 max-[900px]:snap-start">
           <div class="relative aspect-[4/5] overflow-hidden rounded-[18px] bg-coal">
             {c.video ? (
               <video
@@ -30,7 +34,7 @@ const row = 'm-0 mt-14 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-4 
                 <source src={c.video} type="video/mp4" />
               </video>
             ) : (
-              <img src={c.poster} srcset={srcset(c.poster)} sizes="(max-width: 900px) 78vw, 420px" alt={c.alt} loading="lazy" style={c.position && `object-position:${c.position}`} class="absolute inset-0 size-full object-cover brightness-[.5] saturate-[.7]" />
+              <img src={c.poster} srcset={srcset(c.poster)} sizes="(max-width: 900px) 80vw, 33vw" alt={c.alt} loading="lazy" style={c.position && `object-position:${c.position}`} class="absolute inset-0 size-full object-cover brightness-[.5] saturate-[.7]" />
             )}
             {c.note && (
               <p class="absolute inset-x-4 bottom-4 m-0 rounded-[10px] border border-dashed border-white/45 bg-black/55 px-4 py-3 backdrop-blur-[6px]">
@@ -39,11 +43,13 @@ const row = 'm-0 mt-14 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-4 
               </p>
             )}
           </div>
-          <span class="mt-7 flex items-center gap-3 text-[11.5px] font-semibold uppercase tracking-[.24em] text-ink-soft max-[640px]:mt-5">
-            <i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>{c.title}
-          </span>
-          <h3 class="mb-0 mt-3 text-[clamp(24px,2.2vw,31px)] font-semibold leading-[1.12] tracking-[-.03em] text-coal">{c.line}</h3>
-          <p class="mb-0 mt-3 text-[16px] leading-[1.6] text-ink-soft">{c.body}</p>
+          <div class="pr-6 max-[640px]:pr-2">
+            <span class="mt-7 flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[.22em] text-ink max-[640px]:mt-5">
+              <Icon name={c.icon} class="size-7 shrink-0 stroke-coal stroke-[1.6]" />{c.title}
+            </span>
+            <h3 class="mb-0 mt-3 text-[clamp(24px,2.2vw,32px)] font-semibold leading-[1.12] tracking-[-.03em] text-coal">{c.line}</h3>
+            <p class="mb-0 mt-3 max-w-[520px] text-[16px] leading-[1.6] text-ink-soft">{c.body}</p>
+          </div>
         </li>
       ))}
     </ul>
