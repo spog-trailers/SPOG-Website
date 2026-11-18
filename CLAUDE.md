@@ -107,6 +107,9 @@ The source of truth is the "Sitemap" item under "Website Build" in Notion's Comp
 - **About:** the factory is the feature (build quality, the crew, service).
 - **Reviews**
 - **Support:** dropdown with FAQ, Contact, Warranty and Blog.
+- **Become a Dealer:** a dealer lead page in V1, linked from the footer (Nate, 2026-11-18). A separate government site for Disaster Relief comes later.
+
+The homepage hero is a background video, as on `/test-home`. The solar unfold render loop holds the spot until real footage of a crew on site exists.
 
 Each product page is written for its own buyer. The single shared `[product].astro` template gets replaced.
 
