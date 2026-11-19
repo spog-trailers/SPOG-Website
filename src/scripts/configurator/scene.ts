@@ -143,6 +143,7 @@ export function createStage(container: HTMLElement) {
 
   // ---------------------------------------------------------------- sizing
   let trailerLength = 20;
+  let tall = false; // a mast stands well above the roof, so the camera backs off and aims higher
   const resize = () => {
     const w = container.clientWidth || 1;
     const h = container.clientHeight || 1;
@@ -184,12 +185,13 @@ export function createStage(container: HTMLElement) {
     }
     const v = VIEWS[name];
     const narrow = Math.max(1, 1.5 / camera.aspect);
-    const r = (19 + trailerLength * 0.6) * v.zoom * (name === 'wheels' ? Math.sqrt(narrow) : narrow);
+    const lift = tall && name !== 'wheels' ? 1 : 0;
+    const r = (19 + trailerLength * 0.6) * (1 + lift * 0.24) * v.zoom * (name === 'wheels' ? Math.sqrt(narrow) : narrow);
     const az = THREE.MathUtils.degToRad(v.az);
     const el = THREE.MathUtils.degToRad(v.el);
     const target = name === 'wheels'
       ? new THREE.Vector3(trailerLength / 2 - NOSE - axleCenter(trailerLength), 1.7, W / 2)
-      : new THREE.Vector3(v.x, FLOOR + H * (name === 'top' ? 0.5 : 0.4), 0);
+      : new THREE.Vector3(v.x, FLOOR + H * (name === 'top' ? 0.5 : 0.4) + lift * 2.2, 0);
     const pos = new THREE.Vector3(Math.cos(el) * Math.cos(az), Math.sin(el), Math.cos(el) * Math.sin(az)).multiplyScalar(r).add(target);
     return { pos, target, fov: FOV };
   }
@@ -224,6 +226,12 @@ export function createStage(container: HTMLElement) {
     blob.scale.set(L + 12, 1, 15);
     blob.position.x = 1.4;
     if (!userMoved) setView(currentView, true);
+  }
+
+  function setTall(v: boolean) {
+    if (v === tall) return;
+    tall = v;
+    if (!userMoved) setView(currentView, currentView === 'interior');
   }
 
   /** Screen position of a world point, in CSS pixels inside the container. */
@@ -266,6 +274,7 @@ export function createStage(container: HTMLElement) {
     renderer,
     setView,
     setLength,
+    setTall,
     project,
     onFrame: (f: (dt: number) => void) => frameHooks.push(f),
     onUserMove: (f: () => void) => moveHooks.push(f),

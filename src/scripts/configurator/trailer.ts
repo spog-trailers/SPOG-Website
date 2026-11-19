@@ -6,38 +6,48 @@
  * Units are feet. Axes: +x is the front (V nose and tongue), +y is up, +z is the curb side.
  *   Curb side (+z):   entry door with a window, right behind the nose.
  *   Street side (-z): sliding window over the axles, two-door storage hatch low at the front.
- *   Rear (-x):        barn doors with twin chrome lock bars (or a ramp door), four oval tail lights.
+ *   Rear (-x):        barn doors with twin chrome lock bars, four oval tail lights.
  *   Nose:             two flat panels with a black tread-plate stone guard, spare on the tongue.
  *   Roof:             silver, with solar panels laid across it and a low vent over the nose.
  * The body is hollow with a finished interior, so the doors can open and the camera can go inside.
+ * The inside follows Nate's interior photos (same folder, Interior/): white walls and ceiling with
+ * a black band where they meet, round ceiling lights, a black floor, a white partition closing off
+ * the nose with a closet door, and the battery units standing on low white platforms along the walls.
  */
 import * as THREE from 'three';
 import { FLOOR, H, NOSE, PANEL_ACROSS, PANEL_ALONG, PANEL_PITCH, ROOF, W, WALL, axleCenter, sideLength, tandem } from './dims';
 
+/** What the buyer picked. The options are the ones on SPOG's customization sheet (see data.ts). */
 export interface TrailerConfig {
   length: number;
   paint: string;
   paintDark: boolean;
-  trim: 'black' | 'aluminum';
-  wheels: 'machined' | 'black' | 'silver';
-  panels: number;
+  matte: boolean;
   batteryModules: number;
-  rear: 'barn' | 'ramp';
   doorsOpen: boolean;
-  window: boolean;
-  hatch: boolean;
-  spare: boolean;
-  vent: boolean;
-  floods: boolean;
-  cameras: boolean;
-  hvac: boolean;
-  walls: 'white' | 'plywood' | 'black';
-  floor: 'rubber' | 'wood' | 'plate';
-  shelving: boolean;
-  bench: boolean;
-  cabinets: boolean;
-  etrack: boolean;
+  /** Logo spots as a sorted, comma-joined list: noseLeft, noseRight, left, right, rear. */
+  logoSpots: string;
   brand: string;
+  /** Width over height of the logo art, so the decal keeps its shape. */
+  logoAspect: number;
+  hvac: boolean;
+  desks: number;
+  benchLength: number;
+  cabinets: number;
+  shelving: boolean;
+  overhead: boolean;
+  whiteboard: boolean;
+  tv: boolean;
+  fridge: boolean;
+  microwave: boolean;
+  counter: boolean;
+  etrackWalls: boolean;
+  etrackFloor: boolean;
+  starlink: boolean;
+  cellular: boolean;
+  mast: boolean;
+  cameras: boolean;
+  audio: boolean;
 }
 
 type Mat = THREE.Material;
@@ -103,6 +113,16 @@ function coinTexture() {
   }, false);
 }
 
+/** The slots of a tie-down track, as a bump pattern. */
+function slotTexture() {
+  return canvasTexture(64, 48, (c) => {
+    c.fillStyle = '#bdbdbd';
+    c.fillRect(0, 0, 64, 48);
+    c.fillStyle = '#1a1a1a';
+    c.fillRect(22, 8, 20, 32);
+  }, false);
+}
+
 /** Wood for the plank floor and the plywood walls. `planks` draws board gaps. */
 function woodTexture(base: [number, number, number], planks: number) {
   return canvasTexture(512, 512, (c) => {
@@ -160,7 +180,7 @@ function solarCellTexture() {
   });
 }
 
-/** Company name decal for the sides. */
+/** The buyer's company name as a decal, until they upload their own logo art. */
 export async function decalTexture(text: string, onDark: boolean) {
   try { await document.fonts.load('900 120px Montserrat'); } catch { /* fall back to whatever loaded */ }
   return canvasTexture(2048, 420, (c) => {
@@ -215,20 +235,27 @@ export function createMaterials() {
     spokeSide: new THREE.MeshStandardMaterial({ color: '#0e0f11', roughness: 0.3, metalness: 0.85 }),
     spokeFace: new THREE.MeshStandardMaterial({ color: '#d7dade', roughness: 0.2, metalness: 1 }),
     pvFrame: new THREE.MeshStandardMaterial({ color: '#0c0d0f', roughness: 0.45, metalness: 0.6 }),
-    pvTop: new THREE.MeshPhysicalMaterial({ map: solarCellTexture(), roughness: 0.14, metalness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }),
+    pvTop: new THREE.MeshPhysicalMaterial({ map: solarCellTexture(), roughness: 0.3, metalness: 0.2, clearcoat: 0.25, clearcoatRoughness: 0.2, envMapIntensity: 0.45 }),
     tail: new THREE.MeshStandardMaterial({ color: '#7a0c0c', emissive: '#d01208', emissiveIntensity: 0.35, roughness: 0.18, metalness: 0.2 }),
     marker: new THREE.MeshStandardMaterial({ color: '#9a5200', emissive: '#ff9a1a', emissiveIntensity: 0.45, roughness: 0.3 }),
     lamp: new THREE.MeshStandardMaterial({ color: '#ffffff', emissive: '#fff4de', emissiveIntensity: 0.9, roughness: 0.3 }),
+    top: new THREE.MeshPhysicalMaterial({ color: '#0d0d0f', roughness: 0.2, metalness: 0.2, clearcoat: 0.7 }),
+    pack: new THREE.MeshStandardMaterial({ color: '#9da0a5', roughness: 0.45, metalness: 0.55 }),
+    cable: new THREE.MeshStandardMaterial({ color: '#b3161a', roughness: 0.5, metalness: 0.1 }),
+    track: new THREE.MeshStandardMaterial({ color: '#141518', roughness: 0.5, metalness: 0.6, bumpMap: tile(slotTexture(), 0.34, 0.26), bumpScale: 2 }),
+    display: new THREE.MeshPhysicalMaterial({ color: '#0a0c10', roughness: 0.12, metalness: 0.3, clearcoat: 1 }),
+    board: new THREE.MeshStandardMaterial({ color: '#fbfbfa', roughness: 0.22, metalness: 0 }),
+    amber: new THREE.MeshStandardMaterial({ color: '#c46a00', emissive: '#ff8a00', emissiveIntensity: 0.5, roughness: 0.25, transparent: true, opacity: 0.92 }),
     screen: new THREE.MeshStandardMaterial({ color: '#0d1a14', emissive: '#58e39a', emissiveIntensity: 0.9, roughness: 0.3 }),
     gold: new THREE.MeshStandardMaterial({ color: '#EEA114', roughness: 0.4, metalness: 0.3 }),
     equipment: new THREE.MeshStandardMaterial({ color: '#f0f0ee', roughness: 0.5, metalness: 0.1 }),
     graphite: new THREE.MeshStandardMaterial({ color: '#2a2c30', roughness: 0.5, metalness: 0.5 }),
     steel: new THREE.MeshStandardMaterial({ color: '#3a3d42', roughness: 0.45, metalness: 0.7 }),
     benchTop: new THREE.MeshStandardMaterial({ map: planks, color: '#d8ccbc', roughness: 0.6, metalness: 0 }),
-    liner: new THREE.MeshStandardMaterial({ color: '#e2e2de', roughness: 0.6, metalness: 0.1, envMapIntensity: 0.7 }),
+    liner: new THREE.MeshStandardMaterial({ color: '#e4e5e4', roughness: 0.6, metalness: 0.1, envMapIntensity: 0.7 }),
     joint: new THREE.MeshStandardMaterial({ color: '#8d8f93', roughness: 0.5, metalness: 0.4, transparent: true, opacity: 0.5 }),
     ceiling: new THREE.MeshStandardMaterial({ color: '#dededa', roughness: 0.7, metalness: 0.05, side: THREE.DoubleSide, envMapIntensity: 0.7 }),
-    floor: new THREE.MeshStandardMaterial({ color: '#232427', roughness: 0.75, metalness: 0.05, bumpMap: coin, bumpScale: 1.2 }),
+    floor: new THREE.MeshStandardMaterial({ color: '#1b1c1e', roughness: 0.72, metalness: 0.05, bumpMap: coin, bumpScale: 0.5 }),
     logo: decal(),
     brand: decal(),
   };
@@ -238,38 +265,13 @@ export type Materials = ReturnType<typeof createMaterials>;
 /** Recolor in place for everything that doesn't change the shape. */
 export function applyFinish(m: Materials, cfg: TrailerConfig) {
   m.paint.color.set(cfg.paint);
+  // Matte Black drops the clearcoat and scatters its reflections. Every other color is satin.
+  m.paint.roughness = cfg.matte ? 0.8 : 0.34;
+  m.paint.metalness = cfg.matte ? 0.1 : 0.32;
+  m.paint.clearcoat = cfg.matte ? 0 : 0.6;
   // Satin black shows seams as faint lines. On light paint they read as darker joints.
   m.seam.color.set(cfg.paintDark ? '#050506' : '#2a2b2e');
   m.seam.opacity = cfg.paintDark ? 0.55 : 0.28;
-  if (cfg.trim === 'aluminum') {
-    m.trim.color.set('#cdd0d4'); m.trim.roughness = 0.28; m.trim.metalness = 0.95;
-    m.edge.color.set('#c9ccd1'); m.edge.roughness = 0.3; m.edge.metalness = 0.92;
-  } else {
-    m.trim.color.set('#1a1b1e'); m.trim.roughness = 0.46; m.trim.metalness = 0.7;
-    m.edge.color.set('#16171a'); m.edge.roughness = 0.5; m.edge.metalness = 0.6;
-  }
-  const dark = '#0e0f11';
-  const bright = '#d7dade';
-  m.spokeFace.color.set(cfg.wheels === 'black' ? '#15161a' : bright);
-  m.spokeFace.roughness = cfg.wheels === 'black' ? 0.18 : 0.2;
-  m.spokeSide.color.set(cfg.wheels === 'silver' ? '#b9bcc1' : dark);
-  m.rimBarrel.color.set(cfg.wheels === 'silver' ? '#b9bcc1' : dark);
-
-  const wall = { white: '#e2e2de', plywood: '#f0e6d6', black: '#1d1e21' }[cfg.walls];
-  m.liner.color.set(wall);
-  m.liner.map = cfg.walls === 'plywood' ? m.textures.ply : null;
-  m.liner.metalness = cfg.walls === 'plywood' ? 0 : 0.15;
-  m.liner.needsUpdate = true;
-
-  if (cfg.floor === 'rubber') {
-    m.floor.color.set('#232427'); m.floor.map = null; m.floor.bumpMap = m.textures.coin; m.floor.bumpScale = 1.2; m.floor.metalness = 0.05; m.floor.roughness = 0.75;
-  } else if (cfg.floor === 'wood') {
-    m.floor.color.set('#cdbfae'); m.floor.map = m.textures.planks; m.floor.bumpMap = null; m.floor.metalness = 0; m.floor.roughness = 0.6;
-  } else {
-    m.floor.color.set('#c2c5ca'); m.floor.map = null; m.floor.bumpMap = m.textures.plateFloor; m.floor.bumpScale = 1.8; m.floor.metalness = 0.9; m.floor.roughness = 0.34;
-  }
-  m.floor.needsUpdate = true;
-
   m.logo.map = cfg.paintDark ? m.textures.logoWhite : m.textures.logoDark;
   m.logo.needsUpdate = true;
 }
@@ -421,6 +423,10 @@ export interface TrailerParts {
   rampAngle: number;
   /** Points for the on-screen callouts, in world space. */
   anchors: Record<string, THREE.Vector3>;
+  /** Picked items the preview had no room for, so the page can say so. */
+  skipped: string[];
+  /** True when something stands well above the roof, so the camera backs off. */
+  tall: boolean;
   dispose: () => void;
 }
 
@@ -435,6 +441,8 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   const y0 = FLOOR + 0.14;    // top of the floor
   const zi = W / 2 - WALL;    // inside face of a side wall
   const out = W / 2 + 0.02;   // just proud of a side wall
+  const spots = new Set(cfg.brand ? cfg.logoSpots.split(',') : []);
+  const aspect = cfg.logoAspect || 4.876;
 
   const paintOut = (outward: Face, inward: Face) => faces(m.edge, { [outward]: m.paint, [inward]: m.liner });
 
@@ -524,6 +532,10 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     const mark = plane(1.02, 0.306, m.logo, corner * (Ln / 2 - 0.42), ROOF - 1.02, 0.012);
     mark.rotation.z = -Math.PI / 2;
     n.add(mark);
+    if (spots.has(sz > 0 ? 'noseRight' : 'noseLeft')) {
+      const bw = Math.min(2.5, 1.5 * aspect);
+      n.add(plane(bw, bw / aspect, m.brand, corner * -0.28, FLOOR + 4.3, 0.012));
+    }
     // amber markers at the top corners
     n.add(cyl(0.035, 0.03, m.marker, corner * (Ln / 2 - 0.3), ROOF - 0.42, 0.012, 'z', 12));
     n.add(cyl(0.035, 0.03, m.marker, corner * (Ln / 2 - 0.3), FLOOR + 0.2, 0.03, 'z', 12));
@@ -557,9 +569,10 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     const logo = plane(2.0, 0.6, m.logo, xr + 1.55, ROOF - 1.08, sz * (W / 2 + 0.012));
     if (sz < 0) logo.rotation.y = Math.PI;
     g.add(logo);
-    if (cfg.brand) {
-      const bw = Math.min(S * 0.5, 9);
-      const brand = plane(bw, bw * (420 / 2048), m.brand, xr + 0.9 + bw / 2, FLOOR + 3.25, sz * (W / 2 + 0.012));
+    if (spots.has(sz > 0 ? 'right' : 'left')) {
+      const room = Math.min(S * 0.5, 9);
+      const bh = Math.min(2.2, room / aspect);
+      const brand = plane(bh * aspect, bh, m.brand, xr + 0.9 + room / 2, FLOOR + 3.25, sz * (W / 2 + 0.012));
       if (sz < 0) brand.rotation.y = Math.PI;
       g.add(brand);
     }
@@ -569,7 +582,7 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   const axleX = xf - axleCenter(L);
   // The window sits over the axles. On the 10 ft it moves forward to clear the logo.
   const winX = Math.max(axleX, xr + 4.9);
-  if (cfg.window) {
+  {
     const ww = 3.6, wh = 2.0;
     const wy = ROOF - 1.05 - wh / 2;
     const win = new THREE.Group();
@@ -584,7 +597,7 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     win.add(innerFrame, plane(ww, wh, m.daylight, 0, 0, WALL + 0.01), box(0.05, wh, 0.03, m.black, 0, 0, WALL + 0.014));
     g.add(win);
   }
-  if (cfg.hatch) {
+  {
     const hw = Math.min(4.4, S * 0.3), hh = 2.1;
     const hatch = new THREE.Group();
     hatch.position.set(xf - 0.22 - hw / 2, FLOOR + 0.42 + hh / 2, -out);
@@ -622,14 +635,13 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   // ------------------------------------------------------------ rear doors
   const doorY = FLOOR + sill;
   const barn: THREE.Object3D[] = [];
-  let ramp: THREE.Object3D | null = null;
   const lockBar = (len: number, z: number) => {
     const bar = new THREE.Group();
     bar.add(cyl(0.035, len, m.chrome, -0.1, len / 2 - 0.12, z, 'y', 14));
     for (const t of [0.04, 0.3, 0.7, 0.96]) bar.add(box(0.07, 0.1, 0.18, m.chrome, -0.085, len * t - 0.12 + 0.05, z));
     return bar;
   };
-  if (cfg.rear === 'barn') {
+  {
     const lw = openW / 2;
     for (const sz of [1, -1]) {
       // Pivot on the outer edge. The door reaches from there to the center line.
@@ -650,28 +662,19 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
         const logo = plane(1.8, 0.54, m.logo, -0.055, openH - 1.35, dir * (lw / 2 - 0.2));
         logo.rotation.y = -Math.PI / 2;
         door.add(logo);
+      } else if (spots.has('rear')) {
+        const bw = Math.min(1.9, 1.3 * aspect);
+        const brand = plane(bw, bw / aspect, m.brand, -0.055, openH - 1.35, dir * (lw / 2 - 0.05));
+        brand.rotation.y = -Math.PI / 2;
+        door.add(brand);
       }
       g.add(door);
       barn.push(door);
     }
-  } else {
-    const door = new THREE.Group();
-    door.position.set(xr - 0.03, doorY, 0);
-    door.add(box(0.1, openH - 0.03, openW - 0.03, faces(m.edge, { nx: m.paint, px: m.floor }), 0, openH / 2, 0));
-    for (const sz of [1, -1]) {
-      door.add(lockBar(openH + 0.2, sz * (openW / 2 - 0.5)));
-      door.add(box(0.03, 0.07, 0.8, m.chrome, -0.13, openH * 0.49, sz * (openW / 2 - 0.95)));
-      door.add(box(0.07, 0.2, 0.5, m.chrome, -0.03, 0.06, sz * (openW / 2 - 0.9)));
-    }
-    const logo = plane(1.8, 0.54, m.logo, -0.055, openH - 1.35, 1.3);
-    logo.rotation.y = -Math.PI / 2;
-    door.add(logo);
-    g.add(door);
-    ramp = door;
   }
 
   // ------------------------------------------------------------ roof: solar, vent
-  const count = Math.min(cfg.panels, Math.floor((S - 0.15) / PANEL_PITCH));
+  const count = Math.floor((S - 0.15) / PANEL_PITCH);
   if (count > 0) {
     const run = count * PANEL_PITCH;
     for (const sz of [1, -1]) g.add(box(run, 0.07, 0.12, m.aluminum, xr + 0.12 + run / 2, ROOF + 0.035, sz * 2.3));
@@ -685,7 +688,7 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
       g.add(top);
     }
   }
-  if (cfg.vent) {
+  {
     g.add(box(1.25, 0.1, 1.25, m.black, xf + 0.55, ROOF + 0.05, 0));
     const dome = new THREE.Mesh(new THREE.SphereGeometry(0.62, 28, 14, 0, Math.PI * 2, 0, Math.PI / 2), m.graphite);
     dome.scale.set(1, 0.42, 1);
@@ -737,7 +740,7 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   g.add(box(0.2, 0.16, 0.2, m.aluminum, jackX, 2.45, 0));
   g.add(cyl(0.02, 0.5, m.aluminum, jackX, 2.42, 0.3, 'z', 8));
   g.add(cyl(0.02, 0.3, m.aluminum, jackX, 2.28, 0.54, 'y', 8));
-  if (cfg.spare) {
+  {
     const sx = xf + 1.1;
     const nz = (W / 2) * (1 - (sx - xf) / NOSE);
     const spare = wheel(m);
@@ -747,27 +750,9 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     g.add(box(0.16, 1.3, 0.16, m.chassis, sx, 1.55, -(nz + 0.14)));
     g.add(box(0.5, 0.12, 0.5, m.chassis, sx, 1.0, -(nz + 0.3)));
   }
-  if (cfg.hvac) {
-    // heat pump on the tongue, between the nose and the jack
-    const u = new THREE.Group();
-    u.position.set(tip + 1.0, FLOOR + 0.02, 0.15);
-    u.add(box(1.0, 1.75, 2.5, m.equipment, 0, 0.875, 0));
-    const grille = cyl(0.62, 0.03, m.graphite, 0.51, 0.95, -0.35, 'x', 32);
-    const hub = cyl(0.16, 0.05, m.equipment, 0.52, 0.95, -0.35, 'x', 20);
-    u.add(grille, hub);
-    for (let i = 0; i < 6; i++) u.add(box(0.02, 0.03, 0.7, m.graphite, 0.51, 0.35 + i * 0.22, 0.82));
-    g.add(u);
-  }
-
-  // ------------------------------------------------------------ flood lights and cameras
-  if (cfg.floods) {
-    for (const sz of [1, -1]) for (const fx of [xr + S * 0.28, xr + S * 0.78]) {
-      if (sz > 0 && fx > doorRear - 0.8) continue;
-      g.add(box(1.0, 0.24, 0.07, m.black, fx, ROOF - 0.62, sz * (W / 2 + 0.05)));
-      g.add(box(0.88, 0.14, 0.02, m.lamp, fx, ROOF - 0.62, sz * (W / 2 + 0.09)));
-    }
-  }
+  // ------------------------------------------------------------ connectivity and security
   if (cfg.cameras) {
+    // standard cameras: one on each rear corner and one on the nose
     const cam = (x: number, y: number, z: number, yaw: number) => {
       const c = new THREE.Group();
       c.position.set(x, y, z);
@@ -785,74 +770,260 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     cam(xr - 0.08, ROOF - 0.75, -(W / 2 - 0.28), Math.PI);
     cam(tip + 0.02, ROOF - 0.75, 0, 0);
   }
+  const mastX = tip + 0.42;
+  const mastTop = ROOF + 6.2;
+  if (cfg.mast) {
+    // AI job site camera system: the telescoping mast at the nose with two dome cameras under a
+    // crossbar and work lights above it, as on the Workstation photos (ws-starlink.jpg).
+    g.add(box(0.55, 0.5, 0.55, m.chassis, mastX, FLOOR + 0.1, 0));
+    g.add(cyl(0.2, 5.2, m.black, mastX, FLOOR + 2.8, 0, 'y', 16));
+    g.add(cyl(0.15, 5.0, m.black, mastX, FLOOR + 7.4, 0, 'y', 16));
+    g.add(cyl(0.1, mastTop - (FLOOR + 9.6), m.black, mastX, (mastTop + FLOOR + 9.6) / 2, 0, 'y', 14));
+    for (const by of [FLOOR + 2.2, ROOF - 0.6]) g.add(box(0.5, 0.12, 0.3, m.black, tip + 0.18, by, 0));
+    const cy = mastTop - 1.5;
+    g.add(box(0.14, 0.14, 2.6, m.black, mastX, cy, 0));
+    for (const sz of [1, -1]) {
+      g.add(cyl(0.05, 0.5, m.black, mastX, cy - 0.3, sz * 1.1, 'y', 10));
+      g.add(cyl(0.3, 0.3, m.graphite, mastX, cy - 0.6, sz * 1.1, 'y', 20));
+      const dome = new THREE.Mesh(new THREE.SphereGeometry(0.3, 20, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), m.glass);
+      dome.position.set(mastX, cy - 0.75, sz * 1.1);
+      dome.castShadow = true;
+      g.add(dome);
+      g.add(box(0.5, 0.55, 0.75, m.black, mastX, cy + 0.45, sz * 0.75));
+      g.add(box(0.03, 0.42, 0.62, m.lamp, mastX + 0.26, cy + 0.45, sz * 0.75));
+    }
+  }
+  if (cfg.starlink) {
+    // The dish rides on top of the mast when there is one, else on a short pole over the nose.
+    const dish = new THREE.Group();
+    if (cfg.mast) dish.position.set(mastX, mastTop + 0.22, 0);
+    else {
+      g.add(cyl(0.06, 1.3, m.black, xf + 1.45, ROOF + 0.65, 0, 'y', 12));
+      dish.position.set(xf + 1.45, ROOF + 1.4, 0);
+    }
+    dish.add(box(1.25, 0.09, 1.9, m.equipment, 0, 0, 0), box(0.3, 0.2, 0.3, m.graphite, 0, -0.13, 0));
+    dish.rotation.z = -0.28;
+    g.add(dish);
+  }
+  if (cfg.cellular) {
+    // roof antenna over the nose
+    g.add(cyl(0.28, 0.14, m.black, xf + 0.32, ROOF + 0.07, 2.3, 'y', 24));
+    g.add(cyl(0.02, 0.9, m.black, xf + 0.32, ROOF + 0.55, 2.3, 'y', 8));
+  }
+  if (cfg.audio) {
+    // horn and strobe on a bracket at the front street-side corner
+    const ax = xf - 0.9;
+    const az = -(W / 2 + 0.3);
+    g.add(box(0.5, 0.08, 0.6, m.black, ax, ROOF - 0.62, az));
+    const horn = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.3, 0.6, 22), m.equipment);
+    horn.rotation.x = Math.PI / 2;
+    horn.position.set(ax, ROOF - 0.95, az - 0.12);
+    horn.castShadow = true;
+    g.add(horn, cyl(0.12, 0.1, m.black, ax, ROOF - 0.54, az - 0.1, 'y', 16));
+    const strobe = new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), m.amber);
+    strobe.scale.y = 1.4;
+    strobe.position.set(ax, ROOF - 0.5, az - 0.1);
+    g.add(strobe);
+  }
 
   // ------------------------------------------------------------ interior
-  // ceiling light strips, and soft light so the inside reads when the camera is in there
-  for (const sz of [1, -1]) g.add(box(S - 2.2, 0.03, 0.22, m.lamp, xr + S / 2, ROOF - 0.13, sz * 1.5));
+  // A white partition closes off the nose. The closet door on its curb half leads to the gear.
+  const px = xf - 0.06;
+  g.add(box(0.12, H - 0.26, W - WALL * 2, faces(m.edge, { nx: m.liner, px: m.liner }), px, yc, 0));
+  {
+    const dz = 1.85;
+    const dh2 = 6.3;
+    g.add(box(0.05, dh2 + 0.24, 2.74, m.board, px - 0.07, y0 + dh2 / 2 + 0.06, dz));
+    g.add(box(0.03, dh2, 2.5, m.equipment, px - 0.1, y0 + dh2 / 2, dz));
+    for (const [cy2, ch] of [[y0 + 1.5, 2.3], [y0 + 4.5, 2.9]]) g.add(box(0.012, ch, 1.9, m.board, px - 0.118, cy2, dz));
+    g.add(cyl(0.09, 0.1, m.black, px - 0.16, y0 + 3.05, dz - 0.95, 'x', 16));
+  }
+  // black band where the walls meet the ceiling
+  for (const sz of [1, -1]) g.add(box(S - 0.2, 0.3, 0.03, m.black, xr + S / 2, ROOF - 0.27, sz * (zi - 0.016)));
+  g.add(box(0.03, 0.3, W - WALL * 2 - 0.06, m.black, px - 0.076, ROOF - 0.27, 0));
+  // round ceiling lights in two rows, and soft light so the inside reads when the camera is in there
+  const rows = Math.max(2, Math.round(S / 4.2));
+  for (let i = 0; i < rows; i++) for (const sz of [1, -1]) {
+    const lx = xr + (S * (i + 0.5)) / rows;
+    g.add(cyl(0.44, 0.04, m.board, lx, ROOF - 0.13, sz * 1.5, 'y', 28), cyl(0.36, 0.05, m.lamp, lx, ROOF - 0.14, sz * 1.5, 'y', 28));
+  }
   const glow = S > 12 ? [xr + S * 0.25, xr + S * 0.72] : [xr + S * 0.5];
   for (const lx of glow) {
-    const light = new THREE.PointLight('#fff6e8', 9, 22, 1.6);
+    const light = new THREE.PointLight('#f4f8ff', 9, 22, 1.6);
     light.position.set(lx, ROOF - 0.9, 0);
     g.add(light);
   }
-
-  // liner joints every 4 ft and a dark kick strip, so the walls read as panels
+  // faint liner joints every 4 ft, so the walls read as panels
   for (const sz of [1, -1]) {
     for (let x = xr + 4; x < xf - 0.6; x += 4) {
       if (sz > 0 && x > doorRear - 0.2) continue;
-      g.add(box(0.03, H - 0.4, 0.012, m.joint, x, yc, sz * (zi - 0.006)));
+      g.add(box(0.03, H - 0.7, 0.012, m.joint, x, yc - 0.15, sz * (zi - 0.006)));
     }
-    const run = sz > 0 ? doorRear - xr - 0.1 : S;
-    g.add(box(run, 0.32, 0.02, m.steel, xr + run / 2, y0 + 0.16, sz * (zi - 0.01)));
+  }
+  if (cfg.hvac) {
+    // the indoor head, high on the partition as built
+    g.add(box(0.7, 0.95, 2.6, m.equipment, px - 0.41, ROOF - 1.3, -1.0));
+    g.add(box(0.5, 0.05, 2.4, m.graphite, px - 0.48, ROOF - 1.79, -1.0));
+    g.add(box(0.02, 0.04, 2.5, m.joint, px - 0.765, ROOF - 1.5, -1.0), box(0.02, 0.9, 0.03, m.joint, px - 0.765, ROOF - 1.3, -2.3), box(0.02, 0.9, 0.03, m.joint, px - 0.765, ROOF - 1.3, 0.3));
   }
 
-  // power system in the nose: inverter on a board, battery modules stacked under it
+  // Battery units stand on low white platforms along both walls at the rear, 5 kWh each,
+  // street side first. A short trailer shows as many as its walls hold.
+  const wallEnd: Record<number, number> = { [-1]: xf - 0.3, [1]: doorRear - 0.5 };
+  const cursor: Record<number, number> = { [-1]: xr + 0.6, [1]: xr + 0.6 };
   {
-    const pz = -1.55;
-    g.add(box(0.08, 5.2, 3.0, m.graphite, xf + 0.12, y0 + 2.6, pz));
-    g.add(box(0.5, 2.1, 1.5, m.equipment, xf - 0.18, y0 + 4.0, pz));
-    g.add(box(0.02, 0.36, 0.62, m.screen, xf - 0.44, y0 + 4.5, pz));
-    g.add(box(0.02, 0.05, 1.5, m.gold, xf - 0.44, y0 + 3.1, pz));
-    g.add(box(0.3, 0.9, 0.7, m.graphite, xf - 0.08, y0 + 4.2, pz + 1.25));
-    for (let i = 0; i < cfg.batteryModules; i++) {
-      const by = y0 + 0.36 + i * 0.58;
-      g.add(box(1.25, 0.5, 1.9, m.graphite, xf - 0.62, by, pz));
-      g.add(box(0.02, 0.06, 0.06, m.screen, xf - 1.255, by + 0.1, pz + 0.7));
-      for (const hz of [-0.6, 0.6]) g.add(box(0.05, 0.08, 0.34, m.steel, xf - 1.27, by, pz + hz));
+    const unit = 1.75;
+    const room = (wall: number) => Math.max(0, Math.floor((wallEnd[wall] - (xr + 1.5) - 0.4) / unit));
+    let left = cfg.batteryModules;
+    for (const wall of [-1, 1]) {
+      const n = Math.min(wall < 0 ? Math.ceil(left / 2) : left, room(wall), 4);
+      left -= n;
+      if (!n) continue;
+      const len = n * unit + 0.4;
+      const x0 = xr + 1.5;
+      g.add(box(len, 0.85, 0.95, m.equipment, x0 + len / 2, y0 + 0.425, wall * (zi - 0.475)));
+      for (let i = 0; i < n; i++) {
+        const u = new THREE.Group();
+        u.position.set(x0 + 0.2 + unit * (i + 0.5), y0 + 0.85, wall * (zi - 0.5));
+        if (wall > 0) u.rotation.y = Math.PI;
+        u.add(box(1.45, 2.2, 0.62, m.pack, 0, 1.1, 0));
+        u.add(box(1.2, 1.5, 0.02, m.board, 0, 1.0, 0.32), box(1.47, 0.1, 0.64, m.pack, 0, 2.16, 0));
+        u.add(box(0.5, 0.2, 0.02, m.graphite, 0, 0.42, 0.335), box(0.03, 0.03, 0.02, m.screen, 0.5, 1.9, 0.33));
+        for (const cx of [-0.4, 0.4]) u.add(cyl(0.03, 0.34, m.cable, cx, 2.27, 0, 'x', 8));
+        g.add(u);
+      }
+      cursor[wall] = x0 + len + 0.3;
     }
-    g.add(box(1.35, 0.12, 2.0, m.steel, xf - 0.62, y0 + 0.06, pz));
-    for (const cz2 of [-0.5, 0.5]) g.add(cyl(0.05, 1.4, m.steel, xf - 0.1, y0 + 2.4, pz + cz2, 'y', 10));
   }
 
-  const benchLen = Math.min(4.6, S * 0.4);
-  if (cfg.bench) {
-    const b = new THREE.Group();
-    b.position.set(winX, y0, -zi);
-    b.add(box(benchLen, 0.14, 1.9, m.benchTop, 0, 3.0, 0.95));
-    for (const ex of [-1, 1]) for (const ez of [0.12, 1.78]) b.add(box(0.12, 2.93, 0.12, m.steel, ex * (benchLen / 2 - 0.1), 1.465, ez));
-    b.add(box(benchLen - 0.2, 0.08, 1.7, m.steel, 0, 0.9, 0.95));
-    b.add(box(benchLen, 0.5, 0.06, m.steel, 0, 3.32, 0.04));
-    for (const ox of [-0.8, 0.8]) b.add(box(0.36, 0.22, 0.03, m.equipment, ox, 3.34, 0.08));
-    g.add(b);
+  // ------------------------------------------------------------ furniture, packed along the walls
+  // Each piece takes the next free stretch of its preferred wall, or the other wall if that one
+  // is full. Anything that fits neither is left out of the preview and reported back. The real
+  // layout is worked out with the buyer, so this only shows that the pieces exist and their scale.
+  // Inside a slot: x runs along the wall, y is up from the floor, z is out from the wall.
+  const skipped: string[] = [];
+  const limit = wallEnd;
+  const place = (len: number, prefer: 1 | -1, label: string) => {
+    for (const wall of [prefer, -prefer]) {
+      if (cursor[wall] + len > limit[wall] + 0.01) continue;
+      const slot = new THREE.Group();
+      slot.position.set(cursor[wall] + len / 2, y0, wall * zi);
+      if (wall > 0) slot.rotation.y = Math.PI;
+      cursor[wall] += len + 0.25;
+      g.add(slot);
+      return slot;
+    }
+    skipped.push(label);
+    return null;
+  };
+  /** The same, but from the front of the street-side wall, where the as-built desk sits. */
+  const placeFront = (len: number, label: string) => {
+    if (limit[-1] - len < cursor[-1] - 0.01) return place(len, 1, label);
+    const slot = new THREE.Group();
+    slot.position.set(limit[-1] - len / 2, y0, -zi);
+    limit[-1] -= len + 0.25;
+    g.add(slot);
+    return slot;
+  };
+  // White casework with a black top, as on the desk in the interior photos.
+  const casework = (slot: THREE.Group, len: number, depth: number, height: number, doors: number) => {
+    slot.add(box(len, height - 0.3, depth, m.equipment, 0, 0.3 + (height - 0.3) / 2, depth / 2));
+    slot.add(box(len - 0.1, 0.3, depth - 0.2, m.black, 0, 0.15, depth / 2 - 0.1));
+    slot.add(box(len + 0.06, 0.1, depth + 0.06, m.top, 0, height + 0.05, depth / 2));
+    for (let i = 0; i < doors; i++) {
+      const cx = -len / 2 + (len / doors) * (i + 0.5);
+      if (i > 0) slot.add(box(0.02, height - 0.4, 0.01, m.black, -len / 2 + (len / doors) * i, 0.3 + (height - 0.3) / 2, depth + 0.005));
+      slot.add(box(0.04, 0.5, 0.04, m.black, cx + (len / doors) * 0.32, height * 0.72, depth + 0.03));
+    }
+  };
+
+  // A tabletop host for the microwave: the counter first, then cabinets, then the fridge.
+  let host: { slot: THREE.Group; x: number; top: number; depth: number } | null = null;
+
+  if (cfg.benchLength) {
+    const len = cfg.benchLength;
+    const b = place(len, -1, 'the workbench');
+    if (b) {
+      b.add(box(len, 0.14, 1.9, m.benchTop, 0, 3.0, 0.95));
+      for (const ex of [-1, 1]) for (const ez of [0.12, 1.78]) b.add(box(0.12, 2.93, 0.12, m.steel, ex * (len / 2 - 0.1), 1.465, ez));
+      b.add(box(len - 0.2, 0.08, 1.7, m.steel, 0, 0.9, 0.95));
+      b.add(box(len, 0.5, 0.06, m.steel, 0, 3.32, 0.04));
+      for (const ox of [-0.8, 0.8]) b.add(box(0.36, 0.22, 0.03, m.equipment, ox, 3.34, 0.08));
+    }
   }
-  // Racking goes behind the bench on the street side when there's room, else on the curb side.
-  const roomBehindBench = winX - benchLen / 2 - (xr + 0.6);
-  const rackStreet = !cfg.bench || roomBehindBench >= 2.6;
   if (cfg.shelving) {
-    const maxLen = rackStreet ? (cfg.bench ? roomBehindBench - 0.3 : S * 0.42) : doorRear - xr - 1.4;
-    const len = Math.min(6, maxLen);
-    const r = new THREE.Group();
-    r.position.set(xr + 0.6 + len / 2, y0, rackStreet ? -zi : zi);
-    const dz = rackStreet ? 1 : -1;
-    const depth = 1.5;
-    const bays = Math.max(1, Math.round(len / 3));
-    for (let i = 0; i <= bays; i++) for (const ez of [0.08, depth - 0.08]) r.add(box(0.1, 5.2, 0.1, m.steel, -len / 2 + (len / bays) * i, 2.6, dz * ez));
-    for (const sy of [0.5, 1.9, 3.3, 4.7]) r.add(box(len, 0.07, depth, m.steel, 0, sy, dz * (depth / 2)));
-    // a few bins so the shelves read as storage
-    for (let i = 0; i < bays * 2; i++) r.add(box(0.95, 0.62, 1.05, i % 3 === 0 ? m.gold : m.graphite, -len / 2 + 0.75 + i * (len / (bays * 2)), 2.26, dz * 0.72));
-    g.add(r);
+    const len = S > 12 ? 3.6 : 2.6;
+    const r = place(len, -1, 'the shelving');
+    if (r) {
+      const depth = 1.5;
+      for (const ex of [-1, 1]) for (const ez of [0.08, depth - 0.08]) r.add(box(0.1, 5.2, 0.1, m.steel, ex * (len / 2 - 0.05), 2.6, ez));
+      for (const sy of [0.5, 1.9, 3.3, 4.7]) r.add(box(len, 0.07, depth, m.steel, 0, sy, depth / 2));
+      for (let i = 0; i < 3; i++) r.add(box(0.9, 0.62, 1.05, i === 1 ? m.gold : m.graphite, -len / 2 + 0.7 + i * ((len - 1.4) / 2), 2.26, 0.72));
+    }
+  }
+  for (let i = 0; i < cfg.desks; i++) {
+    // black top on a white base, in the front street-side corner as built
+    const len = 4.5;
+    const d = placeFront(len, cfg.desks > 1 ? 'an office desk' : 'the office desk');
+    if (!d) continue;
+    const depth = 2.3;
+    const flip = d.rotation.y ? -1 : 1;
+    d.add(box(len + 0.04, 0.1, depth + 0.04, m.top, 0, 2.5, depth / 2));
+    d.add(box(0.08, 2.45, depth - 0.1, m.equipment, flip * (-len / 2 + 0.04), 1.225, depth / 2));
+    d.add(box(1.5, 2.45, depth - 0.1, m.equipment, flip * (len / 2 - 0.75), 1.225, depth / 2));
+    for (const dy of [0.6, 1.3, 2.0]) d.add(box(0.5, 0.04, 0.04, m.black, flip * (len / 2 - 0.75), dy, depth - 0.03));
+    d.add(box(len - 1.6, 1.3, 0.06, m.equipment, flip * -0.75, 1.8, 0.2));
   }
   if (cfg.cabinets) {
+    const len = cfg.cabinets * 2.4;
+    const c = place(len, 1, cfg.cabinets > 1 ? 'the cabinets' : 'the cabinet');
+    if (c) {
+      casework(c, len, 1.9, 3.0, cfg.cabinets * 2);
+      host = { slot: c, x: -len / 2 + 1.2, top: 3.11, depth: 1.9 };
+    }
+  }
+  if (cfg.counter) {
+    const c = place(4, 1, 'the refreshment counter');
+    if (c) {
+      casework(c, 4, 1.9, 3.0, 2);
+      // coffee maker, a carafe and a stack of cups
+      c.add(box(0.7, 1.1, 0.8, m.steel, -1.2, 3.66, 0.8), box(0.5, 0.08, 0.6, m.steel, -1.2, 3.31, 1.15));
+      c.add(cyl(0.2, 0.5, m.display, -1.2, 3.39, 1.2, 'y', 16));
+      for (let i = 0; i < 3; i++) c.add(cyl(0.12, 0.34, m.board, -0.35 + i * 0.3, 3.28, 0.7, 'y', 12));
+      host = { slot: c, x: 1.05, top: 3.11, depth: 1.9 };
+    }
+  }
+  if (cfg.fridge) {
+    const f = place(2.1, 1, 'the refrigerator');
+    if (f) {
+      f.add(box(2.0, 2.85, 2.0, m.steel, 0, 1.45, 1.0));
+      f.add(box(1.9, 2.6, 0.04, m.graphite, 0, 1.5, 2.02));
+      f.add(box(0.05, 1.4, 0.07, m.chrome, 0.75, 1.7, 2.07));
+      if (!host) host = { slot: f, x: 0, top: 2.88, depth: 2.0 };
+    }
+  }
+  if (cfg.microwave) {
+    // On the first tabletop there is. With none, it gets its own small stand.
+    let spot = host;
+    if (!spot) {
+      const stand = place(1.9, 1, 'the microwave');
+      if (stand) {
+        for (const ex of [-1, 1]) for (const ez of [0.1, 1.4]) stand.add(box(0.08, 2.9, 0.08, m.steel, ex * 0.85, 1.45, ez));
+        for (const sy of [0.9, 2.9]) stand.add(box(1.8, 0.06, 1.5, m.steel, 0, sy, 0.75));
+        spot = { slot: stand, x: 0, top: 2.93, depth: 1.5 };
+      }
+    }
+    if (spot) {
+      const z = spot.depth / 2 + 0.1;
+      spot.slot.add(box(1.6, 0.95, 1.2, m.graphite, spot.x, spot.top + 0.475, z));
+      spot.slot.add(box(1.05, 0.62, 0.03, m.display, spot.x - 0.2, spot.top + 0.475, z + 0.61));
+      spot.slot.add(box(0.05, 0.6, 0.05, m.chrome, spot.x + 0.4, spot.top + 0.475, z + 0.64));
+    }
+  }
+
+  // Wall-hung pieces on the curb side: overhead storage along the top, then the board and screen.
+  const wallRun = doorRear - xr - 1.6;
+  if (cfg.overhead) {
     const len = Math.min(8, doorRear - xr - 1.2);
     const c = new THREE.Group();
     c.position.set(xr + 0.7 + len / 2, ROOF - 0.12, zi);
@@ -860,16 +1031,38 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     c.add(box(len, 1.4, 1.15, m.equipment, 0, -0.7, -0.575));
     for (let i = 0; i < doors; i++) {
       const cx = -len / 2 + (len / doors) * (i + 0.5);
-      c.add(box(len / doors - 0.06, 1.3, 0.03, m.liner, cx, -0.7, -1.165));
-      c.add(box(0.3, 0.04, 0.04, m.steel, cx, -1.22, -1.19));
+      c.add(box(len / doors - 0.06, 1.3, 0.03, m.board, cx, -0.7, -1.165));
+      c.add(box(0.3, 0.04, 0.04, m.black, cx, -1.22, -1.19));
     }
     g.add(c);
   }
-  if (cfg.etrack) {
-    for (const ty of [y0 + 1.6, y0 + 3.55]) {
-      g.add(box(S - 0.8, 0.2, 0.03, m.aluminum, xr + S / 2, ty, -(zi - 0.016)));
-      g.add(box(doorRear - xr - 0.8, 0.2, 0.03, m.aluminum, (xr + doorRear) / 2, ty, zi - 0.016));
+  if (cfg.whiteboard) {
+    const w = Math.min(4, wallRun * 0.46);
+    const h = Math.min(2.0, w * 0.62);
+    const wb = new THREE.Group();
+    wb.position.set(xr + 0.8 + wallRun * 0.28, y0 + 4.2, zi - 0.03);
+    wb.add(box(w + 0.1, h + 0.1, 0.04, m.aluminum, 0, 0, 0), box(w, h, 0.02, m.board, 0, 0, -0.025), box(w * 0.5, 0.05, 0.12, m.aluminum, 0, -h / 2 - 0.05, -0.07));
+    g.add(wb);
+  }
+  if (cfg.tv) {
+    const w = Math.min(3.4, wallRun * 0.4);
+    const h = w * 0.5625;
+    const tv = new THREE.Group();
+    tv.position.set(xr + 0.8 + wallRun * 0.76, y0 + 4.3, zi - 0.06);
+    tv.add(box(w, h, 0.1, m.black, 0, 0, 0), box(w - 0.1, h - 0.1, 0.02, m.display, 0, 0, -0.055));
+    g.add(tv);
+  }
+  if (cfg.etrackWalls) {
+    // black track: two rows on the curb side, and on the street side a low row plus a high row
+    // that stops short of the window
+    for (const ty of [y0 + 1.5, y0 + 4.4]) {
+      g.add(box(doorRear - xr - 0.8, 0.26, 0.04, m.track, (xr + doorRear) / 2, ty, zi - 0.02));
+      const end = ty > y0 + 3 ? winX - 2.1 : xf - 0.5;
+      if (end - xr > 1.5) g.add(box(end - xr - 0.4, 0.26, 0.04, m.track, (xr + end) / 2 + 0.2, ty, -(zi - 0.02)));
     }
+  }
+  if (cfg.etrackFloor) {
+    for (const sz of [1, -1]) g.add(box(S - 2.4, 0.03, 0.26, m.track, xr + (S - 2.4) / 2 + 0.5, y0 + 0.016, sz * 1.15));
   }
 
   // Center the body (not the tongue) on the origin so it turns about its middle.
@@ -883,8 +1076,10 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   return {
     group: g,
     barn,
-    ramp,
+    ramp: null,
     sideDoor,
+    skipped,
+    tall: cfg.mast,
     rampAngle: Math.PI / 2 + Math.asin(Math.min(1, doorY / (openH - 0.03))),
     anchors,
     dispose() {
@@ -909,7 +1104,7 @@ export function interiorView(length: number) {
   const xr = -length / 2;
   const xf = length / 2 - NOSE;
   return {
-    eye: new THREE.Vector3(xr + 1.4, FLOOR + 4.7, 0.55),
-    look: new THREE.Vector3(xf - 0.5, FLOOR + 3.2, -0.3),
+    eye: new THREE.Vector3(xr + 0.35, FLOOR + 5.0, 0.2),
+    look: new THREE.Vector3(xf - 0.5, FLOOR + 2.7, -0.1),
   };
 }

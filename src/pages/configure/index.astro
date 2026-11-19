@@ -1,0 +1,75 @@
+---
+/**
+ * First step of "Design your trailer" (Nate, 2026-11-18): pick which trailer to design.
+ * Only the Cargo has a builder so far, so Workstation and Event are greyed out. Each greyed card
+ * still offers the build request form, so those buyers have a way forward.
+ *
+ * Where "Design yours" goes across the site:
+ *   - Anywhere general (nav, homepage hero, phone bar, /demo): here.
+ *   - On the Cargo lineup panel and the Cargo page: straight to /configure/cargo.
+ *   - On Workstation and Event: the build request form on the homepage, with that trailer picked.
+ * Trailer names, lines and images come from the homepage lineup in src/data/home2.ts.
+ */
+import Base from '../../layouts/Base.astro';
+import { img, phone } from '../../data/content';
+import { lineup } from '../../data/home2';
+
+const builders: Record<string, string> = { cargo: '/configure/cargo' };
+// The Cargo card shows the builder's own 3D model (a capture of /configure/cargo on white, laid
+// over the gray plate with a multiply blend). Remake it if the model's default look changes.
+const art: Record<string, { image: string; width: number; height: number; alt: string }> = {
+  cargo: { image: '/images/configure-cargo.jpg', width: 1123, height: 682, alt: 'Black 20 ft SPOG Cargo trailer, seen from the front curb side' },
+};
+const cards = lineup.panels.map((p) => ({ ...p, ...(art[p.id] ?? {}), blend: !!art[p.id], builder: builders[p.id] }));
+---
+<Base title="Design your trailer | SPOG Trailers" description="Pick a SPOG trailer and design it your way." noindex>
+  <div class="min-h-screen bg-white text-ink">
+    <header class="flex h-[56px] items-center justify-between px-7 max-[640px]:px-4">
+      <a href="/" aria-label="SPOG Trailers home"><img src={img.logoDark} alt="SPOG" class="h-[26px] w-auto" /></a>
+      <a href={phone.href} class="text-[12.5px] font-semibold text-ink no-underline hover:underline">{phone.display}</a>
+    </header>
+
+    <main class="mx-auto max-w-[1320px] px-7 pb-24 pt-[clamp(28px,6vh,72px)] max-[640px]:px-4 max-[640px]:pb-16">
+      <h1 class="m-0 text-center text-[clamp(30px,4vw,48px)] font-semibold leading-[1.08] tracking-[-.03em]">Which trailer are you designing?</h1>
+      <p class="mx-auto mb-0 mt-3 max-w-[460px] text-center text-[15.5px] leading-[1.5] text-ink-soft">Pick a trailer to start your build.</p>
+
+      <ul class="m-0 mt-[clamp(28px,5vh,56px)] grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-4 p-0 max-[900px]:grid-cols-[repeat(1,minmax(0,1fr))]">
+        {cards.map((c) => (
+          <li class="flex">
+            {c.builder ? (
+              <a href={c.builder} class="group flex w-full flex-col rounded-[14px] bg-[#f4f4f4] text-ink no-underline outline-offset-4 transition-[box-shadow] hover:shadow-[inset_0_0_0_2px_#23262B]">
+                <span class="grid aspect-[4/3] place-items-center px-4 pt-6 max-[900px]:aspect-[16/9]">
+                  <img src={c.image} alt={c.alt} width={c.width} height={c.height} class:list={['max-h-full w-auto max-w-full object-contain transition-transform duration-500 group-hover:scale-[1.03]', c.blend && 'mix-blend-multiply']} />
+                </span>
+                <span class="flex flex-1 flex-col px-7 pb-7 pt-5">
+                  <span class="text-[26px] font-semibold tracking-[-.025em]">{c.name}</span>
+                  <span class="mt-1.5 text-[14.5px] leading-[1.5] text-ink-soft">{c.line}</span>
+                  <span class="mt-auto pt-6">
+                    <span class="inline-flex h-[44px] items-center gap-2.5 rounded-[6px] bg-gold px-6 text-[14px] font-semibold text-black transition-colors group-hover:bg-[#f5b233]">
+                      Design your {c.name}
+                      <svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                    </span>
+                  </span>
+                </span>
+              </a>
+            ) : (
+              <div class="flex w-full flex-col rounded-[14px] bg-[#f7f7f7] text-ink">
+                <span class="grid aspect-[4/3] place-items-center px-8 pt-8 max-[900px]:aspect-[16/9]">
+                  <img src={c.image} alt={c.alt} width={c.width} height={c.height} loading="lazy" class="max-h-full w-auto max-w-full object-contain opacity-35 grayscale" />
+                </span>
+                <span class="flex flex-1 flex-col px-7 pb-7 pt-5">
+                  <span class="text-[26px] font-semibold tracking-[-.025em] text-[#a4a5a8]">{c.name}</span>
+                  <span class="mt-1.5 text-[14.5px] leading-[1.5] text-[#a4a5a8]">{c.line}</span>
+                  <span class="mt-auto flex flex-wrap items-center gap-x-5 gap-y-2 pt-6">
+                    <span aria-disabled="true" class="inline-flex h-[44px] cursor-not-allowed items-center rounded-[6px] bg-[#e6e6e6] px-6 text-[14px] font-semibold text-[#8f9195]">Builder coming soon</span>
+                    <a href={`/?trailer=${c.name}#design`} class="text-[13.5px] font-semibold text-ink underline underline-offset-4">Request a build</a>
+                  </span>
+                </span>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </main>
+  </div>
+</Base>

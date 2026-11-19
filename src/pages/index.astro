@@ -34,9 +34,11 @@ import { hero, madeOf, values, footerColumns, navLinks, faqs, statement } from '
 
   Kept from the first draft (/test-home, removed) because Nate likes them: the hero look, the feature cards and the Built band.
   Keep the ids top, cta, design, walkthrough and future so Nav, MobileBar, the lineup and the close work.
+  "Design yours" in the nav, hero and phone bar opens /configure, where the buyer picks a trailer.
+  The Cargo lineup panel goes straight to /configure/cargo. Workstation and Event open #design.
 -->
 <Base>
-  <Nav cta={{ label: 'Design yours', href: '#design' }} demo={{ label: 'Book a demo', href: '/demo' }} lineupHref="#lineup" links={navLinks} />
+  <Nav lineupHref="#lineup" links={navLinks} />
   <TestHero
     eyebrow={hero.eyebrow}
     heading={hero.heading}
@@ -59,5 +61,5 @@ import { hero, madeOf, values, footerColumns, navLinks, faqs, statement } from '
   <Faq items={faqs} />
   <CloseForms />
   <Footer columns={footerColumns} full />
-  <MobileBar cta={{ label: 'Design yours', href: '#design' }} secondary={{ label: 'Book a demo', href: '/demo' }} />
+  <MobileBar />
 </Base>

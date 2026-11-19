@@ -1,18 +1,21 @@
 /**
  * Page wiring for the Cargo configurator: build state, option buttons, the price bar, camera
  * views that follow the section you're in, the callouts pinned to the model, and the order steps.
- * The build is saved in the URL hash so it can be shared. ZIP and contact details never go there.
+ * The build is saved in the URL hash so it can be shared. ZIP, contact details and an uploaded
+ * logo file never go there.
  */
-import { createController } from './controller';
+import { TEXT_ASPECT, createController } from './controller';
 import {
-  BATTERIES, DEFAULT_BUILD, FLOORS, PAINTS, PANELS_INCLUDED, PANEL_PRICE, SIZES, TRIMS, WALLS, WHEELS,
-  buildCode, enforceRules, leadTime, money, moneyTotal, runtime, solarWatts, summaryLine, toTrailerConfig, totals, type BuildState,
+  BATTERIES, CONNECT, DEFAULT_BUILD, INTERIOR, LOGO_PRICE, LOGO_SPOTS, MAX_CABINETS, MAX_DESKS, PAINTS, SHORE, SIZES, VOLTS,
+  batteryKwh, buildCode, enforceRules, has, leadTime, money, moneyTotal, optionPrice, runtime, solarPanels, summaryLine, toTrailerConfig, totals,
+  type BuildState,
 } from './data';
-import { maxPanels } from './dims';
 import { VIEW_ORDER, createStage, type ViewName } from './scene';
 
 type Step = 'design' | 'order' | 'done';
-const SHARED: (keyof BuildState)[] = ['length', 'paint', 'trim', 'wheels', 'battery', 'panels', 'rear', 'addons', 'walls', 'floor', 'inside', 'brandOn', 'brandText', 'tools'];
+type ListKey = 'logoSpots' | 'volts' | 'options' | 'tools';
+const SHARED: (keyof BuildState)[] = ['length', 'paint', 'logoSpots', 'brandText', 'lettering', 'letteringText', 'battery', 'batteryOther', 'volts', 'shore', 'options', 'desks', 'benchLength', 'cabinets', 'tools'];
+const COUNT_MAX: Record<string, number> = { desks: MAX_DESKS, cabinets: MAX_CABINETS };
 
 function loadState(): BuildState {
   const state: BuildState = structuredClone(DEFAULT_BUILD);
@@ -20,10 +23,15 @@ function loadState(): BuildState {
     const m = location.hash.match(/build=([^&]+)/);
     if (m) {
       const saved = JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g, '+').replace(/_/g, '/')))));
-      for (const k of SHARED) if (k in saved && typeof saved[k] === typeof state[k]) (state as any)[k] = saved[k];
+      for (const k of SHARED) {
+        if (!(k in saved) || typeof saved[k] !== typeof state[k] || Array.isArray(saved[k]) !== Array.isArray(state[k])) continue;
+        (state as any)[k] = saved[k];
+      }
     }
   } catch { /* a bad link falls back to the default build */ }
-  if (!SIZES.some((s) => s.ft === state.length)) state.length = DEFAULT_BUILD.length;
+  const known = new Set([...INTERIOR, ...CONNECT].map((o) => o.id));
+  state.options = state.options.filter((id) => known.has(id));
+  state.logoSpots = state.logoSpots.filter((id) => LOGO_SPOTS.some((l) => l.id === id));
   enforceRules(state);
   return state;
 }
@@ -40,74 +48,94 @@ export function initConfigurator() {
   const stageEl = document.getElementById('stage');
   if (!root || !stageEl) return;
   const $$ = <T extends HTMLElement>(sel: string) => [...root.querySelectorAll<T>(sel)];
+  const byId = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
   const out = (key: string, text: string) => $$(`[data-out="${key}"]`).forEach((el) => { el.textContent = text; });
 
   let state = loadState();
   let step: Step = 'design';
   let doorsOpen = false;
+  let logoAspect = TEXT_ASPECT;
 
-  const stage = createStage(stageEl);
-  const controller = createController(stage, toTrailerConfig(state, { doorsOpen }));
-
-  // ---------------------------------------------------------------- render
-  const note = document.getElementById('note')!;
+  const note = byId('note');
   let noteTimer = 0;
   function say(text: string) {
     note.textContent = text;
     note.style.opacity = '1';
     clearTimeout(noteTimer);
-    noteTimer = window.setTimeout(() => { note.style.opacity = '0'; }, 4200);
+    noteTimer = window.setTimeout(() => { note.style.opacity = '0'; }, 5200);
   }
 
-  const brandInput = document.getElementById('brand-text') as HTMLInputElement;
-  const doorsBtn = document.getElementById('doors')!;
-  const zipWrap = document.getElementById('zip-wrap')!;
+  const config = () => toTrailerConfig(state, { doorsOpen, logoAspect });
+  const stage = createStage(stageEl);
+  // When the preview can't fit everything that's checked, say which pieces it left out.
+  let lastSkipped = '';
+  const controller = createController(stage, config(), (parts) => {
+    const list = [...new Set(parts.skipped)].join(', ');
+    if (list && list !== lastSkipped) say(`This preview has no room for ${list}. Your SPOG contact will work out the layout.`);
+    lastSkipped = list;
+  });
+
+  // ---------------------------------------------------------------- render
+  const brandInput = byId<HTMLInputElement>('brand-text');
+  const letteringInput = byId<HTMLInputElement>('lettering-text');
+  const otherInput = byId<HTMLInputElement>('battery-other');
+  const logoFile = byId<HTMLInputElement>('logo-file');
+  const logoClear = byId('logo-clear');
+  const logoAll = byId('logo-all');
+  const doorsBtn = byId('doors');
+  const zipWrap = byId('zip-wrap');
+  const sync = (input: HTMLInputElement, value: string) => { if (input.value !== value) input.value = value; };
 
   function render(save = true) {
     const notes = enforceRules(state);
     if (notes.length) say(notes.join(' '));
-    controller.apply(toTrailerConfig(state, { doorsOpen }));
+    controller.apply(config());
 
     $$<HTMLButtonElement>('[data-opt]').forEach((b) => {
       const key = b.dataset.opt as keyof BuildState;
       b.setAttribute('aria-pressed', String(String(state[key]) === b.dataset.value));
-      if (b.dataset.min) b.disabled = state.length < Number(b.dataset.min);
     });
     $$<HTMLButtonElement>('[data-toggle]').forEach((b) => {
-      const list = state[b.dataset.toggle as 'addons' | 'inside' | 'tools'];
-      b.setAttribute('aria-pressed', String(list.includes(b.dataset.value!)));
+      b.setAttribute('aria-pressed', String(state[b.dataset.toggle as ListKey].includes(b.dataset.value!)));
     });
-    $$<HTMLButtonElement>('[data-flag]').forEach((b) => b.setAttribute('aria-pressed', String(!!state[b.dataset.flag as 'brandOn'])));
-    brandInput.classList.toggle('hidden', !state.brandOn);
-    if (brandInput.value !== state.brandText) brandInput.value = state.brandText;
+    $$<HTMLButtonElement>('[data-flag]').forEach((b) => b.setAttribute('aria-pressed', String(!!state[b.dataset.flag as 'lettering'])));
+    $$('[data-detail]').forEach((d) => {
+      const on = has(state, d.dataset.detail!);
+      d.classList.toggle('hidden', !on);
+      d.classList.toggle('flex', on);
+    });
+    $$<HTMLButtonElement>('[data-step]').forEach((b) => {
+      const key = b.dataset.step as 'desks' | 'cabinets';
+      const next = state[key] + Number(b.dataset.delta);
+      b.disabled = next < 1 || next > COUNT_MAX[key];
+    });
+    out('count-desks', String(state.desks));
+    out('count-cabinets', String(state.cabinets));
 
-    const named = <T extends { id: string; name: string; price: number }>(key: string, list: readonly T[], id: string) => {
-      const item = list.find((x) => x.id === id) ?? list[0];
-      out(`name-${key}`, item.name);
-      out(`price-${key}`, money(item.price));
-    };
-    named('paint', PAINTS, state.paint);
-    named('trim', TRIMS, state.trim);
-    named('wheels', WHEELS, state.wheels);
-    named('walls', WALLS, state.walls);
-    named('floor', FLOORS, state.floor);
-    const bat = BATTERIES.find((b) => b.kwh === state.battery) ?? BATTERIES[0];
-    out('name-battery', `${bat.kwh} kWh battery`);
+    // exterior
+    out('name-paint', (PAINTS.find((p) => p.id === state.paint) ?? PAINTS[0]).name);
+    const spots = state.logoSpots.length;
+    out('price-logo', spots ? moneyTotal(spots * LOGO_PRICE) : `${moneyTotal(LOGO_PRICE)} a spot`);
+    logoAll.setAttribute('aria-pressed', String(spots === LOGO_SPOTS.length));
+    byId('logo-fields').classList.toggle('hidden', !spots);
+    sync(brandInput, state.brandText);
+    letteringInput.classList.toggle('hidden', !state.lettering);
+    sync(letteringInput, state.letteringText);
+
+    // power
+    const kwh = batteryKwh(state);
+    const bat = BATTERIES.find((b) => b.id === state.battery) ?? BATTERIES[0];
+    out('name-battery', `${kwh} kWh battery`);
     out('price-battery', money(bat.price));
-    const watts = solarWatts(state);
-    const max = maxPanels(state.length);
-    out('name-solar', `${watts.toLocaleString()}W roof solar`);
-    out('price-solar', money(Math.max(0, state.panels - PANELS_INCLUDED) * PANEL_PRICE));
-    out('solar-note', `The ${state.length} ft roof fits up to ${max} panels. Each added panel is ${moneyTotal(PANEL_PRICE)}.`);
-    out('panels', `${state.panels} panel${state.panels === 1 ? '' : 's'}`);
-    $$<HTMLButtonElement>('[data-panels]').forEach((b) => {
-      const next = state.panels + Number(b.dataset.panels);
-      b.disabled = next < Math.min(PANELS_INCLUDED, max) || next > max;
-    });
+    byId('battery-other-wrap').classList.toggle('hidden', state.battery !== 'other');
+    if (document.activeElement !== otherInput) sync(otherInput, String(state.batteryOther));
+    out('price-volts', money(VOLTS.filter((v) => state.volts.includes(v.id)).reduce((sum, v) => sum + v.price, 0)));
+    out('price-shore', money((SHORE.find((x) => x.id === state.shore) ?? SHORE[0]).price));
+    [...INTERIOR, ...CONNECT].forEach((o) => out(`price-opt-${o.id}`, moneyTotal(optionPrice(state, o))));
 
     out('stat-length', `${state.length} ft`);
-    out('stat-battery', `${state.battery} kWh`);
-    out('stat-solar', `${watts.toLocaleString()}W`);
+    out('stat-battery', `${kwh} kWh`);
+    out('stat-solar', `${solarPanels(state)} panels`);
 
     const run = runtime(state);
     $$('[data-out="run-bar"]').forEach((el) => { el.style.width = `${Math.round(run.coverage * 100)}%`; });
@@ -118,6 +146,7 @@ export function initConfigurator() {
     const lines = t.lines.map((l) => `<li class="flex justify-between gap-4"><span>${escapeHtml(l.label)}</span><span class="shrink-0 text-ink-soft">${money(l.price)}</span></li>`).join('');
     $$('[data-out="lines"]').forEach((el) => { el.innerHTML = lines; });
     out('vehicle', moneyTotal(t.vehicle));
+    out('quoted', t.quoted ? 'Items marked Quoted are priced separately.' : '');
     out('delivery', t.delivery ? moneyTotal(t.delivery) : 'Included');
     out('total', moneyTotal(t.total));
     out('lead', leadTime(state));
@@ -132,8 +161,8 @@ export function initConfigurator() {
   }
 
   // ---------------------------------------------------------------- views
-  const viewDots = $$<HTMLButtonElement>('[data-view]').filter((b) => b.tagName === 'BUTTON' && !b.hasAttribute('data-section'));
-  const hint = document.getElementById('hint')!;
+  const viewDots = $$<HTMLButtonElement>('button[data-view]');
+  const hint = byId('hint');
   function go(view: ViewName) {
     stage.setView(view);
     viewDots.forEach((d) => d.setAttribute('aria-pressed', String(d.dataset.view === view)));
@@ -149,7 +178,6 @@ export function initConfigurator() {
 
   // The viewer turns to the section you scroll to, as Tesla's does.
   let scrollView: ViewName = 'front';
-  const sections = $$('[data-section]');
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver((entries) => {
       if (step !== 'design') return;
@@ -160,7 +188,7 @@ export function initConfigurator() {
         go(view);
       }
     }, { rootMargin: '-38% 0px -52% 0px' });
-    sections.forEach((s) => io.observe(s));
+    $$('[data-section]').forEach((s) => io.observe(s));
   }
 
   doorsBtn.addEventListener('click', () => { doorsOpen = !doorsOpen; render(false); });
@@ -190,38 +218,60 @@ export function initConfigurator() {
     const b = (e.target as Element).closest<HTMLButtonElement>('button');
     if (!b || b.disabled) return;
     const d = b.dataset;
-    let changed = false;
+    let added = true;
     if (d.opt) {
       const key = d.opt as keyof BuildState;
       (state as any)[key] = typeof state[key] === 'number' ? Number(d.value) : d.value;
-      changed = true;
+      if (key === 'battery' && d.value === 'other') setTimeout(() => otherInput.focus(), 0);
     } else if (d.toggle) {
-      const list = state[d.toggle as 'addons' | 'inside' | 'tools'];
+      const list = state[d.toggle as ListKey];
       const i = list.indexOf(d.value!);
-      if (i >= 0) list.splice(i, 1); else list.push(d.value!);
-      changed = true;
+      if (i >= 0) { list.splice(i, 1); added = false; } else list.push(d.value!);
+      if (d.toggle === 'logoSpots' && added && list.length === 1) setTimeout(() => brandInput.focus(), 0);
     } else if (d.flag) {
-      state.brandOn = !state.brandOn;
-      changed = true;
-      if (state.brandOn) setTimeout(() => brandInput.focus(), 0);
-    } else if (d.panels) {
-      state.panels += Number(d.panels);
-      changed = true;
-      go('top');
+      state.lettering = !state.lettering;
+      if (state.lettering) setTimeout(() => letteringInput.focus(), 0);
+    } else if (d.step) {
+      const key = d.step as 'desks' | 'cabinets';
+      state[key] += Number(d.delta);
+    } else if (b === logoAll) {
+      state.logoSpots = state.logoSpots.length === LOGO_SPOTS.length ? [] : LOGO_SPOTS.map((l) => l.id);
     } else if (d.goto) {
       setStep(d.goto as Step);
       return;
-    }
-    if (!changed) return;
-    if ('open' in d) doorsOpen = true;
-    // Turn the viewer to what just changed. Removing an add-on doesn't need a look.
-    const removed = d.toggle && !state[d.toggle as 'addons'].includes(d.value!);
-    if (d.go && !removed && step === 'design') go(d.go as ViewName);
+    } else return;
+    // Turn the viewer to what just changed. Unchecking something doesn't need a look.
+    const view = d.go ?? (d.step ? 'interior' : b === logoAll ? 'front' : '');
+    if (view && added && step === 'design') go(view as ViewName);
     render();
   });
   brandInput.addEventListener('input', () => { state.brandText = brandInput.value; render(); });
+  letteringInput.addEventListener('input', () => { state.letteringText = letteringInput.value; render(); });
+  otherInput.addEventListener('input', () => {
+    const n = Number(otherInput.value);
+    if (Number.isFinite(n) && n > 0) { state.batteryOther = Math.min(200, Math.round(n)); render(); }
+  });
 
-  const zip = document.getElementById('zip') as HTMLInputElement;
+  // The buyer's own logo art. It's read in the browser and never uploaded or saved in the link.
+  function setLogo(image: HTMLImageElement | null) {
+    controller.setArt(image);
+    logoAspect = image ? Math.max(0.4, Math.min(8, image.naturalWidth / Math.max(1, image.naturalHeight))) : TEXT_ASPECT;
+    logoClear.classList.toggle('hidden', !image);
+    brandInput.classList.toggle('hidden', !!image);
+    render(false);
+  }
+  logoFile.addEventListener('change', () => {
+    const file = logoFile.files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => { setLogo(image); URL.revokeObjectURL(url); };
+    image.onerror = () => { URL.revokeObjectURL(url); say("That file didn't open as an image. Try a PNG, JPG or SVG."); };
+    image.src = url;
+  });
+  logoClear.addEventListener('click', () => { logoFile.value = ''; setLogo(null); });
+
+  const zip = byId<HTMLInputElement>('zip');
   zip.addEventListener('input', () => { state.zip = zip.value.replace(/\D/g, '').slice(0, 5); zip.value = state.zip; });
 
   // ---------------------------------------------------------------- steps
@@ -231,26 +281,28 @@ export function initConfigurator() {
     root!.dataset.step = next;
     panels.forEach((p) => { p.hidden = p.dataset.panel !== next; });
     if (next !== 'design') go('front');
-    const top = document.getElementById('panel')!.getBoundingClientRect().top + window.scrollY - 56;
+    const top = byId('panel').getBoundingClientRect().top + window.scrollY - 56;
     window.scrollTo({ top: window.matchMedia('(min-width: 900px)').matches ? 0 : top, behavior: 'auto' });
     render(false);
   }
-  const form = document.getElementById('order-form') as HTMLFormElement;
-  const error = document.getElementById('order-error')!;
+  const form = byId<HTMLFormElement>('order-form');
+  const error = byId('order-error');
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const ok = form.checkValidity();
     error.classList.toggle('hidden', ok);
     if (ok) setStep('done');
   });
-  document.getElementById('reset')!.addEventListener('click', () => {
+  byId('reset').addEventListener('click', () => {
     state = structuredClone(DEFAULT_BUILD);
     doorsOpen = false;
     form.reset();
+    logoFile.value = '';
+    setLogo(null);
     setStep('design');
     render();
   });
-  const share = document.getElementById('share')!;
+  const share = byId('share');
   share.addEventListener('click', async () => {
     saveState(state);
     try {

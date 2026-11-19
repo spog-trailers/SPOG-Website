@@ -22,8 +22,10 @@ export function getStaticPaths() {
 const page = productPages[Astro.params.product as ProductId];
 // Event's close borrows from the approved line "Own the night. Power it with the sun."
 const closeHeading: [string, string] | undefined = page.id === 'event' ? ['Own', 'the night.'] : undefined;
-// "Design yours" opens the homepage's build request form with this trailer picked.
-const design = `/?trailer=${page.walkthroughTrailer}#design`;
+// "Design yours" goes straight to this trailer's builder when it has one (Cargo). Otherwise it
+// opens the homepage's build request form with this trailer picked.
+const builders: Record<string, string> = { cargo: '/configure/cargo' };
+const design = builders[page.id] ?? `/?trailer=${page.walkthroughTrailer}#design`;
 ---
 <!--
   Product page (/cargo, /workstation, /event). Built on the Rivian R1T page, see

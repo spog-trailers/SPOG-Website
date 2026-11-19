@@ -36,6 +36,7 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 | `src/scripts/sizeDrawing.ts`, `src/scripts/runtime.ts` | The to-scale trailer and pickup drawing, and the runtime math (hours = kWh / kW) |
 | `docs/product-page-teardown-2026-11-16.md` | Rivian R1T research behind the product page layout |
 | `_archive/` | Snapshots of earlier source. Not built. |
+| `src/pages/configure/index.astro` | "Which trailer are you designing?" at `/configure`, the first step of Design your trailer. Cargo is live, Workstation and Event are greyed out. Not indexed. |
 | `src/pages/configure/cargo.astro` | Cargo configurator at `/configure/cargo`, laid out like Tesla's design studio (see "Configurator"). Not indexed. |
 | `src/scripts/configurator/` | Configurator code: `trailer.ts` (the 3D Cargo, modeled in code from Nate's photos), `scene.ts` (white studio, reflections, camera views), `controller.ts` (keeps the model in sync, swings the doors), `data.ts` (options, SAMPLE prices, rules, run-time math), `ui.ts` (page wiring and order steps), `dims.ts` (measurements) |
 | `src/components/sections/` | One component per section of the old homepage. Nav, Statement, Faq, Footer and MobileBar are shared by every page. |
@@ -92,7 +93,7 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 - The homepage at `/` is the one Nate wrote in Notion after the 2026-11-18 team call (the "Home Page" item under Website Build in the Company Roadmap). It was drafted at `/test-home-2` and replaced the old homepage the same day. `/test-home-2` redirects to `/`.
 - **What changed from the first test homepage:** only Cargo, Workstation and Event get space, and about 75% of the page speaks to contractors. Garage, Disaster Relief and Camper shrink to one "Coming next" strip.
 - **Order:** Hero (background video, "The trailer that powers your job."), Proof strip (a real US flag badge), Lineup (sticky scroll) with the "See our future lineup" strip, Solutions (security photo, power video, comfort photo), Statement ("Bring your own power." over the snow tow video, from the old homepage's "Pull in. Plug in." band), What SPOG is made of (feature cards), Our future lineup (Garage, Disaster Relief, Camper), About band (shop video), FAQ (from the old homepage, nav FAQ link jumps here), Close (two forms), Footer. Cut at Nate's call: Built different, Guarantee, How it works and the run-time sheet.
-- **Nav buttons on every page (Nate, 2026-11-18):** two one-line buttons, "Book a demo" (to `/demo`) and "Design yours", with no small labels. The phone action bar matches. These are the Nav and MobileBar defaults. "Design yours" opens the build request form on the homepage. The product pages link to `/?trailer=Cargo#design` (and so on), which opens that form with their trailer picked. Only `/old-home` passes its old Reserve and Book a walkthrough buttons.
+- **Nav buttons on every page (Nate, 2026-11-18):** two one-line buttons, "Book a demo" (to `/demo`) and "Design yours", with no small labels. The phone action bar matches. These are the Nav and MobileBar defaults. "Design yours" opens `/configure`. The product pages pass their own link (see "Configurator"). Only `/old-home` passes its old Reserve and Book a walkthrough buttons.
 - **Site nav and footer links** live in `content.ts` and follow the sitemap. Homepage anchors start with "/" (`/#future`, `/#faq`, `/#built`) so they work from every page, and `home2.ts` turns them into in-page links on the homepage. Keep the ids `lineup`, `future`, `faq`, `built`, `design` and `walkthrough` on the homepage.
 - **Solutions (`SolutionCards.astro`)** say the fix, not the pain (Nate, 2026-11-18), after the video cards on rivian.com. Nate's order (2026-11-18): Security (mast photo), Power (looping video) in the middle, Comfort (the HVAC photo). An icon sits next to each card's name. The section runs wider than `wrap` (24px gutters up to 1920px) so the videos get room. Power is Nate's full welding clip at 0.75x, each half slowed and smoothed separately so nothing morphs across the cut. Videos load only when a card scrolls into view and pause when it leaves. A card's `note` puts a visible tag on it while its video is missing or a stand-in.
 - **Our future lineup (`FutureLineup.astro`)** is one wide row in the first test homepage's looks (Garage, Disaster Relief, Camper), with "Join the waitlist" opening a signup. No category labels, specs, prices or Reserve. A small note under the row says the images are concept renderings of trailers that aren't built or for sale yet (Nate's request). Nate dropped the "Coming next" and "Get first word" wording on this page.
@@ -107,7 +108,7 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
   - Without JavaScript, with reduced motion or on a very short screen, the panels stack as three full screens.
   - Mark any other section `data-hide-mobilebar` to hide the phone action bar while it's on screen, as the lineup does.
 - **Prices on the lineup panels are Nate's** (2026-11-18): Cargo from $10,000, Workstation from $15,000, Event "Buy from $150,000, or rent". The Event panel has no battery figure. Never add or change a price without him. This is the only place on the site that shows prices.
-- **"Design your trailer" is a build request form for now.** Links to `#design` open that form in the close, and links to `#walkthrough` open the walkthrough form in the same card. A link with `data-trailer="Cargo"` also picks that trailer. Point "Design" at the configurator only once real pricing is approved.
+- **"Design your trailer" opens the builder flow** (see "Configurator" for where each button goes). The form in the close is the build request form, which Workstation and Event still use. Links to `#design` open that form, and links to `#walkthrough` open the walkthrough form in the same card. A link with `data-trailer="Workstation"` also picks that trailer.
 - **Shared sections take props with safe defaults**, so the other pages render as before: `TestHero` (copy, buttons, heading size), `FeatureCards` (a `kicker` slot), `Nav` (`cta`, `lineupHref`), `MobileBar` (`cta`) and `Footer` (`columns`, `full`).
 - **"Harness" stays** in the Power card line. Nate chose it over the copy rule, and it's marked in `home2.ts`. He also chose the blunt "Other companies cut corners with staples and glue."
 - The small line above "What SPOG is made of." spells out the name. It reads "Solar Power Off Grid", as on the logo and the decal on the trailers.
@@ -152,7 +153,7 @@ Each product page is written for its own buyer. The single shared `[product].ast
 
 - Order: Nav, Subnav (floating section bar that replaces the masthead after the hero), Hero, Overview (light), Power (dark), Statement (photo), Size + Specs (dark), Lineup (light), Close (dark), Faq (light), Footer, MobileBar. Overview and Statement are optional per product.
 - Headline numbers and short specs come from `products` in `content.ts`. Don't retype them in `productPages.ts`, so a correction lands in one place.
-- No prices on product pages, and no link to `/configure/cargo` until real pricing is approved (the configurator shows made-up sample prices).
+- No prices on product pages. The Cargo page's "Design yours" links to `/configure/cargo` (Nate, 2026-11-18), which still shows sample prices.
 - Only the length is labeled in the size drawing. Heights, axles and panel layout are drawn for looks.
 - Runtime figures reproduce SPOG's "Customize My Trailer Guide" table (continuous use, full battery, one device, no solar). Keep battery stops inside each product's range.
 - Cargo uses the "studio" hero (render in a framed plate) because there's no wide Cargo photo yet. Switch `hero.kind` to `photo` when Robert's shot exists.
@@ -161,18 +162,31 @@ Each product page is written for its own buyer. The single shared `[product].ast
 ## Configurator (rebuilt 2026-11-18)
 
 - `/configure/cargo` follows Tesla's design studio (tesla.com/model3/design), at Nate's request: a white viewer on the left that you drag all the way around, one scrolling column of choices on the right, and a bar along the bottom with the price and the order button. The first version is saved in `_archive/2026-11-18-configurator-v1/`.
-- **The 3D model** is built in code on three.js (used on this page only) from Nate's photos of the finished black 20 ft Cargo in `_photos-original/2026-11-17/Black Cargo Trailer/`. It's a close stand-in, not CAD. Measurements scaled from the photos are in `dims.ts`:
+- **Where "Design yours" goes (Nate, 2026-11-18):**
+  - Anywhere general (nav, homepage hero, phone bar, `/demo`): `/configure`, which asks which trailer. Only Cargo has a builder, so Workstation and Event are greyed out there with a "Request a build" link.
+  - On the Cargo lineup panel and the Cargo page: straight to `/configure/cargo`.
+  - On Workstation and Event: the build request form on the homepage (`/?trailer=Workstation#design`), until they get builders. Add a builder by adding it to `builders` in `configure/index.astro` and `[product].astro`, and to `builder` in the lineup data in `home2.ts`.
+- **The options are real.** They follow SPOG's "Trailer Customization Options" sheet (SPOG-D-0001, Release 1, Nov 17 2026), section by section and mostly in its words, plus the 12 exterior colors Nate sent:
+  - Lengths 10 and 20 ft, with 35 ft shown as "Estimated availability summer 2027" and not selectable.
+  - Colors: White, Black, Charcoal Grey, Silver, Red, Pewter, Indigo Blue, Matte Black, Dove Grey, Yellow, Brandywine, Blue. The hex values are matched by eye to the names.
+  - Company logo by spot (nose left, nose right, left side, right side, rear, all), typed or uploaded. Vinyl lettering or numbers is a note only.
+  - Power: battery 5, 10, 20, 40 kWh or other, output voltage 120, 208 and 240 V, shore power 30, 50 or 100 amp. Roof solar is standard, so there's no panel count to choose.
+  - Interior: heating and cooling, office desk, workbench, cabinets, shelving, overhead storage, whiteboard, TV or monitor, refrigerator, microwave, refreshment counter, E-track on walls and floor.
+  - Connectivity and security: Starlink ready, cellular router, AI job site camera system, security cameras, security audio system.
+  - Not offered, because the sheet doesn't list them: trim and wheel choices, a ramp door, wall and floor finishes.
+- **The prices are not real.** The sheet has no prices. Only "From $10,000" is Nate's. Every other price in `data.ts` is a sample so the running total works, as are the panel and tool wattages, the delivery fee and the deposit. The page is linked from the site now, so real prices (or hiding the prices) must happen before launch. Never copy the sample numbers anywhere else.
+- **The 3D model** is built in code on three.js (used on this page only) from Nate's photos of the finished black 20 ft Cargo in `_photos-original/2026-11-17/Black Cargo Trailer/` (outside and `Interior/`). It's a close stand-in, not CAD. Measurements scaled from the photos are in `dims.ts`:
   - The 20 ft length includes the 2 ft V nose. The body is 7 ft wide with the wheels outside it.
   - Curb side: entry door with a window. Street side: sliding window over the axles and a two-door storage hatch.
   - Rear: barn doors with twin chrome lock bars and four oval tail lights. Roof: five solar panels and a low vent.
   - Black machined wheels under aluminum fenders, with a matching spare on the tongue.
-- The body is hollow with a finished interior, so "Open doors" swings the rear and side doors and the Interior view puts the camera inside. The battery and inverter sit in the nose.
-- **The viewer turns to the section you scroll to** (Exterior to the front, Power to the roof, Rear door to the rear, Add-ons to the street side, Interior inside). Picking an option turns it to that option. The dots under the viewer step through six views.
-- **Callouts** on the first view are pinned to points on the model and hide once you drag.
-- **What's real in `data.ts`:** the 10 and 20 ft lengths, "From $10,000", the 5 to 20 kWh battery range, the two-week standard lead time and the as-built look. **Everything else is a guess** Nate asked for until he sends the real list: every other price, the color names, the add-ons, the interior options, panel wattage, tool wattages, delivery fee and deposit. Never copy those numbers onto the live site.
-- The default build is the trailer in the photos (black, 20 ft, five panels, window, hatch, spare, vent), so its price starts above the base price.
-- Nothing is sent anywhere and no payment is taken. The build is saved in the URL hash so it can be shared. Delivery, ZIP and contact details are never put in the URL.
-- The page isn't linked from the site. Link it only once real pricing is approved.
+  - Inside: white walls and ceiling with a black band where they meet, round ceiling lights, a black floor, a white partition with a closet door closing off the nose, and battery units (5 kWh each) on low white platforms along both walls.
+- Options are modeled from SPOG's own builds where photos exist: the security mast with dome cameras and the Starlink dish on top (Workstation photos), the black-topped white desk and black E-track (Cargo interior photos). The rest are simple stand-ins.
+- Furniture is packed along the walls in the order it's picked up in `trailer.ts`. When a piece doesn't fit (mostly on the 10 ft), the preview leaves it out and a notice says so. The real layout is worked out with the buyer.
+- "Open doors" swings the rear and side doors, and the Interior view puts the camera inside.
+- **The viewer turns to the section you scroll to** and to the option you just picked. The dots under the viewer step through six views. **Callouts** on the first view are pinned to points on the model and hide once you drag.
+- The picture on the `/configure` Cargo card is a capture of the model (`public/images/configure-cargo.jpg`). Remake it if the default look changes.
+- Nothing is sent anywhere and no payment is taken. The build is saved in the URL hash so it can be shared. Delivery, ZIP, contact details and an uploaded logo file are never put in the URL.
 - After adding a dependency or a new folder, restart the dev server (`npx astro dev stop`, then `npm run dev`) if new Tailwind classes don't show up.
 
 ## Gotchas
@@ -207,6 +221,7 @@ Everything below was invented for the mockup and must be replaced with real, app
 - Imagery pulled from spogtrailers.com on 2026-11-16 (all marked in `content.ts`). Renders: `event-led-dusk.jpg` (Event lineup row), `garage-ev-inside.jpg`, `disaster-relief-solar-deployed.jpg`, `camper-campfire.jpg` (Coming next cards), `statement-solar-unfold.mp4` + `.jpg` (Self-powered background loop, concept render). Real photos: `event-movie-night.jpg` (Events tab), `shop-floor.jpg` (Built section). Renders of trailers that are on sale should be swapped for real photos before launch.
 - The Workstation page on spogtrailers.com uses an AI-generated header image. Don't reuse it as product imagery.
 - The Workstation studio render used in Compare shows a door decal with an edition name the brand rules ban. Reshoot or retouch.
+- Configurator prices: every price except "From $10,000" is a sample. Get real prices from Nate, or hide prices, before launch. Its paint colors are matched by eye and need checking against the real swatches. Its starting picks (10 kWh, 120 V, 30 amp) are assumptions.
 - All `href="#"` links
 - Product pages: every line marked NEW in `productPages.ts` needs approval, and so does the copy written into `src/components/product/` (section headings, the runtime footnote, button labels). Feature tiles marked PLACEHOLDER SOURCE (Workstation security cameras, Event 5G internet and 360 cameras) come from the old site and need confirming.
 - Product page lengths: Cargo 12/16/20 ft and Event 24/31 ft stops are guesses between documented endpoints. Workstation stops come from the old configurator and Hybrid Fleet page.

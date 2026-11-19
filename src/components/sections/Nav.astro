@@ -4,12 +4,13 @@ import { img, navLinks, announcement } from '../../data/content';
 const navBtn = 'flex h-11 flex-col justify-center border-[1.5px] px-4 leading-[normal] no-underline';
 // `cta` is the gold button, `demo` the outlined one, `lineupHref` is where the announcement bar
 // points and `links` are the nav links. The defaults are the homepage's buttons (Nate, 2026-11-18):
-// Book a demo, and Design yours, which opens the build request form on the homepage. A product
-// page passes its own `cta` so that form opens with its trailer picked. /old-home passes its old buttons.
+// Book a demo, and Design yours, which opens the "which trailer" page at /configure. A product
+// page passes its own `cta`: the Cargo page goes straight to its builder, and Workstation and
+// Event open the build request form with their trailer picked. /old-home passes its old buttons.
 type NavButton = { small?: string; label: string; href: string };
 interface Props { cta?: NavButton; demo?: NavButton; lineupHref?: string; links?: { label: string; href: string }[] }
 const {
-  cta = { label: 'Design yours', href: '/#design' },
+  cta = { label: 'Design yours', href: '/configure' },
   demo = { label: 'Book a demo', href: '/demo' },
   lineupHref = announcement.href,
   links = navLinks,

@@ -18,7 +18,7 @@ export const hero = {
   eyebrow: { gold: 'Powering the Builders of America' }, // SOURCE (tagline)
   heading: ['The trailer', 'that powers', 'your job.'], // NATE
   sub: 'All-electric, solar-charged trailers with battery storage sized to your work, for hauling gear, running a site office or hosting an event. Built in the USA.', // NATE
-  primary: { label: 'Design your trailer', href: '#design' }, // NATE
+  primary: { label: 'Design your trailer', href: '/configure' }, // NATE. Opens the "which trailer" page.
   secondary: { label: 'Book a walkthrough', href: '#walkthrough' }, // SOURCE
 };
 
@@ -49,7 +49,7 @@ export const lineup = {
   design: 'Design yours', // NATE
   panels: [
     {
-      id: 'cargo', name: 'Cargo', tone: 'studio' as Tone, href: '/cargo',
+      id: 'cargo', name: 'Cargo', tone: 'studio' as Tone, href: '/cargo', builder: '/configure/cargo',
       line: 'Haul all your gear, with the power to run your job.', // NATE
       facts: ['From $10,000', '10 or 20 ft', 'Up to 40 kWh'], // NATE. CONFIRM 40 kWh with Joe (the Product Wiki lists Cargo at 5 to 20 kWh)
       image: '/images/lineup-cargo.webp', width: 811, height: 928, // PLACEHOLDER: a render. Swap for a real Cargo photo.
@@ -57,7 +57,7 @@ export const lineup = {
       fit: [22, 46], shot: [80, 78], lap: 0.42,
     },
     {
-      id: 'workstation', name: 'Workstation', tone: 'studio' as Tone, href: '/workstation',
+      id: 'workstation', name: 'Workstation', tone: 'studio' as Tone, href: '/workstation', builder: '',
       line: 'The site office that works the day it lands.', // SOURCE. Nate wants a new line (2026-11-18, "sounds so AI"). Ten options went to him in chat.
       facts: ['From $15,000', '10 or 20 ft', 'Built-in climate control'], // NATE
       image: '/images/lineup-workstation.webp', width: 1700, height: 783,
@@ -65,7 +65,7 @@ export const lineup = {
       fit: [10.6, 30], shot: [92, 80], lap: 0.42,
     },
     {
-      id: 'event', name: 'Event', tone: 'night' as Tone, href: '/event',
+      id: 'event', name: 'Event', tone: 'night' as Tone, href: '/event', builder: '',
       line: 'Own the night. Power it with the sun.', // SOURCE
       facts: ['Buy from $150,000, or rent', '20 ft', 'Built-in LED screen'], // NATE (2026-11-18: battery figure dropped, shorter price line)
       image: '/images/lineup-event.webp', width: 1800, height: 1055,
@@ -233,8 +233,10 @@ export const about = {
 
 /**
  * Close. Repeats the hero line. The two buttons pick which form shows on the right.
- * "Design your trailer" is a build request for now. It can't open the configurator until real
- * pricing is approved, because /configure/cargo runs on made-up sample prices.
+ * The "Design your trailer" tab here is the build request form. Since 2026-11-18 (Nate) the
+ * "Design yours" buttons open /configure, and the Cargo ones go straight to /configure/cargo.
+ * Workstation and Event have no builder yet, so their buttons open this form with the trailer picked.
+ * /configure/cargo still shows sample prices, so real pricing is needed before launch.
  */
 export const close = {
   eyebrow: closing.eyebrow, // SOURCE
