@@ -194,7 +194,7 @@ export const tour = {
 // ---------------------------------------------------------------- statement
 
 export const statement = {
-  heading: 'Every crew needs a trailer. Yours should run the job.', // SOURCE (messaging report, brand lines)
+  heading: 'Every crew already tows a trailer to the job, so yours should be the one that powers it.', // NEW, Nate approved (Notion, 2026-11-19), reworks the messaging report brand line into one sentence
   image: shoot.cargoStatement,
   alt: 'Black SPOG Cargo on the lot in front of the SPOG shop, SPOG painted across the bay doors',
   position: '50% 62%',
@@ -204,7 +204,7 @@ export const statement = {
 
 export const replaces = {
   kicker: 'What it replaces', // NEW
-  heading: ['One trailer.', 'Power on board.'], // NEW
+  heading: ['One trailer that carries', 'your gear and your power.'], // NEW, Nate approved (Notion, 2026-11-19)
   body: "Every crew already needs a trailer. SPOG turns that trailer into the job's power station, so there's no second unit to buy, tow, fuel or store.", // SOURCE (messaging report, USP)
   items: [
     { title: 'Fewer generator hours', body: 'Your tools, lights and chargers run on stored solar, so the generator runs less.' }, // NEW, plainer per Nate's rule (no "before X happens" lines)
