@@ -30,6 +30,8 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 | `src/components/features/FeatureCards.astro`, `src/data/features.ts` | Feature cards (after Rivian's "Get to know", Tesla's "Meet Model Y" and Pebble's feature section): a row of tall cards you can swipe, each opening a panel with the photo, numbers and detail. Used on `/workstation` and the homepage. Several can share a page. |
 | `src/components/work/`, `src/data/workstationPage.ts` | The work look (Cargo and Workstation) and the Workstation draft's copy. Every line is marked NEW, SOURCE or PLACEHOLDER. |
 | `docs/product-page-teardown-workstation-2026-11-17.md` | Ring Jobsite Security, Cybertruck, Rivian R2 and R1S research behind the Workstation draft, plus the Pebble, Rivian and Model Y feature sections behind the feature cards |
+| `src/pages/cargo-2.astro`, `src/components/cargo2/`, `src/data/cargo2Page.ts` | Cargo 2, the new Cargo sales page draft at `/cargo-2` (see "Cargo 2"). Not indexed. Every line of copy is marked NATE, SOURCE, NEW or CONFIRM. |
+| `src/scripts/configurator/embed.ts` | The 3D Cargo as a drop-in viewer with no option panel (`mountViewer`). Load it only with a dynamic `import()`, because it pulls in three.js. |
 | `src/pages/[product].astro` | Product pages at `/cargo` and `/event`, one shared template (Workstation has its own page). Section order and rhythm in the comment at the top. |
 | `src/data/productPages.ts` | Product page content: hero, feature tiles, runtime devices, statement photo, lengths. Every line is marked NEW, SOURCE or PLACEHOLDER. |
 | `src/components/product/` | Product page sections (Hero, Subnav, Overview, Power, Statement, Size, Lineup). Close, Faq, Nav, Footer and MobileBar are shared with the homepage. |
@@ -159,6 +161,15 @@ Each product page is written for its own buyer. The single shared `[product].ast
 - Cargo uses the "studio" hero (render in a framed plate) because there's no wide Cargo photo yet. Switch `hero.kind` to `photo` when Robert's shot exists.
 - Nav links now go to `/cargo`, `/workstation`, `/event` and `/#...` for homepage-only anchors. Keep the ids `top`, `cta`, `walkthrough`, `sheet` and `faq` on every page so Nav, MobileBar and Close keep working.
 
+## Cargo 2 (draft, 2026-11-19)
+
+- `/cargo-2` is Nate's new pass on the Cargo sales page, after the Tesla Model Y and Rivian R1T product pages. `/cargo` is untouched. The nav and the footer's Trailers column carry a temporary "Cargo 2" link (marked in `navLinks` in `content.ts`). Remove both once he picks a version.
+- **Order:** Hero (real photo, the name huge, two buttons, three facts), Get to know Cargo (feature cards), Take a tour (the 3D model), Statement photo, What it replaces (dark, with the fuel math), Power, Options, Specs, Built (the homepage's shop video band), Close, FAQ. The rhythm is in the top comment of `cargo-2.astro`.
+- **Photos** are Nate's black 20 ft (`cargo*` entries in `shoot`, made from `_photos-original/2026-11-17/Black Cargo Trailer/`). Cards are 2:3 crops and their panels use matching 3:2 crops. The rear doors photo (7) has the license plate painted out. Photos picked to avoid other brands' vehicles, people and plates.
+- **The 3D tour** uses `embed.ts`. It loads only when the section comes near and stops drawing when it leaves the screen, so the page loads no three.js up front. It has views, open doors, the inside view and the 12 colors. The viewer is labeled "Computer-generated model", and a note under it names the optional extras the model shows (heat and AC, desk, wall track). Keep the tour on a light background, because the canvas is see-through.
+- **Copy rules kept:** no price (product pages carry none; ask Nate before adding "From $10,000"), and only facts from the options sheet, the Warranty Policy or Nate. No solar watts, width, lead time, payload or delivery. The side window, storage hatch and spare are on the 20 ft in the photos but not on the options sheet, so their cards say "On the 20 ft shown here".
+- Nate's Cargo messaging report says never to make the empty trailer the main character. A Tesla or Rivian style page does that, so he should decide.
+
 ## Configurator (rebuilt 2026-11-18)
 
 - `/configure/cargo` follows Tesla's design studio (tesla.com/model3/design), at Nate's request: a white viewer on the left that you drag all the way around, one scrolling column of choices on the right, and a bar along the bottom with the price and the order button. The first version is saved in `_archive/2026-11-18-configurator-v1/`.
@@ -191,6 +202,7 @@ Each product page is written for its own buyer. The single shared `[product].ast
 - Options are modeled from SPOG's own builds where photos exist: the security mast with dome cameras and the Starlink dish on top (Workstation photos), the black-topped white desk and black E-track (Cargo interior photos). The rest are simple stand-ins.
 - Furniture is packed along the walls in the order it's picked up in `trailer.ts`. When a piece doesn't fit (mostly on the 10 ft), the preview leaves it out and a notice says so. The real layout is worked out with the buyer.
 - "Open doors" swings the rear and side doors, and the Interior view puts the camera inside.
+- The viewer carries the notice "Computer-generated model. The finished trailer may differ." (Nate, 2026-11-18), as does the Cargo card on `/configure`.
 - **The viewer turns to the section you scroll to** and to the option you just picked. The dots under the viewer step through six views. **Callouts** on the first view are pinned to points on the model and hide once you drag.
 - The picture on the `/configure` Cargo card is a capture of the model (`public/images/configure-cargo.jpg`). Remake it if the default look changes.
 - Nothing is sent anywhere and no payment is taken. The build is saved in the URL hash so it can be shared. Delivery, ZIP, contact details and an uploaded logo file are never put in the URL.

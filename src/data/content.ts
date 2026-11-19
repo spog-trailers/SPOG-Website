@@ -62,6 +62,21 @@ export const shoot = {
   engineeringCad: '/images/engineering-cad.jpg', // engineer at CAD screens, trailer frame
   eventDayWings: '/images/event-day-wings.jpg', // Event trailer, wings open, daytime
   eventNightCrowd: '/images/event-night-crowd.jpg', // Event trailer lit at night, crowd on the lawn. Screen faces away.
+  // The finished black 20 ft Cargo, shot 2026-11-17 (_photos-original/2026-11-17/Black Cargo Trailer/).
+  // Numbers are the source photo. Cards are 2:3 crops, the others 3:2 or 16:9. Used on /cargo-2.
+  cargoHero: '/images/cargo2-hero.jpg', // 13: street-side front three-quarter, SPOG doors behind
+  cargoStatement: '/images/cargo2-statement.jpg', // 37: low drone, front three-quarter, SPOG painted on the bay doors
+  cargoSolar: '/images/cargo2-solar.jpg', // 53: high drone, five panels across the roof
+  cargoSolarCard: '/images/cargo2-solar-card.jpg',
+  cargoDoors: '/images/cargo2-doors.jpg', // 7: rear barn doors. The license plate is painted out.
+  cargoDoorsCard: '/images/cargo2-doors-card.jpg',
+  cargoDoor: '/images/cargo2-door.jpg', // 23: curb side, entry door, backlit (sticker in the door glass)
+  cargoDoorCard: '/images/cargo2-door-card.jpg',
+  cargoStreet: '/images/cargo2-street.jpg', // 36: street side, window and storage hatch
+  cargoStreetCard: '/images/cargo2-street-card.jpg',
+  cargoNose: '/images/cargo2-nose.jpg', // 15: V nose, tongue and spare (cropped to clear parked cars)
+  cargoNoseCard: '/images/cargo2-nose-card.jpg',
+  cargoProfile: '/images/cargo2-profile.jpg', // 36: street-side profile, whole trailer
 };
 
 /** The 1200 px copy of a photo from `shoot`, for cards and phones. Older images have none. */
@@ -75,6 +90,7 @@ export const phone = { display: '1 (855) 720-2290', href: 'tel:18557202290' };
 // Site nav (Nate, 2026-11-18). Homepage anchors start with "/" so they work from every page.
 export const navLinks = [
   { label: 'Cargo', href: '/cargo' },
+  { label: 'Cargo 2', href: '/cargo-2' }, // TEMPORARY: the new Cargo page draft (2026-11-19). Remove once Nate picks a version.
   { label: 'Workstation', href: '/workstation' },
   { label: 'Event', href: '/event' },
   { label: 'Future lineup', href: '/#future' },
@@ -317,7 +333,7 @@ export const runSheet = [
  * Contact opens the walkthrough form, which every page has. PLACEHOLDER: every "#" is a page that isn't built yet.
  */
 export const footerColumns = [
-  { title: 'Trailers', links: [['Cargo', '/cargo'], ['Workstation', '/workstation'], ['Event', '/event'], ['Future lineup', '/#future']] },
+  { title: 'Trailers', links: [['Cargo', '/cargo'], ['Cargo 2', '/cargo-2'], ['Workstation', '/workstation'], ['Event', '/event'], ['Future lineup', '/#future']] },
   { title: 'Company', links: [['About', '/#built'], ['Reviews', '#'], ['Become a Dealer', '#']] },
   { title: 'Support', links: [['FAQ', '/#faq'], ['Contact', '#walkthrough'], ['Warranty', '#'], ['Blog', '#']] },
 ];

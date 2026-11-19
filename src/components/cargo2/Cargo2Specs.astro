@@ -1,0 +1,30 @@
+---
+import WorkTitle from '../work/WorkTitle.astro';
+import { srcset } from '../../data/content';
+import { specs } from '../../data/cargo2Page';
+/**
+ * Specs, after Tesla's "Model Y Specs": the side profile and one clean table. Only facts the
+ * options sheet, the Warranty Policy or Nate confirmed (see cargo2Page.ts). No width, solar
+ * watts, payload or lead time until the product team settles them.
+ * Keeps the id "specs" for the section bar.
+ */
+---
+<section id="specs" aria-label="Specs" class="border-t border-line bg-black pb-[120px] pt-[130px] text-bone max-[640px]:pb-16 max-[640px]:pt-20">
+  <div class="wrap">
+    <WorkTitle kicker={specs.kicker} lines={specs.heading} tone="dark" />
+    <div class="mt-14 grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-start gap-x-16 gap-y-10 max-[1000px]:grid-cols-[minmax(0,1fr)]">
+      <img src={specs.image} srcset={srcset(specs.image)} sizes="(max-width: 1000px) 100vw, 680px" alt={specs.alt} loading="lazy" class="aspect-[16/9] w-full rounded-[18px] object-cover" />
+      <div>
+        <dl class="m-0">
+          {specs.rows.map(([label, value]) => (
+            <div class="grid grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] gap-6 border-b border-line py-[18px] first:pt-0 max-[480px]:grid-cols-[minmax(0,1fr)] max-[480px]:gap-1">
+              <dt class="text-[14px] text-mute">{label}</dt>
+              <dd class="m-0 text-[15.5px] font-semibold leading-[1.45] text-white">{value}</dd>
+            </div>
+          ))}
+        </dl>
+        <p class="mb-0 mt-6 text-[13px] leading-[1.55] text-mute">{specs.fine}</p>
+      </div>
+    </div>
+  </div>
+</section>

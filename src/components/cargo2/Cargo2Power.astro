@@ -1,0 +1,37 @@
+---
+import WorkTitle from '../work/WorkTitle.astro';
+import { demo, power } from '../../data/cargo2Page';
+/**
+ * The power system as the options sheet lists it: battery, output voltage and shore power, in the
+ * sheet's own words. No run-time numbers: the tested tool-load table doesn't exist yet, so the
+ * run-time question points to a demo, as on the homepage.
+ */
+---
+<section id="power" aria-label="Power" class="bg-stone pb-[120px] pt-[130px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
+  <div class="wrap">
+    <div class="flex items-end justify-between gap-x-14 gap-y-5 max-[900px]:flex-col max-[900px]:items-start">
+      <WorkTitle kicker={power.kicker} lines={power.heading} />
+      <p class="m-0 max-w-[440px] text-[17px] leading-[1.6] text-ink-soft">{power.body}</p>
+    </div>
+    <ul class="m-0 mt-14 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-3 p-0 max-[960px]:grid-cols-[repeat(1,minmax(0,1fr))]">
+      {power.groups.map((g) => (
+        <li class="flex flex-col rounded-[18px] bg-paper px-8 pb-8 pt-7 max-[640px]:px-6">
+          <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[-.03em] text-coal">{g.title}</h3>
+          <p class="mb-0 mt-2 text-[15px] leading-[1.5] text-ink-soft">{g.note}</p>
+          <ul class="m-0 mt-6 flex list-none flex-wrap gap-2 p-0">
+            {g.options.map((o) => <li class="rounded-full border border-[#d3d1cc] px-3.5 py-1.5 text-[13.5px] font-semibold text-coal">{o}</li>)}
+          </ul>
+        </li>
+      ))}
+    </ul>
+    <p class="mb-0 mt-5 text-[13px] text-ink-soft">{power.fine}</p>
+
+    <div class="mt-12 flex flex-wrap items-center justify-between gap-6 rounded-[18px] bg-white px-9 py-8 max-[640px]:px-6">
+      <div class="max-w-[640px]">
+        <h3 class="m-0 text-[21px] font-semibold tracking-[-.02em] text-coal">{power.runtime.q}</h3>
+        <p class="mb-0 mt-2 text-[16px] leading-[1.55] text-ink-soft">{power.runtime.a}</p>
+      </div>
+      <a href={demo.href} class="inline-flex h-[50px] shrink-0 items-center justify-center border-[1.5px] border-coal px-7 text-[12px] font-bold uppercase leading-[normal] tracking-[.18em] text-coal no-underline transition-colors hover:bg-coal hover:text-white">{demo.label}</a>
+    </div>
+  </div>
+</section>

@@ -5,8 +5,9 @@ import { lineupEntry, type ProductPage } from '../../data/productPages';
 // slides in and the main masthead tucks away, so only one bar sits at the top.
 // On phones it becomes a full-width strip of links; the MobileBar carries the buttons there.
 // `links` lets a bespoke page (like the Workstation draft) list its own sections.
-interface Props { page: ProductPage; links?: [string, string][] }
-const { page, links: custom } = Astro.props;
+// `buttons` replaces the two buttons on the right (the outlined one first, then the gold one).
+interface Props { page: ProductPage; links?: [string, string][]; buttons?: [{ label: string; href: string }, { label: string; href: string }] }
+const { page, links: custom, buttons = [{ label: 'Walkthrough', href: '#walkthrough' }, { label: 'Reserve', href: '#cta' }] } = Astro.props;
 const p = lineupEntry(page.id);
 const links: [string, string][] = custom ?? [
   ...(page.overview ? [['Overview', '#overview'] as [string, string]] : []),
@@ -38,8 +39,8 @@ const btn = 'flex h-10 shrink-0 items-center border-[1.5px] px-4 text-[11px] fon
         </li>
       ))}
     </ul>
-    <a href="#walkthrough" class={`${btn} ml-2 border-white/60 text-white hover:border-white hover:bg-white hover:text-black max-[1000px]:hidden`}>Walkthrough</a>
-    <a href="#cta" class={`${btn} border-gold bg-gold text-black hover:border-white hover:bg-white max-[640px]:hidden`}>Reserve</a>
+    <a href={buttons[0].href} class={`${btn} ml-2 border-white/60 text-white hover:border-white hover:bg-white hover:text-black max-[1000px]:hidden`}>{buttons[0].label}</a>
+    <a href={buttons[1].href} class={`${btn} border-gold bg-gold text-black hover:border-white hover:bg-white max-[640px]:hidden`}>{buttons[1].label}</a>
   </div>
 </nav>
 

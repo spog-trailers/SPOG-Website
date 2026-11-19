@@ -83,7 +83,16 @@ function studioEnvironment(renderer: THREE.WebGLRenderer) {
 
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
-export function createStage(container: HTMLElement) {
+export interface StageOptions {
+  /** Wheel and pinch zoom. Off when the viewer sits inside a long page, so it can't trap the scroll. */
+  zoom?: boolean;
+  /** Camera distance for the outside views, as a share of the configurator's. Below 1 frames tighter. */
+  distance?: number;
+}
+
+export function createStage(container: HTMLElement, options: StageOptions = {}) {
+  const allowZoom = options.zoom ?? true;
+  const distance = options.distance ?? 1;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
@@ -238,7 +247,7 @@ export function createStage(container: HTMLElement) {
       controls.maxDistance = 90;
       controls.minPolarAngle = 0.12;
       controls.maxPolarAngle = Math.PI * 0.492;
-      controls.enableZoom = true;
+      controls.enableZoom = allowZoom;
       controls.rotateSpeed = 0.8;
     }
   }
@@ -252,7 +261,7 @@ export function createStage(container: HTMLElement) {
     const v = VIEWS[name];
     const narrow = Math.max(1, 1.5 / camera.aspect);
     const lift = tall && name !== 'wheels' ? 1 : 0;
-    const r = (19 + trailerLength * 0.6) * (1 + lift * 0.24) * v.zoom * (name === 'wheels' ? Math.sqrt(narrow) : narrow);
+    const r = (19 + trailerLength * 0.6) * (1 + lift * 0.24) * distance * v.zoom * (name === 'wheels' ? Math.sqrt(narrow) : narrow);
     const az = THREE.MathUtils.degToRad(v.az);
     const el = THREE.MathUtils.degToRad(v.el);
     const target = name === 'wheels'
@@ -308,6 +317,8 @@ export function createStage(container: HTMLElement) {
   // ---------------------------------------------------------------- loop
   const frameHooks: ((dt: number) => void)[] = [];
   let last = performance.now();
+  let running = false;
+  let raf = 0;
   function frame(now: number) {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
@@ -325,14 +336,24 @@ export function createStage(container: HTMLElement) {
     drawContactShadow();
     if (composer) composer.render();
     else renderer.render(scene, camera);
-    requestAnimationFrame(frame);
+    if (running) raf = requestAnimationFrame(frame);
+  }
+  /** Start or stop drawing. A viewer scrolled off screen should be stopped. */
+  function setActive(on: boolean) {
+    if (on === running) return;
+    running = on;
+    cancelAnimationFrame(raf);
+    if (on) {
+      last = performance.now();
+      raf = requestAnimationFrame(frame);
+    }
   }
 
   limits(false);
   resize();
   setLength(20);
   setView('front', true);
-  requestAnimationFrame(frame);
+  setActive(true);
 
   return {
     scene,
@@ -341,6 +362,7 @@ export function createStage(container: HTMLElement) {
     setView,
     setLength,
     setTall,
+    setActive,
     project,
     onFrame: (f: (dt: number) => void) => frameHooks.push(f),
     onUserMove: (f: () => void) => moveHooks.push(f),

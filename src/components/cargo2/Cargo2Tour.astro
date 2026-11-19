@@ -1,0 +1,148 @@
+---
+import WorkTitle from '../work/WorkTitle.astro';
+import { PAINTS } from '../../scripts/configurator/data';
+import { design, tour } from '../../data/cargo2Page';
+/**
+ * "Take a tour" (Rivian) on a Tesla-style studio plate: the configurator's 3D Cargo with no option
+ * panel. Drag it around, jump to a view, open the doors, step inside and try the 12 colors.
+ * Under it, Tesla's row of four numbers, then the notices Nate asked for.
+ *
+ * Loading: three.js is big, so the model loads only when this section comes near (a dynamic
+ * import), and it stops drawing when the section leaves the screen. Until then, and without
+ * JavaScript or WebGL, a still of the same model holds the spot.
+ * The background stays light on purpose: the canvas is see-through and the ground shadow is a
+ * soft black, so it needs a light plate behind it.
+ */
+const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border border-[#cfd0d2] bg-white/70 px-4 text-[12.5px] font-semibold text-ink transition-colors hover:border-[#8f9195] aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-white';
+---
+<section id="tour" aria-label="Take a tour of the Cargo" data-hide-mobilebar class="overflow-hidden bg-[linear-gradient(to_bottom,#efefef_0%,#f7f7f7_45%,#ffffff_100%)] pb-[110px] pt-[120px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
+  <div class="wrap flex items-end justify-between gap-x-14 gap-y-5 max-[900px]:flex-col max-[900px]:items-start">
+    <WorkTitle kicker={tour.kicker} lines={tour.heading} />
+    <p class="m-0 max-w-[420px] text-[17px] leading-[1.6] text-ink-soft">{tour.body}</p>
+  </div>
+
+  <div class="relative mx-auto mt-6 h-[clamp(360px,64vh,740px)] max-w-[1640px] max-[640px]:h-[min(62svh,460px)]">
+    <div data-tour-stage class="absolute inset-y-0 inset-x-6 cursor-grab overflow-hidden rounded-[22px] active:cursor-grabbing max-[640px]:inset-x-3"></div>
+    <img data-tour-poster src={tour.poster} alt="Computer-generated model of the black 20 ft SPOG Cargo" class="pointer-events-none absolute inset-0 m-auto max-h-[80%] max-w-[86%] object-contain mix-blend-multiply transition-opacity duration-700" />
+    <p class="pointer-events-none absolute bottom-3 right-6 m-0 text-[11.5px] font-semibold text-ink-soft max-[640px]:right-4">Computer-generated model</p>
+    <p data-tour-hint class="pointer-events-none absolute left-1/2 top-3 m-0 -translate-x-1/2 rounded-full bg-white/85 px-3.5 py-1.5 text-[12px] font-semibold text-ink-soft opacity-0 transition-opacity duration-500">Drag to turn it around</p>
+  </div>
+
+  <div class="wrap">
+    <div class="flex flex-wrap items-center justify-center gap-2">
+      <div role="group" aria-label="Views" class="no-scrollbar flex max-w-full gap-1.5 overflow-x-auto">
+        {tour.views.map(([id, label], i) => <button type="button" data-tour-view={id} aria-pressed={i === 0 ? 'true' : 'false'} class={pill}>{label}</button>)}
+      </div>
+      <button type="button" data-tour-doors aria-pressed="false" class={pill}>Open doors</button>
+    </div>
+
+    <div class="mt-6 flex flex-col items-center">
+      <div role="group" aria-label="Exterior colors" class="flex flex-wrap justify-center gap-0.5">
+        {PAINTS.map((p, i) => <button type="button" data-tour-paint={p.id} data-name={p.name} aria-label={p.name} title={p.name} aria-pressed={i === 1 ? 'true' : 'false'} class:list={['tsw', p.matte && 'tsw-matte']} style={`--c:${p.hex}`}></button>)}
+      </div>
+      <p class="mb-0 mt-2 text-[13.5px] font-semibold text-ink"><span data-tour-paint-name>{PAINTS[1].name}</span></p>
+    </div>
+
+    <dl class="m-0 mx-auto mt-12 grid max-w-[1000px] grid-cols-[repeat(4,minmax(0,1fr))] gap-6 max-[760px]:grid-cols-[repeat(2,minmax(0,1fr))] max-[760px]:gap-y-8">
+      {tour.stats.map(([value, label], i) => (
+        <div class:list={['flex flex-col-reverse items-center text-center', i > 0 && 'min-[761px]:border-l min-[761px]:border-[#dcdcdc]']}>
+          <dt class="mt-1 text-[13px] text-ink-soft">{label}</dt>
+          <dd class="m-0 text-[clamp(20px,2vw,28px)] font-semibold tracking-[-.025em] text-coal">{value}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <div class="mt-12 flex justify-center">
+      <a href={design.href} class="inline-flex h-[50px] items-center justify-center border-[1.5px] border-coal bg-coal px-8 text-[12px] font-bold uppercase leading-[normal] tracking-[.18em] text-white no-underline transition-colors hover:border-gold hover:bg-gold hover:text-black">{design.label}</a>
+    </div>
+
+    <p class="mx-auto mb-0 mt-8 max-w-[640px] text-center text-[12.5px] leading-[1.55] text-ink-soft">{tour.model} {tour.extras}</p>
+  </div>
+</section>
+
+<style>
+  /* Paint chips: a lit sphere with a ring when picked, as in the configurator. */
+  .tsw { position: relative; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; }
+  .tsw::before {
+    content: ''; position: absolute; inset: 6px; border-radius: 50%;
+    background: radial-gradient(circle at 34% 26%, color-mix(in srgb, var(--c) 55%, white), var(--c) 55%, color-mix(in srgb, var(--c) 72%, black));
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / .14);
+  }
+  .tsw-matte::before { background: radial-gradient(circle at 34% 26%, color-mix(in srgb, var(--c) 88%, white), var(--c) 70%); }
+  .tsw[aria-pressed='true'] { box-shadow: inset 0 0 0 2px #23262b; }
+  .tsw:hover:not([aria-pressed='true']) { box-shadow: inset 0 0 0 1px #b9babd; }
+</style>
+
+<script>
+  import type { Viewer } from '../../scripts/configurator/embed';
+
+  const root = document.getElementById('tour');
+  const stageEl = root?.querySelector<HTMLElement>('[data-tour-stage]');
+  if (root && stageEl) {
+    const poster = root.querySelector<HTMLElement>('[data-tour-poster]')!;
+    const hint = root.querySelector<HTMLElement>('[data-tour-hint]')!;
+    const viewBtns = [...root.querySelectorAll<HTMLButtonElement>('[data-tour-view]')];
+    const doorsBtn = root.querySelector<HTMLButtonElement>('[data-tour-doors]')!;
+    const paintBtns = [...root.querySelectorAll<HTMLButtonElement>('[data-tour-paint]')];
+    const paintName = root.querySelector<HTMLElement>('[data-tour-paint-name]')!;
+
+    // What the visitor picked. Clicks before the model loads are kept and applied when it does.
+    const want = { view: 'front', doors: false, paint: 'black' };
+    let viewer: Viewer | null = null;
+    let loading = false;
+    let onScreen = false;
+
+    const press = (list: HTMLButtonElement[], on: (b: HTMLButtonElement) => boolean) => list.forEach((b) => b.setAttribute('aria-pressed', String(on(b))));
+    const showHint = () => {
+      hint.textContent = want.view === 'interior' ? 'Drag to look around' : 'Drag to turn it around';
+      hint.style.opacity = viewer ? '1' : '0';
+    };
+
+    async function load() {
+      if (viewer || loading) return;
+      loading = true;
+      try {
+        const { mountViewer } = await import('../../scripts/configurator/embed');
+        viewer = mountViewer(stageEl!);
+        viewer.setPaint(want.paint);
+        if (want.doors) viewer.setDoors(true);
+        if (want.view !== 'front') viewer.setView(want.view as never);
+        viewer.setActive(onScreen);
+        viewer.onUserMove(() => { hint.style.opacity = '0'; });
+        poster.style.opacity = '0';
+        showHint();
+      } catch {
+        // No WebGL or the script failed: the still stays and the buttons do nothing harmful.
+        loading = false;
+      }
+    }
+
+    // Load a little before the section arrives, and draw only while it's on screen.
+    new IntersectionObserver(([e]) => { if (e.isIntersecting) load(); }, { rootMargin: '600px 0px' }).observe(root);
+    new IntersectionObserver(([e]) => {
+      onScreen = e.isIntersecting;
+      viewer?.setActive(onScreen);
+    }).observe(stageEl);
+
+    viewBtns.forEach((b) => b.addEventListener('click', () => {
+      want.view = b.dataset.tourView!;
+      press(viewBtns, (x) => x === b);
+      viewer?.setView(want.view as never);
+      showHint();
+    }));
+    doorsBtn.addEventListener('click', () => {
+      want.doors = !want.doors;
+      doorsBtn.setAttribute('aria-pressed', String(want.doors));
+      doorsBtn.textContent = want.doors ? 'Close doors' : 'Open doors';
+      viewer?.setDoors(want.doors);
+    });
+    paintBtns.forEach((b) => b.addEventListener('click', () => {
+      want.paint = b.dataset.tourPaint!;
+      press(paintBtns, (x) => x === b);
+      paintName.textContent = b.dataset.name ?? '';
+      viewer?.setPaint(want.paint);
+      // The still only shows black, so it hides once another color is picked.
+      if (!viewer && want.paint !== 'black') poster.style.opacity = '0.25';
+    }));
+  }
+</script>

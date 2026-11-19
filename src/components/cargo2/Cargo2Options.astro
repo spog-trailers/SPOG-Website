@@ -1,0 +1,63 @@
+---
+import WorkTitle from '../work/WorkTitle.astro';
+import { CONNECT, INTERIOR, PAINTS } from '../../scripts/configurator/data';
+import { design, options } from '../../data/cargo2Page';
+/**
+ * Options, straight from the Trailer Customization Options sheet (the same list the configurator
+ * uses, from src/scripts/configurator/data.ts, which loads no three.js). Names only, no prices.
+ */
+const groups = (list: typeof INTERIOR) => [...new Set(list.map((o) => o.group))].map((g) => ({ name: g, items: list.filter((o) => o.group === g) }));
+const columns = [
+  { title: 'Interior', groups: groups(INTERIOR) },
+  { title: 'Connectivity and security', groups: groups(CONNECT) },
+];
+const check = '<svg viewBox="0 0 24 24" class="mt-[3px] size-4 shrink-0 fill-none stroke-coal stroke-[2.4]" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>';
+---
+<section id="options" aria-label="Options" class="bg-white pb-[120px] pt-[130px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
+  <div class="wrap">
+    <div class="flex items-end justify-between gap-x-14 gap-y-5 max-[900px]:flex-col max-[900px]:items-start">
+      <WorkTitle kicker={options.kicker} lines={options.heading} />
+      <p class="m-0 max-w-[440px] text-[17px] leading-[1.6] text-ink-soft">{options.body}</p>
+    </div>
+
+    <div class="mt-14 grid grid-cols-[repeat(3,minmax(0,1fr))] gap-3 max-[1000px]:grid-cols-[repeat(1,minmax(0,1fr))]">
+      <div class="rounded-[18px] bg-stone px-8 pb-9 pt-7 max-[640px]:px-6">
+        <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[-.03em] text-coal">Exterior</h3>
+        <div class="mt-6 flex flex-wrap gap-1.5" aria-label="Twelve exterior colors">
+          {PAINTS.map((p) => <span title={p.name} class="block size-7 rounded-full shadow-[inset_0_0_0_1px_rgb(0_0_0/.14)]" style={`background:radial-gradient(circle at 34% 26%, color-mix(in srgb, ${p.hex} ${p.matte ? 88 : 55}%, white), ${p.hex} 60%)`}></span>)}
+        </div>
+        <ul class="m-0 mt-6 grid list-none gap-3 p-0">
+          {options.exterior.map((o) => (
+            <li class="flex gap-3 text-[15.5px] leading-[1.45]">
+              <Fragment set:html={check} />
+              <span><b class="font-semibold text-coal">{o.name}</b>{o.desc && <span class="block text-[14px] text-ink-soft">{o.desc}</span>}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {columns.map((col) => (
+        <div class="rounded-[18px] bg-stone px-8 pb-9 pt-7 max-[640px]:px-6">
+          <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[-.03em] text-coal">{col.title}</h3>
+          {col.groups.map((g) => (
+            <div class="mt-6">
+              <h4 class="m-0 text-[11.5px] font-semibold uppercase tracking-[.16em] text-ink-soft">{g.name}</h4>
+              <ul class="m-0 mt-3 grid list-none gap-2.5 p-0">
+                {g.items.map((o) => (
+                  <li class="flex gap-3 text-[15.5px] leading-[1.45]">
+                    <Fragment set:html={check} />
+                    <span><b class="font-semibold text-coal">{o.name}</b>{o.desc && <span class="block text-[14px] text-ink-soft">{o.desc}</span>}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-8 flex flex-wrap items-center justify-between gap-5">
+      <p class="m-0 max-w-[620px] text-[13px] leading-[1.55] text-ink-soft">{options.fine}</p>
+      <a href={design.href} class="inline-flex h-[50px] items-center justify-center border-[1.5px] border-gold bg-gold px-8 text-[12px] font-bold uppercase leading-[normal] tracking-[.18em] text-black no-underline transition-colors hover:border-coal hover:bg-coal hover:text-white">{design.label}</a>
+    </div>
+  </div>
+</section>
