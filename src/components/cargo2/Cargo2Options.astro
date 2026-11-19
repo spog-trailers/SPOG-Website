@@ -6,7 +6,11 @@ import { design, options } from '../../data/cargo2Page';
  * Options, straight from the Trailer Customization Options sheet (the same list the configurator
  * uses, from src/scripts/configurator/data.ts, which loads no three.js). Names only, no prices.
  */
-const groups = (list: typeof INTERIOR) => [...new Set(list.map((o) => o.group))].map((g) => ({ name: g, items: list.filter((o) => o.group === g) }));
+// Work groups first (Nate, 2026-11-19: it's a job-site trailer), then everything else in sheet order.
+const first = ['Work surfaces and storage', 'E-track'];
+const groups = (list: typeof INTERIOR) => [...new Set(list.map((o) => o.group))]
+  .sort((a, b) => (first.includes(b) ? 1 : 0) - (first.includes(a) ? 1 : 0) || first.indexOf(a) - first.indexOf(b))
+  .map((g) => ({ name: g, items: list.filter((o) => o.group === g) }));
 const columns = [
   { title: 'Interior', groups: groups(INTERIOR) },
   { title: 'Connectivity and security', groups: groups(CONNECT) },

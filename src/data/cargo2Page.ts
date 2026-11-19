@@ -22,8 +22,8 @@ import { shoot } from './content';
 import type { Feature } from './features';
 
 export const meta = {
-  title: 'SPOG Cargo | The trailer that powers your job', // NEW
-  description: 'The SPOG Cargo hauls your gear with solar and a battery built in. 10 or 20 ft, built in Middletown, New York.', // NEW
+  title: 'SPOG Cargo | Enclosed cargo trailer with solar power', // NEW. "Enclosed" at Nate's call (2026-11-19), the word every competitor uses
+  description: 'The SPOG Cargo is an enclosed cargo trailer on a welded steel frame, with solar and a battery built in. 10 or 20 ft, built in Middletown, New York.', // NEW
 };
 
 /** Where the two main buttons go on this page. */
@@ -33,11 +33,12 @@ export const demo = { label: 'Book a demo', href: '/demo' }; // NATE
 export const hero = {
   name: 'Cargo',
   line: 'Haul all your gear, with the power to run your job.', // NATE (homepage lineup)
-  sub: "Solar and a battery run your tools, lights and chargers on stored power, so you burn less fuel and skip the homeowner's outlet.", // SOURCE (messaging report, hero sub)
+  sub: "An enclosed cargo trailer on a welded steel frame. Solar and a battery run your tools, lights and chargers on stored power, so you burn less fuel and skip the homeowner's outlet.", // NEW first sentence (Nate, 2026-11-19), SOURCE second (messaging report, hero sub)
   facts: [
+    ['Enclosed', 'Cargo trailer'], // NATE (2026-11-19)
     ['10 or 20 ft', 'Length'], // NATE
+    ['Welded steel', 'Frame'], // NATE (2026-11-19)
     ['Standard', 'Roof solar and battery'], // SOURCE (options sheet)
-    ['Middletown, NY', 'Built by our crew'], // SOURCE
   ] as [string, string][],
   image: shoot.cargoHero,
   alt: 'Black SPOG Cargo trailer parked outside the SPOG shop in Middletown, New York',
@@ -46,6 +47,7 @@ export const hero = {
 /** Section bar that replaces the masthead once the hero scrolls away. */
 export const subnavLinks: [string, string][] = [
   ['Overview', '#overview'],
+  ['Build', '#build'],
   ['Tour', '#tour'],
   ['Power', '#power'],
   ['Options', '#options'],
@@ -57,26 +59,12 @@ export const subnavLinks: [string, string][] = [
 
 export const featuresHead = {
   kicker: 'Get to know Cargo', // NEW, after Rivian's "Get to know the R1T"
-  heading: ['The trailer you need anyway,', 'with the power built in.'], // NEW, from the messaging report's USP
+  heading: ['An enclosed cargo trailer,', 'with the power built in.'], // NEW, Nate's "enclosed" (2026-11-19) and the messaging report's USP
 };
 
 const shown = 'On the 20 ft shown here. Your SPOG contact will confirm what comes on your build.'; // NEW
 
 export const features: Feature[] = [
-  {
-    id: 'solar',
-    title: 'Solar roof',
-    line: 'A free recharge every day it sits in the sun.', // SOURCE (messaging report, transformation)
-    image: shoot.cargoSolarCard,
-    alt: 'SPOG Cargo from above, solar panels across the whole roof',
-    position: '50% 55%',
-    panel: {
-      intro: 'Pull up and the power is already there. Tools, lights and chargers run off stored solar before anyone touches the generator.', // SOURCE (messaging report, transformation)
-      media: { src: shoot.cargoSolar, alt: 'Five solar panels across the roof of a black SPOG Cargo', width: 2400, height: 1600 },
-      stats: [['Roof solar', 'Standard'], ['Battery storage', 'Standard']], // SOURCE (options sheet: "Standard on every trailer")
-      link: { label: 'See the power options', href: '#power' }, // NEW
-    },
-  },
   {
     id: 'doors',
     title: 'Rear double doors',
@@ -129,28 +117,47 @@ export const features: Feature[] = [
     },
   },
   {
-    id: 'built',
-    title: 'Built in Middletown',
-    line: 'Welded and wired by our own crew.', // NEW, from Nate's "from welding to wiring"
-    image: shoot.shopWelding,
-    alt: 'A welder at work in the SPOG shop in Middletown, New York',
-    position: '50% 50%',
+    id: 'solar',
+    title: 'Solar roof',
+    line: 'A free recharge every day it sits in the sun.', // SOURCE (messaging report, transformation)
+    image: shoot.cargoSolarCard,
+    alt: 'SPOG Cargo from above, solar panels across the whole roof',
+    position: '50% 55%',
     panel: {
-      intro: 'Other companies cut corners with staples and glue. Every SPOG is designed and built by our own crew in Middletown, New York, from welding to wiring.', // NATE
-      points: [
-        { title: 'A frame for the load', body: 'Every SPOG starts with a frame built to carry the weight of its solar and battery.' }, // SOURCE (Notion Home Page, saved for the Cargo page)
-        { title: 'Tested before it leaves', body: 'Wiring, battery, solar and outlets are designed together and tested before it leaves Middletown.' }, // SOURCE (Objections & FAQ)
-      ],
+      intro: 'Pull up and the power is already there. Tools, lights and chargers run off stored solar before anyone touches the generator.', // SOURCE (messaging report, transformation)
+      media: { src: shoot.cargoSolar, alt: 'Five solar panels across the roof of a black SPOG Cargo', width: 2400, height: 1600 },
+      stats: [['Roof solar', 'Standard'], ['Battery storage', 'Standard']], // SOURCE (options sheet: "Standard on every trailer")
+      link: { label: 'See the power options', href: '#power' }, // NEW
     },
   },
 ];
+
+// ---------------------------------------------------------------- built for the job site
+
+/** Nate, 2026-11-19: it's a utility trailer for job sites, so show it holds up. Facts only. */
+export const build = {
+  heading: ['Built for', 'the job site.'], // NEW, Nate's direction
+  body: "It's a cargo trailer first, and it lives on the job site. Other companies cut corners with staples and glue. Every SPOG is designed and built by our own crew in Middletown, New York, from welding to wiring.", // NEW first sentence, NATE the rest
+  photos: [
+    { src: shoot.shopWelding, alt: 'A welder joining the steel frame of a SPOG trailer in the Middletown shop', position: '50% 50%', caption: 'Welding a steel frame in Middletown.' }, // NEW. PLACEHOLDER until Nate's frame photos
+    { src: shoot.engineeringCad, alt: 'A SPOG engineer working on a trailer frame in CAD', position: '30% 50%', caption: 'The frame, drawn in CAD.' }, // NEW
+  ],
+  points: [
+    { title: 'Welded steel frame', body: 'Every Cargo starts on a welded steel frame built to carry the weight of its solar and battery.' }, // NATE (steel frame), SOURCE (frame line)
+    { title: 'Insulated shell', body: 'Insulated roof and walls come standard on every Cargo.' }, // SOURCE (options sheet)
+    { title: 'Hardwearing inside', body: 'A basic, hardwearing interior finish, with E-track available on the walls and floor to tie gear down.' }, // SOURCE (options sheet)
+    { title: 'Tested before it leaves', body: 'Wiring, battery, solar and outlets are designed together and tested before it leaves Middletown.' }, // SOURCE (Objections & FAQ)
+    { title: 'Backed in writing', body: 'A 3-year limited structural warranty and a 1-year limited parts warranty.' }, // SOURCE (Warranty Policy)
+    { title: 'Service on site', body: 'We can diagnose problems remotely, and our mobile service fleet repairs on site.' }, // SOURCE (Warranty Policy)
+  ],
+};
 
 // ---------------------------------------------------------------- 3D tour
 
 export const tour = {
   kicker: 'Take a tour', // NEW, after Rivian's "Take a tour"
   heading: ['Turn it around.', 'Step inside.'], // NEW
-  body: 'Drag the trailer to see every side, open the doors, step inside and try the colors.', // NEW
+  body: 'Drag the trailer to see every side, open the doors and step inside.', // NEW
   views: [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street', 'Street side'], ['top', 'Roof'], ['interior', 'Inside']] as [string, string][],
   stats: [
     ['10 or 20 ft', 'Length'], // NATE
@@ -229,7 +236,9 @@ export const specs = {
   image: shoot.cargoProfile,
   alt: 'Street-side profile of a black 20 ft SPOG Cargo, window, storage hatch, tandem wheels and spare',
   rows: [
+    ['Type', 'Enclosed cargo trailer'], // NATE (2026-11-19)
     ['Length', '10 or 20 ft'], // NATE
+    ['Frame', 'Welded steel'], // NATE (2026-11-19)
     ['Standard on every trailer', 'Roof solar panels, battery storage, and insulated roof and walls'], // SOURCE (options sheet)
     ['Battery storage', '5, 10, 20 or 40 kWh, or other'], // SOURCE (options sheet). CONFIRM 40 kWh on Cargo
     ['Output voltage', '120 V, 208 V, 240 V'], // SOURCE (options sheet)
@@ -253,6 +262,10 @@ export const close = {
 
 /** Cargo questions. NEW answers need Nate's sign-off. */
 export const faqs = [
+  {
+    q: 'Will it hold up on a job site?', // NEW (Nate, 2026-11-19: the question GCs and subs ask)
+    a: "That's what it's built for. Every Cargo starts on a welded steel frame built to carry the weight of its solar and battery, and the structure is covered by a 3-year limited structural warranty.", // NEW, facts from Nate and the Warranty Policy
+  },
   {
     q: 'Will it run my saws and compressor?', // SOURCE (buyer question, Objections & FAQ)
     a: "It depends on the tools and the battery size. Book a demo and we'll show you the run time for the tools you use.", // NEW, as on the homepage
