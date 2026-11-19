@@ -16,7 +16,7 @@ import { design, tour } from '../../data/cargo2Page';
 const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border border-[#cfd0d2] bg-white/70 px-4 text-[12.5px] font-semibold text-ink transition-colors hover:border-[#8f9195] aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-white';
 ---
 <section id="tour" aria-label="Take a tour of the Cargo" data-hide-mobilebar class="overflow-hidden bg-[linear-gradient(to_bottom,#efefef_0%,#f7f7f7_45%,#ffffff_100%)] pb-[110px] pt-[120px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
-  <div class="wrap">
+  <div class="wrap flex flex-col items-center text-center"><!-- centered over the model (Nate, 2026-11-19) -->
     <WorkTitle lines={tour.heading} />
     <a href={design.href} class="mt-8 inline-flex h-[50px] items-center justify-center border-[1.5px] border-coal bg-coal px-8 text-[12px] font-bold uppercase leading-[normal] tracking-[.18em] text-white no-underline transition-colors hover:border-gold hover:bg-gold hover:text-black">{design.label}</a>
   </div>
