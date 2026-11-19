@@ -68,6 +68,9 @@ export const shoot = {
   cargoStatement: '/images/cargo2-statement.jpg', // 37: low drone, front three-quarter, SPOG painted on the bay doors
   cargoSolar: '/images/cargo2-solar.jpg', // 53: high drone, five panels across the roof
   cargoSolarCard: '/images/cargo2-solar-card.jpg',
+  cargoInsulation: '/images/cargo2-insulation.jpg', // Nate 2026-11-19 (Image.png): steel frame wrapped in rigid foam board in the shop. The boards carry Owens Corning's Pink Panther.
+  cargoInsulationCard: '/images/cargo2-insulation-card.jpg',
+  cargoStarlinkCard: '/images/cargo2-starlink-card.jpg', // portrait crop of the Starlink mast shot (Zoom in on starlink.CR3), same photo as wsStarlink
   cargoDoors: '/images/cargo2-doors.jpg', // 7: rear barn doors. The license plate is painted out.
   cargoDoorsCard: '/images/cargo2-doors-card.jpg',
   cargoDoor: '/images/cargo2-door.jpg', // 23: curb side, entry door, backlit (sticker in the door glass)

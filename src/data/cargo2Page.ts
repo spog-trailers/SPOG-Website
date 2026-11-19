@@ -78,6 +78,19 @@ export const features: Feature[] = [
     },
   },
   {
+    id: 'insulated',
+    title: 'Insulated walls and roof',
+    line: 'Every SPOG comes insulated.', // NATE (2026-11-19)
+    image: shoot.cargoInsulationCard,
+    alt: 'A SPOG trailer on its steel frame in the Middletown shop, its walls lined with rigid foam insulation board',
+    position: '50% 50%',
+    panel: {
+      intro: 'Rigid foam board lines the walls and roof before the outside panels go on. It comes standard on every trailer we build.', // NEW, from Nate's photo. SOURCE for standard (options sheet, Nate)
+      media: { src: shoot.cargoInsulation, alt: 'A SPOG trailer mid-build in the Middletown shop, rigid foam insulation fixed to the steel frame', width: 2400, height: 1600 },
+      stats: [['Insulated roof and walls', 'Standard']], // SOURCE (options sheet)
+    },
+  },
+  {
     id: 'entry',
     title: 'Side entry door',
     line: 'Get in without opening the back.', // NEW
@@ -117,6 +130,23 @@ export const features: Feature[] = [
     },
   },
   {
+    id: 'connect',
+    title: 'Security and Starlink',
+    line: 'Optional cameras and internet, if your site needs them.', // NEW, Nate's direction (2026-11-19)
+    image: shoot.cargoStarlinkCard,
+    alt: 'Starlink dish, work lights and two dome cameras on a SPOG security mast',
+    position: '50% 50%',
+    panel: {
+      intro: 'Add security cameras and a horn and strobe to watch the trailer and your gear after hours. Add Starlink or a cellular router to keep your crew online where cell service is weak.', // NEW, options from the sheet
+      media: { src: shoot.wsStarlink, alt: 'Starlink dish, work lights and two dome cameras on a SPOG security mast against the sky', width: 2400, height: 1600 },
+      points: [
+        { title: 'Pick what you need', body: 'Security and internet are add-ons. Your SPOG contact will confirm what fits your build.' }, // NEW
+        { title: 'Shown on a mast', body: 'The photo shows them on a SPOG security mast. Your SPOG contact will confirm how they mount on your Cargo.' }, // NEW. CONFIRM the mast on Cargo
+      ],
+      link: { label: 'See all the options', href: '#options' }, // NEW
+    },
+  },
+  {
     id: 'solar',
     title: 'Solar roof',
     line: 'A free recharge every day it sits in the sun.', // SOURCE (messaging report, transformation)
@@ -144,7 +174,7 @@ export const build = {
   ],
   points: [
     { title: 'Welded steel frame', body: 'Every Cargo starts on a welded steel frame built to carry the weight of its solar and battery.' }, // NATE (steel frame), SOURCE (frame line)
-    { title: 'Insulated shell', body: 'Insulated roof and walls come standard on every Cargo.' }, // SOURCE (options sheet)
+    { title: 'Built to order', body: 'Every Cargo is built to order in Middletown, to the length, power and fit-out you pick.' }, // NEW (insulation moved to its own feature card, 2026-11-19)
     { title: 'Hardwearing inside', body: 'A basic, hardwearing interior finish, with E-track available on the walls and floor to tie gear down.' }, // SOURCE (options sheet)
     { title: 'Tested before it leaves', body: 'Wiring, battery, solar and outlets are designed together and tested before it leaves Middletown.' }, // SOURCE (Objections & FAQ)
     { title: 'Backed in writing', body: 'A 3-year limited structural warranty and a 1-year limited parts warranty.' }, // SOURCE (Warranty Policy)
