@@ -10,9 +10,10 @@
  *   Nose:             two flat panels with a black tread-plate stone guard, spare on the tongue.
  *   Roof:             silver, with solar panels laid across it and a low vent over the nose.
  * The body is hollow with a finished interior, so the doors can open and the camera can go inside.
- * The inside follows Nate's interior photos (same folder, Interior/): white walls and ceiling with
- * a black band where they meet, round ceiling lights, a black floor, a white partition closing off
- * the nose with a closet door, and the battery units standing on low white platforms along the walls.
+ * The inside follows Nate's Better Interior photos (same folder, rebuilt 2026-11-19): glossy white
+ * wall panels with faint seams, a black diamond-plate angle where walls meet the ceiling, two rows of
+ * black-rimmed puck lights, a smooth charcoal rubber floor, a white nose wall with the heat and AC
+ * head and a single-panel closet door, and open-cage battery units on low white platforms mid-length.
  */
 import * as THREE from 'three';
 import { FLOOR, H, NOSE, PANEL_ACROSS, PANEL_ALONG, PANEL_PITCH, ROOF, W, WALL, axleCenter, sideLength, tandem } from './dims';
@@ -153,6 +154,62 @@ function tireTexture() {
       c.beginPath(); c.moveTo(x + 18, 146); c.lineTo(x, 164); c.stroke();
     }
   }, false);
+}
+
+/** Seeded random numbers, so the procedural textures look the same on every load. */
+function seeded(seed: number) {
+  let t = seed >>> 0;
+  return () => {
+    t = (t + 0x6d2b79f5) >>> 0;
+    let r = Math.imul(t ^ (t >>> 15), 1 | t);
+    r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * Charcoal rubber floor, as in the Better Interior photos (2026-11-19): smooth and matte, with a
+ * fine speckle and a few soft scuffs. No coin pattern, which the real floor doesn't have.
+ */
+function rubberFloorTexture() {
+  return canvasTexture(256, 256, (c) => {
+    const rnd = seeded(7);
+    c.fillStyle = '#2c2d30';
+    c.fillRect(0, 0, 256, 256);
+    for (let i = 0; i < 2600; i++) {
+      const v = 34 + Math.floor(rnd() * 22);
+      c.fillStyle = `rgba(${v},${v + 1},${v + 3},${0.35 + rnd() * 0.4})`;
+      c.fillRect(rnd() * 256, rnd() * 256, 1 + rnd() * 1.4, 1 + rnd() * 1.4);
+    }
+    c.globalAlpha = 0.06;
+    c.strokeStyle = '#8a8c90';
+    for (let i = 0; i < 9; i++) {
+      c.lineWidth = 1 + rnd() * 3;
+      c.beginPath();
+      const x = rnd() * 256, y = rnd() * 256;
+      c.moveTo(x, y);
+      c.quadraticCurveTo(x + rnd() * 60 - 30, y + rnd() * 40 - 20, x + rnd() * 90 - 45, y + rnd() * 50 - 25);
+      c.stroke();
+    }
+  });
+}
+
+/**
+ * Black E-track with its open slots. The slots show the white wall behind, as in the photos.
+ * One image is one 2 in slot pitch along the rail and the full 5 in rail height.
+ */
+function etrackTexture() {
+  return canvasTexture(48, 120, (c) => {
+    c.fillStyle = '#121315';
+    c.fillRect(0, 0, 48, 120);
+    c.fillStyle = '#e9eaea';
+    c.beginPath();
+    c.roundRect(15, 26, 18, 68, 4);
+    c.fill();
+    c.fillStyle = '#3a3c40';
+    c.fillRect(0, 8, 48, 3);
+    c.fillRect(0, 109, 48, 3);
+  });
 }
 
 /** The slots of a tie-down track, as a bump pattern. */
@@ -299,10 +356,15 @@ export function createMaterials() {
     graphite: new THREE.MeshStandardMaterial({ color: '#2a2c30', roughness: 0.5, metalness: 0.5 }),
     steel: new THREE.MeshStandardMaterial({ color: '#3a3d42', roughness: 0.45, metalness: 0.7 }),
     benchTop: new THREE.MeshStandardMaterial({ map: planks, color: '#d8ccbc', roughness: 0.6, metalness: 0 }),
-    liner: new THREE.MeshStandardMaterial({ color: '#e4e5e4', roughness: 0.6, metalness: 0.1, envMapIntensity: 0.7 }),
-    joint: new THREE.MeshStandardMaterial({ color: '#8d8f93', roughness: 0.5, metalness: 0.4, transparent: true, opacity: 0.5 }),
-    ceiling: new THREE.MeshStandardMaterial({ color: '#dededa', roughness: 0.7, metalness: 0.05, side: THREE.DoubleSide, envMapIntensity: 0.7 }),
-    floor: new THREE.MeshStandardMaterial({ color: '#1b1c1e', roughness: 0.72, metalness: 0.05, bumpMap: coin, bumpScale: 0.5 }),
+    // Interior, rebuilt from the Better Interior photos (2026-11-19): glossy white wall panels with
+    // faint seams, a white ceiling, a smooth charcoal rubber floor and open-slot black E-track.
+    liner: new THREE.MeshStandardMaterial({ color: '#f2f3f2', roughness: 0.3, metalness: 0.02, envMapIntensity: 0.85 }),
+    joint: new THREE.MeshStandardMaterial({ color: '#a9abaf', roughness: 0.5, metalness: 0.2, transparent: true, opacity: 0.2 }),
+    ceiling: new THREE.MeshStandardMaterial({ color: '#eceeed', roughness: 0.48, metalness: 0.02, side: THREE.DoubleSide, envMapIntensity: 0.75 }),
+    floor: new THREE.MeshStandardMaterial({ map: tile(rubberFloorTexture(), 3.2), roughness: 0.62, metalness: 0, envMapIntensity: 0.6 }),
+    etrack: new THREE.MeshStandardMaterial({ map: tile(etrackTexture(), 1 / 6, 5 / 12), roughness: 0.42, metalness: 0.45 }),
+    cage: new THREE.MeshStandardMaterial({ color: '#b7babe', roughness: 0.42, metalness: 0.72 }),
+    module: new THREE.MeshStandardMaterial({ color: '#e7e8e6', roughness: 0.55, metalness: 0.05 }),
     logo: decal(),
     brand: decal(),
   };
@@ -888,72 +950,104 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   }
 
   // ------------------------------------------------------------ interior
-  // A white partition closes off the nose. The closet door on its curb half leads to the gear.
+  // Rebuilt from Nate's Better Interior photos (2026-11-19). A flat white wall closes off the nose,
+  // with the heat and AC head high on its street half and a white single-panel closet door on its
+  // curb half. Glossy white wall panels with faint seams every 4 ft, a black diamond-plate angle
+  // where the walls meet the ceiling, two rows of round puck lights with black rims, and a smooth
+  // charcoal rubber floor. The battery units stand mid-length on low white platforms.
   const px = xf - 0.06;
   g.add(box(0.12, H - 0.26, W - WALL * 2, faces(m.edge, { nx: m.liner, px: m.liner }), px, yc, 0));
   {
-    const dz = 1.85;
-    const dh2 = 6.3;
-    g.add(box(0.05, dh2 + 0.24, 2.74, m.board, px - 0.07, y0 + dh2 / 2 + 0.06, dz));
-    g.add(box(0.03, dh2, 2.5, m.equipment, px - 0.1, y0 + dh2 / 2, dz));
-    for (const [cy2, ch] of [[y0 + 1.5, 2.3], [y0 + 4.5, 2.9]]) g.add(box(0.012, ch, 1.9, m.board, px - 0.118, cy2, dz));
-    g.add(cyl(0.09, 0.1, m.black, px - 0.16, y0 + 3.05, dz - 0.95, 'x', 16));
+    // closet door: one recessed panel, three black hinges on the curb edge, a round black knob
+    const dz = 1.85, dw2 = 2.5, dh2 = 6.65;
+    g.add(box(0.05, dh2 + 0.2, dw2 + 0.3, m.board, px - 0.07, y0 + dh2 / 2 + 0.05, dz));
+    g.add(box(0.04, dh2, dw2, m.board, px - 0.11, y0 + dh2 / 2, dz));
+    g.add(box(0.012, dh2 - 1.0, dw2 - 0.7, m.module, px - 0.13, y0 + dh2 / 2 + 0.05, dz));
+    for (const hy of [0.7, dh2 / 2, dh2 - 0.7]) g.add(box(0.03, 0.32, 0.1, m.black, px - 0.13, y0 + hy, dz + dw2 / 2 - 0.05));
+    const knob = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 12), m.black);
+    knob.position.set(px - 0.2, y0 + 3.0, dz - dw2 / 2 + 0.3);
+    g.add(knob, cyl(0.04, 0.08, m.black, px - 0.14, y0 + 3.0, dz - dw2 / 2 + 0.3, 'x', 10));
   }
-  // black band where the walls meet the ceiling
-  for (const sz of [1, -1]) g.add(box(S - 0.2, 0.3, 0.03, m.black, xr + S / 2, ROOF - 0.27, sz * (zi - 0.016)));
-  g.add(box(0.03, 0.3, W - WALL * 2 - 0.06, m.black, px - 0.076, ROOF - 0.27, 0));
-  // round ceiling lights in two rows, and soft light so the inside reads when the camera is in there
-  const rows = Math.max(2, Math.round(S / 4.2));
-  for (let i = 0; i < rows; i++) for (const sz of [1, -1]) {
-    const lx = xr + (S * (i + 0.5)) / rows;
-    g.add(cyl(0.44, 0.04, m.board, lx, ROOF - 0.13, sz * 1.5, 'y', 28), cyl(0.36, 0.05, m.lamp, lx, ROOF - 0.14, sz * 1.5, 'y', 28));
+  // black diamond-plate angle where the walls meet the ceiling: a leg down the wall and one across the ceiling
+  const bandY = ROOF - 0.11;
+  for (const sz of [1, -1]) {
+    g.add(box(S - 0.2, 0.34, 0.035, m.trim, xr + S / 2, bandY - 0.17, sz * (zi - 0.018)));
+    g.add(box(S - 0.2, 0.035, 0.26, m.trim, xr + S / 2, bandY - 0.018, sz * (zi - 0.13)));
   }
-  const glow = S > 12 ? [xr + S * 0.25, xr + S * 0.72] : [xr + S * 0.5];
+  g.add(box(0.035, 0.34, W - WALL * 2 - 0.06, m.trim, px - 0.078, bandY - 0.17, 0));
+  g.add(box(0.26, 0.035, W - WALL * 2 - 0.06, m.trim, px - 0.19, bandY - 0.018, 0));
+  // puck lights: two rows of round lights with black rims, about one every 3 ft (six a row on the 20 ft)
+  const perRow = Math.max(2, Math.round(S / 3));
+  for (let i = 0; i < perRow; i++) for (const sz of [1, -1]) {
+    const lx = xr + (S * (i + 0.5)) / perRow;
+    g.add(cyl(0.31, 0.03, m.black, lx, bandY - 0.015, sz * 1.6, 'y', 32), cyl(0.255, 0.036, m.lamp, lx, bandY - 0.02, sz * 1.6, 'y', 32));
+  }
+  const glow = S > 12 ? [xr + S * 0.2, xr + S * 0.5, xr + S * 0.8] : [xr + S * 0.5];
   for (const lx of glow) {
-    const light = new THREE.PointLight('#f4f8ff', 9, 22, 1.6);
+    const light = new THREE.PointLight('#f6f8fc', S > 12 ? 7 : 9, 20, 1.6);
     light.position.set(lx, ROOF - 0.9, 0);
     g.add(light);
   }
-  // faint liner joints every 4 ft, so the walls read as panels
+  // faint panel seams: every 4 ft down the walls, and across the ceiling
   for (const sz of [1, -1]) {
     for (let x = xr + 4; x < xf - 0.6; x += 4) {
       if (sz > 0 && x > doorRear - 0.2) continue;
-      g.add(box(0.03, H - 0.7, 0.012, m.joint, x, yc - 0.15, sz * (zi - 0.006)));
+      g.add(box(0.025, H - 0.75, 0.012, m.joint, x, yc - 0.18, sz * (zi - 0.006)));
     }
   }
+  for (let x = xr + 4; x < xf - 0.6; x += 4) g.add(box(0.025, 0.01, W - WALL * 2 - 0.6, m.joint, x, bandY - 0.006, 0));
   if (cfg.hvac) {
-    // the indoor head, high on the partition as built
-    g.add(box(0.7, 0.95, 2.6, m.equipment, px - 0.41, ROOF - 1.3, -1.0));
-    g.add(box(0.5, 0.05, 2.4, m.graphite, px - 0.48, ROOF - 1.79, -1.0));
-    g.add(box(0.02, 0.04, 2.5, m.joint, px - 0.765, ROOF - 1.5, -1.0), box(0.02, 0.9, 0.03, m.joint, px - 0.765, ROOF - 1.3, -2.3), box(0.02, 0.9, 0.03, m.joint, px - 0.765, ROOF - 1.3, 0.3));
+    // the wall-mounted indoor head, high on the street half of the nose wall, just under the trim
+    const hz = -1.75;
+    const hy = bandY - 0.34 - 0.18 - 0.475;
+    g.add(box(0.6, 0.95, 2.65, m.module, px - 0.36, hy, hz));
+    g.add(box(0.04, 0.82, 2.55, m.board, px - 0.67, hy + 0.04, hz));
+    g.add(box(0.06, 0.08, 2.35, m.graphite, px - 0.62, hy - 0.4, hz));
+    g.add(box(0.012, 0.07, 0.34, m.display, px - 0.69, hy - 0.18, hz + 0.75));
   }
 
-  // Battery units stand on low white platforms along both walls at the rear, 5 kWh each,
-  // street side first. A short trailer shows as many as its walls hold.
+  // Battery units, 5 kWh each, stand on low white platforms with black channel on top. On the 20 ft
+  // they sit mid-length by the window, with the desk running from them to the nose (as photographed).
+  // Short trailers keep them at the rear so the front stays open.
   const wallEnd: Record<number, number> = { [-1]: xf - 0.3, [1]: doorRear - 0.5 };
-  const cursor: Record<number, number> = { [-1]: xr + 0.6, [1]: xr + 0.6 };
+  /** Free stretches of each wall, rear to front, that the furniture packs into. */
+  const free: Record<number, [number, number][]> = { [-1]: [[xr + 0.6, wallEnd[-1]]], [1]: [[xr + 0.6, wallEnd[1]]] };
   {
-    const unit = 1.75;
-    const room = (wall: number) => Math.max(0, Math.floor((wallEnd[wall] - (xr + 1.5) - 0.4) / unit));
+    const unit = 1.55;
+    const zone0 = S > 12 ? Math.max(xr + 5.8, winX - 1.0) : xr + 1.2; // about 6 ft in from the rear doors, as measured off photo 60
     let left = cfg.batteryModules;
     for (const wall of [-1, 1]) {
-      const n = Math.min(wall < 0 ? Math.ceil(left / 2) : left, room(wall), 4);
+      const room = Math.max(0, Math.floor((wallEnd[wall] - zone0 - 0.5) / unit));
+      const n = Math.min(wall < 0 ? Math.ceil(left / 2) : left, room, 4);
       left -= n;
       if (!n) continue;
-      const len = n * unit + 0.4;
-      const x0 = xr + 1.5;
-      g.add(box(len, 0.85, 0.95, m.equipment, x0 + len / 2, y0 + 0.425, wall * (zi - 0.475)));
+      const len = n * unit + 0.5;
+      const x0 = zone0;
+      // platform with two runs of black channel along the top
+      g.add(box(len, 0.95, 1.3, m.equipment, x0 + len / 2, y0 + 0.475, wall * (zi - 0.65)));
+      for (const off of [0.32, 1.05]) g.add(box(len - 0.12, 0.13, 0.15, m.black, x0 + len / 2, y0 + 1.0, wall * (zi - off)));
+      // a duplex outlet on the wall just behind the platform
+      g.add(box(0.24, 0.38, 0.02, m.board, x0 - 0.45, y0 + 1.3, wall * (zi - 0.01)));
+      for (const oy of [1.21, 1.39]) g.add(box(0.1, 0.06, 0.012, m.graphite, x0 - 0.45, y0 + oy, wall * (zi - 0.022)));
       for (let i = 0; i < n; i++) {
+        // open aluminum cage around a white module, red terminal caps and cable on top
         const u = new THREE.Group();
-        u.position.set(x0 + 0.2 + unit * (i + 0.5), y0 + 0.85, wall * (zi - 0.5));
+        u.position.set(x0 + 0.25 + unit * (i + 0.5), y0 + 1.07, wall * (zi - 0.48));
         if (wall > 0) u.rotation.y = Math.PI;
-        u.add(box(1.45, 2.2, 0.62, m.pack, 0, 1.1, 0));
-        u.add(box(1.2, 1.5, 0.02, m.board, 0, 1.0, 0.32), box(1.47, 0.1, 0.64, m.pack, 0, 2.16, 0));
-        u.add(box(0.5, 0.2, 0.02, m.graphite, 0, 0.42, 0.335), box(0.03, 0.03, 0.02, m.screen, 0.5, 1.9, 0.33));
-        for (const cx of [-0.4, 0.4]) u.add(cyl(0.03, 0.34, m.cable, cx, 2.27, 0, 'x', 8));
+        const cw = 1.35, ch = 1.75, cd = 0.56;
+        for (const ex of [-1, 1]) for (const ez of [-1, 1]) u.add(box(0.09, ch, 0.09, m.cage, ex * (cw / 2 - 0.045), ch / 2, ez * (cd / 2 - 0.045)));
+        for (const ey of [0.05, ch - 0.05]) for (const ez of [-1, 1]) u.add(box(cw, 0.09, 0.09, m.cage, 0, ey, ez * (cd / 2 - 0.045)));
+        for (const ey of [0.05, ch - 0.05]) for (const ex of [-1, 1]) u.add(box(0.09, 0.09, cd, m.cage, ex * (cw / 2 - 0.045), ey, 0));
+        u.add(box(cw - 0.26, ch - 0.3, cd - 0.14, m.module, 0, ch / 2, -0.02));
+        u.add(box(0.32, 0.12, 0.012, m.display, -0.18, ch - 0.38, cd / 2 - 0.08), box(0.04, 0.04, 0.012, m.screen, 0.12, ch - 0.38, cd / 2 - 0.08));
+        for (const tx of [-0.35, 0.35]) {
+          u.add(cyl(0.045, 0.08, m.cable, tx * 0.85, ch + 0.01, 0.12, 'y', 12));
+          u.add(cyl(0.022, cd * 0.9, m.cable, tx * 0.85, ch + 0.06, -cd * 0.3, 'z', 8));
+        }
         g.add(u);
       }
-      cursor[wall] = x0 + len + 0.3;
+      // the platform splits the wall into a stretch behind it and one in front of it
+      free[wall] = [[xr + 0.6, x0 - 0.9], [x0 + len + 0.3, wallEnd[wall]]].filter(([a, b]) => b - a > 0.5) as [number, number][];
     }
   }
 
@@ -963,28 +1057,33 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   // layout is worked out with the buyer, so this only shows that the pieces exist and their scale.
   // Inside a slot: x runs along the wall, y is up from the floor, z is out from the wall.
   const skipped: string[] = [];
-  const limit = wallEnd;
+  const slotAt = (x: number, wall: number) => {
+    const slot = new THREE.Group();
+    slot.position.set(x, y0, wall * zi);
+    if (wall > 0) slot.rotation.y = Math.PI;
+    g.add(slot);
+    return slot;
+  };
+  /** Takes the first free stretch, rear to front, on the preferred wall and then the other one. */
   const place = (len: number, prefer: 1 | -1, label: string) => {
     for (const wall of [prefer, -prefer]) {
-      if (cursor[wall] + len > limit[wall] + 0.01) continue;
-      const slot = new THREE.Group();
-      slot.position.set(cursor[wall] + len / 2, y0, wall * zi);
-      if (wall > 0) slot.rotation.y = Math.PI;
-      cursor[wall] += len + 0.25;
-      g.add(slot);
-      return slot;
+      const run = free[wall].find(([a, b]) => b - a >= len - 0.01);
+      if (!run) continue;
+      const x = run[0] + len / 2;
+      run[0] += len + 0.25;
+      return slotAt(x, wall);
     }
     skipped.push(label);
     return null;
   };
   /** The same, but from the front of the street-side wall, where the as-built desk sits. */
+  const frontRoom = () => { const r = free[-1][free[-1].length - 1]; return r ? r[1] - r[0] : 0; };
   const placeFront = (len: number, label: string) => {
-    if (limit[-1] - len < cursor[-1] - 0.01) return place(len, 1, label);
-    const slot = new THREE.Group();
-    slot.position.set(limit[-1] - len / 2, y0, -zi);
-    limit[-1] -= len + 0.25;
-    g.add(slot);
-    return slot;
+    const run = free[-1][free[-1].length - 1];
+    if (!run || run[1] - run[0] < len - 0.01) return place(len, 1, label);
+    const x = run[1] - len / 2;
+    run[1] -= len + 0.25;
+    return slotAt(x, -1);
   };
   // White casework with a black top, as on the desk in the interior photos.
   const casework = (slot: THREE.Group, len: number, depth: number, height: number, doors: number) => {
@@ -1023,17 +1122,16 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     }
   }
   for (let i = 0; i < cfg.desks; i++) {
-    // black top on a white base, in the front street-side corner as built
-    const len = 4.5;
-    const d = placeFront(len, cfg.desks > 1 ? 'an office desk' : 'the office desk');
+    // As built: a long black top on a solid white base, from the batteries to the nose wall on the
+    // street side. It runs as long as the wall allows, up to 6.5 ft (about 4 ft on the 10 ft).
+    const room = frontRoom();
+    const len = i === 0 ? (room >= 3.5 ? Math.min(6.5, room) : 4.5) : 4.5;
+    const d = i === 0 ? placeFront(len, cfg.desks > 1 ? 'an office desk' : 'the office desk') : place(len, -1, 'an office desk');
     if (!d) continue;
-    const depth = 2.3;
-    const flip = d.rotation.y ? -1 : 1;
-    d.add(box(len + 0.04, 0.1, depth + 0.04, m.top, 0, 2.5, depth / 2));
-    d.add(box(0.08, 2.45, depth - 0.1, m.equipment, flip * (-len / 2 + 0.04), 1.225, depth / 2));
-    d.add(box(1.5, 2.45, depth - 0.1, m.equipment, flip * (len / 2 - 0.75), 1.225, depth / 2));
-    for (const dy of [0.6, 1.3, 2.0]) d.add(box(0.5, 0.04, 0.04, m.black, flip * (len / 2 - 0.75), dy, depth - 0.03));
-    d.add(box(len - 1.6, 1.3, 0.06, m.equipment, flip * -0.75, 1.8, 0.2));
+    const depth = 2.0;
+    d.add(box(len + 0.04, 0.09, depth + 0.06, m.top, 0, 2.48, depth / 2 + 0.01));
+    d.add(box(len - 0.06, 2.43, depth - 0.12, m.equipment, 0, 1.215, (depth - 0.12) / 2));
+    for (const gx of [-len * 0.3, len * 0.3]) d.add(box(0.22, 0.012, 0.1, m.graphite, gx, 2.53, 0.35));
   }
   if (cfg.cabinets) {
     const len = cfg.cabinets * 2.4;
@@ -1114,12 +1212,13 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     g.add(tv);
   }
   if (cfg.etrackWalls) {
-    // black track: two rows on the curb side, and on the street side a low row plus a high row
-    // that stops short of the window
-    for (const ty of [y0 + 1.5, y0 + 4.4]) {
-      g.add(box(doorRear - xr - 0.8, 0.26, 0.04, m.track, (xr + doorRear) / 2, ty, zi - 0.02));
-      const end = ty > y0 + 3 ? winX - 2.1 : xf - 0.5;
-      if (end - xr > 1.5) g.add(box(end - xr - 0.4, 0.26, 0.04, m.track, (xr + end) / 2 + 0.2, ty, -(zi - 0.02)));
+    // Black open-slot track, 5 in tall, as photographed: a low row about 1 ft 8 in up and a high row
+    // about 4 ft 10 in up, the length of both walls. The high row on the street side stops short of
+    // the window, and the curb side stops at the entry door.
+    for (const ty of [y0 + 1.65, y0 + 4.85]) {
+      g.add(box(doorRear - xr - 0.8, 0.42, 0.04, m.etrack, (xr + doorRear) / 2, ty, zi - 0.02));
+      const end = ty > y0 + 3 ? winX - 2.2 : xf - 0.5;
+      if (end - xr > 1.5) g.add(box(end - xr - 0.4, 0.42, 0.04, m.etrack, (xr + end) / 2 + 0.2, ty, -(zi - 0.02)));
     }
   }
   if (cfg.etrackFloor) {
@@ -1165,7 +1264,8 @@ export function interiorView(length: number) {
   const xr = -length / 2;
   const xf = length / 2 - NOSE;
   return {
-    eye: new THREE.Vector3(xr + 0.35, FLOOR + 5.0, 0.2),
-    look: new THREE.Vector3(xf - 0.5, FLOOR + 2.7, -0.1),
+    // from the rear doors, at about chest height, looking straight down the middle (photo 60)
+    eye: new THREE.Vector3(xr + 0.35, FLOOR + 4.7, 0),
+    look: new THREE.Vector3(xf - 0.5, FLOOR + 3.3, 0),
   };
 }

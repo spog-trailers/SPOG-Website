@@ -204,7 +204,9 @@ Each product page is written for its own buyer. The single shared `[product].ast
   - Curb side: entry door with a window. Street side: sliding window over the axles and a two-door equipment compartment (not storage, Nate 2026-11-19).
   - Rear: barn doors with twin chrome lock bars and four oval tail lights. Roof: five solar panels and a low vent.
   - Black machined wheels under aluminum fenders, with a matching spare on the tongue.
-  - Inside: white walls and ceiling with a black band where they meet, round ceiling lights, a black floor, a white partition with a closet door closing off the nose, and battery units (5 kWh each) on low white platforms along both walls.
+  - Inside (rebuilt 2026-11-19 from Nate's "Better Interior" photos, `Black Cargo Trailer/Better Interior/` 60 to 66): glossy white wall panels with faint seams every 4 ft and across the ceiling, a black diamond-plate angle where the walls meet the ceiling, two rows of black-rimmed puck lights (about one every 3 ft), a smooth charcoal rubber floor, and a white nose wall with the heat and AC head high on its street half and a single-panel closet door (three black hinges, round black knob) on its curb half.
+  - Battery units (5 kWh each) are open gray aluminum cages around a white module, red terminals and cable on top, standing on a low white platform with black channel. On the 20 ft they sit mid-length, about 6 ft in from the rear doors, as in photo 60, and the desk (solid white base, black top, up to 6.5 ft) runs from them to the nose wall. Short trailers keep the batteries at the rear. Furniture packs into the free wall stretches behind and in front of the batteries.
+  - E-track is the open-slot kind (the white wall shows through), 5 in tall, at about 1 ft 8 in and 4 ft 10 in.
 - **Realism pass (2026-11-18, Nate asked for it to look more like Tesla's):**
   - A soft contact shadow is redrawn every frame from what sits near the ground.
   - Ambient occlusion shades the creases (screens 900px and wider only).
