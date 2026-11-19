@@ -194,7 +194,7 @@ export const tour = {
 // ---------------------------------------------------------------- statement
 
 export const statement = {
-  heading: 'Every crew already tows a trailer to the job, so yours should be the one that powers it.', // NEW, Nate approved (Notion, 2026-11-19), reworks the messaging report brand line into one sentence
+  heading: 'Every crew needs a trailer. Yours should run the job.', // SOURCE (messaging report, brand lines). Nate restored it 2026-11-19, the one-sentence version ran too long
   image: shoot.cargoStatement,
   alt: 'Black SPOG Cargo on the lot in front of the SPOG shop, SPOG painted across the bay doors',
   position: '50% 62%',
