@@ -116,32 +116,30 @@ export const features: Feature[] = [
     },
   },
   {
-    id: 'nose',
-    title: 'Nose and tongue',
-    line: 'Tread plate up front, a spare on the tongue.', // NEW
-    image: shoot.cargoNoseCard,
-    alt: 'V nose of a black SPOG Cargo with black tread plate, the tongue and a spare wheel',
+    id: 'security',
+    title: 'Security',
+    line: 'Optional cameras and lights to protect your gear.', // NATE (Notion, 2026-11-19)
+    image: shoot.cargoSecurityCard,
+    alt: 'Two dome cameras and work lights on a SPOG security mast',
     position: '50% 50%',
     panel: {
-      intro: 'The V nose wears black tread plate where the road throws stones, and a matching spare rides on the tongue.', // NEW, from the photos
-      media: { src: shoot.cargoNose, alt: 'Front three-quarter of a black SPOG Cargo from the street side', width: 2400, height: 1600 },
-      points: [{ title: 'The spare', body: shown }], // NEW. CONFIRM whether the spare is standard
+      intro: 'Add cameras and lights to watch the trailer and your gear after hours. A horn and strobe can warn people away.', // NEW, from Nate's note and the options sheet
+      media: { src: shoot.wsSecurityMast, alt: 'Dome cameras and work lights on a SPOG security mast in the Middletown shop', width: 2400, height: 1600 },
+      points: [{ title: 'Pick what you need', body: 'Security is an add-on. Your SPOG contact will confirm what fits your build.' }], // NEW
+      link: { label: 'See all the options', href: '#options' }, // NEW
     },
   },
   {
-    id: 'connect',
-    title: 'Security and Starlink',
-    line: 'Optional cameras and internet, if your site needs them.', // NEW, Nate's direction (2026-11-19)
+    id: 'starlink',
+    title: 'Starlink',
+    line: 'Optional internet for your crew on site.', // NEW, Nate's direction (Notion, 2026-11-19)
     image: shoot.cargoStarlinkCard,
-    alt: 'Starlink dish, work lights and two dome cameras on a SPOG security mast',
-    position: '50% 50%',
+    alt: 'Starlink dish on top of a SPOG mast against a blue sky',
+    position: '50% 30%',
     panel: {
-      intro: 'Add security cameras and a horn and strobe to watch the trailer and your gear after hours. Add Starlink or a cellular router to keep your crew online where cell service is weak.', // NEW, options from the sheet
-      media: { src: shoot.wsStarlink, alt: 'Starlink dish, work lights and two dome cameras on a SPOG security mast against the sky', width: 2400, height: 1600 },
-      points: [
-        { title: 'Pick what you need', body: 'Security and internet are add-ons. Your SPOG contact will confirm what fits your build.' }, // NEW
-        { title: 'Shown on a mast', body: 'The photo shows them on a SPOG security mast. Your SPOG contact will confirm how they mount on your Cargo.' }, // NEW. CONFIRM the mast on Cargo
-      ],
+      intro: 'Add Starlink to keep your crew online where cell service is weak, or a cellular router where it is strong.', // NEW, options from the sheet
+      media: { src: shoot.wsStarlink, alt: 'Starlink dish on a SPOG mast against the sky', width: 2400, height: 1600 },
+      points: [{ title: 'Pick what you need', body: 'Internet is an add-on. Your SPOG contact will confirm what fits your build.' }], // NEW
       link: { label: 'See all the options', href: '#options' }, // NEW
     },
   },

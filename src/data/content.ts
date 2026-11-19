@@ -71,6 +71,7 @@ export const shoot = {
   cargoFrame: '/images/cargo2-frame.jpg', // Nate 2026-11-19 (Steel Frames.png): a steel floor frame with its crossmembers on the shop floor, more frames behind
   cargoInsulation: '/images/cargo2-insulation.jpg', // Nate 2026-11-19 (Image.png): steel frame wrapped in rigid foam board in the shop. The boards carry Owens Corning's Pink Panther.
   cargoInsulationCard: '/images/cargo2-insulation-card.jpg',
+  cargoSecurityCard: '/images/cargo2-security-card.jpg', // portrait crop of 'Close up of security lights and camera for workstation trailer and cargo trailer.jpg', same photo as wsSecurityMast
   cargoStarlinkCard: '/images/cargo2-starlink-card.jpg', // portrait crop of the Starlink mast shot (Zoom in on starlink.CR3), same photo as wsStarlink
   cargoDoors: '/images/cargo2-doors.jpg', // 7: rear barn doors. The license plate is painted out.
   cargoDoorsCard: '/images/cargo2-doors-card.jpg',
