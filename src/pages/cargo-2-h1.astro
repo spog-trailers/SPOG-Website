@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import { srcset } from '../data/content';
+import { hero } from '../data/cargo2Page';
+/**
+ * Temporary comparison for Nate (2026-11-19): the Cargo 2 hero H1 at four letter spacings, current
+ * first, each step a little looser. Same photo, size and type line as the live hero. Not linked,
+ * not indexed. Delete once he picks one and the winner goes into Cargo2Hero.astro.
+ */
+const versions = [
+  { id: 'A', note: 'Current, -0.06em', track: '-.06em' },
+  { id: 'B', note: 'Slightly looser, -0.04em', track: '-.04em' },
+  { id: 'C', note: 'Looser again, -0.02em', track: '-.02em' },
+  { id: 'D', note: 'Loosest, 0 (the font\'s own spacing)', track: '0em' },
+];
+---
+<Base title="Cargo H1 spacing test" noindex>
+  {versions.map((v) => (
+    <section class="grain relative flex h-[70svh] min-h-[520px] items-end overflow-hidden bg-night text-white">
+      <img src={hero.image} srcset={srcset(hero.image)} sizes="100vw" alt="" class="absolute inset-0 size-full object-cover object-[50%_40%]" />
+      <div class="absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0/.86)_0%,rgb(0_0_0/.5)_30%,rgb(0_0_0/0)_58%)]"></div>
+      <p class="absolute left-0 top-0 m-0 bg-gold px-4 py-2 text-[14px] font-bold text-black">{v.id} · {v.note}</p>
+      <div class="wrap relative z-[3] w-full pb-14">
+        <h1 class="m-0">
+          <span class="block text-[clamp(84px,13vw,210px)] font-black uppercase leading-[.8]" style={`letter-spacing:${v.track}`}>{hero.name}</span>
+          <span class="mt-4 block text-[clamp(17px,1.5vw,21px)] font-semibold tracking-[-.01em] text-white/80">{hero.type}</span>
+        </h1>
+      </div>
+    </section>
+  ))}
+</Base>
