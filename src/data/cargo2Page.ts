@@ -54,7 +54,7 @@ export const subnavLinks: [string, string][] = [
 
 export const featuresHead = {
   kicker: 'Get to know Cargo', // NEW, after Rivian's "Get to know the R1T"
-  heading: ['An enclosed cargo trailer,', 'with the power built in.'], // NEW, Nate's "enclosed" (2026-11-19) and the messaging report's USP
+  heading: ['You need an enclosed cargo trailer anyway,', 'so get one with the power built in.'], // NEW, Nate approved (Notion, 2026-11-19), from the messaging report's USP
 };
 
 const shown = 'On the 20 ft shown here. Your SPOG contact will confirm what comes on your build.'; // NEW
