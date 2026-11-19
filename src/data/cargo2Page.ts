@@ -233,7 +233,7 @@ export const power = {
 export const options = {
   kicker: 'Options', // NEW
   heading: ['Build it', 'for your crew.'], // NEW
-  body: 'Every Cargo is built to order. Pick the power, the look and the gear inside.', // NEW (Power folded in, Nate 2026-11-19)
+  body: 'Every Cargo is built to order, so you pick the exact configuration that works for you and your crew.', // NATE 2026-11-19
   exterior: [
     { name: 'Exterior color', desc: 'Twelve colors. Your SPOG contact will confirm the color.' }, // NATE (colors), SOURCE (sheet wording)
     { name: 'Company logo', desc: 'On the nose, either side or the rear.' }, // SOURCE (options sheet)
