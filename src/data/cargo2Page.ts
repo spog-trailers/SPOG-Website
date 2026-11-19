@@ -141,7 +141,7 @@ export const features: Feature[] = [
   {
     id: 'solar',
     title: 'Solar roof',
-    line: 'Free power from the sun.', // NATE's direction (Notion, 2026-11-19: the daily recharge line read as AI)
+    line: 'Free power wherever you go.', // NATE (Notion, 2026-11-19)
     image: shoot.cargoSolarCard,
     alt: 'SPOG Cargo from above, solar panels across the whole roof',
     position: '50% 55%',
