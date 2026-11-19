@@ -52,9 +52,9 @@ export const lineup = {
       id: 'cargo', name: 'Cargo', tone: 'studio' as Tone, href: '/cargo', builder: '/configure/cargo',
       line: 'Haul all your gear, with the power to run your job.', // NATE
       facts: ['From $10,000', '10 or 20 ft', 'Up to 40 kWh'], // NATE. CONFIRM 40 kWh with Joe (the Product Wiki lists Cargo at 5 to 20 kWh)
-      image: '/images/lineup-cargo.webp', width: 811, height: 928, // PLACEHOLDER: a render. Swap for a real Cargo photo.
-      alt: 'SPOG Cargo trailer with a solar roof and a light mast',
-      fit: [22, 46], shot: [80, 78], lap: 0.42,
+      image: '/images/lineup-cargo.webp', width: 1509, height: 786, // Nate's image (2026-11-19, 'Cargo trailer transparent background.png'). Its checkerboard was painted in, so Vision cut it out.
+      alt: 'Black SPOG Cargo trailer with a side entry door and a spare wheel on the tongue',
+      fit: [22, 46], shot: [92, 78], lap: 0.26,
     },
     {
       id: 'workstation', name: 'Workstation', tone: 'studio' as Tone, href: '/workstation', builder: '',
