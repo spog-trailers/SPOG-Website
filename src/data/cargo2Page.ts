@@ -185,7 +185,6 @@ export const build = {
 export const tour = {
   kicker: 'Take a tour', // NEW, after Rivian's "Take a tour"
   heading: ['Turn it around.', 'Step inside.'], // NEW
-  body: 'Drag the trailer to see every side, open the doors and step inside.', // NEW
   views: [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street', 'Street side'], ['top', 'Roof'], ['interior', 'Inside']] as [string, string][],
   stats: [
     ['10 or 20 ft', 'Length'], // NATE
