@@ -1,40 +1,41 @@
 ---
-import WorkTitle from '../work/WorkTitle.astro';
 import { small, srcset } from '../../data/content';
 import { build } from '../../data/cargo2Page';
 /**
- * Built for the job site (Nate, 2026-11-19). Cargo is a utility trailer first, and GCs and subs
- * want to know it holds up. The welded steel frame leads, then six build facts, every one from
- * the options sheet, the Warranty Policy, the Objections & FAQ doc or Nate. No toughness claims
- * beyond those, because every claim on the site reads as a promise.
- * Photos: Nate's steel floor frame leads (2026-11-19), with the welding and CAD shots beside it.
+ * Built for the job site (Nate, 2026-11-19), laid out the way Rivian runs its build and safety
+ * stories: a full-bleed photo with one headline on it, then big photo and text rows that
+ * alternate sides. Nate didn't like the first version (two small photos over a grid of six
+ * short points).
+ *
+ * Cargo is a utility trailer first, and GCs and subs want to know it holds up. Every claim comes
+ * from the options sheet, the Warranty Policy, the Objections & FAQ doc or Nate, because each
+ * one reads as a promise.
  */
 ---
-<section id="build" aria-label="Built for the job site" class="bg-black pb-[120px] pt-[130px] text-bone max-[640px]:pb-16 max-[640px]:pt-20">
-  <div class="wrap">
-    <div class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-end gap-x-16 gap-y-7 max-[960px]:grid-cols-[minmax(0,1fr)]">
-      <WorkTitle lines={build.heading} tone="dark" />
-      <p class="m-0 max-w-[560px] text-[18px] leading-[1.6] text-bone/80">{build.body}</p>
+<section id="build" aria-label="Built for the job site" class="bg-black text-bone">
+  <!-- Opener: Nate's steel floor frame, full bleed, headline in the lower left. -->
+  <div class="grain relative flex min-h-[min(92vh,880px)] items-end overflow-hidden max-[640px]:min-h-[78svh]">
+    <img src={build.hero.src} srcset={srcset(build.hero.src)} sizes="100vw" alt={build.hero.alt} loading="lazy" class="absolute inset-0 size-full object-cover" style={`object-position:${build.hero.position}`} />
+    <div class="absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0/.88)_0%,rgb(0_0_0/.45)_38%,rgb(0_0_0/0)_66%)]"></div>
+    <div class="wrap relative z-[2] w-full pb-16 max-[640px]:pb-10">
+      <h2 class="m-0 max-w-[1000px] text-[clamp(44px,7vw,112px)] font-black uppercase leading-[.88] tracking-[-.05em] text-white">
+        {build.heading.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}
+      </h2>
+      <p class="mb-0 mt-6 max-w-[560px] text-[19px] leading-[1.55] text-white/85">{build.body}</p>
     </div>
+  </div>
 
-    <!-- The steel frame leads, large on the left. Welding and the CAD drawing stack on the right. -->
-    <div class="mt-14 grid grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] grid-rows-[auto_auto] gap-3 max-[760px]:grid-cols-[minmax(0,1fr)] max-[640px]:mt-10">
-      {build.photos.map((p, i) => (
-        <figure class:list={['relative m-0 overflow-hidden rounded-[18px]', i === 0 && 'row-span-2 min-[761px]:min-h-full']}>
-          <img src={i === 0 ? p.src : small(p.src)} srcset={i === 0 ? srcset(p.src) : undefined} sizes={i === 0 ? '(max-width: 760px) 100vw, 60vw' : undefined} alt={p.alt} loading="lazy" class:list={['block w-full object-cover', i === 0 ? 'aspect-[16/10] min-[761px]:absolute min-[761px]:inset-0 min-[761px]:h-full min-[761px]:aspect-auto' : 'aspect-[3/2]']} style={`object-position:${p.position}`} />
-          <figcaption class="absolute bottom-3 left-3 rounded-full bg-black/65 px-3 py-1.5 text-[12.5px] text-bone backdrop-blur-[4px]">{p.caption}</figcaption>
-        </figure>
-      ))}
-    </div>
-
-    <ul class="m-0 mt-14 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-x-4 gap-y-12 p-0 max-[900px]:grid-cols-[repeat(2,minmax(0,1fr))] max-[600px]:grid-cols-[repeat(1,minmax(0,1fr))] max-[640px]:mt-10 max-[640px]:gap-y-9">
-      {build.points.map((it) => (
-        <li class="border-t border-line pt-7">
+  <!-- Rows: big photo on one side, the point on the other, alternating. -->
+  <div class="wrap grid gap-[120px] pb-[130px] pt-[120px] max-[640px]:gap-16 max-[640px]:pb-20 max-[640px]:pt-16">
+    {build.rows.map((r, i) => (
+      <article class="grid grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] items-center gap-x-16 gap-y-8 max-[900px]:grid-cols-[minmax(0,1fr)]">
+        <img src={small(r.src)} srcset={srcset(r.src)} sizes="(max-width: 900px) 100vw, 55vw" alt={r.alt} loading="lazy" class:list={['block aspect-[3/2] w-full rounded-[18px] object-cover', i % 2 === 1 && 'min-[901px]:order-2']} style={`object-position:${r.position}`} />
+        <div class:list={[i % 2 === 1 && 'min-[901px]:order-1']}>
           <i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>
-          <h3 class="mb-0 mt-5 text-[22px] font-black uppercase leading-[1.05] tracking-[-.03em] text-white">{it.title}</h3>
-          <p class="mb-0 mt-3 max-w-[380px] text-[16px] leading-[1.6] text-bone/75">{it.body}</p>
-        </li>
-      ))}
-    </ul>
+          <h3 class="mb-0 mt-6 text-[clamp(30px,3vw,44px)] font-black uppercase leading-[.92] tracking-[-.045em] text-white">{r.title}</h3>
+          <p class="mb-0 mt-5 max-w-[440px] text-[17px] leading-[1.6] text-bone/78">{r.body}</p>
+        </div>
+      </article>
+    ))}
   </div>
 </section>

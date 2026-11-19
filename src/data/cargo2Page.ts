@@ -18,7 +18,7 @@
  *     and spare, which the sheet doesn't list, so the cards say "on the 20 ft shown".
  *   - The 3D model is labeled computer-generated, and its optional extras are named.
  */
-import { shoot } from './content';
+import { img, shoot } from './content';
 import type { Feature } from './features';
 
 export const meta = {
@@ -165,18 +165,23 @@ export const features: Feature[] = [
 export const build = {
   heading: ['Built for', 'the job site.'], // NEW, Nate's direction
   body: "It's a cargo trailer first, and it lives on the job site. Other companies cut corners with staples and glue. Every SPOG is designed and built by our own crew in Middletown, New York, from welding to wiring.", // NEW first sentence, NATE the rest
-  photos: [
-    { src: shoot.cargoFrame, alt: 'A welded steel trailer floor frame with steel crossmembers on the floor of the SPOG shop', position: '50% 70%', caption: 'A steel floor frame, welded in our shop.' }, // NEW, Nate's photo (2026-11-19)
-    { src: shoot.shopWelding, alt: 'A welder joining the steel frame of a SPOG trailer in the Middletown shop', position: '50% 50%', caption: 'Welding a steel frame in Middletown.' }, // NEW
-    { src: shoot.engineeringCad, alt: 'A SPOG engineer working on a trailer frame in CAD', position: '30% 50%', caption: 'The frame, drawn in CAD.' }, // NEW
-  ],
-  points: [
-    { title: 'Welded steel frame', body: 'Every Cargo starts on a welded steel frame, with steel crossmembers across the floor, built to carry the weight of its solar and battery.' }, // NATE (steel frame), SOURCE (frame line), crossmembers from Nate's frame photo
-    { title: 'Built to order', body: 'Every Cargo is built to order in Middletown, to the length, power and fit-out you pick.' }, // NEW (insulation moved to its own feature card, 2026-11-19)
-    { title: 'Hardwearing inside', body: 'A basic, hardwearing interior finish, with E-track available on the walls and floor to tie gear down.' }, // SOURCE (options sheet)
-    { title: 'Tested before it leaves', body: 'Wiring, battery, solar and outlets are designed together and tested before it leaves Middletown.' }, // SOURCE (Objections & FAQ)
-    { title: 'Backed in writing', body: 'A 3-year limited structural warranty and a 1-year limited parts warranty.' }, // SOURCE (Warranty Policy)
-    { title: 'Service on site', body: 'We can diagnose problems remotely, and our mobile service fleet repairs on site.' }, // SOURCE (Warranty Policy)
+  hero: { src: shoot.cargoFrame, alt: 'A welded steel trailer floor frame with steel crossmembers on the floor of the SPOG shop', position: '50% 72%' }, // Nate's photo (2026-11-19)
+  rows: [
+    {
+      title: 'Welded steel frame',
+      body: 'Every Cargo starts on a welded steel frame, with steel crossmembers across the floor, built to carry the weight of its solar and battery.', // NATE (steel frame), SOURCE (frame line), crossmembers from Nate's frame photo
+      src: shoot.shopWelding, alt: 'A welder joining the steel frame of a SPOG trailer in the Middletown shop', position: '50% 50%',
+    },
+    {
+      title: 'Designed and tested in Middletown',
+      body: 'We draw the frame in CAD, and the wiring, battery, solar and outlets are designed together and tested before it leaves the shop.', // NEW, built on SOURCE (Objections & FAQ)
+      src: shoot.engineeringCad, alt: 'A SPOG engineer working on a trailer frame in CAD', position: '30% 50%',
+    },
+    {
+      title: 'Backed in writing',
+      body: 'A 3-year limited structural warranty and a 1-year limited parts warranty. We can diagnose problems remotely, and our mobile service fleet repairs on site.', // SOURCE (Warranty Policy)
+      src: img.builtBg, alt: 'A finished SPOG trailer on the floor of the Middletown shop, SPOG painted on the wall behind it', position: '50% 50%',
+    },
   ],
 };
 
