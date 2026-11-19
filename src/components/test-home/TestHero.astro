@@ -36,7 +36,7 @@ const {
   <div class="scrim-hero absolute inset-0 z-[1]"></div>
   <div class="wrap relative z-[3] w-full pb-16">
     {eyebrow && <Eyebrow gold={eyebrow.gold} text={eyebrow.text} class="block animate-rise-1" />}
-    <h1 class:list={['m-0 animate-rise-1', eyebrow && 'mt-6', 'font-black uppercase leading-[.84] tracking-[-.045em] text-white', size]}>
+    <h1 class:list={['m-0 animate-rise-1', eyebrow && 'mt-6', 'font-black uppercase leading-[.84] tracking-[0em] text-white', size]}>
       {heading.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}
     </h1>
     <div class="mt-[34px] flex animate-rise-2 flex-wrap items-end justify-between gap-[30px]">

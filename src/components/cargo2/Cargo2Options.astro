@@ -27,7 +27,7 @@ const check = '<svg viewBox="0 0 24 24" class="mt-[3px] size-4 shrink-0 fill-non
     <div class="mt-14 grid grid-cols-[repeat(2,minmax(0,1fr))] gap-3 max-[860px]:grid-cols-[repeat(1,minmax(0,1fr))]">
       <!-- Power first (Nate, 2026-11-19: the separate Power section repeated this and the specs) -->
       <div class="rounded-[18px] bg-stone px-8 pb-9 pt-7 max-[640px]:px-6">
-        <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[-.03em] text-coal">Power</h3>
+        <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[0em] text-coal">Power</h3>
         <p class="mb-0 mt-2 text-[15px] leading-[1.5] text-ink-soft">{power.body}</p>
         {power.groups.map((g) => (
           <div class="mt-6">
@@ -39,7 +39,7 @@ const check = '<svg viewBox="0 0 24 24" class="mt-[3px] size-4 shrink-0 fill-non
         ))}
       </div>
       <div class="rounded-[18px] bg-stone px-8 pb-9 pt-7 max-[640px]:px-6">
-        <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[-.03em] text-coal">Exterior</h3>
+        <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[0em] text-coal">Exterior</h3>
         <div class="mt-6 flex flex-wrap gap-1.5" aria-label="Twelve exterior colors">
           {PAINTS.map((p) => <span title={p.name} class="block size-7 rounded-full shadow-[inset_0_0_0_1px_rgb(0_0_0/.14)]" style={`background:radial-gradient(circle at 34% 26%, color-mix(in srgb, ${p.hex} ${p.matte ? 88 : 55}%, white), ${p.hex} 60%)`}></span>)}
         </div>
@@ -54,7 +54,7 @@ const check = '<svg viewBox="0 0 24 24" class="mt-[3px] size-4 shrink-0 fill-non
       </div>
       {columns.map((col) => (
         <div class="rounded-[18px] bg-stone px-8 pb-9 pt-7 max-[640px]:px-6">
-          <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[-.03em] text-coal">{col.title}</h3>
+          <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[0em] text-coal">{col.title}</h3>
           {col.groups.map((g) => (
             <div class="mt-6">
               <h4 class="m-0 text-[11.5px] font-semibold uppercase tracking-[.16em] text-ink-soft">{g.name}</h4>

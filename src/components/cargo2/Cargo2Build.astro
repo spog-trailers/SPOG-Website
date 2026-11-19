@@ -22,7 +22,7 @@ import { build } from '../../data/cargo2Page';
     <img src={build.hero.src} srcset={srcset(build.hero.src)} sizes="100vw" alt={build.hero.alt} loading="lazy" class="absolute inset-0 size-full object-cover" style={`object-position:${build.hero.position}`} />
     <div class="absolute inset-0 bg-[linear-gradient(to_top,rgb(0_0_0/.88)_0%,rgb(0_0_0/.45)_38%,rgb(0_0_0/0)_66%)]"></div>
     <div class="wrap relative z-[2] w-full pb-16 max-[640px]:pb-10">
-      <h2 class="m-0 max-w-[1000px] text-[clamp(44px,7vw,112px)] font-black uppercase leading-[.88] tracking-[-.05em] text-white">
+      <h2 class="m-0 max-w-[1000px] text-[clamp(44px,7vw,112px)] font-black uppercase leading-[.88] tracking-[0em] text-white">
         {build.heading.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}
       </h2>
       <p class="mb-0 mt-6 max-w-[560px] text-[19px] leading-[1.55] text-white/85">{build.body}</p>
@@ -40,7 +40,7 @@ import { build } from '../../data/cargo2Page';
         )}
         <div class:list={[i % 2 === 1 && 'min-[901px]:order-1']}>
           <i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>
-          <h3 class="mb-0 mt-6 text-[clamp(30px,3vw,44px)] font-black uppercase leading-[.92] tracking-[-.045em] text-white">{r.title}</h3>
+          <h3 class="mb-0 mt-6 text-[clamp(30px,3vw,44px)] font-black uppercase leading-[.92] tracking-[0em] text-white">{r.title}</h3>
           <p class="mb-0 mt-5 max-w-[440px] text-[17px] leading-[1.6] text-bone/78">{r.body}</p>
         </div>
       </article>

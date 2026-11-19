@@ -9,7 +9,7 @@ import { drawing, viewBox } from '../../scripts/sizeDrawing';
 // look="work" sets the heading in the heavy uppercase of the Cargo and Workstation pages.
 interface Props { page: ProductPage; look?: 'default' | 'work' }
 const { page, look = 'default' } = Astro.props;
-const work = look === 'work' ? 'font-black! uppercase leading-[.92]! tracking-[-.045em]!' : '';
+const work = look === 'work' ? 'font-black! uppercase leading-[.92]! tracking-[0em]!' : '';
 const p = lineupEntry(page.id);
 const { lengths, defaultLength } = page.size;
 const maxLength = lengths[lengths.length - 1];

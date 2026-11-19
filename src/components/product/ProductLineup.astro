@@ -21,7 +21,7 @@ const { current } = Astro.props;
           <li class:list={['flex flex-col overflow-hidden rounded-[20px] bg-paper', here && 'ring-2 ring-gold']}>
             <img src={c.image} alt={c.alt} loading="lazy" style={`object-position:${c.position}`} class="block aspect-[4/3] w-full object-cover max-[900px]:aspect-[16/9]" />
             <div class="flex flex-1 flex-col px-7 pb-7 pt-6">
-              <b class="block text-[34px] font-black uppercase leading-none tracking-[-.045em]">{p.name}</b>
+              <b class="block text-[34px] font-black uppercase leading-none tracking-[0em]">{p.name}</b>
               <span class="mt-2.5 block text-[16.5px] text-ink-soft">{p.tag}</span>
               <div class="mt-auto pt-7">
                 {here ? (
