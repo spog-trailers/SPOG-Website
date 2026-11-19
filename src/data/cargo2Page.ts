@@ -85,15 +85,14 @@ export const features: Feature[] = [
     alt: 'A SPOG trailer on its steel frame in the Middletown shop, its walls lined with rigid foam insulation board',
     position: '50% 50%',
     panel: {
-      intro: 'Rigid foam board lines the walls and roof before the outside panels go on. It comes standard on every trailer we build.', // NEW, from Nate's photo. SOURCE for standard (options sheet, Nate)
+      intro: 'Rigid foam board lines the walls and roof, so the inside stays warmer in winter. It comes standard on every trailer we build.', // NEW, Nate's "warmer in the winter" (Notion, 2026-11-19). SOURCE for standard (options sheet)
       media: { src: shoot.cargoInsulation, alt: 'A SPOG trailer mid-build in the Middletown shop, rigid foam insulation fixed to the steel frame', width: 2400, height: 1600 },
-      stats: [['Insulated roof and walls', 'Standard']], // SOURCE (options sheet)
     },
   },
   {
     id: 'entry',
     title: 'Side entry door',
-    line: 'Get in without opening the back.', // NEW
+    line: 'Easy access, with the barn doors shut.', // NATE's "easy access" (Notion, 2026-11-19)
     image: shoot.cargoDoorCard,
     alt: 'Curb side of a black SPOG Cargo with a white-framed entry door near the nose',
     position: '50% 50%',
