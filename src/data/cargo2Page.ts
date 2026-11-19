@@ -149,12 +149,12 @@ export const features: Feature[] = [
   {
     id: 'solar',
     title: 'Solar roof',
-    line: 'A free recharge every day it sits in the sun.', // SOURCE (messaging report, transformation)
+    line: 'Free power from the sun.', // NATE's direction (Notion, 2026-11-19: the daily recharge line read as AI)
     image: shoot.cargoSolarCard,
     alt: 'SPOG Cargo from above, solar panels across the whole roof',
     position: '50% 55%',
     panel: {
-      intro: 'Pull up and the power is already there. Tools, lights and chargers run off stored solar before anyone touches the generator.', // SOURCE (messaging report, transformation)
+      intro: 'The power is wherever you go, enough to run your tools, lights and chargers without a generator or fixed power.', // NATE (Notion, 2026-11-19)
       media: { src: shoot.cargoSolar, alt: 'Five solar panels across the roof of a black SPOG Cargo', width: 2400, height: 1600 },
       stats: [['Roof solar', 'Standard'], ['Battery storage', 'Standard']], // SOURCE (options sheet: "Standard on every trailer")
       link: { label: 'See the power options', href: '#power' }, // NEW
@@ -217,8 +217,8 @@ export const replaces = {
   heading: ['One trailer.', 'Power on board.'], // NEW
   body: "Every crew already needs a trailer. SPOG turns that trailer into the job's power station, so there's no second unit to buy, tow, fuel or store.", // SOURCE (messaging report, USP)
   items: [
-    { title: 'Fewer generator hours', body: 'Tools, lights and chargers run off stored solar before anyone touches the generator.' }, // SOURCE (messaging report)
-    { title: 'Fewer fuel runs', body: 'The roof recharges the battery every day the trailer sits in the sun.' }, // SOURCE (messaging report)
+    { title: 'Fewer generator hours', body: 'Your tools, lights and chargers run on stored solar, so the generator runs less.' }, // NEW, plainer per Nate's rule (no "before X happens" lines)
+    { title: 'Fewer fuel runs', body: 'The solar roof recharges the battery, so you haul less fuel.' }, // NEW, plainer per Nate (2026-11-19)
     { title: 'Your own power', body: "Your crew shows up with its own power and doesn't depend on the client's outlet or the GC to keep tools running." }, // SOURCE (messaging report, commercial jobs)
   ],
   fuel: {
@@ -288,7 +288,7 @@ export const specs = {
 export const close = {
   kicker: 'Cargo', // NEW
   heading: 'The trailer that powers your job.', // NATE
-  body: 'See a SPOG up close and get your questions answered before your next job.', // NEW, as on the homepage close
+  body: 'See a SPOG up close and get your questions answered.', // NEW, as on the homepage close
 };
 
 /** Cargo questions. NEW answers need Nate's sign-off. */

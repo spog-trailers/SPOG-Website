@@ -173,7 +173,7 @@ export const values: Feature[] = [
     image: shoot.wsAerialMast,
     alt: 'SPOG trailer from above, solar panels across the roof',
     position: '50% 50%',
-    panel: { intro: 'Every SPOG turns sunlight into power and stores it on board, with a free recharge every day it sits in the sun.' }, // NEW, from the Cargo report
+    panel: { intro: 'Every SPOG turns sunlight into power and stores it on board.' }, // NEW. Daily recharge tail cut (Nate, 2026-11-19: reads as AI)
   },
   {
     id: 'mobility',
@@ -241,7 +241,7 @@ export const about = {
 export const close = {
   eyebrow: closing.eyebrow, // SOURCE
   heading: hero.heading,
-  body: 'See a SPOG up close and get your questions answered before your next job.', // NEW
+  body: 'See a SPOG up close and get your questions answered.', // NEW. "before your next job" cut per Nate's rule (2026-11-19)
   call: { label: `Or call ${phone.display}`, href: phone.href }, // SOURCE
   design: {
     tab: 'Design your trailer',
