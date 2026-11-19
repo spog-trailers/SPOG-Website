@@ -32,8 +32,9 @@ export const demo = { label: 'Book a demo', href: '/demo' }; // NATE
 
 export const hero = {
   name: 'Cargo',
+  type: 'Enclosed cargo trailer', // NATE (Notion, 2026-11-19): part of the h1 in small type, for search
   line: 'Haul all your gear, with the power to run your job.', // NATE (homepage lineup)
-  sub: 'An enclosed cargo trailer on a welded steel frame. Solar and a battery run your tools, lights and chargers on stored power, so you have power wherever your job takes you.', // NEW first sentence (Nate, 2026-11-19). Second sentence SOURCE (messaging report) with NATE's ending (Notion comment, 2026-11-19)
+  sub: 'Built on a welded steel frame. Solar and a battery run your tools, lights and chargers on stored power, so you have power wherever your job takes you.', // NEW first sentence (Nate, 2026-11-19). Second sentence SOURCE (messaging report) with NATE's ending (Notion comment, 2026-11-19)
   price: 'Starting at $10,000', // NATE (Notion, 2026-11-19: one price under the line, like Rivian, in place of the four facts)
   image: shoot.cargoHero,
   alt: 'Black SPOG Cargo trailer parked outside the SPOG shop in Middletown, New York',
