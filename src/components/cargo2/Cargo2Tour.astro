@@ -5,7 +5,7 @@ import { design, tour } from '../../data/cargo2Page';
 /**
  * "Take a tour" (Rivian) on a Tesla-style studio plate: the configurator's 3D Cargo with no option
  * panel. Drag it around, jump to a view, open the doors, step inside and try the 12 colors.
- * Under it, Tesla's row of four numbers, then the notices Nate asked for.
+ * Under it, the colors and the one notice Nate asked for (the stats row was cut 2026-11-19, the specs table has them).
  *
  * Loading: three.js is big, so the model loads only when this section comes near (a dynamic
  * import), and it stops drawing when the section leaves the screen. Until then, and without
@@ -41,14 +41,6 @@ const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border bord
       <p class="mb-0 mt-2 text-[13.5px] font-semibold text-ink"><span data-tour-paint-name>{PAINTS[1].name}</span></p>
     </div>
 
-    <dl class="m-0 mx-auto mt-12 grid max-w-[1000px] grid-cols-[repeat(4,minmax(0,1fr))] gap-6 max-[760px]:grid-cols-[repeat(2,minmax(0,1fr))] max-[760px]:gap-y-8">
-      {tour.stats.map(([value, label], i) => (
-        <div class:list={['flex flex-col-reverse items-center text-center', i > 0 && 'min-[761px]:border-l min-[761px]:border-[#dcdcdc]']}>
-          <dt class="mt-1 text-[13px] text-ink-soft">{label}</dt>
-          <dd class="m-0 text-[clamp(20px,2vw,28px)] font-semibold tracking-[-.025em] text-coal">{value}</dd>
-        </div>
-      ))}
-    </dl>
 
     <p class="mx-auto mb-0 mt-8 max-w-[640px] text-center text-[12.5px] leading-[1.55] text-ink-soft">{tour.model} {tour.extras}</p>
   </div>

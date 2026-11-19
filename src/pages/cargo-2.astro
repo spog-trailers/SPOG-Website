@@ -8,7 +8,6 @@ import Cargo2Build from '../components/cargo2/Cargo2Build.astro';
 import Cargo2Tour from '../components/cargo2/Cargo2Tour.astro';
 import WorkPhoto from '../components/work/WorkPhoto.astro';
 import Cargo2Replaces from '../components/cargo2/Cargo2Replaces.astro';
-import Cargo2Power from '../components/cargo2/Cargo2Power.astro';
 import Cargo2Options from '../components/cargo2/Cargo2Options.astro';
 import Cargo2Specs from '../components/cargo2/Cargo2Specs.astro';
 import AboutBand from '../components/home2/AboutBand.astro';
@@ -36,12 +35,11 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
     Take a tour L (light studio plate, the 3D model, views, doors, 12 colors, four numbers)
     Statement P ("Every crew needs a trailer. Yours should run the job.")
     What it replaces D (the one dark chapter for the numbers: outcomes and the fuel math)
-    Power L (stone: battery, output voltage, shore power, as on the options sheet)
     Options L (white: the customization sheet, names only)
     Specs D (profile photo and the confirmed specs)
     Built P (the shop video, from the homepage)
     Close D, FAQ L, Footer D
-  Keep the ids top, overview, build, tour, power, options, specs, cta and faq: the section bar,
+  Keep the ids top, overview, build, tour, options, specs, cta and faq: the section bar,
   the phone bar and the links in the copy point at them.
 -->
 <Base title={meta.title} description={meta.description} noindex>
@@ -53,7 +51,6 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
   <Cargo2Tour />
   <WorkPhoto image={statement.image} alt={statement.alt} position={statement.position} heading={statement.heading} />
   <Cargo2Replaces />
-  <Cargo2Power />
   <Cargo2Options />
   <Cargo2Specs />
   <AboutBand />

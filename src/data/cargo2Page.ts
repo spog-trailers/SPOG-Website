@@ -44,7 +44,6 @@ export const subnavLinks: [string, string][] = [
   ['Overview', '#overview'],
   ['Build', '#build'],
   ['Tour', '#tour'],
-  ['Power', '#power'],
   ['Options', '#options'],
   ['Specs', '#specs'],
   ['FAQ', '#faq'],
@@ -149,7 +148,7 @@ export const features: Feature[] = [
       intro: 'The power is wherever you go, enough to run your tools, lights and chargers without a generator or fixed power.', // NATE (Notion, 2026-11-19)
       media: { src: shoot.cargoSolar, alt: 'Five solar panels across the roof of a black SPOG Cargo', width: 2400, height: 1600 },
       stats: [['Roof solar', 'Standard'], ['Battery storage', 'Up to 40 kWh']], // SOURCE (options sheet), 40 kWh NATE (Notion, 2026-11-19). CONFIRM 40 kWh on Cargo with Joe
-      link: { label: 'Battery and outlet options', href: '#power' }, // NEW. Closes the panel and jumps to the Power section
+      link: { label: 'Battery and outlet options', href: '#options' }, // NEW. Closes the panel and jumps to the Options section
     },
   },
 ];
@@ -186,12 +185,6 @@ export const tour = {
   kicker: 'Take a tour', // NEW, after Rivian's "Take a tour"
   heading: ['See how it works', 'for you.'], // NATE (Notion, 2026-11-19)
   views: [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street', 'Street side'], ['top', 'Roof'], ['interior', 'Inside']] as [string, string][],
-  stats: [
-    ['10 or 20 ft', 'Length'], // NATE
-    ['5 to 40 kWh', 'Battery choices'], // SOURCE (options sheet). CONFIRM 40 kWh on Cargo with Joe
-    ['120, 208, 240 V', 'Output voltage'], // SOURCE (options sheet)
-    ['30, 50, 100 amp', 'Shore power'], // SOURCE (options sheet)
-  ] as [string, string][],
   model: 'Computer-generated model. The finished trailer may differ.', // NATE asked for this notice (2026-11-18)
   extras: 'Shown with optional heat and AC, an office desk and tie-down track on the walls.', // NEW, names the optional items the model shows
   poster: '/images/configure-cargo.jpg',
@@ -226,19 +219,12 @@ export const replaces = {
 // ---------------------------------------------------------------- power
 
 export const power = {
-  kicker: 'Power', // NEW
-  heading: ['Sized to', 'your work.'], // NEW
-  body: 'Solar on the roof and a battery on board come standard. Pick the battery, the outlets and the plug-in that fit your crew.', // NEW
+  body: 'Solar on the roof and a battery on board come standard. Pick the battery, the outlets and the plug-in.', // NEW
   groups: [
-    { title: 'Battery storage', note: 'Energy stored on board.', options: ['5 kWh', '10 kWh', '20 kWh', '40 kWh', 'Other'] }, // SOURCE (options sheet)
-    { title: 'Output voltage', note: 'The voltage at the outlets. Pick all you need.', options: ['120 V', '208 V', '240 V'] }, // SOURCE (options sheet)
-    { title: 'Shore power connection', note: 'Plug-in size for site or grid power.', options: ['30 amp', '50 amp', '100 amp'] }, // SOURCE (options sheet)
+    { title: 'Battery storage', options: ['5 kWh', '10 kWh', '20 kWh', '40 kWh', 'Other'] }, // SOURCE (options sheet)
+    { title: 'Output voltage', options: ['120 V', '208 V', '240 V'] }, // SOURCE (options sheet)
+    { title: 'Shore power connection', options: ['30 amp', '50 amp', '100 amp'] }, // SOURCE (options sheet)
   ],
-  fine: 'Power options depend on trailer length. Your SPOG contact will confirm what fits your trailer.', // SOURCE (options sheet)
-  runtime: {
-    q: 'How long will it run your tools?', // NEW
-    a: "It depends on the tools and the battery size. Book a demo and we'll show you the run time for the tools you use.", // NEW, as on the homepage FAQ
-  },
 };
 
 // ---------------------------------------------------------------- options
@@ -246,13 +232,13 @@ export const power = {
 export const options = {
   kicker: 'Options', // NEW
   heading: ['Build it', 'for your crew.'], // NEW
-  body: 'Every Cargo is built to order. These are the options on our customization sheet.', // NEW
+  body: 'Every Cargo is built to order. Pick the power, the look and the gear inside.', // NEW (Power folded in, Nate 2026-11-19)
   exterior: [
     { name: 'Exterior color', desc: 'Twelve colors. Your SPOG contact will confirm the color.' }, // NATE (colors), SOURCE (sheet wording)
     { name: 'Company logo', desc: 'On the nose, either side or the rear.' }, // SOURCE (options sheet)
     { name: 'Vinyl lettering or numbers' }, // SOURCE (options sheet)
   ],
-  fine: 'Options are for discussion. Availability, pricing and final specifications are confirmed in writing by SPOG.', // SOURCE (options sheet footer)
+  fine: 'Power options depend on trailer length. Options are for discussion. Availability, pricing and final specifications are confirmed in writing by SPOG.', // SOURCE (options sheet)
 };
 
 // ---------------------------------------------------------------- specs

@@ -1,7 +1,7 @@
 ---
 import WorkTitle from '../work/WorkTitle.astro';
 import { CONNECT, INTERIOR, PAINTS } from '../../scripts/configurator/data';
-import { design, options } from '../../data/cargo2Page';
+import { design, options, power } from '../../data/cargo2Page';
 /**
  * Options, straight from the Trailer Customization Options sheet (the same list the configurator
  * uses, from src/scripts/configurator/data.ts, which loads no three.js). Names only, no prices.
@@ -24,7 +24,20 @@ const check = '<svg viewBox="0 0 24 24" class="mt-[3px] size-4 shrink-0 fill-non
       <p class="m-0 max-w-[440px] text-[17px] leading-[1.6] text-ink-soft">{options.body}</p>
     </div>
 
-    <div class="mt-14 grid grid-cols-[repeat(3,minmax(0,1fr))] gap-3 max-[1000px]:grid-cols-[repeat(1,minmax(0,1fr))]">
+    <div class="mt-14 grid grid-cols-[repeat(2,minmax(0,1fr))] gap-3 max-[860px]:grid-cols-[repeat(1,minmax(0,1fr))]">
+      <!-- Power first (Nate, 2026-11-19: the separate Power section repeated this and the specs) -->
+      <div class="rounded-[18px] bg-stone px-8 pb-9 pt-7 max-[640px]:px-6">
+        <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[-.03em] text-coal">Power</h3>
+        <p class="mb-0 mt-2 text-[15px] leading-[1.5] text-ink-soft">{power.body}</p>
+        {power.groups.map((g) => (
+          <div class="mt-6">
+            <h4 class="m-0 text-[11.5px] font-semibold uppercase tracking-[.16em] text-ink-soft">{g.title}</h4>
+            <ul class="m-0 mt-3 flex list-none flex-wrap gap-2 p-0">
+              {g.options.map((o) => <li class="rounded-full border border-[#d3d1cc] bg-white px-3.5 py-1.5 text-[13.5px] font-semibold text-coal">{o}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
       <div class="rounded-[18px] bg-stone px-8 pb-9 pt-7 max-[640px]:px-6">
         <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[-.03em] text-coal">Exterior</h3>
         <div class="mt-6 flex flex-wrap gap-1.5" aria-label="Twelve exterior colors">
