@@ -181,6 +181,13 @@ Each product page is written for its own buyer. The single shared `[product].ast
   - Rear: barn doors with twin chrome lock bars and four oval tail lights. Roof: five solar panels and a low vent.
   - Black machined wheels under aluminum fenders, with a matching spare on the tongue.
   - Inside: white walls and ceiling with a black band where they meet, round ceiling lights, a black floor, a white partition with a closet door closing off the nose, and battery units (5 kWh each) on low white platforms along both walls.
+- **Realism pass (2026-11-18, Nate asked for it to look more like Tesla's):**
+  - A soft contact shadow is redrawn every frame from what sits near the ground.
+  - Ambient occlusion shades the creases (screens 900px and wider only).
+  - The paint has a sharper clearcoat and a faint ripple so reflections bend like real sheet aluminum.
+  - The tires have tread, and the rails have fasteners.
+  - The canvas is see-through, so the page's white is the backdrop.
+  - It's still simple shapes drawn live. Tesla-level pictures need the factory's CAD files or a 3D artist's model.
 - Options are modeled from SPOG's own builds where photos exist: the security mast with dome cameras and the Starlink dish on top (Workstation photos), the black-topped white desk and black E-track (Cargo interior photos). The rest are simple stand-ins.
 - Furniture is packed along the walls in the order it's picked up in `trailer.ts`. When a piece doesn't fit (mostly on the 10 ft), the preview leaves it out and a notice says so. The real layout is worked out with the buyer.
 - "Open doors" swings the rear and side doors, and the Interior view puts the camera inside.

@@ -18,7 +18,7 @@ const builders: Record<string, string> = { cargo: '/configure/cargo' };
 // The Cargo card shows the builder's own 3D model (a capture of /configure/cargo on white, laid
 // over the gray plate with a multiply blend). Remake it if the model's default look changes.
 const art: Record<string, { image: string; width: number; height: number; alt: string }> = {
-  cargo: { image: '/images/configure-cargo.jpg', width: 1123, height: 682, alt: 'Black 20 ft SPOG Cargo trailer, seen from the front curb side' },
+  cargo: { image: '/images/configure-cargo.jpg', width: 1037, height: 640, alt: 'Black 20 ft SPOG Cargo trailer, seen from the front curb side' },
 };
 const cards = lineup.panels.map((p) => ({ ...p, ...(art[p.id] ?? {}), blend: !!art[p.id], builder: builders[p.id] }));
 ---

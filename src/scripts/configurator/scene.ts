@@ -1,10 +1,22 @@
 /**
- * The 3D stage for the configurator: a white studio like Tesla's. Pure white background,
- * a shadow-only floor, soft studio reflections, camera presets you can drag away from,
- * and an interior view that puts the camera inside the trailer.
+ * The 3D stage for the configurator: a white studio like Tesla's, with camera presets you can
+ * drag away from and an interior view that puts the camera inside the trailer.
+ *
+ * What makes it read as a photo and not a diagram (the realism pass, 2026-11-18):
+ *   - The canvas is see-through, so the page's own white is the backdrop and stays pure white.
+ *   - A soft contact shadow is drawn fresh each frame from what actually sits near the ground,
+ *     so it's darkest under the tires and follows open doors.
+ *   - Ambient occlusion darkens the creases where parts meet (wider screens only, for speed).
+ *   - The studio the paint reflects has a horizon and tall light panels (studioEnvironment).
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { HorizontalBlurShader } from 'three/addons/shaders/HorizontalBlurShader.js';
+import { VerticalBlurShader } from 'three/addons/shaders/VerticalBlurShader.js';
 import { FLOOR, H, W, axleCenter, NOSE } from './dims';
 import { interiorView } from './trailer';
 
@@ -74,9 +86,9 @@ const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 
 export function createStage(container: HTMLElement) {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setClearColor('#ffffff', 1);
+  renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.NeutralToneMapping;
   renderer.toneMappingExposure = 1.05;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -91,34 +103,68 @@ export function createStage(container: HTMLElement) {
   scene.environment = studioEnvironment(renderer);
   scene.environmentIntensity = 1;
 
-  // shadow-only floor, so the background stays pure white
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.ShadowMaterial({ opacity: 0.09 }));
-  floor.rotation.x = -Math.PI / 2;
-  floor.receiveShadow = true;
-  scene.add(floor);
-
-  // soft contact shadow directly under the trailer
-  const blobCanvas = document.createElement('canvas');
-  blobCanvas.width = blobCanvas.height = 256;
-  const bc = blobCanvas.getContext('2d')!;
-  const bg = bc.createRadialGradient(128, 128, 8, 128, 128, 128);
-  bg.addColorStop(0, 'rgba(0,0,0,.55)');
-  bg.addColorStop(0.45, 'rgba(0,0,0,.26)');
-  bg.addColorStop(1, 'rgba(0,0,0,0)');
-  bc.fillStyle = bg;
-  bc.fillRect(0, 0, 256, 256);
-  const blob = new THREE.Mesh(
-    new THREE.PlaneGeometry(1, 1),
-    new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(blobCanvas), transparent: true, depthWrite: false, toneMapped: false }),
-  );
-  blob.rotation.x = -Math.PI / 2;
-  blob.position.y = 0.02;
-  scene.add(blob);
+  // ---------------------------------------------------------------- contact shadow
+  // A camera on the ground looks straight up and records how close everything is. Blurred, that
+  // becomes the shadow: dark where the tires touch, lighter under the raised body.
+  const CS = { w: 40, d: 18, h: 3.4, feet: 1.5, opacity: 0.62 };
+  const shadowGroup = new THREE.Group();
+  shadowGroup.position.set(1.5, 0.012, 0);
+  scene.add(shadowGroup);
+  const shadowRT = new THREE.WebGLRenderTarget(1024, 512);
+  const blurRT = new THREE.WebGLRenderTarget(1024, 512);
+  shadowRT.texture.generateMipmaps = blurRT.texture.generateMipmaps = false;
+  const shadowGeo = new THREE.PlaneGeometry(CS.w, CS.d).rotateX(Math.PI / 2);
+  const shadowPlane = new THREE.Mesh(shadowGeo, new THREE.MeshBasicMaterial({ map: shadowRT.texture, opacity: CS.opacity, transparent: true, depthWrite: false }));
+  shadowPlane.scale.y = -1; // the target is upside down seen from above
+  shadowPlane.renderOrder = -1;
+  const blurPlane = new THREE.Mesh(shadowGeo);
+  blurPlane.visible = false;
+  const shadowCam = new THREE.OrthographicCamera(-CS.w / 2, CS.w / 2, CS.d / 2, -CS.d / 2, 0, CS.h);
+  shadowCam.rotation.x = Math.PI / 2;
+  shadowGroup.add(shadowPlane, blurPlane, shadowCam);
+  const nearness = new THREE.MeshDepthMaterial();
+  nearness.depthTest = false;
+  nearness.depthWrite = false;
+  nearness.onBeforeCompile = (shader) => {
+    shader.fragmentShader = shader.fragmentShader.replace(
+      'gl_FragColor = vec4( vec3( 1.0 - fragCoordZ ), opacity );',
+      'gl_FragColor = vec4( vec3( 0.0 ), 1.0 - fragCoordZ );',
+    );
+  };
+  const hBlur = new THREE.ShaderMaterial(HorizontalBlurShader);
+  const vBlur = new THREE.ShaderMaterial(VerticalBlurShader);
+  hBlur.depthTest = vBlur.depthTest = false;
+  function blurShadow(feet: number) {
+    blurPlane.visible = true;
+    blurPlane.material = hBlur;
+    hBlur.uniforms.tDiffuse.value = shadowRT.texture;
+    hBlur.uniforms.h.value = feet / 4 / CS.w;
+    renderer.setRenderTarget(blurRT);
+    renderer.render(blurPlane, shadowCam);
+    blurPlane.material = vBlur;
+    vBlur.uniforms.tDiffuse.value = blurRT.texture;
+    vBlur.uniforms.v.value = feet / 4 / CS.d;
+    renderer.setRenderTarget(shadowRT);
+    renderer.render(blurPlane, shadowCam);
+    blurPlane.visible = false;
+  }
+  function drawContactShadow() {
+    shadowPlane.visible = false;
+    scene.overrideMaterial = nearness;
+    renderer.setRenderTarget(shadowRT);
+    renderer.clear();
+    renderer.render(scene, shadowCam);
+    scene.overrideMaterial = null;
+    blurShadow(CS.feet);
+    blurShadow(CS.feet * 0.4);
+    renderer.setRenderTarget(null);
+    shadowPlane.visible = true;
+  }
 
   scene.add(new THREE.HemisphereLight('#ffffff', '#e9e7e2', 0.9));
   const key = new THREE.DirectionalLight('#ffffff', 2.3);
   key.position.set(3, 50, 7);
-  key.castShadow = true;
+  key.castShadow = true; // parts shade each other. The ground shadow is the contact shadow above.
   key.shadow.mapSize.set(2048, 2048);
   const sc = key.shadow.camera;
   sc.left = -24; sc.right = 24; sc.top = 24; sc.bottom = -24; sc.near = 1; sc.far = 120;
@@ -141,6 +187,25 @@ export function createStage(container: HTMLElement) {
   // On a phone, a sideways drag turns the trailer and an up or down swipe still scrolls the page.
   renderer.domElement.style.touchAction = 'pan-y';
 
+  // ---------------------------------------------------------------- ambient occlusion
+  // Darkens the creases where parts meet: under the fenders, around trim, behind the wheels.
+  // It costs a second pass over the scene, so phones skip it.
+  let composer: EffectComposer | null = null;
+  if (renderer.capabilities.isWebGL2 && !window.matchMedia('(max-width: 899px)').matches) {
+    try {
+      composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 }));
+      composer.addPass(new RenderPass(scene, camera));
+      const ao = new GTAOPass(scene, camera, 1, 1);
+      ao.updateGtaoMaterial({ radius: 1.5, distanceExponent: 1.5, thickness: 1.2, scale: 1.15, samples: 16 });
+      ao.updatePdMaterial({ lumaPhi: 10, depthPhi: 2, normalPhi: 3, radius: 4, radiusExponent: 1, rings: 2, samples: 16 });
+      ao.blendIntensity = 0.9;
+      composer.addPass(ao);
+      composer.addPass(new OutputPass());
+    } catch {
+      composer = null; // an older GPU: draw the plain picture
+    }
+  }
+
   // ---------------------------------------------------------------- sizing
   let trailerLength = 20;
   let tall = false; // a mast stands well above the roof, so the camera backs off and aims higher
@@ -148,6 +213,7 @@ export function createStage(container: HTMLElement) {
     const w = container.clientWidth || 1;
     const h = container.clientHeight || 1;
     renderer.setSize(w, h, false);
+    composer?.setSize(w, h);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
   };
@@ -223,8 +289,6 @@ export function createStage(container: HTMLElement) {
 
   function setLength(L: number) {
     trailerLength = L;
-    blob.scale.set(L + 12, 1, 15);
-    blob.position.x = 1.4;
     if (!userMoved) setView(currentView, true);
   }
 
@@ -258,7 +322,9 @@ export function createStage(container: HTMLElement) {
     }
     frameHooks.forEach((f) => f(dt));
     controls.update();
-    renderer.render(scene, camera);
+    drawContactShadow();
+    if (composer) composer.render();
+    else renderer.render(scene, camera);
     requestAnimationFrame(frame);
   }
 

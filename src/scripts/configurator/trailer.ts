@@ -113,6 +113,48 @@ function coinTexture() {
   }, false);
 }
 
+/**
+ * Sheet aluminum is never dead flat. This is the faint, slow ripple that bends reflections across
+ * each wall, as in the photos. It's a sum of whole-number waves, so it tiles without a seam, and
+ * it's stored at half-float precision because an 8-bit height map this gentle shows as stripes.
+ */
+function rippleTexture() {
+  const size = 128;
+  const data = new Uint16Array(size * size);
+  const waves = [[1, 0, 0.9, 0.3], [0, 1, 0.5, 1.1], [1, 1, 0.45, 2.0], [2, 1, 0.4, 0.7], [1, 2, 0.3, 4.1], [3, 0, 0.28, 5.2], [2, 3, 0.2, 3.3], [4, 1, 0.14, 1.7]];
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    let h = 0;
+    for (const [kx, ky, amp, phase] of waves) h += amp * Math.sin((Math.PI * 2 * (kx * x + ky * y)) / size + phase);
+    data[y * size + x] = THREE.DataUtils.toHalfFloat(0.5 + h * 0.1);
+  }
+  const tex = new THREE.DataTexture(data, size, size, THREE.RedFormat, THREE.HalfFloatType);
+  tex.magFilter = tex.minFilter = THREE.LinearFilter;
+  tex.needsUpdate = true;
+  return tex;
+}
+
+/** Tire tread and sidewall rings. u runs around the tire, v across it from bead to bead. */
+function tireTexture() {
+  return canvasTexture(128, 256, (c) => {
+    c.fillStyle = '#9a9a9a';
+    c.fillRect(0, 0, 128, 256);
+    // sidewall rings
+    c.fillStyle = '#6f6f6f';
+    for (const v of [34, 52, 204, 222]) c.fillRect(0, v, 128, 3);
+    // tread: raised blocks cut by three grooves around and angled sipes across
+    c.fillStyle = '#d2d2d2';
+    c.fillRect(0, 92, 128, 72);
+    c.fillStyle = '#1e1e1e';
+    for (const v of [108, 126, 144]) c.fillRect(0, v, 128, 5);
+    c.strokeStyle = '#1e1e1e';
+    c.lineWidth = 5;
+    for (let x = -32; x < 160; x += 32) {
+      c.beginPath(); c.moveTo(x, 92); c.lineTo(x + 18, 110); c.stroke();
+      c.beginPath(); c.moveTo(x + 18, 146); c.lineTo(x, 164); c.stroke();
+    }
+  }, false);
+}
+
 /** The slots of a tie-down track, as a bump pattern. */
 function slotTexture() {
   return canvasTexture(64, 48, (c) => {
@@ -205,6 +247,10 @@ export function createMaterials() {
   const plate = tile(diamondPlateTexture(), 0.34);
   const plateFloor = tile(diamondPlateTexture(), 0.34);
   const coin = tile(coinTexture(), 0.16);
+  const ripple = tile(rippleTexture(), 9, 7);
+  const tread = tireTexture();
+  tread.wrapS = tread.wrapT = THREE.RepeatWrapping;
+  tread.repeat.set(44, 1);
   const planks = tile(woodTexture([166, 126, 76], 6), 4);
   const ply = tile(woodTexture([203, 168, 112], 0), 4);
   const loader = new THREE.TextureLoader();
@@ -219,10 +265,11 @@ export function createMaterials() {
   return {
     textures: { plate, plateFloor, coin, planks, ply, logoWhite: logo('/images/spog-logo-white.png'), logoDark: logo('/images/spog-logo-dark.png') },
     // Satin aluminum skin. A little clearcoat gives the long soft highlights of the studio look.
-    paint: new THREE.MeshPhysicalMaterial({ color: '#141416', roughness: 0.34, metalness: 0.5, clearcoat: 0.6, clearcoatRoughness: 0.3 }),
+    paint: new THREE.MeshPhysicalMaterial({ color: '#141416', roughness: 0.34, metalness: 0.5, clearcoat: 0.6, clearcoatRoughness: 0.3, bumpMap: ripple, bumpScale: 3 }),
     seam: new THREE.MeshStandardMaterial({ color: '#050506', roughness: 0.6, metalness: 0.3, transparent: true, opacity: 0.55 }),
     trim: new THREE.MeshStandardMaterial({ color: '#1a1b1e', roughness: 0.46, metalness: 0.7, bumpMap: plate, bumpScale: 1.6 }),
     edge: new THREE.MeshStandardMaterial({ color: '#16171a', roughness: 0.5, metalness: 0.6 }),
+    rivet: new THREE.MeshStandardMaterial({ color: '#2a2b2f', roughness: 0.35, metalness: 0.9 }),
     black: new THREE.MeshStandardMaterial({ color: '#111214', roughness: 0.55, metalness: 0.4 }),
     chassis: new THREE.MeshStandardMaterial({ color: '#0d0e10', roughness: 0.7, metalness: 0.4 }),
     aluminum: new THREE.MeshStandardMaterial({ color: '#c9ccd1', roughness: 0.32, metalness: 0.92 }),
@@ -230,7 +277,7 @@ export function createMaterials() {
     roof: new THREE.MeshStandardMaterial({ color: '#d4d7db', roughness: 0.42, metalness: 0.75 }),
     glass: new THREE.MeshPhysicalMaterial({ color: '#07090c', roughness: 0.06, metalness: 0.2, clearcoat: 1, clearcoatRoughness: 0.04, envMapIntensity: 1.6 }),
     daylight: new THREE.MeshBasicMaterial({ color: '#f2f6fa' }),
-    rubber: new THREE.MeshStandardMaterial({ color: '#131314', roughness: 0.9, metalness: 0, side: THREE.DoubleSide }),
+    rubber: new THREE.MeshStandardMaterial({ color: '#151516', roughness: 0.86, metalness: 0, side: THREE.DoubleSide, bumpMap: tread, bumpScale: 5 }),
     rimBarrel: new THREE.MeshStandardMaterial({ color: '#0e0f11', roughness: 0.35, metalness: 0.85, side: THREE.DoubleSide }),
     spokeSide: new THREE.MeshStandardMaterial({ color: '#0e0f11', roughness: 0.3, metalness: 0.85 }),
     spokeFace: new THREE.MeshStandardMaterial({ color: '#d7dade', roughness: 0.2, metalness: 1 }),
@@ -266,9 +313,10 @@ export type Materials = ReturnType<typeof createMaterials>;
 export function applyFinish(m: Materials, cfg: TrailerConfig) {
   m.paint.color.set(cfg.paint);
   // Matte Black drops the clearcoat and scatters its reflections. Every other color is satin.
-  m.paint.roughness = cfg.matte ? 0.8 : 0.34;
+  m.paint.roughness = cfg.matte ? 0.8 : 0.4;
   m.paint.metalness = cfg.matte ? 0.1 : 0.32;
-  m.paint.clearcoat = cfg.matte ? 0 : 0.6;
+  m.paint.clearcoat = cfg.matte ? 0 : 0.8;
+  m.paint.clearcoatRoughness = 0.13;
   // Satin black shows seams as faint lines. On light paint they read as darker joints.
   m.seam.color.set(cfg.paintDark ? '#050506' : '#2a2b2e');
   m.seam.opacity = cfg.paintDark ? 0.55 : 0.28;
@@ -343,9 +391,10 @@ const TIRE_R = 1.1;
 /** A wheel with its outer face toward +z. Black barrel, eight split spokes with machined faces. */
 function wheel(m: Materials) {
   const g = new THREE.Group();
-  const prof = [[0.64, -0.25], [0.7, -0.3], [0.86, -0.315], [1.0, -0.31], [1.07, -0.26], [1.1, -0.14], [1.1, 0.14], [1.07, 0.26], [1.0, 0.31], [0.86, 0.315], [0.7, 0.3], [0.64, 0.25]]
-    .map(([r, a]) => new THREE.Vector2(r, a));
-  const tire = new THREE.Mesh(new THREE.LatheGeometry(prof, 56), m.rubber);
+  // A smooth cross-section: bead, bulged sidewall, rounded shoulder, flat tread, and back.
+  const half: [number, number][] = [[0.64, 0.25], [0.68, 0.285], [0.76, 0.31], [0.86, 0.322], [0.95, 0.318], [1.02, 0.3], [1.065, 0.265], [1.09, 0.215], [1.1, 0.15], [1.1, 0.05]];
+  const prof = [...half.map(([r, a]) => [r, -a]), ...half.map(([r, a]) => [r, a]).reverse()].map(([r, a]) => new THREE.Vector2(r, a));
+  const tire = new THREE.Mesh(new THREE.LatheGeometry(prof, 72), m.rubber);
   tire.rotation.x = Math.PI / 2;
   tire.castShadow = true;
   g.add(tire);
@@ -576,6 +625,18 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
       if (sz < 0) brand.rotation.y = Math.PI;
       g.add(brand);
     }
+  }
+
+  // small fasteners along the top and bottom rails, as one instanced mesh
+  {
+    const pts: [number, number, number][] = [];
+    for (const sz of [1, -1]) for (let x = xr + 0.5; x < xf - 0.2; x += 0.72) {
+      pts.push([x, ROOF - 0.07, sz * (out + 0.02)], [x, FLOOR + 0.2, sz * (out + 0.02)]);
+    }
+    const rivets = new THREE.InstancedMesh(new THREE.SphereGeometry(0.022, 8, 6), m.rivet, pts.length);
+    const mat4 = new THREE.Matrix4();
+    pts.forEach(([x, y, z], i) => rivets.setMatrixAt(i, mat4.makeTranslation(x, y, z)));
+    g.add(rivets);
   }
 
   // ------------------------------------------------------------ street side: window and hatch
