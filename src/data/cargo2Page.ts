@@ -33,7 +33,7 @@ export const demo = { label: 'Book a demo', href: '/demo' }; // NATE
 export const hero = {
   name: 'Cargo',
   line: 'Haul all your gear, with the power to run your job.', // NATE (homepage lineup)
-  sub: "An enclosed cargo trailer on a welded steel frame. Solar and a battery run your tools, lights and chargers on stored power, so you burn less fuel and skip the homeowner's outlet.", // NEW first sentence (Nate, 2026-11-19), SOURCE second (messaging report, hero sub)
+  sub: 'An enclosed cargo trailer on a welded steel frame. Solar and a battery run your tools, lights and chargers on stored power, so you have power wherever your job takes you.', // NEW first sentence (Nate, 2026-11-19). Second sentence SOURCE (messaging report) with NATE's ending (Notion comment, 2026-11-19)
   facts: [
     ['Enclosed', 'Cargo trailer'], // NATE (2026-11-19)
     ['10 or 20 ft', 'Length'], // NATE
