@@ -1,0 +1,295 @@
+---
+/**
+ * Concept configurator and checkout for the Cargo trailer, in a white studio like Tesla's.
+ * The 3D model is procedural (not CAD). Colors, prices, tool wattages and fees are SAMPLE data
+ * from src/scripts/configurator/data.ts. No form data leaves the page and no payment is taken.
+ */
+import Base from '../../layouts/Base.astro';
+import { img } from '../../data/content';
+import { BATTERIES, BRANDING, DELIVERY_FEE, DEPOSIT, EQUIPMENT, INSIDE, LENGTHS, PAINTS, TOOLS, TRIMS, WING, money } from '../../scripts/configurator/data';
+
+const card = 'w-full cursor-pointer rounded-[12px] border border-[#dddbd7] bg-white px-5 py-4 text-left text-ink transition-[border-color,box-shadow] hover:border-[#a9a7a3] aria-pressed:border-ink aria-pressed:shadow-[inset_0_0_0_1px_#23262B] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#dddbd7]';
+const h2 = 'm-0 text-[22px] font-semibold tracking-[-.02em] text-ink';
+const sub = 'mt-1 text-[14.5px] text-ink-soft';
+const field = 'w-full rounded-[10px] border border-[#d3d1cc] bg-white px-4 py-[13px] text-[16px] text-ink placeholder:text-[#9a9894] focus-visible:border-ink';
+const label = 'mb-1.5 block text-[11px] font-semibold uppercase tracking-[.18em] text-ink-soft';
+const pill = 'cursor-pointer rounded-full border border-black/10 bg-white/85 px-3.5 py-2 text-[11px] font-bold uppercase leading-[normal] tracking-[.16em] text-ink backdrop-blur-[10px] hover:border-black/30 aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-white';
+const price = 'text-[14px] font-semibold text-ink';
+const note = 'mt-0.5 block text-[13.5px] text-ink-soft';
+const steps = [['build', 'Build'], ['delivery', 'Delivery'], ['details', 'Details'], ['review', 'Deposit']];
+---
+<Base title="Build your Cargo | SPOG Trailers (concept)" description="Concept configurator and sample checkout for the SPOG Cargo trailer.">
+  <!-- Header -->
+  <header class="fixed inset-x-0 top-0 z-30 flex h-16 items-center gap-8 border-b border-black/[.08] bg-white/90 px-6 backdrop-blur-[14px] max-[640px]:gap-4 max-[640px]:px-4">
+    <a href="/" aria-label="SPOG home"><img src={img.logoDark} alt="SPOG" class="h-6 w-auto" /></a>
+    <ol class="m-0 flex list-none gap-6 p-0 max-[900px]:hidden" aria-label="Checkout steps">
+      {steps.map(([id, name], i) => (
+        <li data-step-tab={id} class="group flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[.18em] text-[#9a9894] data-[active]:text-ink data-[done]:text-ink-soft">
+          <span class="grid size-5 place-items-center rounded-full border border-current text-[10px] group-data-[active]:border-ink group-data-[active]:bg-ink group-data-[active]:text-white">{i + 1}</span>{name}
+        </li>
+      ))}
+    </ol>
+    <span class="ml-auto rounded-full bg-stone px-3 py-1.5 text-[10.5px] font-bold uppercase tracking-[.18em] text-ink-soft"><i class="mr-2 inline-block size-1.5 rounded-full bg-gold align-middle"></i>Concept · Sample pricing</span>
+  </header>
+
+  <div class="grid h-[calc(100dvh-88px)] grid-cols-[minmax(0,1fr)_440px] pt-16 max-[900px]:block max-[900px]:h-auto">
+    <!-- Stage -->
+    <section aria-label="3D view of your Cargo" class="relative min-h-0 bg-white max-[900px]:sticky max-[900px]:top-16 max-[900px]:z-10 max-[900px]:h-[44dvh]">
+      <div id="stage" class="absolute inset-0 cursor-grab active:cursor-grabbing"></div>
+
+      <div class="pointer-events-none absolute left-6 top-5 max-[640px]:left-4 max-[640px]:top-3">
+        <p class="m-0 text-[11px] font-semibold uppercase tracking-[.22em] text-ink-soft">Concept model</p>
+        <p class="m-0 mt-1 text-[clamp(28px,3.4vw,52px)] font-black uppercase leading-none tracking-[-.04em] text-ink">Cargo <span data-out="length-big" class="text-[#b4b2ae]">16 ft</span></p>
+      </div>
+
+      <div id="toast" role="status" aria-live="polite" class="pointer-events-none absolute left-1/2 top-20 max-w-[min(520px,90%)] -translate-x-1/2 rounded-[12px] bg-ink/90 px-4 py-3 text-center text-[14px] text-white opacity-0 backdrop-blur-[10px] transition-opacity duration-300 data-[show]:opacity-100 max-[640px]:top-14"></div>
+
+      <div class="absolute bottom-5 left-6 flex gap-1.5 max-[640px]:bottom-3 max-[640px]:left-4">
+        <button type="button" class={pill} data-stage-action="mast" hidden>Raise mast</button>
+        <button type="button" class={pill} data-stage-action="wing" hidden>Open wing</button>
+      </div>
+
+      <div class="absolute bottom-5 right-6 flex gap-1.5 max-[640px]:bottom-3 max-[640px]:right-4 max-[480px]:hidden" role="group" aria-label="Camera">
+        {[['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street', 'Street side'], ['top', 'Top']].map(([v, n]) => (
+          <button type="button" class={pill} data-view-btn={v} aria-pressed={v === 'front' ? 'true' : 'false'}>{n}</button>
+        ))}
+      </div>
+    </section>
+
+    <!-- Rail -->
+    <aside id="rail" aria-label="Build options" class="min-h-0 overflow-y-auto border-l border-black/[.08] bg-white max-[900px]:overflow-visible max-[900px]:border-l-0 max-[900px]:border-t max-[900px]:pb-[120px]">
+
+      <!-- STEP 1: BUILD -->
+      <div data-step="build" class="px-8 pb-16 pt-9 max-[640px]:px-5">
+        <section data-view="front" class="pb-10">
+          <h1 class="m-0 text-[44px] font-black uppercase leading-none tracking-[-.04em] text-ink">Cargo</h1>
+          <p class="mb-0 mt-2 text-[17px] text-ink-soft">Haul the tools. Power the job.</p>
+          <dl class="mb-0 mt-7 grid grid-cols-[repeat(3,1fr)] border-y border-[#e6e4e0]">
+            <div class="py-4 pr-2"><dt class="text-[11px] font-semibold uppercase tracking-[.14em] text-ink-soft">Battery</dt><dd class="m-0 mt-1 text-[20px] font-extrabold text-ink" data-out="stat-battery"></dd></div>
+            <div class="border-l border-[#e6e4e0] py-4 pl-4"><dt class="text-[11px] font-semibold uppercase tracking-[.14em] text-ink-soft">Solar</dt><dd class="m-0 mt-1 text-[20px] font-extrabold text-ink" data-out="stat-solar"></dd></div>
+            <div class="border-l border-[#e6e4e0] py-4 pl-4"><dt class="text-[11px] font-semibold uppercase tracking-[.14em] text-ink-soft">Length</dt><dd class="m-0 mt-1 text-[20px] font-extrabold text-ink" data-out="stat-length"></dd></div>
+          </dl>
+          <p class="mb-0 mt-4 text-[13px] text-ink-soft">Concept model and sample pricing, built to show what a SPOG configurator can do.</p>
+        </section>
+
+        <section data-view="side" class="border-t border-[#e6e4e0] py-9">
+          <h2 class={h2}>Length</h2>
+          <p class={sub}>Longer trailers carry more solar.</p>
+          <div class="mt-5 grid gap-2">
+            {LENGTHS.map((l) => (
+              <button type="button" class={card} data-length={l.ft} aria-pressed="false">
+                <span class="flex items-baseline justify-between gap-4"><b class="text-[17px] font-bold">{l.ft} ft</b><span class={price}>${l.price.toLocaleString()}</span></span>
+                <span class={note}>{l.note}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section data-view="top" class="border-t border-[#e6e4e0] py-9">
+          <h2 class={h2}>Power</h2>
+          <p class={sub}>Battery stores it. Solar refills it.</p>
+          <p class="mb-2.5 mt-6 text-[12px] font-semibold uppercase tracking-[.16em] text-ink-soft">Battery</p>
+          <div class="grid grid-cols-[repeat(2,1fr)] gap-2">
+            {BATTERIES.map((b) => (
+              <button type="button" class={card} data-battery={b.kwh} aria-pressed="false">
+                <b class="block text-[17px] font-bold">{b.kwh} kWh</b>
+                <span class="block text-[13.5px] text-ink-soft" data-battery-note={b.kwh}>{money(b.price)}</span>
+              </button>
+            ))}
+          </div>
+
+          <p class="mb-2.5 mt-7 text-[12px] font-semibold uppercase tracking-[.16em] text-ink-soft">Roof solar</p>
+          <div class="flex items-center gap-3 rounded-[12px] border border-[#dddbd7] bg-white p-2">
+            <button type="button" data-panels="-2" aria-label="Fewer panels" class="grid size-11 cursor-pointer place-items-center rounded-[10px] border-0 bg-stone text-[22px] text-ink hover:bg-stone-2 disabled:cursor-not-allowed disabled:opacity-30">&minus;</button>
+            <div class="flex-1 text-center">
+              <b class="block text-[17px] font-bold text-ink" data-out="panels"></b>
+              <span class="block text-[13px] text-ink-soft" data-out="panels-note"></span>
+            </div>
+            <button type="button" data-panels="2" aria-label="More panels" class="grid size-11 cursor-pointer place-items-center rounded-[10px] border-0 bg-stone text-[22px] text-ink hover:bg-stone-2 disabled:cursor-not-allowed disabled:opacity-30">+</button>
+          </div>
+          <button type="button" class={`${card} mt-2`} data-toggle="wing" aria-pressed="false">
+            <span class="flex items-baseline justify-between gap-4"><b class="text-[16px] font-bold">Solar wing</b><span class={price}>{money(WING.price)}</span></span>
+            <span class={note} data-out="wing-note">Two more panels that fold out as an awning. 12 ft and longer.</span>
+          </button>
+        </section>
+
+        <section data-view="front" class="border-t border-[#e6e4e0] py-9">
+          <h2 class={h2}>Exterior</h2>
+          <p class="mt-1 text-[14.5px]"><b class="font-semibold text-ink" data-out="paint-name"></b> <span class="text-ink-soft" data-out="paint-price"></span></p>
+          <div class="mt-4 flex flex-wrap gap-3">
+            {PAINTS.map((p) => (
+              <button type="button" data-paint={p.id} aria-pressed="false" aria-label={`${p.name}, ${money(p.price)}`} class="size-11 cursor-pointer rounded-full border-2 border-transparent bg-transparent p-[3px] aria-pressed:border-ink">
+                <span class="block size-full rounded-full border border-black/15" style={`background:${p.hex}`}></span>
+              </button>
+            ))}
+          </div>
+          <p class="mt-6 text-[14.5px]"><b class="font-semibold text-ink" data-out="trim-name"></b> <span class="text-ink-soft" data-out="trim-price"></span></p>
+          <div class="mt-3 flex gap-3">
+            {TRIMS.map((t) => (
+              <button type="button" data-trim={t.id} aria-pressed="false" aria-label={`${t.name}, ${money(t.price)}`} class="size-11 cursor-pointer rounded-full border-2 border-transparent bg-transparent p-[3px] aria-pressed:border-ink">
+                <span class="block size-full rounded-full border border-black/15" style={`background:${t.swatch}`}></span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section data-view="front" class="border-t border-[#e6e4e0] py-9">
+          <h2 class={h2}>Equipment</h2>
+          <div class="mt-5 grid gap-2">
+            {EQUIPMENT.map((e) => (
+              <button type="button" class={card} data-equip={e.id} aria-pressed="false">
+                <span class="flex items-baseline justify-between gap-4"><b class="text-[16px] font-bold">{e.name}</b><span class={price}>{money(e.price)}</span></span>
+                <span class={note}>{e.desc}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section data-view="rear" class="border-t border-[#e6e4e0] py-9">
+          <h2 class={h2}>Inside</h2>
+          <div class="mt-5 grid gap-2">
+            {INSIDE.map((e) => (
+              <button type="button" class={card} data-inside={e.id} aria-pressed="false">
+                <span class="flex items-baseline justify-between gap-4"><b class="text-[16px] font-bold">{e.name}</b><span class={price}>{money(e.price)}</span></span>
+                <span class={note}>{e.desc}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section data-view="street" class="border-t border-[#e6e4e0] py-9">
+          <h2 class={h2}>Branding</h2>
+          <p class={sub}>Your company name on the street side, as a cut vinyl decal.</p>
+          <button type="button" class={`${card} mt-5`} data-toggle="brand" aria-pressed="false">
+            <span class="flex items-baseline justify-between gap-4"><b class="text-[16px] font-bold">Company decal</b><span class={price}>{money(BRANDING.price)}</span></span>
+          </button>
+          <label for="brand-text" class={`${label} mt-4`}>Company name</label>
+          <input id="brand-text" maxlength="28" placeholder={BRANDING.placeholder} class={field} autocomplete="organization" />
+        </section>
+
+        <section data-view="front" class="border-t border-[#e6e4e0] py-9">
+          <h2 class={h2}>Your day on this build</h2>
+          <p class={sub}>Pick what runs on a normal day. These are sample estimates only.</p>
+          <div class="mt-5 rounded-[14px] bg-stone p-5">
+            <b class="block text-[18px] font-bold leading-[1.25] text-ink" data-out="rt-headline"></b>
+            <div class="mt-4 h-2.5 overflow-hidden rounded-full bg-white"><i class="block h-full rounded-full bg-gold transition-[width] duration-500" data-out="rt-bar" style="width:0%"></i></div>
+            <span class="mt-3 block text-[13.5px] text-ink-soft" data-out="rt-detail"></span>
+          </div>
+          <div class="mt-3 grid gap-1.5">
+            {TOOLS.map((t) => (
+              <button type="button" data-tool={t.id} aria-pressed="false" class="flex w-full cursor-pointer items-center justify-between gap-4 rounded-[10px] border border-[#dddbd7] bg-white px-4 py-3 text-left text-[14.5px] text-ink hover:border-[#a9a7a3] aria-pressed:border-ink aria-pressed:shadow-[inset_0_0_0_1px_#23262B]">
+                <span>{t.name}</span><span class="text-[12.5px] text-ink-soft">{t.watts.toLocaleString()}W · {t.hours} h/day</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section data-view="rear" class="border-t border-[#e6e4e0] pt-9">
+          <h2 class={h2}>Your Cargo</h2>
+          <ul class="mt-4 grid gap-2.5 p-0" data-out="lines"></ul>
+          <div class="mt-5 flex items-baseline justify-between border-t border-[#e6e4e0] pt-4">
+            <b class="text-[16px] text-ink">Estimated price</b><b class="text-[22px] font-extrabold text-ink" data-out="vehicle-total"></b>
+          </div>
+          <p class="mb-0 mt-2 text-[13.5px] text-ink-soft"><span data-out="lead-time"></span>. Sample pricing for this concept.</p>
+        </section>
+      </div>
+
+      <!-- STEP 2: DELIVERY -->
+      <div data-step="delivery" hidden class="px-8 pb-16 pt-9 max-[640px]:px-5">
+        <h2 class="m-0 text-[30px] font-semibold tracking-[-.025em] text-ink">Delivery</h2>
+        <p class={sub}>Pick it up at the shop or have it brought to you.</p>
+        <div class="mt-6 grid gap-2">
+          <button type="button" class={card} data-delivery="pickup" aria-pressed="true">
+            <span class="flex items-baseline justify-between gap-4"><b class="text-[16px] font-bold">Pick up in Middletown, NY</b><span class={price}>Included</span></span>
+            <span class={note}>We walk you through the trailer and hitch it up.</span>
+          </button>
+          <button type="button" class={card} data-delivery="delivery" aria-pressed="false">
+            <span class="flex items-baseline justify-between gap-4"><b class="text-[16px] font-bold">Deliver to my site</b><span class={price}>${DELIVERY_FEE}</span></span>
+            <span class={note}>Tri-State delivery with a walkthrough on arrival.</span>
+          </button>
+        </div>
+        <label for="zip" class={`${label} mt-7`}>Site ZIP code</label>
+        <input id="zip" inputmode="numeric" maxlength="5" placeholder="10940" class={field} autocomplete="postal-code" />
+        <div class="mt-7 rounded-[14px] bg-stone p-5">
+          <b class="block text-[16px] text-ink" data-out="lead-time-2"></b>
+          <span class="mt-1 block text-[13.5px] text-ink-soft">Standard white builds with black trim and no add-ons inside ship fastest.</span>
+        </div>
+      </div>
+
+      <!-- STEP 3: DETAILS -->
+      <div data-step="details" hidden class="px-8 pb-16 pt-9 max-[640px]:px-5">
+        <h2 class="m-0 text-[30px] font-semibold tracking-[-.025em] text-ink">Your details</h2>
+        <p class={sub}>Demo only. Nothing you type here leaves this page.</p>
+        <form id="details" class="mt-6 grid gap-4" novalidate onsubmit="return false">
+          <div><label for="d-name" class={label}>Full name</label><input id="d-name" autocomplete="name" class={field} required /></div>
+          <div><label for="d-company" class={label}>Company</label><input id="d-company" autocomplete="organization" class={field} /></div>
+          <div><label for="d-email" class={label}>Email</label><input id="d-email" type="email" autocomplete="email" class={field} required /></div>
+          <div><label for="d-phone" class={label}>Phone</label><input id="d-phone" type="tel" autocomplete="tel" class={field} /></div>
+          <p id="details-error" class="m-0 text-[14px] text-[#b3261e]" hidden>Add your name and a valid email to continue.</p>
+        </form>
+      </div>
+
+      <!-- STEP 4: REVIEW AND DEPOSIT -->
+      <div data-step="review" hidden class="px-8 pb-16 pt-9 max-[640px]:px-5">
+        <h2 class="m-0 text-[30px] font-semibold tracking-[-.025em] text-ink">Review and deposit</h2>
+        <p class={sub} data-out="review-summary"></p>
+        <ul class="mt-6 grid gap-2.5 p-0" data-out="review-lines"></ul>
+        <div class="mt-4 grid gap-2.5 border-t border-[#e6e4e0] pt-4 text-[15px]">
+          <div class="flex justify-between"><span class="text-ink-soft">Delivery</span><span class="text-ink" data-out="delivery-line"></span></div>
+          <div class="flex justify-between"><b class="text-ink">Estimated total</b><b class="text-[20px] text-ink" data-out="grand-total"></b></div>
+        </div>
+        <div class="mt-6 rounded-[14px] border border-gold/60 bg-[#fdf8ec] p-5">
+          <div class="flex items-baseline justify-between"><b class="text-[17px] text-ink">Due today</b><b class="text-[24px] font-extrabold text-ink">${DEPOSIT}</b></div>
+          <span class="mt-1 block text-[13.5px] text-ink-soft">Refundable deposit. The balance is due when your trailer is ready.</span>
+        </div>
+        <label class="mt-5 flex cursor-pointer items-start gap-3 text-[14px] text-ink">
+          <input id="agree" type="checkbox" class="mt-0.5 size-5 shrink-0 accent-[#23262B]" />
+          <span>I understand this is a demo. No payment is taken and nothing is ordered.</span>
+        </label>
+      </div>
+
+      <!-- DONE -->
+      <div data-step="done" hidden class="px-8 pb-16 pt-9 max-[640px]:px-5">
+        <p class="m-0 text-[11px] font-semibold uppercase tracking-[.22em] text-ink-soft"><i class="mr-2 inline-block size-1.5 rounded-full bg-gold align-middle"></i>Demo deposit placed</p>
+        <h2 class="mb-0 mt-3 text-[38px] font-black uppercase leading-[.95] tracking-[-.04em] text-ink">Your Cargo<br />is spec'd.</h2>
+        <p class="mt-4 text-[15px] text-ink">Build code <b class="font-bold" data-out="code"></b></p>
+        <p class="mt-1 text-[14px] text-ink-soft" data-out="done-summary"></p>
+        <ol class="mt-7 grid gap-4 p-0">
+          {[['Walkthrough', 'We bring a trailer to your site and run your tools off it.'], ['Spec sign-off', 'We confirm every option and your delivery date.'], ['Build and delivery', 'Your trailer is built in Middletown and delivered or picked up.']].map(([t, b], i) => (
+            <li class="flex gap-4"><span class="grid size-8 shrink-0 place-items-center rounded-full bg-ink text-[13px] font-bold text-white">{i + 1}</span><span><b class="block text-[15.5px] text-ink">{t}</b><span class="text-[14px] text-ink-soft">{b}</span></span></li>
+          ))}
+        </ol>
+        <button type="button" id="share" class="mt-8 w-full cursor-pointer rounded-[12px] border border-[#cfcdc8] bg-white px-5 py-4 text-[12px] font-bold uppercase tracking-[.18em] text-ink hover:border-ink">Copy a link to this build</button>
+        <p class="mt-3 text-[12.5px] text-ink-soft">Demo only. No payment was taken and nothing was ordered.</p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Bottom bar -->
+  <footer class="fixed inset-x-0 bottom-0 z-30 flex h-[88px] items-center gap-6 border-t border-black/[.08] bg-white/95 px-6 backdrop-blur-[14px] max-[640px]:h-[76px] max-[640px]:gap-3 max-[640px]:px-4">
+    <div class="min-w-0 flex-1 max-[640px]:hidden">
+      <b class="block text-[16px] text-ink">Cargo <span class="font-normal text-ink-soft">concept</span></b>
+      <span class="block truncate text-[13px] text-ink-soft" data-out="summary"></span>
+    </div>
+    <div class="text-right max-[640px]:flex-1 max-[640px]:text-left">
+      <b class="block text-[20px] font-extrabold leading-tight text-ink" data-out="bar-price"></b>
+      <span class="block text-[12px] text-ink-soft" data-out="bar-price-label">Estimated price · sample</span>
+    </div>
+    <div class="flex gap-2">
+      <button type="button" id="back" hidden class="h-[50px] cursor-pointer border-[1.5px] border-[#cfcdc8] bg-white px-5 text-[12px] font-bold uppercase tracking-[.18em] text-ink hover:border-ink max-[640px]:px-3">Back</button>
+      <button type="button" id="next" class="h-[50px] cursor-pointer border-[1.5px] border-gold bg-gold px-6 text-[12px] font-bold uppercase tracking-[.18em] text-black hover:border-ink hover:bg-ink hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-gold disabled:hover:bg-gold disabled:hover:text-black max-[640px]:px-3.5 max-[640px]:text-[10.5px] max-[640px]:tracking-[.12em]">Continue to delivery</button>
+    </div>
+  </footer>
+</Base>
+
+<style is:global>
+  /* This page only: a light studio instead of the site's dark theme. */
+  :root { color-scheme: light; }
+  body { background: #fff; color: #23262B; }
+  body::before { background: #fff; }
+</style>
+
+<script>
+  import { initConfigurator } from '../../scripts/configurator/ui';
+  initConfigurator();
+</script>

@@ -1,14 +1,25 @@
-/** Shared Cargo dimensions in feet. No three.js here, so pages can import it on the server. */
+/**
+ * Cargo dimensions in feet, measured off Nate's photos of the finished black 20 ft Cargo
+ * (_photos-original/2026-11-17/Black Cargo Trailer). No three.js here, so pages can import it.
+ *
+ * The 20 ft length includes the V nose: an 18 ft box plus a 2 ft nose. The body is 7 ft wide with
+ * the wheels outside it under aluminum fenders. Heights are scaled from the tire (about 27 in).
+ */
 export const W = 7;
-export const H = 7;
-export const FLOOR = 2.5;
-export const NOSE = 2;
+export const H = 7.1;
+export const FLOOR = 1.25;
 export const ROOF = FLOOR + H;
-export const PANEL_X = 5.6;
-export const PANEL_Z = 3.4;
-export const ROW_PITCH = 5.75;
+export const NOSE = 2;
+export const WALL = 0.12;
 
-/** How many roof panel rows fit on the box part of the roof for a given length. */
-export function roofRows(length: number) {
-  return Math.max(1, Math.floor((length - NOSE - 0.2) / ROW_PITCH));
-}
+export const PANEL_ALONG = 3.4;
+export const PANEL_ACROSS = 6.3;
+export const PANEL_PITCH = 3.56;
+
+/** Length of the flat side, without the nose. */
+export const sideLength = (length: number) => length - NOSE;
+/** How many roof panels fit on the flat part of the roof. Five on the 20 ft, as built. */
+export const maxPanels = (length: number) => Math.max(1, Math.floor((sideLength(length) - 0.15) / PANEL_PITCH));
+/** Axles sit about 61% of the way back along the box. The 10 ft runs a single axle. */
+export const axleCenter = (length: number) => sideLength(length) * 0.606;
+export const tandem = (length: number) => length >= 16;

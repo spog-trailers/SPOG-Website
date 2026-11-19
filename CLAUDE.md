@@ -36,8 +36,8 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 | `src/scripts/sizeDrawing.ts`, `src/scripts/runtime.ts` | The to-scale trailer and pickup drawing, and the runtime math (hours = kWh / kW) |
 | `docs/product-page-teardown-2026-11-16.md` | Rivian R1T research behind the product page layout |
 | `_archive/` | Snapshots of earlier source. Not built. |
-| `src/pages/configure/cargo.astro` | Concept Cargo configurator and sample checkout at `/configure/cargo` |
-| `src/scripts/configurator/` | Configurator code: `trailer.ts` (procedural 3D model), `scene.ts` (white studio stage, lighting, camera), `controller.ts` (keeps the model in sync), `data.ts` (options, SAMPLE prices, rules, run-time math), `ui.ts` (page wiring and checkout steps), `dims.ts` (shared dimensions) |
+| `src/pages/configure/cargo.astro` | Cargo configurator at `/configure/cargo`, laid out like Tesla's design studio (see "Configurator"). Not indexed. |
+| `src/scripts/configurator/` | Configurator code: `trailer.ts` (the 3D Cargo, modeled in code from Nate's photos), `scene.ts` (white studio, reflections, camera views), `controller.ts` (keeps the model in sync, swings the doors), `data.ts` (options, SAMPLE prices, rules, run-time math), `ui.ts` (page wiring and order steps), `dims.ts` (measurements) |
 | `src/components/sections/` | One component per section of the old homepage. Nav, Statement, Faq, Footer and MobileBar are shared by every page. |
 | `src/components/ui/` | Button, Eyebrow (small tracked label), Heading, Stars, Icon, Person |
 | `src/data/content.ts` | All copy, specs, lists, hotspot positions and icon paths, plus the site nav and footer links. Edit copy here first. |
@@ -158,11 +158,21 @@ Each product page is written for its own buyer. The single shared `[product].ast
 - Cargo uses the "studio" hero (render in a framed plate) because there's no wide Cargo photo yet. Switch `hero.kind` to `photo` when Robert's shot exists.
 - Nav links now go to `/cargo`, `/workstation`, `/event` and `/#...` for homepage-only anchors. Keep the ids `top`, `cta`, `walkthrough`, `sheet` and `faq` on every page so Nav, MobileBar and Close keep working.
 
-## Configurator (concept)
+## Configurator (rebuilt 2026-11-18)
 
-- `/configure/cargo` is a demo built on three.js (a dependency added for this page only, it never loads on the homepage). The trailer is modeled in code, not from CAD, so it's a stand-in for real 3D files.
-- Everything in `src/scripts/configurator/data.ts` except the Cargo limits (8 to 24 ft, 5 to 20 kWh, solar capped at 3,360W, two-week standard lead time) is made up: prices, color names, tool wattages, delivery fee, deposit. Never copy those numbers onto the live site.
+- `/configure/cargo` follows Tesla's design studio (tesla.com/model3/design), at Nate's request: a white viewer on the left that you drag all the way around, one scrolling column of choices on the right, and a bar along the bottom with the price and the order button. The first version is saved in `_archive/2026-11-18-configurator-v1/`.
+- **The 3D model** is built in code on three.js (used on this page only) from Nate's photos of the finished black 20 ft Cargo in `_photos-original/2026-11-17/Black Cargo Trailer/`. It's a close stand-in, not CAD. Measurements scaled from the photos are in `dims.ts`:
+  - The 20 ft length includes the 2 ft V nose. The body is 7 ft wide with the wheels outside it.
+  - Curb side: entry door with a window. Street side: sliding window over the axles and a two-door storage hatch.
+  - Rear: barn doors with twin chrome lock bars and four oval tail lights. Roof: five solar panels and a low vent.
+  - Black machined wheels under aluminum fenders, with a matching spare on the tongue.
+- The body is hollow with a finished interior, so "Open doors" swings the rear and side doors and the Interior view puts the camera inside. The battery and inverter sit in the nose.
+- **The viewer turns to the section you scroll to** (Exterior to the front, Power to the roof, Rear door to the rear, Add-ons to the street side, Interior inside). Picking an option turns it to that option. The dots under the viewer step through six views.
+- **Callouts** on the first view are pinned to points on the model and hide once you drag.
+- **What's real in `data.ts`:** the 10 and 20 ft lengths, "From $10,000", the 5 to 20 kWh battery range, the two-week standard lead time and the as-built look. **Everything else is a guess** Nate asked for until he sends the real list: every other price, the color names, the add-ons, the interior options, panel wattage, tool wattages, delivery fee and deposit. Never copy those numbers onto the live site.
+- The default build is the trailer in the photos (black, 20 ft, five panels, window, hatch, spare, vent), so its price starts above the base price.
 - Nothing is sent anywhere and no payment is taken. The build is saved in the URL hash so it can be shared. Delivery, ZIP and contact details are never put in the URL.
+- The page isn't linked from the site. Link it only once real pricing is approved.
 - After adding a dependency or a new folder, restart the dev server (`npx astro dev stop`, then `npm run dev`) if new Tailwind classes don't show up.
 
 ## Gotchas

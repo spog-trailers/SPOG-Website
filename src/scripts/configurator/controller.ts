@@ -1,34 +1,32 @@
 /**
  * Keeps the 3D trailer in sync with a TrailerConfig. Rebuilds geometry only when the shape
- * changes, recolors in place, and animates the wing and mast toward their targets.
+ * changes, recolors in place, and swings the doors toward open or shut.
  */
 import type { Stage } from './scene';
-import { applyTrim, buildTrailer, createMaterials, decalTexture, poseMast, poseWing, type TrailerConfig, type TrailerParts } from './trailer';
+import { applyFinish, buildTrailer, createMaterials, decalTexture, poseDoors, type TrailerConfig, type TrailerParts } from './trailer';
 
-const SHAPE_KEYS: (keyof TrailerConfig)[] = ['length', 'roofPanels', 'wing', 'mast', 'led', 'gearRail', 'hvac'];
+const SHAPE_KEYS: (keyof TrailerConfig)[] = [
+  'length', 'panels', 'batteryModules', 'rear', 'window', 'hatch', 'spare', 'vent', 'floods', 'cameras', 'hvac',
+  'shelving', 'bench', 'cabinets', 'etrack',
+];
 
 export function createController(stage: Stage, initial: TrailerConfig) {
   const mats = createMaterials();
-  stage.registerGlow(mats.led, 1);
-  stage.registerGlow(mats.lamp, 1.6);
-  stage.registerGlow(mats.tail, 0.45);
-  stage.registerGlow(mats.marker, 0.25);
-
   let cfg: TrailerConfig = { ...initial };
   let parts: TrailerParts | null = null;
-  let wingT = cfg.wingOpen ? 1 : 0;
-  let mastT = cfg.mastUp ? 1 : 0;
+  let doorT = cfg.doorsOpen ? 1 : 0;
   let decalKey = '';
 
   async function refreshDecal() {
-    if (!parts?.decal) return;
+    if (!cfg.brand) return;
     const key = `${cfg.brand}|${cfg.paintDark}`;
-    if (key === decalKey && mats.decal.map) return;
+    if (key === decalKey && mats.brand.map) return;
     decalKey = key;
     const tex = await decalTexture(cfg.brand, cfg.paintDark);
-    mats.decal.map?.dispose();
-    mats.decal.map = tex;
-    mats.decal.needsUpdate = true;
+    if (key !== decalKey) { tex.dispose(); return; }
+    mats.brand.map?.dispose();
+    mats.brand.map = tex;
+    mats.brand.needsUpdate = true;
   }
 
   function rebuild() {
@@ -39,48 +37,27 @@ export function createController(stage: Stage, initial: TrailerConfig) {
     parts = buildTrailer(cfg, mats);
     stage.scene.add(parts.group);
     stage.setLength(cfg.length);
-    if (parts.mastLight) {
-      parts.mastLight.userData.on = cfg.mastUp;
-      stage.registerSpot(parts.mastLight);
-    }
-    poseWing(parts, wingT);
-    poseMast(parts, mastT);
-    decalKey = '';
-    refreshDecal();
-    stage.reapplyMood();
+    poseDoors(parts, doorT);
   }
 
   function apply(next: TrailerConfig) {
     const prev = cfg;
     cfg = { ...next };
-    mats.paint.color.set(cfg.paint);
-    applyTrim(mats, cfg.trim);
-    const shapeChanged = !parts || SHAPE_KEYS.some((k) => prev[k] !== cfg[k]) || (!!prev.brand.trim() !== !!cfg.brand.trim());
+    applyFinish(mats, cfg);
+    const shapeChanged = !parts || SHAPE_KEYS.some((k) => prev[k] !== cfg[k]) || (!!prev.brand !== !!cfg.brand);
     if (shapeChanged) rebuild();
-    else refreshDecal();
-    if (parts?.mastLight) {
-      parts.mastLight.userData.on = cfg.mastUp;
-      stage.reapplyMood();
-    }
+    refreshDecal();
   }
 
   stage.onFrame((dt) => {
     if (!parts) return;
-    const k = Math.min(1, dt * 1.6);
-    const wTarget = cfg.wingOpen ? 1 : 0;
-    const mTarget = cfg.mastUp ? 1 : 0;
-    if (Math.abs(wingT - wTarget) > 0.001) {
-      wingT += (wTarget - wingT) * k + Math.sign(wTarget - wingT) * 0.004;
-      wingT = Math.min(1, Math.max(0, wingT));
-      poseWing(parts, wingT);
-    }
-    if (Math.abs(mastT - mTarget) > 0.001) {
-      mastT += (mTarget - mastT) * k + Math.sign(mTarget - mastT) * 0.004;
-      mastT = Math.min(1, Math.max(0, mastT));
-      poseMast(parts, mastT);
-    }
+    const target = cfg.doorsOpen ? 1 : 0;
+    if (doorT === target) return;
+    const step = dt / 1.3;
+    doorT = target > doorT ? Math.min(1, doorT + step) : Math.max(0, doorT - step);
+    poseDoors(parts, doorT);
   });
 
   apply(cfg);
-  return { apply, get config() { return cfg; } };
+  return { apply, get config() { return cfg; }, get anchors() { return parts?.anchors ?? {}; } };
 }
