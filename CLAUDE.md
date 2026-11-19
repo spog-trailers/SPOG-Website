@@ -2,6 +2,7 @@
 
 Astro 7 + Tailwind CSS 4 build of the approved homepage design ("Daybreak E").
 The visual system (colors, type, photo grade, components) matches the approved mockup. On 2026-11-16 the section order was rebuilt from the competitive teardown in `docs/homepage-teardown-2026-11-16.md`. The pre-reorder source is saved in `_archive/2026-11-16-pre-reorder/`, from before this folder was in git.
+On 2026-11-18 Nate made Test homepage 2 the homepage at `/`. The homepage before it moved to `/old-home` (linked as "Old home" in the nav, for inspiration), and the first test homepage was removed. `/test-home` and `/test-home-2` redirect to `/`.
 
 Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (branch `main`). This repo is pinned to the `nthor-spog` GitHub account through a local credential helper in `.git/config`, so it pushes as nthor-spog whatever the default `gh` account is. Creating or changing `.git` needs an unsandboxed command.
 
@@ -18,16 +19,15 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 
 | Path | What it is |
 |---|---|
-| `src/pages/index.astro` | Homepage. Section order, the rhythm map and the list of held sections live in the comment at the top. |
-| `src/pages/test-home.astro` | Draft homepage at `/test-home` with a look per buyer (see "Test homepage"). Not indexed. Rhythm map in the top comment. |
-| `src/components/test-home/`, `src/data/testHome.ts` | Test homepage sections and their copy. Every line is marked NEW or SOURCE. |
-| `src/pages/test-home-2.astro` | Second draft homepage at `/test-home-2` (see "Test homepage 2"). Not indexed. Rhythm map in the top comment. |
-| `src/components/home2/`, `src/data/home2.ts` | Test homepage 2 sections (proof strip, lineup scroll, solution video cards, future lineup, about band with the shop video, close with two forms) and their copy. Every line is marked NATE, SOURCE, NEW, CONFIRM or PLACEHOLDER. |
-| `src/pages/demo.astro`, `src/data/demo.ts` | Book a demo page at `/demo`, where "Book a demo" in the Test 2 nav lands: in-person demo, virtual demo or call now. Not indexed. |
+| `src/pages/index.astro` | Homepage, built as Test homepage 2 (see "Homepage"). Section order and rhythm map in the comment at the top. |
+| `src/components/home2/`, `src/data/home2.ts` | Homepage sections (proof strip, lineup scroll, solution video cards, future lineup, about band with the shop video, close with two forms) and their copy. Every line is marked NATE, SOURCE, NEW, CONFIRM or PLACEHOLDER. |
+| `src/pages/old-home.astro` | The homepage before 2026-11-18, kept at `/old-home` for inspiration (see "Old homepage"). Not indexed. Section order, rhythm map and held sections in the top comment. |
+| `src/components/test-home/`, `src/data/testHome.ts` | Pieces of the first test homepage (page removed 2026-11-18, see "First test homepage"). `TestHero` and the wordmarks are still used. The rest is held for reference. |
+| `src/pages/demo.astro`, `src/data/demo.ts` | Book a demo page at `/demo`, where "Book a demo" in the homepage nav lands: in-person demo, virtual demo or call now. Not indexed. |
 | `scripts/cutout.py` | Cuts a trailer out of its photo for the lineup panels (see Gotchas). |
 | `docs/homepage-teardown-2026-11-16.md` | Competitor research behind the current section order |
 | `src/pages/workstation.astro` | The Workstation page at `/workstation`, written for GCs (see "Workstation page"). Rhythm in the top comment. The old draft URL `/test-workstation` redirects here (`astro.config.mjs`). |
-| `src/components/features/FeatureCards.astro`, `src/data/features.ts` | Feature cards (after Rivian's "Get to know", Tesla's "Meet Model Y" and Pebble's feature section): a row of tall cards you can swipe, each opening a panel with the photo, numbers and detail. Used on `/workstation` and `/test-home`. Several can share a page. |
+| `src/components/features/FeatureCards.astro`, `src/data/features.ts` | Feature cards (after Rivian's "Get to know", Tesla's "Meet Model Y" and Pebble's feature section): a row of tall cards you can swipe, each opening a panel with the photo, numbers and detail. Used on `/workstation` and the homepage. Several can share a page. |
 | `src/components/work/`, `src/data/workstationPage.ts` | The work look (Cargo and Workstation) and the Workstation draft's copy. Every line is marked NEW, SOURCE or PLACEHOLDER. |
 | `docs/product-page-teardown-workstation-2026-11-17.md` | Ring Jobsite Security, Cybertruck, Rivian R2 and R1S research behind the Workstation draft, plus the Pebble, Rivian and Model Y feature sections behind the feature cards |
 | `src/pages/[product].astro` | Product pages at `/cargo` and `/event`, one shared template (Workstation has its own page). Section order and rhythm in the comment at the top. |
@@ -38,9 +38,9 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 | `_archive/` | Snapshots of earlier source. Not built. |
 | `src/pages/configure/cargo.astro` | Concept Cargo configurator and sample checkout at `/configure/cargo` |
 | `src/scripts/configurator/` | Configurator code: `trailer.ts` (procedural 3D model), `scene.ts` (white studio stage, lighting, camera), `controller.ts` (keeps the model in sync), `data.ts` (options, SAMPLE prices, rules, run-time math), `ui.ts` (page wiring and checkout steps), `dims.ts` (shared dimensions) |
-| `src/components/sections/` | One component per homepage section |
+| `src/components/sections/` | One component per section of the old homepage. Nav, Statement, Faq, Footer and MobileBar are shared by every page. |
 | `src/components/ui/` | Button, Eyebrow (small tracked label), Heading, Stars, Icon, Person |
-| `src/data/content.ts` | All copy, specs, lists, hotspot positions and icon paths. Edit copy here first. |
+| `src/data/content.ts` | All copy, specs, lists, hotspot positions and icon paths, plus the site nav and footer links. Edit copy here first. |
 | `src/styles/global.css` | Tailwind theme tokens (colors, font, keyframes) plus custom utilities |
 | `public/scroll-effects.css` | Scroll-driven effects. Must stay in /public (see Gotchas). |
 | `public/images/` | All photography and logos. Nate's real photos from 2026-11-17 are listed in `shoot` in `content.ts`, each with a `-1200` copy for cards and phones. |
@@ -58,8 +58,9 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 
 ## Layout rules
 
-- **Section rhythm:** never put two photo-background sections next to each other. Alternate photo, plain dark, light. The current pattern is documented in a comment at the top of `index.astro`.
-- **Current order:** Nav (with announcement bar), Hero, Problem, Compare (2027 lineup + coming next), Statement (self-powered + key numbers), UseCaseTabs, Explore (hotspots + close-up photos), Process, Guarantee, Built, Faq, Close (reserve + walkthrough form + run-time sheet), Footer, MobileBar.
+- **Section rhythm:** never put two photo-background sections next to each other. Alternate photo, plain dark, light. Each page documents its pattern in a comment at the top.
+- **Old homepage only:** the next four rules (order, Compare, held sections, the run-time sheet) describe `/old-home` and the product pages. The homepage's own rules are under "Homepage".
+- **Old homepage order:** Nav (with announcement bar), Hero, Problem, Compare (2027 lineup + coming next), Statement (self-powered + key numbers), UseCaseTabs, Explore (hotspots + close-up photos), Process, Guarantee, Built, Faq, Close (reserve + walkthrough form + run-time sheet), Footer, MobileBar.
 - **Lineup balance (Tesla model):** trailers you can sell now get full rows and Reserve buttons in Compare. Future trailers live in the quieter "Coming next" block under it, with an interest signup and no Reserve button. When a future trailer goes on sale, move it from `nextUp` to `products` in `content.ts`.
 - **Held sections:** SocialProof, ReviewQuote and CustomerStory are built but not rendered because all their content is placeholder. When real proof exists, bring back ONE of them. Highlights, KeyNumbers, LeadMagnet and LaunchCta were merged into other sections and are kept only for reference (LaunchCta uses retired offer copy, so don't bring it back as is).
 - **Two levels of CTA everywhere:** Reserve (gold, `#cta`) for buyers who are ready, Book a walkthrough (outline, `#walkthrough`) for everyone else. The run-time sheet (`#sheet`) is the softest option.
@@ -67,11 +68,16 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 - Light sections use `bg-stone` with `bg-paper` cards. Dark sections use `bg-black`.
 - Container is the `wrap` utility (1320px max, 36px gutters).
 
-## Test homepage (draft, 2026-11-17)
+## Old homepage (`/old-home`, since 2026-11-18)
 
-- `/test-home` tries Nate's idea of one brand with a different look per buyer, the way Tesla's Roadster differs from the Model Y. The live homepage at `/` is untouched. The nav carries two temporary links, "Test 1" (this page) and "Test 2" (`/test-home-2`), marked in `navLinks`. Remove them once a version is chosen.
+- This was the homepage at `/` until Nate made Test homepage 2 the homepage. He kept it for inspiration. The nav has a temporary "Old home" link to it (marked in `navLinks` in `content.ts`). Remove the link when he no longer needs it.
+- It renders exactly as before, except its nav and footer are the site's, so those links lead to the new homepage. Its announcement bar still jumps to its own `#specs`.
+
+## First test homepage (removed 2026-11-18)
+
+- `/test-home` tried Nate's idea of one brand with a different look per buyer, the way Tesla's Roadster differs from the Model Y. Nate removed it when Test homepage 2 became the homepage. The page is in git history, and `/test-home` redirects to `/`. What follows is kept because the homepage still builds on it.
 - **The homepage rule (Nate, v2):** the homepage only talks about what every SPOG shares (power, freedom, utility, quality, American made) and shows each trailer once at a high level. Feature selling and buyer-specific messaging go on the product pages. v1 put six full showcases on the homepage, and Nate found it too busy.
-- v2 order: Hero (brand promise, approved by Nate), Lineup cards, Values (feature cards for power, freedom, utility, quality and American made), Built, Close. Since the 2026-11-17 photo pass the Workstation and Event lineup cards, all five value cards and Built (via its `image` prop, the flag shot) use Nate's real photos. Built's default image is unchanged, so the live homepage is too.
+- v2 order: Hero (brand promise, approved by Nate), Lineup cards, Values (feature cards for power, freedom, utility, quality and American made), Built, Close. Since the 2026-11-17 photo pass the Workstation and Event lineup cards, all five value cards and Built (via its `image` prop, the flag shot) use Nate's real photos. Built's default image is unchanged, so the old homepage is too.
 - **Lineup cards** follow Tesla's homepage card row. Each card has a category, the name in that trailer's own type (`wordmark` in `testHome.ts`), one status line and the buttons. The look per trailer lives in the photo grade and the name:
   - **Cargo and Workstation:** heavy uppercase, warm daylight. They share one utility look.
   - **Event:** night, with a thin wide name.
@@ -81,18 +87,19 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 - Coming-next cards have no Reserve. "Get first word" opens a small signup dialog with the trailer picked. Reserve on a card preselects that trailer in the walkthrough form.
 - Nate liked the v1 Garage and Disaster Relief looks. The v1 showcases (`Show*.astro`, `SpecPlate`) are held, unrendered, as starting points for the product pages.
 
-## Test homepage 2 (draft, 2026-11-18)
+## Homepage (from Test homepage 2, 2026-11-18)
 
-- `/test-home-2` is the homepage Nate wrote in Notion after the 2026-11-18 team call (the "Home Page" item under Website Build in the Company Roadmap). `/` and `/test-home` are untouched, because he wants to keep each version. The nav link is "Test 2".
-- **What changed from `/test-home`:** only Cargo, Workstation and Event get space, and about 75% of the page speaks to contractors. Garage, Disaster Relief and Camper shrink to one "Coming next" strip.
-- **Order:** Hero (background video, "The trailer that powers your job."), Proof strip (a real US flag badge), Lineup (sticky scroll) with the "See our future lineup" strip, Solutions (security photo, power video, comfort photo), Statement ("Bring your own power." over the snow tow video, from the live homepage's "Pull in. Plug in." band), What SPOG is made of (feature cards), Our future lineup (Garage, Disaster Relief, Camper), About band (shop video), FAQ (from the live homepage, nav FAQ link jumps here), Close (two forms), Footer. Cut at Nate's call: Built different, Guarantee, How it works and the run-time sheet.
-- **Nav on this page (Nate, 2026-11-18):** two one-line buttons, "Book a demo" (to `/demo`) and "Design yours", with no small labels. The phone action bar matches. The "Coming next" nav and footer links read "Future lineup" and jump to `#future` on this page. Nav takes `demo` and `links`, MobileBar takes `secondary`. Other pages keep their defaults.
+- The homepage at `/` is the one Nate wrote in Notion after the 2026-11-18 team call (the "Home Page" item under Website Build in the Company Roadmap). It was drafted at `/test-home-2` and replaced the old homepage the same day. `/test-home-2` redirects to `/`.
+- **What changed from the first test homepage:** only Cargo, Workstation and Event get space, and about 75% of the page speaks to contractors. Garage, Disaster Relief and Camper shrink to one "Coming next" strip.
+- **Order:** Hero (background video, "The trailer that powers your job."), Proof strip (a real US flag badge), Lineup (sticky scroll) with the "See our future lineup" strip, Solutions (security photo, power video, comfort photo), Statement ("Bring your own power." over the snow tow video, from the old homepage's "Pull in. Plug in." band), What SPOG is made of (feature cards), Our future lineup (Garage, Disaster Relief, Camper), About band (shop video), FAQ (from the old homepage, nav FAQ link jumps here), Close (two forms), Footer. Cut at Nate's call: Built different, Guarantee, How it works and the run-time sheet.
+- **Nav on the homepage (Nate, 2026-11-18):** two one-line buttons, "Book a demo" (to `/demo`) and "Design yours", with no small labels. The phone action bar matches. Nav takes `demo` and `links`, MobileBar takes `secondary`. The product pages and `/old-home` still show Reserve and Book a walkthrough.
+- **Site nav and footer links** live in `content.ts` and follow the sitemap. Homepage anchors start with "/" (`/#future`, `/#faq`, `/#built`) so they work from every page, and `home2.ts` turns them into in-page links on the homepage. Keep the ids `lineup`, `future`, `faq`, `built`, `design` and `walkthrough` on the homepage.
 - **Solutions (`SolutionCards.astro`)** say the fix, not the pain (Nate, 2026-11-18), after the video cards on rivian.com. Nate's order (2026-11-18): Security (mast photo), Power (looping video) in the middle, Comfort (the HVAC photo). An icon sits next to each card's name. The section runs wider than `wrap` (24px gutters up to 1920px) so the videos get room. Power is Nate's full welding clip at 0.75x, each half slowed and smoothed separately so nothing morphs across the cut. Videos load only when a card scrolls into view and pause when it leaves. A card's `note` puts a visible tag on it while its video is missing or a stand-in.
-- **Our future lineup (`FutureLineup.astro`)** is one wide row in the /test-home looks (Garage, Disaster Relief, Camper), with "Join the waitlist" opening a signup. No category labels, specs, prices or Reserve. A small note under the row says the images are concept renderings of trailers that aren't built or for sale yet (Nate's request). Nate dropped the "Coming next" and "Get first word" wording on this page.
-- **Statement** reuses the live homepage's band through new props (`eyebrow`, `words`, `video`, `poster`, `numbers`, `lazy`). Nate liked the look and hated the copy, so the words are his approved "Bring your own power." and the stale "100 kWh" number became "Length up to 20 ft". The video is his snowy drone shot of a Workstation on tow at 0.75x, smoothed and looped. It loads only when the section comes near.
+- **Our future lineup (`FutureLineup.astro`)** is one wide row in the first test homepage's looks (Garage, Disaster Relief, Camper), with "Join the waitlist" opening a signup. No category labels, specs, prices or Reserve. A small note under the row says the images are concept renderings of trailers that aren't built or for sale yet (Nate's request). Nate dropped the "Coming next" and "Get first word" wording on this page.
+- **Statement** reuses the old homepage's band through new props (`eyebrow`, `words`, `video`, `poster`, `numbers`, `lazy`). Nate liked the look and hated the copy, so the words are his approved "Bring your own power." and the stale "100 kWh" number became "Length up to 20 ft". The video is his snowy drone shot of a Workstation on tow at 0.75x, smoothed and looped. It loads only when the section comes near.
 - **About band** runs `about-shop-loop.mp4`, Nate's warehouse fly-through and the welder on the shop floor at half speed (see Gotchas for how it was made).
-- **Book a demo (`/demo`)** offers an in-person demo, a virtual demo and a call. The first two open a form under the cards (no endpoint yet). The hero and close on Test 2 still say "Book a walkthrough".
-- **Kept from `/test-home` because Nate likes them:** the hero look (`TestHero`, now with props), the feature cards and the look of the Built band.
+- **Book a demo (`/demo`)** offers an in-person demo, a virtual demo and a call. The first two open a form under the cards (no endpoint yet). The hero and close on the homepage still say "Book a walkthrough".
+- **Kept from the first test homepage because Nate likes them:** the hero look (`TestHero`, now with props), the feature cards and the look of the Built band.
 - **Lineup (`LineupScroll.astro`)** follows the second section on rivian.com. The section pins to the screen and steps through Cargo, Workstation and Event as you scroll:
   - Each panel has the name set huge behind the trailer, one sentence, one line of facts split by thin dividers, then "Explore" (product page) and "Design yours".
   - The trailers are cut-outs (`public/images/lineup-*.webp`), so the name can sit behind them. Sizes per panel are in `home2.ts` (`fit`, `shot`, `lap`).
@@ -125,7 +132,7 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 
 ## Sitemap (Nate, 2026-11-18, not built yet)
 
-The source of truth is the "Sitemap" item under "Website Build" in Notion's Company Roadmap. It replaces the 2026-11-17 plan, which gave Garage, Disaster Relief and RV their own pages. The homepage for this sitemap is drafted at `/test-home-2`. The other new pages (Coming Next, About, Reviews, Support, Become a Dealer) aren't built.
+The source of truth is the "Sitemap" item under "Website Build" in Notion's Company Roadmap. It replaces the 2026-11-17 plan, which gave Garage, Disaster Relief and RV their own pages. The homepage for this sitemap is live at `/`. The other new pages (Coming Next, About, Reviews, Support, Become a Dealer) aren't built.
 
 - **Home:** about 75% Cargo and Workstation, since most visitors are contractors shopping for those. Event keeps a lineup card. Homepage copy v1 is on the "Home Page" item in the same Notion board.
 - **Cargo**
@@ -137,7 +144,7 @@ The source of truth is the "Sitemap" item under "Website Build" in Notion's Comp
 - **Support:** dropdown with FAQ, Contact, Warranty and Blog.
 - **Become a Dealer:** a dealer lead page in V1, linked from the footer (Nate, 2026-11-18). A separate government site for Disaster Relief comes later.
 
-The homepage hero is a background video, as on `/test-home`. The solar unfold render loop holds the spot until real footage of a crew on site exists.
+The homepage hero is a background video. The solar unfold render loop holds the spot until real footage of a crew on site exists.
 
 Each product page is written for its own buyer. The single shared `[product].astro` template gets replaced.
 
@@ -195,19 +202,18 @@ Everything below was invented for the mockup and must be replaced with real, app
 - Product page lengths: Cargo 12/16/20 ft and Event 24/31 ft stops are guesses between documented endpoints. Workstation stops come from the old configurator and Hybrid Fleet page.
 - Product page photos: Cargo and Workstation statement photos are Red Rocks placeholders (the Cargo one may not show a Cargo). The Event dusk render shows a video game on the screen, so check rights or swap the screen image.
 - The Garage render (`garage-ev-inside.jpg`) shows a Tesla Model S inside. Swap it for a neutral car before launch.
-- Test homepage: every line marked NEW in `testHome.ts`, including the card categories, status lines and the five pillars.
 - Workstation page: every line marked NEW in `workstationPage.ts`. The remote office button opens the walkthrough form until its landing page exists.
 - Workstation options to confirm: whether the premium interior is an option and what it includes, and how to present the generator hookup next to the approved line "No utility hookup, no generator noise."
 - The Workstation dusk photo (`ws-dusk.jpg`, remote band) has a Tesla Cybertruck in the frame. Check that's fine before launch.
 - Held out of `public/` until cleared: the Joby hangar shot (Joby's written permission) and a navy Workstation with a customer's BSW branding (the customer's permission). The Event render with a basketball broadcast on its screen is held for rights. All three are in `_photos-original/2026-11-17/`.
-- Test homepage 2 (`home2.ts`):
+- Homepage (`home2.ts`):
   - Every line marked NEW needs approval.
   - The three customer quotes in the proof strip. The slots show as empty dashed boxes until real quotes are signed off.
   - "Up to 40 kWh" on the Cargo panel, to confirm with Joe. The Product Wiki lists Cargo at 5 to 20 kWh. (Event's figure was dropped.)
-  - The Workstation panel line "The site office that works the day it lands." Nate wants a new one (it also runs on the live homepage in `content.ts`).
+  - The Workstation panel line "The site office that works the day it lands." Nate wants a new one (it also runs on the old homepage in `content.ts`).
   - Solution cards: the Security photo is the mast in the shop, and a night shot of it at work would be stronger. The Power card's drone half shows an orange pickup and a Chevy in frame.
   - Statement: "0 gal fuel per day" over snow footage reads as a winter claim, so confirm it with Joe. A Rivian tows the trailer in the video.
-  - The FAQ answers on Test 2 are the live homepage's placeholders, still unapproved. The run-time answer points at `/demo` because the sheet was cut.
+  - The FAQ answers on the homepage are the old homepage's placeholders, still unapproved. The run-time answer points at `/demo` because the sheet was cut.
   - Our future lineup: the three one-liners and the renderings note. The Garage render shows a Tesla inside.
   - `/demo`: every line marked NEW in `demo.ts`, and both forms need endpoints (GoHighLevel, or a calendar booking).
   - The Cargo cut-out is a render. The lineup needs a real Cargo photo.
@@ -226,7 +232,7 @@ The dark half of the page reuses one Red Rocks photo. Replace with:
 4. Residential crews tab: Cargo on a real driveway
 5. Highlights cards: roof solar close-up, crew charging tools, gear inside the trailer
 6. Customer story: the actual customer on their site
-7. Videos for the Test 2 solution cards (4:5 crop friendly, 5 to 10 seconds, no burned-in text): the security mast's cameras and lights working at night, and a crew member working inside a Workstation with the heat or AC running. A Power shot without other brands' vehicles in frame would also help.
+7. Videos for the homepage solution cards (4:5 crop friendly, 5 to 10 seconds, no burned-in text): the security mast's cameras and lights working at night, and a crew member working inside a Workstation with the heat or AC running. A Power shot without other brands' vehicles in frame would also help.
 8. Done 2026-11-17 (Nate's photos): Workstation office interior, heat and AC unit, Starlink, security mast, welding, CAD. Still nice to have: a super working at the desk, and the Workstation on a real job site.
 9. Done 2026-11-17: homepage value cards. Still nice to have: a SPOG tech on a customer site for Quality.
 

@@ -1,5 +1,5 @@
 /**
- * Test homepage 2 at /test-home-2 (draft, 2026-11-18). The live homepage and /test-home are untouched.
+ * The homepage at / (built as Test homepage 2, made the homepage 2026-11-18). The old homepage is at /old-home.
  *
  * The copy is the "Home Page" item under Website Build in Notion's Company Roadmap, as Nate
  * left it on 2026-11-18 after working through it in comments. Edit copy there first, then here.
@@ -11,7 +11,7 @@
  *   CONFIRM      a number someone still has to confirm before launch
  *   PLACEHOLDER  stands in until the real thing exists
  */
-import { closing, phone, shoot, nextUp, navLinks as siteLinks, faqs as siteFaqs } from './content';
+import { closing, phone, shoot, nextUp, navLinks as siteLinks, footerColumns as siteFooter, faqs as siteFaqs } from './content';
 import type { Feature } from './features';
 
 export const hero = {
@@ -252,13 +252,12 @@ export const close = {
   walkthrough: { tab: 'Book a walkthrough', ...closing.walkthrough }, // SOURCE
 };
 
-/** The site nav, with "Coming next" and FAQ pointing at this page's own sections instead of the live homepage. */
-export const navLinks = siteLinks.map((l) =>
-  l.href === '/#next' ? { label: 'Future lineup', href: '#future' } : l.href === '/#faq' ? { ...l, href: '#faq' } : l,
-); // NATE (2026-11-18)
+/** The site nav and footer, with homepage anchors ("/#faq") made in-page ("#faq") on this page. */
+const here = (href: string) => (href.startsWith('/#') ? href.slice(1) : href);
+export const navLinks = siteLinks.map((l) => ({ ...l, href: here(l.href) }));
 
 /**
- * The FAQ from the live homepage (Nate, 2026-11-18: "bring back the FAQ section"). Same questions
+ * The FAQ from the old homepage (Nate, 2026-11-18: "bring back the FAQ section"). Same questions
  * and answers. PLACEHOLDER: every answer still needs sign-off. The run-time sheet isn't on this
  * page, so that answer points at the demo page instead.
  */
@@ -268,12 +267,4 @@ export const faqs = siteFaqs.map((f) =>
     : f,
 );
 
-/**
- * Footer links in the order of the sitemap (Nate, 2026-11-18).
- * PLACEHOLDER: every "#" is a page that isn't built yet.
- */
-export const footerColumns = [
-  { title: 'Trailers', links: [['Cargo', '/cargo'], ['Workstation', '/workstation'], ['Event', '/event'], ['Future lineup', '#future']] },
-  { title: 'Company', links: [['About', '#built'], ['Reviews', '#'], ['Become a Dealer', '#']] },
-  { title: 'Support', links: [['FAQ', '#faq'], ['Contact', '#walkthrough'], ['Warranty', '#'], ['Blog', '#']] },
-];
+export const footerColumns = siteFooter.map((c) => ({ ...c, links: c.links.map(([label, href]) => [label, here(href)]) }));

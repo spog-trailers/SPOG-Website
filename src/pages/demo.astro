@@ -4,7 +4,7 @@ import Nav from '../components/sections/Nav.astro';
 import Footer from '../components/sections/Footer.astro';
 import { demo, demoNav, demoFooter } from '../data/demo';
 /**
- * BOOK A DEMO (draft, 2026-11-18). "Book a demo" in the Test 2 nav lands here. Not indexed.
+ * BOOK A DEMO (draft, 2026-11-18). "Book a demo" in the homepage nav lands here. Not indexed.
  * Three choices (Nate): an in-person demo, a virtual demo, or call now. The first two open their
  * form under the cards, and the third dials the number. Without JavaScript both forms show.
  * Light page with lots of room, in the Ring Jobsite Security spirit Nate likes, then the dark footer.
@@ -20,7 +20,7 @@ const icons: Record<string, string> = {
 };
 ---
 <Base title="Book a demo | SPOG Trailers" description="Book an in-person or virtual demo of a SPOG trailer, or call the team." noindex>
-  <Nav cta={{ label: 'Design yours', href: '/test-home-2#design' }} demo={{ label: 'Book a demo', href: '/demo' }} lineupHref="/test-home-2#lineup" links={demoNav} />
+  <Nav cta={{ label: 'Design yours', href: '/#design' }} demo={{ label: 'Book a demo', href: '/demo' }} lineupHref="/#lineup" links={demoNav} />
 
   <main id="top" class="bg-stone pb-[120px] pt-[190px] text-ink max-[640px]:pb-20 max-[640px]:pt-[150px]">
     <div class="wrap">

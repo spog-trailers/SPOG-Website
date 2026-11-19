@@ -1,5 +1,8 @@
 /**
- * Test homepage at /test-home (draft v2, 2026-11-17). The live homepage is untouched.
+ * The first test homepage, /test-home (draft v2, 2026-11-17). Its page was removed on 2026-11-18
+ * when Test homepage 2 became the homepage (Nate). The page is in git history before that commit.
+ * Still in use: `wordmark` (lineup and future lineup names), `hero` (TestHero's defaults) and the
+ * v1 showcase data for the held Show* components. LineupCards and the rest are kept for reference.
  *
  * v2 after Nate's review: the homepage only talks about what every SPOG shares (power,
  * freedom, utility, quality, American made) and shows each trailer once, Tesla style, as a

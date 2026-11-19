@@ -3,7 +3,7 @@ import Button from '../ui/Button.astro';
 import Eyebrow from '../ui/Eyebrow.astro';
 import { img } from '../../data/content';
 import { hero } from '../../data/testHome';
-// Every prop defaults to the /test-home copy, so that page renders exactly as before.
+// Every prop defaults to the first test homepage's copy. The homepage passes its own.
 // `size` is the heading's font-size class. Three-line headings need a smaller one.
 interface Props {
   eyebrow?: { gold?: string; text?: string };

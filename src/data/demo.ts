@@ -1,5 +1,5 @@
 /**
- * Book a demo at /demo (draft, 2026-11-18). "Book a demo" in the Test 2 nav lands here (Nate's
+ * Book a demo at /demo (draft, 2026-11-18). "Book a demo" in the homepage nav lands here (Nate's
  * request): three ways to see a SPOG, in person, on a video call or by phone.
  *
  * Copy marks, as in home2.ts:
@@ -11,8 +11,8 @@
 import { closing, phone } from './content';
 import { footerColumns, navLinks } from './home2';
 
-// This page has none of the homepage sections, so in-page links go to the test homepage 2.
-const toHome = (href: string) => (href.startsWith('#') && href.length > 1 ? `/test-home-2${href}` : href);
+// This page has none of the homepage sections, so in-page links go to the homepage.
+const toHome = (href: string) => (href.startsWith('#') && href.length > 1 ? `/${href}` : href);
 export const demoNav = navLinks.map((l) => ({ ...l, href: toHome(l.href) }));
 export const demoFooter = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, href]) => [label, toHome(href)]) }));
 

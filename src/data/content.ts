@@ -72,15 +72,15 @@ export const srcset = (src: string) => (small(src) !== src ? `${small(src)} 1200
 export const phone = { display: '1 (855) 720-2290', href: 'tel:18557202290' };
 
 // Absolute paths so the nav works on the homepage and the product pages.
+// Site nav (Nate, 2026-11-18). Homepage anchors start with "/" so they work from every page.
 export const navLinks = [
   { label: 'Cargo', href: '/cargo' },
   { label: 'Workstation', href: '/workstation' },
   { label: 'Event', href: '/event' },
-  { label: 'Coming next', href: '/#next' },
+  { label: 'Future lineup', href: '/#future' },
   { label: 'FAQ', href: '/#faq' },
-  // TEMPORARY: the two draft homepages, for review. Short labels so seven links fit. Remove when one is chosen.
-  { label: 'Test 1', href: '/test-home' }, // first draft (2026-11-17), a look per buyer
-  { label: 'Test 2', href: '/test-home-2' }, // second draft (2026-11-18), "Test homepage 2"
+  // TEMPORARY: the homepage before 2026-11-18, kept for inspiration (Nate). Remove when it's no longer needed.
+  { label: 'Old home', href: '/old-home' },
 ];
 
 // Thin bar above the nav. Tucks away once the page scrolls.
@@ -89,7 +89,7 @@ export const announcement = {
   gold: 'The 2027 lineup',
   text: 'Cargo, Workstation and Event, built in Middletown',
   cta: 'See the lineup',
-  href: '/#specs',
+  href: '/#lineup',
 };
 
 // PLACEHOLDER: rating, owner count and logos are invented for the mockup.
@@ -312,10 +312,14 @@ export const runSheet = [
   { tool: 'Heat, office', a: 30, b: 58 },
 ];
 
+/**
+ * Footer links in the order of the sitemap (Nate, 2026-11-18). Homepage anchors start with "/".
+ * Contact opens the walkthrough form, which every page has. PLACEHOLDER: every "#" is a page that isn't built yet.
+ */
 export const footerColumns = [
-  { title: 'Trailers', links: [['Cargo', '/cargo'], ['Workstation', '/workstation'], ['Event', '/event'], ['Coming next', '/#next'], ['Custom builds', '#walkthrough']] },
-  { title: 'Company', links: [['About', '/#built'], ['How it works', '/#process'], ['Press', '#'], ['Careers', '#']] },
-  { title: 'Support', links: [['FAQ', '/#faq'], ['Warranty', '#'], ['Service', '#'], ['Contact', '#walkthrough']] },
+  { title: 'Trailers', links: [['Cargo', '/cargo'], ['Workstation', '/workstation'], ['Event', '/event'], ['Future lineup', '/#future']] },
+  { title: 'Company', links: [['About', '/#built'], ['Reviews', '#'], ['Become a Dealer', '#']] },
+  { title: 'Support', links: [['FAQ', '/#faq'], ['Contact', '#walkthrough'], ['Warranty', '#'], ['Blog', '#']] },
 ];
 
 /** Line icons (stroke only). viewBox per icon. */

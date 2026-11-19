@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/sections/Nav.astro';
+import Hero from '../components/sections/Hero.astro';
+import Problem from '../components/sections/Problem.astro';
+import Compare from '../components/sections/Compare.astro';
+import Statement from '../components/sections/Statement.astro';
+import UseCaseTabs from '../components/sections/UseCaseTabs.astro';
+import Explore from '../components/sections/Explore.astro';
+import Process from '../components/sections/Process.astro';
+import Guarantee from '../components/sections/Guarantee.astro';
+import Built from '../components/sections/Built.astro';
+import Faq from '../components/sections/Faq.astro';
+import Close from '../components/sections/Close.astro';
+import Footer from '../components/sections/Footer.astro';
+import MobileBar from '../components/sections/MobileBar.astro';
+---
+<!--
+  OLD HOMEPAGE. This was the homepage at / until 2026-11-18, when the Test 2 draft replaced it.
+  Nate kept it for inspiration, linked as "Old home" in the nav. Not indexed. Its nav and footer
+  are the site's, so they point at the new homepage. The announcement bar still jumps to #specs here.
+
+  Section order follows the competitive teardown in docs/homepage-teardown-2026-11-16.md.
+
+  Section rhythm rule: never put two photo-background sections next to each other.
+  Photo: Hero, Statement (self-powered), Explore, Built
+  Light: Problem, UseCaseTabs, Guarantee, Faq
+  Dark:  Compare (lineup + coming next), Process, Close
+
+  Held until real proof exists (components kept, not rendered):
+    SocialProof, ReviewQuote, CustomerStory. Bring back ONE proof section, between
+    Compare and Statement or between Built and Faq.
+  Merged (components kept for reference, not rendered):
+    Highlights -> Explore (hotspot photos), KeyNumbers -> Statement,
+    LeadMagnet + LaunchCta -> Close.
+-->
+<Base title="Old homepage | SPOG Trailers" noindex>
+  <Nav lineupHref="#specs" />
+  <Hero />
+  <Problem />
+  <Compare />
+  <Statement />
+  <UseCaseTabs />
+  <Explore />
+  <Process />
+  <Guarantee />
+  <Built />
+  <Faq />
+  <Close />
+  <Footer />
+  <MobileBar />
+</Base>
