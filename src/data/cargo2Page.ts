@@ -127,7 +127,7 @@ export const features: Feature[] = [
   {
     id: 'starlink',
     title: 'Starlink',
-    line: 'Optional internet for your crew on site.', // NEW, Nate's direction (Notion, 2026-11-19)
+    line: 'Stay connected on the job, even on the most rural sites, with optional Starlink.', // NATE, his third option with "optional" kept (2026-11-19)
     image: shoot.cargoStarlinkCard,
     alt: 'Starlink dish on top of a SPOG mast against a blue sky',
     position: '50% 30%',
@@ -173,8 +173,8 @@ export const build = {
       src: shoot.engineeringCad, alt: 'A SPOG engineer working on a trailer frame in CAD', position: '30% 50%',
     },
     {
-      title: 'Backed in writing',
-      body: 'A 3-year limited structural warranty and a 1-year limited parts warranty. We can diagnose problems remotely, and our mobile service fleet repairs on site.', // SOURCE (Warranty Policy)
+      title: 'Backed by a 3-year structural warranty', // NATE 2026-11-19
+      body: 'Every Cargo comes with a 3-year limited structural warranty and a 1-year limited parts warranty, and if something needs work we diagnose it remotely and send our mobile service fleet to your site.', // NATE approved 2026-11-19, facts SOURCE (Warranty Policy)
       src: img.builtBg, alt: 'A finished SPOG trailer on the floor of the Middletown shop, SPOG painted on the wall behind it', position: '50% 50%',
     },
   ],
