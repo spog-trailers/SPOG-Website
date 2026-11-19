@@ -68,7 +68,7 @@ export const features: Feature[] = [
     alt: 'Rear barn doors of a black SPOG Cargo with two full-height chrome lock bars',
     position: '50% 50%',
     panel: {
-      intro: 'Both doors swing wide for carts and gear, then lock with full-height bars when the day is done.', // NEW, from the photos
+      intro: 'Both barn doors swing wide for carts and gear, and full-height bars lock them shut at night.', // NATE approved 2026-11-19, from the photos
       media: { src: shoot.cargoDoors, alt: 'Rear three-quarter view of a black SPOG Cargo, barn doors closed', width: 2400, height: 1600 },
     },
   },
@@ -100,7 +100,7 @@ export const features: Feature[] = [
   {
     id: 'street',
     title: 'Window and storage hatch',
-    line: 'Daylight inside, and cords within reach outside.', // NEW
+    line: 'A window lets light in, and the hatch keeps cords and hoses within reach from outside.', // NATE approved 2026-11-19
     image: shoot.cargoStreetCard,
     alt: 'Street side of a black SPOG Cargo with a sliding window and a two-door storage hatch',
     position: '50% 50%',
