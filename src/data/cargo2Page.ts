@@ -235,7 +235,7 @@ export const options = {
   heading: ['Build it', 'for your crew.'], // NEW
   body: 'Every Cargo is built to order, so you pick the exact configuration that works for you and your crew.', // NATE 2026-11-19
   exterior: [
-    { name: 'Exterior color', desc: 'Twelve colors. Your SPOG contact will confirm the color.' }, // NATE (colors), SOURCE (sheet wording)
+    { name: 'Exterior color', desc: 'Pick from twelve colors, and your SPOG contact will confirm the match before the build.' }, // NATE approved 2026-11-19
     { name: 'Company logo', desc: 'On the nose, either side or the rear.' }, // SOURCE (options sheet)
     { name: 'Vinyl lettering or numbers' }, // SOURCE (options sheet)
   ],
