@@ -14,7 +14,7 @@
  *   - No price. Product pages carry none, and only "From $10,000" is real. Ask Nate before adding it.
  *   - Only facts the options sheet or Nate confirmed. No solar watts, width, lead time, payload,
  *     tow weight or delivery, because none of those are settled.
- *   - Options shown as options. The black 20 ft in the photos has a side window, storage hatch
+ *   - Options shown as options. The black 20 ft in the photos has a side window, an equipment compartment (not storage, Nate)
  *     and spare, which the sheet doesn't list, so the cards say "on the 20 ft shown".
  *   - The 3D model is labeled computer-generated, and its optional extras are named.
  */
@@ -99,15 +99,15 @@ export const features: Feature[] = [
   },
   {
     id: 'street',
-    title: 'Window and storage hatch',
-    line: 'A window lets light in, and the hatch keeps cords and hoses within reach from outside.', // NATE approved 2026-11-19
+    title: 'Sliding window',
+    line: 'A sliding window on the street side lets daylight and fresh air into the work space.', // NEW. The hatch is an equipment compartment, not storage (Nate, 2026-11-19)
     image: shoot.cargoStreetCard,
-    alt: 'Street side of a black SPOG Cargo with a sliding window and a two-door storage hatch',
+    alt: 'Street side of a black SPOG Cargo with a sliding window over the axles',
     position: '50% 50%',
     panel: {
-      intro: 'A sliding window lets light into the work space. The two-door hatch low on the street side reaches cords and hoses without climbing in.', // NEW
-      media: { src: shoot.cargoStreet, alt: 'Street side of a black SPOG Cargo, window, storage hatch and tandem wheels', width: 2400, height: 1600 },
-      points: [{ title: 'Where they sit', body: shown }], // NEW. CONFIRM whether the window and hatch are standard
+      intro: 'The window sits over the axles, so light reaches the work space even with every door shut.', // NEW
+      media: { src: shoot.cargoStreet, alt: 'Street side of a black SPOG Cargo, sliding window and tandem wheels', width: 2400, height: 1600 },
+      points: [{ title: 'Where it sits', body: shown }], // NEW. CONFIRM whether the window is standard
     },
   },
   {
@@ -248,7 +248,7 @@ export const specs = {
   kicker: 'Specs', // NEW
   heading: ['Cargo', 'at a glance.'], // NEW
   image: shoot.cargoProfile,
-  alt: 'Street-side profile of a black 20 ft SPOG Cargo, window, storage hatch, tandem wheels and spare',
+  alt: 'Street-side profile of a black 20 ft SPOG Cargo, sliding window, tandem wheels and spare',
   rows: [
     ['Type', 'Enclosed cargo trailer'], // NATE (2026-11-19)
     ['Length', '10 or 20 ft'], // NATE

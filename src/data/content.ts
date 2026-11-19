@@ -77,7 +77,7 @@ export const shoot = {
   cargoDoorsCard: '/images/cargo2-doors-card.jpg',
   cargoDoor: '/images/cargo2-door.jpg', // 23: curb side, entry door, backlit (sticker in the door glass)
   cargoDoorCard: '/images/cargo2-door-card.jpg',
-  cargoStreet: '/images/cargo2-street.jpg', // 36: street side, window and storage hatch
+  cargoStreet: '/images/cargo2-street.jpg', // 36: street side, sliding window (the low compartment is equipment, not storage)
   cargoStreetCard: '/images/cargo2-street-card.jpg',
   cargoNose: '/images/cargo2-nose.jpg', // 15: V nose, tongue and spare (cropped to clear parked cars)
   cargoNoseCard: '/images/cargo2-nose-card.jpg',
