@@ -166,6 +166,7 @@ export const build = {
       title: 'Welded steel frame',
       body: 'Every Cargo starts on a welded steel frame, with steel crossmembers across the floor, built to carry the weight of its solar and battery.', // NATE (steel frame), SOURCE (frame line), crossmembers from Nate's frame photo
       src: shoot.shopWelding, alt: 'A welder joining the steel frame of a SPOG trailer in the Middletown shop', position: '50% 50%',
+      video: '/images/cargo2-weld-loop.mp4', poster: '/images/cargo2-weld-loop.jpg', // Nate's "welding on the ground" clip, half speed, smoothed and looped (2026-11-19)
     },
     {
       title: 'Designed and tested in Middletown',
@@ -175,7 +176,8 @@ export const build = {
     {
       title: 'Backed by a 3-year structural warranty', // NATE 2026-11-19
       body: 'Every Cargo comes with a 3-year limited structural warranty and a 1-year limited parts warranty, and if something needs work we diagnose it remotely and send our mobile service fleet to your site.', // NATE approved 2026-11-19, facts SOURCE (Warranty Policy)
-      src: img.builtBg, alt: 'A finished SPOG trailer on the floor of the Middletown shop, SPOG painted on the wall behind it', position: '50% 50%',
+      src: img.builtBg, alt: 'The Middletown shop floor, SPOG painted on the wall and an American flag at the far end', position: '50% 50%',
+      video: '/images/cargo2-shop-loop.mp4', poster: '/images/cargo2-shop-loop.jpg', // Nate's warehouse fly-through, half speed, plays forward then back (2026-11-19)
     },
   ],
 };

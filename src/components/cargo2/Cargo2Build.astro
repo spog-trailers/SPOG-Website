@@ -7,6 +7,10 @@ import { build } from '../../data/cargo2Page';
  * alternate sides. Nate didn't like the first version (two small photos over a grid of six
  * short points).
  *
+ * Rows with a video (welding, shop floor) play it muted on a loop, but only while the row is on
+ * screen: nothing loads until it comes near, and it pauses when it leaves. Reduced motion keeps
+ * the poster still.
+ *
  * Cargo is a utility trailer first, and GCs and subs want to know it holds up. Every claim comes
  * from the options sheet, the Warranty Policy, the Objections & FAQ doc or Nate, because each
  * one reads as a promise.
@@ -29,7 +33,11 @@ import { build } from '../../data/cargo2Page';
   <div class="wrap grid gap-[120px] pb-[130px] pt-[120px] max-[640px]:gap-16 max-[640px]:pb-20 max-[640px]:pt-16">
     {build.rows.map((r, i) => (
       <article class="grid grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] items-center gap-x-16 gap-y-8 max-[900px]:grid-cols-[minmax(0,1fr)]">
-        <img src={small(r.src)} srcset={srcset(r.src)} sizes="(max-width: 900px) 100vw, 55vw" alt={r.alt} loading="lazy" class:list={['block aspect-[3/2] w-full rounded-[18px] object-cover', i % 2 === 1 && 'min-[901px]:order-2']} style={`object-position:${r.position}`} />
+        {r.video ? (
+          <video data-build-video src={r.video} poster={r.poster} muted loop playsinline preload="none" aria-label={r.alt} class:list={['block aspect-[3/2] w-full rounded-[18px] bg-night object-cover', i % 2 === 1 && 'min-[901px]:order-2']}></video>
+        ) : (
+          <img src={small(r.src)} srcset={srcset(r.src)} sizes="(max-width: 900px) 100vw, 55vw" alt={r.alt} loading="lazy" class:list={['block aspect-[3/2] w-full rounded-[18px] object-cover', i % 2 === 1 && 'min-[901px]:order-2']} style={`object-position:${r.position}`} />
+        )}
         <div class:list={[i % 2 === 1 && 'min-[901px]:order-1']}>
           <i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>
           <h3 class="mb-0 mt-6 text-[clamp(30px,3vw,44px)] font-black uppercase leading-[.92] tracking-[-.045em] text-white">{r.title}</h3>
@@ -39,3 +47,17 @@ import { build } from '../../data/cargo2Page';
     ))}
   </div>
 </section>
+
+<script>
+  const vids = [...document.querySelectorAll<HTMLVideoElement>('[data-build-video]')];
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (vids.length && !still && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        const v = e.target as HTMLVideoElement;
+        if (e.isIntersecting) { v.preload = 'auto'; v.play().catch(() => {}); } else v.pause();
+      }
+    }, { rootMargin: '200px 0px' });
+    vids.forEach((v) => io.observe(v));
+  }
+</script>
