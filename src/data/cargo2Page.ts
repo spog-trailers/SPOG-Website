@@ -118,9 +118,9 @@ export const features: Feature[] = [
     alt: 'Two dome cameras and work lights on a SPOG security mast',
     position: '50% 50%',
     panel: {
-      intro: 'Add cameras and lights to watch the trailer and your gear after hours. A horn and strobe can warn people away.', // NEW, from Nate's note and the options sheet
+      intro: 'Add cameras and lights to watch the trailer and your gear after hours, and a horn and strobe that warns people away.', // NATE approved 2026-11-19, from Nate's note and the options sheet
       media: { src: shoot.wsSecurityMast, alt: 'Dome cameras and work lights on a SPOG security mast in the Middletown shop', width: 2400, height: 1600 },
-      points: [{ title: 'Pick what you need', body: 'Security is an add-on. Your SPOG contact will confirm what fits your build.' }], // NEW
+      points: [{ title: 'Pick what you need', body: 'Security is an add-on, and your SPOG contact will confirm what fits your build.' }], // NATE approved 2026-11-19
       link: { label: 'See all the options', href: '#options' }, // NEW
     },
   },
@@ -134,7 +134,7 @@ export const features: Feature[] = [
     panel: {
       intro: 'Add Starlink to keep your crew online where cell service is weak, or a cellular router where it is strong.', // NEW, options from the sheet
       media: { src: shoot.wsStarlink, alt: 'Starlink dish on a SPOG mast against the sky', width: 2400, height: 1600 },
-      points: [{ title: 'Pick what you need', body: 'Internet is an add-on. Your SPOG contact will confirm what fits your build.' }], // NEW
+      points: [{ title: 'Pick what you need', body: 'Internet is an add-on, and your SPOG contact will confirm what fits your build.' }], // NATE approved 2026-11-19
       link: { label: 'See all the options', href: '#options' }, // NEW
     },
   },
