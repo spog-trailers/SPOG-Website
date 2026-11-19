@@ -5,15 +5,17 @@ import { design, options, power } from '../../data/cargo2Page';
 /**
  * Options, straight from the Trailer Customization Options sheet (the same list the configurator
  * uses, from src/scripts/configurator/data.ts, which loads no three.js). Names only, no prices.
+ * v2 groups them the same way as the feature cards (power, security and internet, storage and
+ * interior, your look), so the page reads as one story. Plain lists, since the cards sell.
  */
-// Work groups first (Nate, 2026-11-19: it's a job-site trailer), then everything else in sheet order.
-const first = ['Work surfaces and storage', 'E-track'];
+// Each card's groups in this order (Nate, 2026-11-19: storage and work items first, it's a job-site trailer).
+const order = ['Security', 'Internet', 'Work surfaces and storage', 'E-track', 'Climate', 'Fixtures and appliances'];
 const groups = (list: typeof INTERIOR) => [...new Set(list.map((o) => o.group))]
-  .sort((a, b) => (first.includes(b) ? 1 : 0) - (first.includes(a) ? 1 : 0) || first.indexOf(a) - first.indexOf(b))
+  .sort((a, b) => order.indexOf(a) - order.indexOf(b))
   .map((g) => ({ name: g, items: list.filter((o) => o.group === g) }));
 const columns = [
-  { title: 'Interior', groups: groups(INTERIOR) },
-  { title: 'Connectivity and security', groups: groups(CONNECT) },
+  { title: 'Security and internet', groups: groups(CONNECT) },
+  { title: 'Storage and interior', groups: groups(INTERIOR) },
 ];
 const check = '<svg viewBox="0 0 24 24" class="mt-[3px] size-4 shrink-0 fill-none stroke-coal stroke-[2.4]" aria-hidden="true"><path d="M4 12.5l5 5L20 6"/></svg>';
 ---
@@ -25,7 +27,7 @@ const check = '<svg viewBox="0 0 24 24" class="mt-[3px] size-4 shrink-0 fill-non
     </div>
 
     <div class="mt-14 grid grid-cols-[repeat(2,minmax(0,1fr))] gap-3 max-[860px]:grid-cols-[repeat(1,minmax(0,1fr))]">
-      <!-- Power first (Nate, 2026-11-19: the separate Power section repeated this and the specs) -->
+      <!-- Power first, then security, storage and the look, the same order as the cards (v2) -->
       <div class="rounded-[18px] bg-stone px-8 pb-9 pt-7 max-[640px]:px-6">
         <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[0em] text-coal">Power</h3>
         <p class="mb-0 mt-2 text-[15px] leading-[1.5] text-ink-soft">{power.body}</p>
@@ -38,23 +40,11 @@ const check = '<svg viewBox="0 0 24 24" class="mt-[3px] size-4 shrink-0 fill-non
           </div>
         ))}
       </div>
-      <div class="rounded-[18px] bg-stone px-8 pb-9 pt-7 max-[640px]:px-6">
-        <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[0em] text-coal">Exterior</h3>
-        <div class="mt-6 flex flex-wrap gap-1.5" aria-label="Twelve exterior colors">
-          {PAINTS.map((p) => <span title={p.name} class="block size-7 rounded-full shadow-[inset_0_0_0_1px_rgb(0_0_0/.14)]" style={`background:radial-gradient(circle at 34% 26%, color-mix(in srgb, ${p.hex} ${p.matte ? 88 : 55}%, white), ${p.hex} 60%)`}></span>)}
-        </div>
-        <ul class="m-0 mt-6 grid list-none gap-3 p-0">
-          {options.exterior.map((o) => (
-            <li class="flex gap-3 text-[15.5px] leading-[1.45]">
-              <Fragment set:html={check} />
-              <span><b class="font-semibold text-coal">{o.name}</b>{o.desc && <span class="block text-[14px] text-ink-soft">{o.desc}</span>}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-      {columns.map((col) => (
-        <div class="rounded-[18px] bg-stone px-8 pb-9 pt-7 max-[640px]:px-6">
+      <!-- Storage and interior runs full width with its groups side by side, so no card is left half empty. -->
+      {columns.map((col, ci) => (
+        <div class:list={['rounded-[18px] bg-stone px-8 pb-9 pt-7 max-[640px]:px-6', ci === 1 && 'min-[861px]:col-span-2']}>
           <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[0em] text-coal">{col.title}</h3>
+          <div class:list={[ci === 1 && 'grid gap-x-10 min-[1000px]:grid-cols-[repeat(4,minmax(0,1fr))] min-[640px]:grid-cols-[repeat(2,minmax(0,1fr))]']}>
           {col.groups.map((g) => (
             <div class="mt-6">
               <h4 class="m-0 text-[11.5px] font-semibold uppercase tracking-[.16em] text-ink-soft">{g.name}</h4>
@@ -68,8 +58,26 @@ const check = '<svg viewBox="0 0 24 24" class="mt-[3px] size-4 shrink-0 fill-non
               </ul>
             </div>
           ))}
+          </div>
         </div>
       ))}
+      <!-- Your look runs full width too: the colors on the left, the list on the right. -->
+      <div class="grid items-center gap-x-10 rounded-[18px] bg-stone px-8 pb-9 pt-7 max-[640px]:px-6 min-[861px]:col-span-2 min-[861px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <div>
+        <h3 class="m-0 text-[22px] font-black uppercase leading-[1.05] tracking-[0em] text-coal">Your look</h3>
+        <div class="mt-6 flex flex-wrap gap-1.5" aria-label="Twelve exterior colors">
+          {PAINTS.map((p) => <span title={p.name} class="block size-7 rounded-full shadow-[inset_0_0_0_1px_rgb(0_0_0/.14)]" style={`background:radial-gradient(circle at 34% 26%, color-mix(in srgb, ${p.hex} ${p.matte ? 88 : 55}%, white), ${p.hex} 60%)`}></span>)}
+        </div>
+        </div>
+        <ul class="m-0 mt-6 grid list-none gap-3 p-0">
+          {options.look.map((o) => (
+            <li class="flex gap-3 text-[15.5px] leading-[1.45]">
+              <Fragment set:html={check} />
+              <span><b class="font-semibold text-coal">{o.name}</b>{o.desc && <span class="block text-[14px] text-ink-soft">{o.desc}</span>}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
 
     <div class="mt-8 flex flex-wrap items-center justify-between gap-5">

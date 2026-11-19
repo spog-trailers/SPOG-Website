@@ -82,6 +82,10 @@ export const shoot = {
   cargoNose: '/images/cargo2-nose.jpg', // 15: V nose, tongue and spare (cropped to clear parked cars)
   cargoNoseCard: '/images/cargo2-nose-card.jpg',
   cargoProfile: '/images/cargo2-profile.jpg', // 36: street-side profile, whole trailer
+  cargoStorage: '/images/cargo2-storage.jpg', // Better Interior 61: barn doors swung open, the empty 20 ft inside
+  cargoStorageCard: '/images/cargo2-storage-card.jpg', // Better Interior 60: E-track down both walls, batteries on their platforms
+  cargoHvac: '/images/cargo2-hvac.jpg', // Better Interior 66: wall-mounted heating and cooling unit over the desk, closet door at the nose
+  cargoHvacCard: '/images/cargo2-hvac-card.jpg',
 };
 
 /** The 1200 px copy of a photo from `shoot`, for cards and phones. Older images have none. */
@@ -362,4 +366,6 @@ export const icons: Record<string, { viewBox: string; body: string }> = {
   wifi: { viewBox: '0 0 34 34', body: '<path d="M3.5 13a19 19 0 0127 0M8 18a13 13 0 0118 0M12.5 23a7 7 0 019 0"/><circle cx="17" cy="28" r="1.4"/>' },
   camera: { viewBox: '0 0 34 34', body: '<path d="M5 9l19 4.5-2 8L3 17z"/><path d="M24 13.5l5-1.5v8l-5.5-1.5M11 20l-2 9H4"/>' },
   screen: { viewBox: '0 0 34 34', body: '<rect x="3" y="6" width="28" height="18" rx="1.5"/><path d="M11 29h12M17 24v5"/>' },
+  fuel: { viewBox: '0 0 34 34', body: '<path d="M7 9h13l7 7v15H7z"/><path d="M20 9v7h7M11 4h6v5M12 20l8 8M20 20l-8 8"/>' },
+  plug: { viewBox: '0 0 34 34', body: '<path d="M12 3v7M22 3v7M8 10h18v6a9 9 0 01-18 0z"/><path d="M17 25v6"/>' },
 };

@@ -6,18 +6,16 @@ import Cargo2Hero from '../components/cargo2/Cargo2Hero.astro';
 import FeatureCards from '../components/features/FeatureCards.astro';
 import Cargo2Build from '../components/cargo2/Cargo2Build.astro';
 import Cargo2Tour from '../components/cargo2/Cargo2Tour.astro';
-import WorkPhoto from '../components/work/WorkPhoto.astro';
 import Cargo2Replaces from '../components/cargo2/Cargo2Replaces.astro';
 import Cargo2Options from '../components/cargo2/Cargo2Options.astro';
 import Cargo2Specs from '../components/cargo2/Cargo2Specs.astro';
-import AboutBand from '../components/home2/AboutBand.astro';
 import Cargo2Close from '../components/cargo2/Cargo2Close.astro';
 import Faq from '../components/sections/Faq.astro';
 import Footer from '../components/sections/Footer.astro';
 import MobileBar from '../components/sections/MobileBar.astro';
 import { productPages } from '../data/productPages';
 import { footerColumns } from '../data/content';
-import { demo, design, faqs, features, featuresHead, meta, statement, subnavLinks } from '../data/cargo2Page';
+import { demo, design, faqs, features, featuresHead, meta, subnavLinks } from '../data/cargo2Page';
 // This page has no walkthrough form, so the footer's Contact link goes to the demo page.
 const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, href]) => [label, href === '#walkthrough' ? demo.href : href]) }));
 ---
@@ -28,18 +26,21 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
   Not indexed while it's a draft (and while public sales wait on legal).
   Copy and its approval marks live in src/data/cargo2Page.ts. Photos are Nate's black 20 ft.
 
+  v2 (2026-11-19): built around what GCs and subs buy, power, security and storage, with heat and AC,
+  Starlink and a custom look as add-ons, tied together by build quality. The core pitch shows up only
+  in the hero, the Power card, the savings section and the close. The statement photo and the shared
+  shop video band were cut because they repeated the pitch and the Build section.
+
   Order and rhythm (never two photo sections next to each other):
-    Hero P (real photo, name huge, two buttons, three facts)
-    Get to know Cargo L (white, feature cards: barn doors, insulation, side door, sliding window, security, Starlink, solar)
-    Built for the job site P+D (full-bleed frame photo with the headline, then three alternating photo rows on dark, after Rivian. Nate, 2026-11-19)
-    Take a tour L (light studio plate, the 3D model, views, doors, 12 colors, four numbers)
-    Statement P ("Every crew needs a trailer. Yours should run the job.")
-    What it replaces D (the one dark chapter for the numbers: outcomes and the fuel math)
-    Options L (white: the customization sheet, names only)
+    Hero P (real photo, name huge, one line, two buttons, the starting price)
+    Get to know Cargo L (white, six cards: power, security, storage, heat and AC, Starlink, your look)
+    Built for the job site P+D (full-bleed frame photo with the headline, then three alternating rows on dark, two with video)
+    Take a tour L (light studio plate, the 3D model, views, doors, 12 colors)
+    What it saves you D (fuel number and three icon tiles, after Tesla)
+    Options L (white: the customization sheet, grouped like the cards)
     Specs D (profile photo and the confirmed specs)
-    Built P (the shop video, from the homepage)
     Close D, FAQ L, Footer D
-  Keep the ids top, overview, build, tour, options, specs, cta and faq: the section bar,
+  Keep the ids top, overview, build, tour, savings, options, specs, cta and faq: the section bar,
   the phone bar and the links in the copy point at them.
 -->
 <Base title={meta.title} description={meta.description} noindex>
@@ -49,11 +50,9 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
   <FeatureCards id="overview" label="Get to know Cargo" kicker={featuresHead.kicker} heading={featuresHead.heading} features={features} look="work" tone="light" />
   <Cargo2Build />
   <Cargo2Tour />
-  <WorkPhoto image={statement.image} alt={statement.alt} position={statement.position} heading={statement.heading} />
   <Cargo2Replaces />
   <Cargo2Options />
   <Cargo2Specs />
-  <AboutBand />
   <Cargo2Close />
   <Faq items={faqs} heading="Questions about Cargo." />
   <Footer columns={footer} />

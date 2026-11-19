@@ -3,7 +3,7 @@ import { srcset } from '../../data/content';
 import { demo, design, hero } from '../../data/cargo2Page';
 /**
  * Cargo 2 hero, after the Rivian R1T page: the real photo full bleed, the name set huge at the
- * bottom left with the promise under it, the two buttons at the bottom right, and the starting price (Nate, 2026-11-19, after Rivian).
+ * bottom left with one line under it (v2), the two buttons at the bottom right, and the starting price (Nate, 2026-11-19, after Rivian).
  * The photo is the finished black 20 ft outside the SPOG shop (source photo 13).
  * Keep the id "top": the section bar and the phone action bar watch it.
  */
@@ -16,12 +16,9 @@ const btn = 'inline-flex h-[50px] items-center justify-center border-[1.5px] px-
   <div class="wrap relative z-[3] w-full pb-14 max-[640px]:pb-10">
     <div class="flex items-end justify-between gap-10 max-[900px]:flex-col max-[900px]:items-start max-[900px]:gap-7">
       <div class="max-w-[760px]">
-        <h1 class="m-0">
-          <span class="block text-[clamp(84px,13vw,210px)] font-black uppercase leading-[.8] tracking-[0em]">{hero.name}</span>
-          <span class="mt-4 block text-[clamp(17px,1.5vw,21px)] font-semibold tracking-[-.01em] text-white/80">{hero.type}</span>
-        </h1>
-        <p class="mb-0 mt-5 text-[clamp(21px,2vw,28px)] font-semibold leading-[1.25] tracking-[-.02em]">{hero.line}</p>
-        <p class="mb-0 mt-3 max-w-[600px] text-[16.5px] leading-[1.55] text-white/78 max-[640px]:text-[15px]">{hero.sub}</p>
+        <h1 class="m-0 text-[clamp(84px,13vw,210px)] font-black uppercase leading-[.8] tracking-[0em]">{hero.name}</h1>
+        <!-- One line under the name (Nate, v2): his line and the old subhead merged. -->
+        <p class="mb-0 mt-6 max-w-[640px] text-[clamp(20px,1.9vw,26px)] font-semibold leading-[1.3] tracking-[-.015em]">{hero.line}</p>
       </div>
       <div class="flex shrink-0 gap-2.5 max-[420px]:w-full max-[420px]:flex-col">
         <a href={demo.href} class={`${btn} border-white/75 bg-black/25 text-white backdrop-blur-[6px] hover:border-white hover:bg-white hover:text-black`}>{demo.label}</a>
