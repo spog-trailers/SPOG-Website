@@ -1,6 +1,5 @@
 ---
 import Button from '../ui/Button.astro';
-import Eyebrow from '../ui/Eyebrow.astro';
 import { about } from '../../data/home2';
 // Mini about, in the look of the Built section (picture on the right, fading into the dark).
 // The picture is a slowed, looping shop video (Nate, 2026-11-18). It loads when the section comes
@@ -21,8 +20,7 @@ import { about } from '../../data/home2';
   <div class="scrim-built absolute inset-0 z-[1]"></div>
 
   <div class="wrap relative z-[3] w-full">
-    <Eyebrow gold={about.eyebrow} />
-    <h2 class="mb-0 mt-[18px] max-w-[980px] text-[clamp(38px,5vw,78px)] font-light leading-[1.04] tracking-[-.035em] text-white">
+    <h2 class="m-0 max-w-[980px] text-[clamp(38px,5vw,78px)] font-light leading-[1.04] tracking-[-.035em] text-white">
       <b class="font-black uppercase tracking-[-.04em]">{about.lead}</b> {about.rest}
     </h2>
     <p class="mb-0 mt-8 max-w-[560px] text-[18px] leading-[1.6] text-white/82">{about.body}</p>

@@ -61,6 +61,7 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 
 ## Layout rules
 
+- **No small labels above headings (Nate, 2026-11-19).** He found the tracked eyebrow labels over every section heading looked AI-made, so they're gone from the homepage, Cargo 2, Workstation and the product template. `WorkTitle` has no kicker. `Faq` and `Close` show theirs only with the `eyebrow` prop, which only `/old-home` passes. The one exception kept is the "Solar Power Off Grid" line over "What SPOG is made of." because it spells out the name. Don't add new ones.
 - **Section rhythm:** never put two photo-background sections next to each other. Alternate photo, plain dark, light. Each page documents its pattern in a comment at the top.
 - **Old homepage only:** the next four rules (order, Compare, held sections, the run-time sheet) describe `/old-home`, plus the Close section the product pages still use. The nav on every other page shows Book a demo and Design yours. The homepage's own rules are under "Homepage".
 - **Old homepage order:** Nav (with announcement bar), Hero, Problem, Compare (2027 lineup + coming next), Statement (self-powered + key numbers), UseCaseTabs, Explore (hotspots + close-up photos), Process, Guarantee, Built, Faq, Close (reserve + walkthrough form + run-time sheet), Footer, MobileBar.
@@ -123,7 +124,7 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
   - Tesla Cybertruck.
   - Ring Jobsite Security, which he loves for being "simple. Lots of whitespace. Very clean."
 - **The work look**, shared with Cargo later:
-  - heavy uppercase headings with a gold bar before a small gray label (`WorkTitle`)
+  - heavy uppercase headings with no label above them (`WorkTitle`)
   - light sections with a lot of space for the pitch (top half)
   - one dark chapter for the numbers, then the dark close
   - gold is never used as text on white, because it's too light to read

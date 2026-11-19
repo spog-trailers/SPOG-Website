@@ -1,6 +1,5 @@
 ---
 import Button from '../ui/Button.astro';
-import Eyebrow from '../ui/Eyebrow.astro';
 import { hero, ws } from '../../data/workstationPage';
 // Work look hero: warm daylight photo, the name set huge in heavy uppercase (same type as the
 // lineup card on the test homepage), the promise, two actions and the three numbers a GC asks
@@ -17,8 +16,7 @@ import { hero, ws } from '../../data/workstationPage';
   <div class="absolute inset-0 z-[1] bg-[linear-gradient(to_top,rgb(0_0_0/.9)_0%,rgb(0_0_0/.6)_40%,rgb(0_0_0/.22)_72%,rgb(0_0_0/.1)_100%),linear-gradient(to_right,rgb(0_0_0/.5)_0%,rgb(0_0_0/0)_55%),linear-gradient(to_bottom,rgb(0_0_0/.55)_0%,rgb(0_0_0/0)_22%)]"></div>
 
   <div class="wrap relative z-[3] w-full @container">
-    <Eyebrow gold={hero.eyebrow.gold} text={hero.eyebrow.text} />
-    <h1 class="m-0 mt-4 text-[13.2cqw] font-black uppercase leading-[.82] tracking-[-.05em] text-white">{ws.name}</h1>
+    <h1 class="m-0 text-[13.2cqw] font-black uppercase leading-[.82] tracking-[-.05em] text-white">{ws.name}</h1>
 
     <div class="mt-10 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-x-12 gap-y-10 max-[1180px]:grid-cols-[minmax(0,1fr)] max-[640px]:mt-8">
       <div>

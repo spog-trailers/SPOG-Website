@@ -11,7 +11,7 @@ import { specs } from '../../data/cargo2Page';
 ---
 <section id="specs" aria-label="Specs" class="border-t border-line bg-black pb-[120px] pt-[130px] text-bone max-[640px]:pb-16 max-[640px]:pt-20">
   <div class="wrap">
-    <WorkTitle kicker={specs.kicker} lines={specs.heading} tone="dark" />
+    <WorkTitle lines={specs.heading} tone="dark" />
     <div class="mt-14 grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-start gap-x-16 gap-y-10 max-[1000px]:grid-cols-[minmax(0,1fr)]">
       <img src={specs.image} srcset={srcset(specs.image)} sizes="(max-width: 1000px) 100vw, 680px" alt={specs.alt} loading="lazy" class="aspect-[16/9] w-full rounded-[18px] object-cover" />
       <div>

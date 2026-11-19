@@ -7,16 +7,17 @@ import { closing } from '../../data/content';
 // Closing section. Merges the old LaunchCta and LeadMagnet, and repeats the hero promise.
 // Three levels of commitment: reserve (hard), walkthrough (middle), run-time sheet (soft).
 // No special-offer framing here. The 2027 Launch Offer is for close contacts and partners only.
-interface Props { trailer?: string; heading?: [string, string] }
-const { trailer, heading = closing.heading } = Astro.props;
+/** eyebrow: show the small label above the heading. Only /old-home still does (Nate cut them, 2026-11-19). */
+interface Props { trailer?: string; heading?: [string, string]; eyebrow?: boolean }
+const { trailer, heading = closing.heading, eyebrow = false } = Astro.props;
 const field = 'w-full rounded-[10px] border border-panel-line bg-black px-4 py-[14px] text-[16px] text-white placeholder:text-[#8a8a8a] focus-visible:border-gold';
 const label = 'mb-1.5 block text-[11px] font-semibold uppercase tracking-[.18em] text-mute';
 ---
 <section id="cta" aria-label="Reserve or book a walkthrough" class="relative overflow-hidden border-t border-line bg-black pb-[110px] pt-[120px]">
   <div class="wrap relative z-[3] grid grid-cols-[1.05fr_1fr] items-start gap-[70px] max-[960px]:grid-cols-[repeat(1,1fr)] max-[960px]:gap-14">
     <div>
-      <Eyebrow gold={closing.eyebrow} text="Built in Middletown" />
-      <h2 class="mb-0 mt-4 text-[clamp(48px,7vw,120px)] font-black uppercase leading-[.84] tracking-[-.05em] text-white">
+      {eyebrow && <Eyebrow gold={closing.eyebrow} text="Built in Middletown" />}
+      <h2 class:list={['mb-0 text-[clamp(48px,7vw,120px)] font-black uppercase leading-[.84] tracking-[-.05em] text-white', eyebrow && 'mt-4']}>
         {heading[0]}<br />{heading[1]}
       </h2>
       <ul class="mt-10 grid gap-4">

@@ -4,15 +4,16 @@ import Heading from '../ui/Heading.astro';
 import Icon from '../ui/Icon.astro';
 import { faqs as homeFaqs, phone } from '../../data/content';
 
-interface Props { items?: typeof homeFaqs; heading?: string }
-const { items: faqs = homeFaqs, heading = 'Questions crews ask.' } = Astro.props;
+/** eyebrow: show the small "FAQ" label above the heading. Only /old-home still does (Nate cut them, 2026-11-19). */
+interface Props { items?: typeof homeFaqs; heading?: string; eyebrow?: boolean }
+const { items: faqs = homeFaqs, heading = 'Questions crews ask.', eyebrow = false } = Astro.props;
 ---
 <!-- PLACEHOLDER: answers are drawn from existing homepage copy. Confirm each before launch. -->
 <section id="faq" aria-label="Questions" class="bg-stone pb-[120px] pt-[130px] text-ink">
   <div class="wrap grid grid-cols-[5fr_7fr] items-start gap-[60px] max-[960px]:grid-cols-[repeat(1,1fr)] max-[960px]:gap-10">
     <div>
-      <Eyebrow gold="FAQ" />
-      <Heading class="mt-4 max-w-[480px]">{heading}</Heading>
+      {eyebrow && <Eyebrow gold="FAQ" />}
+      <Heading class={eyebrow ? 'mt-4 max-w-[480px]' : 'max-w-[480px]'}>{heading}</Heading>
       <p class="mt-[18px] max-w-[440px] text-[19px] text-ink-soft">Something else on your mind? Call the shop and talk to the people who build it.</p>
       <a href={phone.href} class="mt-8 inline-block rounded-[9px] bg-ink px-[22px] py-[15px] text-[15px] font-semibold text-white no-underline hover:bg-black">Call {phone.display}</a>
     </div>

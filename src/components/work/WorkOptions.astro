@@ -8,7 +8,7 @@ import { small, srcset } from '../../data/content';
 ---
 <section id="options" aria-label="Options" class="bg-white pb-[140px] pt-[130px] text-ink max-[640px]:pb-20 max-[640px]:pt-20">
   <div class="wrap">
-    <WorkTitle kicker={optionsHead.kicker} lines={optionsHead.heading} />
+    <WorkTitle lines={optionsHead.heading} />
   </div>
   <div class="wrap mt-16 grid gap-[110px] max-[900px]:mt-12 max-[900px]:gap-16">
     {options.map((o, i) => (
@@ -28,10 +28,7 @@ import { small, srcset } from '../../data/content';
           )}
         </div>
         <div>
-          <span class="flex items-center gap-3 text-[11.5px] font-semibold uppercase tracking-[.24em] text-ink-soft">
-            <i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>Option
-          </span>
-          <h3 class="m-0 mt-5 text-[clamp(30px,3vw,44px)] font-black uppercase leading-[.92] tracking-[-.045em] text-coal">{o.title}</h3>
+          <h3 class="m-0 text-[clamp(30px,3vw,44px)] font-black uppercase leading-[.92] tracking-[-.045em] text-coal">{o.title}</h3>
           <p class="mb-0 mt-5 max-w-[400px] text-[17px] leading-[1.6] text-ink-soft">{o.body}</p>
         </div>
       </article>

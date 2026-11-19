@@ -10,7 +10,7 @@ import { srcset } from '../../data/content';
   <div class="wrap grid grid-cols-[minmax(0,7fr)_minmax(0,5fr)] items-center gap-16 max-[900px]:grid-cols-[minmax(0,1fr)] max-[900px]:gap-10">
     <img src={remote.image} srcset={srcset(remote.image)} sizes="(max-width: 900px) 100vw, 56vw" alt={remote.alt} loading="lazy" class="block aspect-[3/2] w-full rounded-[18px] object-cover max-[640px]:rounded-[14px]" />
     <div>
-      <WorkTitle kicker={remote.kicker} lines={remote.heading} size="md" />
+      <WorkTitle lines={remote.heading} size="md" />
       <p class="mb-0 mt-6 max-w-[440px] text-[17px] leading-[1.6] text-ink-soft">{remote.body}</p>
       <!-- PLACEHOLDER: point at the remote office landing page once it's built. -->
       <Button href={remote.href} variant="ink" class="mt-7">{remote.cta}</Button>

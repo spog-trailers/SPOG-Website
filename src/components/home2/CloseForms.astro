@@ -1,6 +1,5 @@
 ---
 import Button from '../ui/Button.astro';
-import Eyebrow from '../ui/Eyebrow.astro';
 import { close, hero } from '../../data/home2';
 /**
  * Close for the test homepage 2. It repeats the hero line, then offers the same two steps as
@@ -24,8 +23,7 @@ const { design, walkthrough } = close;
 <section id="cta" aria-label="Design your trailer or book a walkthrough" class="relative overflow-hidden border-t border-line bg-black pb-[110px] pt-[120px] max-[640px]:pb-20 max-[640px]:pt-20">
   <div class="wrap grid grid-cols-[1.05fr_1fr] items-start gap-[70px] max-[960px]:grid-cols-[repeat(1,1fr)] max-[960px]:gap-14">
     <div>
-      <Eyebrow gold={close.eyebrow} text="Built in Middletown" />
-      <h2 class="mb-0 mt-4 text-[clamp(40px,5.2vw,84px)] font-black uppercase leading-[.86] tracking-[-.05em] text-white max-[960px]:text-[clamp(40px,9.4vw,84px)]">
+      <h2 class="m-0 text-[clamp(40px,5.2vw,84px)] font-black uppercase leading-[.86] tracking-[-.05em] text-white max-[960px]:text-[clamp(40px,9.4vw,84px)]">
         {close.heading.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}
       </h2>
       <p class="mb-0 mt-8 max-w-[460px] text-[18px] leading-[1.55] text-bone">{close.body}</p>

@@ -1,5 +1,4 @@
 ---
-import Eyebrow from '../ui/Eyebrow.astro';
 import Heading from '../ui/Heading.astro';
 import { devices, lineupEntry, type ProductPage } from '../../data/productPages';
 import { formatHours, runHours } from '../../scripts/runtime';
@@ -21,8 +20,7 @@ const cols = list.length === 4 ? 'grid-cols-[repeat(4,1fr)] max-[1100px]:grid-co
   <div class="wrap">
     <div class="grid grid-cols-[repeat(2,1fr)] items-end gap-14 max-[900px]:grid-cols-[repeat(1,1fr)] max-[900px]:gap-10">
       <div>
-        <Eyebrow gold="Power" text="One system across the lineup" />
-        <Heading class={work ? `mt-4 text-white ${work}` : "mt-4 text-white"}>What it runs.</Heading>
+        <Heading class={work ? `text-white ${work}` : "text-white"}>What it runs.</Heading>
         <p class="mb-0 mt-[18px] max-w-[460px] text-[19px] text-mute">Pick a battery size to see how long each one runs on a full charge.</p>
       </div>
       <dl class="m-0 flex flex-wrap gap-y-6 border-t border-line">

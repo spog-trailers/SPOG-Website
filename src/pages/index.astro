@@ -40,7 +40,7 @@ import { hero, madeOf, values, footerColumns, navLinks, faqs, statement } from '
 <Base>
   <Nav lineupHref="#lineup" links={navLinks} />
   <TestHero
-    eyebrow={hero.eyebrow}
+    eyebrow={null}
     heading={hero.heading}
     sub={hero.sub}
     primary={hero.primary}
@@ -50,7 +50,7 @@ import { hero, madeOf, values, footerColumns, navLinks, faqs, statement } from '
   <ProofStrip />
   <LineupScroll />
   <SolutionCards />
-  <Statement eyebrow={statement.eyebrow} words={statement.words} video={statement.video} poster={statement.poster} numbers={statement.numbers} lazy />
+  <Statement eyebrow={null} words={statement.words} video={statement.video} poster={statement.poster} numbers={statement.numbers} lazy />
   <FeatureCards id="values" label={madeOf.label} kicker="" heading={madeOf.heading} features={values} tone="dark">
     <p slot="kicker" aria-label={`SPOG stands for ${madeOf.stands.join(' ')}`} class="m-0 flex flex-wrap items-center gap-x-[1.2em] gap-y-1 text-[11.5px] font-semibold uppercase tracking-[.24em] text-mute">
       {madeOf.stands.map((w) => <span aria-hidden="true"><b class="font-black text-gold">{w[0]}</b>{w.slice(1)}</span>)}

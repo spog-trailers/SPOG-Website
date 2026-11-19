@@ -1,5 +1,4 @@
 ---
-import Eyebrow from '../ui/Eyebrow.astro';
 import Heading from '../ui/Heading.astro';
 import { lineupEntry, specRows, type ProductPage } from '../../data/productPages';
 import { drawing, viewBox } from '../../scripts/sizeDrawing';
@@ -21,8 +20,7 @@ const rows = specRows(page.id);
   <div class="wrap">
     <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-8">
       <div>
-        <Eyebrow gold="Size it up" />
-        <Heading class={work ? `mt-4 text-white ${work}` : "mt-4 text-white"}>{lengthRange}.</Heading>
+        <Heading class={work ? `text-white ${work}` : "text-white"}>{lengthRange}.</Heading>
         <p class="mb-0 mt-[18px] max-w-[460px] text-[19px] text-mute">Drawn to scale behind a full-size pickup. Pick a length.</p>
       </div>
       <div class="flex flex-wrap gap-1.5" role="group" aria-label="Trailer length">

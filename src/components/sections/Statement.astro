@@ -6,7 +6,7 @@ import { img, statement, numbers as homeNumbers } from '../../data/content';
 // scroll and the fourth turns gold (public/scroll-effects.css). `lazy` holds the video until the
 // section comes near, for pages that already have other videos.
 interface Props {
-  eyebrow?: { gold: string; text?: string };
+  eyebrow?: { gold: string; text?: string } | null;
   words?: string[];
   video?: string;
   poster?: string;
@@ -34,8 +34,8 @@ const {
   <div class="scrim-statement absolute inset-0 z-[1]"></div>
 
   <div class="relative z-[3] flex w-full flex-col items-center">
-    <Eyebrow gold={eyebrow.gold} text={eyebrow.text} />
-    <p class="lit-words mb-0 mt-7 max-w-[1100px] text-center text-[clamp(44px,7.4vw,112px)] font-extrabold leading-[.98] tracking-[-.045em]">
+    {eyebrow && <Eyebrow gold={eyebrow.gold} text={eyebrow.text} />}
+    <p class:list={['lit-words mb-0', eyebrow && 'mt-7', 'max-w-[1100px] text-center text-[clamp(44px,7.4vw,112px)] font-extrabold leading-[.98] tracking-[-.045em]']}>
       {words.map((w, i) => <>{i > 0 && ' '}<span class="text-white/22">{w}</span></>)}
     </p>
 

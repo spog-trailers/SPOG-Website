@@ -37,7 +37,7 @@ const ctrl = dark
 <section id={id} aria-label={label} data-fc class:list={['overflow-hidden pb-[110px] pt-[120px] max-[640px]:pb-16 max-[640px]:pt-20', dark ? 'bg-black text-bone' : 'bg-white text-ink']}>
   <div class="wrap">
     {work ? (
-      <WorkTitle kicker={kicker} lines={heading} tone={dark ? 'dark' : 'light'} />
+      <WorkTitle lines={heading} tone={dark ? 'dark' : 'light'} />
     ) : (
       <div>
         {Astro.slots.has('kicker') ? <slot name="kicker" /> : <Eyebrow gold={kicker} />}
