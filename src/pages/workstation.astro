@@ -16,6 +16,8 @@ import Footer from '../components/sections/Footer.astro';
 import MobileBar from '../components/sections/MobileBar.astro';
 import { productFaqs } from '../data/productPages';
 import { ws, page, close, subnavLinks, features, featuresHead, showcase, statement } from '../data/workstationPage';
+// "Design yours" opens the homepage's build request form with Workstation picked.
+const design = { label: 'Design yours', href: '/?trailer=Workstation#design' };
 ---
 <!--
   WORKSTATION PAGE (2026-11-17). Written for general contractors and subs. Its own page,
@@ -40,7 +42,7 @@ import { ws, page, close, subnavLinks, features, featuresHead, showcase, stateme
   Keep the ids top, cta, walkthrough, sheet and faq so Nav, Subnav, MobileBar and Close work.
 -->
 <Base title={ws.title} description={ws.description}>
-  <Nav />
+  <Nav cta={design} />
   <ProductSubnav page={page} links={subnavLinks} />
   <WorkHero />
   <FeatureCards id="overview" label="Get to know Workstation" kicker={featuresHead.kicker} heading={featuresHead.heading} features={features} look="work" tone="light" />
@@ -54,5 +56,5 @@ import { ws, page, close, subnavLinks, features, featuresHead, showcase, stateme
   <Close trailer="Workstation" heading={close} />
   <Faq items={productFaqs} heading="Questions crews ask." />
   <Footer />
-  <MobileBar />
+  <MobileBar cta={design} />
 </Base>

@@ -1,15 +1,16 @@
 ---
 import { img, navLinks, announcement } from '../../data/content';
-// Two-line nav buttons: a small label says who the button is for, the action sits under it.
+// Nav buttons. A `small` label adds a second line above the action (the old homepage uses it).
 const navBtn = 'flex h-11 flex-col justify-center border-[1.5px] px-4 leading-[normal] no-underline';
 // `cta` is the gold button, `demo` the outlined one, `lineupHref` is where the announcement bar
-// points and `links` are the nav links. Leave out `small` for a one-line button. The defaults keep
-// every existing page as it was. The test homepage 2 and /demo pass their own.
+// points and `links` are the nav links. The defaults are the homepage's buttons (Nate, 2026-11-18):
+// Book a demo, and Design yours, which opens the build request form on the homepage. A product
+// page passes its own `cta` so that form opens with its trailer picked. /old-home passes its old buttons.
 type NavButton = { small?: string; label: string; href: string };
 interface Props { cta?: NavButton; demo?: NavButton; lineupHref?: string; links?: { label: string; href: string }[] }
 const {
-  cta = { small: '2027 lineup', label: 'Reserve', href: '#cta' },
-  demo = { small: 'See it run', label: 'Book a walkthrough', href: '#walkthrough' },
+  cta = { label: 'Design yours', href: '/#design' },
+  demo = { label: 'Book a demo', href: '/demo' },
   lineupHref = announcement.href,
   links = navLinks,
 } = Astro.props;

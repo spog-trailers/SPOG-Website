@@ -18,7 +18,8 @@ import MobileBar from '../components/sections/MobileBar.astro';
 <!--
   OLD HOMEPAGE. This was the homepage at / until 2026-11-18, when the Test 2 draft replaced it.
   Nate kept it for inspiration, linked as "Old home" in the nav. Not indexed. Its nav and footer
-  are the site's, so they point at the new homepage. The announcement bar still jumps to #specs here.
+  links are the site's, so they point at the new homepage. Its nav buttons, phone bar and announcement
+  bar keep their old targets on this page (Reserve, Book a walkthrough, #specs).
 
   Section order follows the competitive teardown in docs/homepage-teardown-2026-11-16.md.
 
@@ -35,7 +36,7 @@ import MobileBar from '../components/sections/MobileBar.astro';
     LeadMagnet + LaunchCta -> Close.
 -->
 <Base title="Old homepage | SPOG Trailers" noindex>
-  <Nav lineupHref="#specs" />
+  <Nav lineupHref="#specs" cta={{ small: '2027 lineup', label: 'Reserve', href: '#cta' }} demo={{ small: 'See it run', label: 'Book a walkthrough', href: '#walkthrough' }} />
   <Hero />
   <Problem />
   <Compare />
@@ -48,5 +49,5 @@ import MobileBar from '../components/sections/MobileBar.astro';
   <Faq />
   <Close />
   <Footer />
-  <MobileBar />
+  <MobileBar cta={{ label: 'Reserve', href: '#cta' }} secondary={{ label: 'Walkthrough', href: '#walkthrough' }} />
 </Base>

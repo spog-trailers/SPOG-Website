@@ -22,6 +22,8 @@ export function getStaticPaths() {
 const page = productPages[Astro.params.product as ProductId];
 // Event's close borrows from the approved line "Own the night. Power it with the sun."
 const closeHeading: [string, string] | undefined = page.id === 'event' ? ['Own', 'the night.'] : undefined;
+// "Design yours" opens the homepage's build request form with this trailer picked.
+const design = `/?trailer=${page.walkthroughTrailer}#design`;
 ---
 <!--
   Product page (/cargo, /workstation, /event). Built on the Rivian R1T page, see
@@ -34,7 +36,7 @@ const closeHeading: [string, string] | undefined = page.id === 'event' ? ['Own',
   Overview and Statement are optional per product.
 -->
 <Base title={page.title} description={page.description}>
-  <Nav />
+  <Nav cta={{ label: 'Design yours', href: design }} />
   <ProductSubnav page={page} />
   <ProductHero page={page} />
   {page.overview && <ProductOverview page={page} />}
@@ -45,5 +47,5 @@ const closeHeading: [string, string] | undefined = page.id === 'event' ? ['Own',
   <Close trailer={page.walkthroughTrailer} heading={closeHeading} />
   <Faq items={productFaqs} heading={page.faqHeading} />
   <Footer />
-  <MobileBar />
+  <MobileBar cta={{ label: 'Design yours', href: design }} />
 </Base>

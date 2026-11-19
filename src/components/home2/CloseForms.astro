@@ -7,7 +7,8 @@ import { close, hero } from '../../data/home2';
  * the hero: design your trailer (the hard step) and book a walkthrough (the soft step).
  * One card on the right holds both forms, and the buttons anywhere on the page pick which one
  * shows: links to #design open the build request, links to #walkthrough open the walkthrough.
- * A link with data-trailer="Cargo" also picks that trailer in both forms.
+ * A link with data-trailer="Cargo" also picks that trailer in both forms. From another page, use
+ * /?trailer=Cargo#design (the product pages' "Design yours" does). The query is dropped once read.
  *
  * "Design your trailer" is a build request for now. Point it at the configurator once real
  * pricing is approved (/configure/cargo still runs on made-up sample prices).
@@ -134,6 +135,11 @@ const { design, walkthrough } = close;
     });
     window.addEventListener('hashchange', () => fromHash(location.hash));
     fromHash(location.hash);
+    const asked = new URLSearchParams(location.search).get('trailer');
+    if (asked) {
+      pickTrailer(asked);
+      history.replaceState(null, '', location.pathname + location.hash);
+    }
     fitLength();
   }
 </script>
