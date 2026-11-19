@@ -24,7 +24,6 @@ const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border bord
     <div data-tour-stage class="absolute inset-y-0 inset-x-6 cursor-grab overflow-hidden rounded-[22px] active:cursor-grabbing max-[640px]:inset-x-3"></div>
     <img data-tour-poster src={tour.poster} alt="Computer-generated model of the black 20 ft SPOG Cargo" class="pointer-events-none absolute inset-0 m-auto max-h-[80%] max-w-[86%] object-contain mix-blend-multiply transition-opacity duration-700" />
     <p class="pointer-events-none absolute bottom-3 right-6 m-0 text-[11.5px] font-semibold text-ink-soft max-[640px]:right-4">Computer-generated model</p>
-    <p data-tour-hint class="pointer-events-none absolute left-1/2 top-3 m-0 -translate-x-1/2 rounded-full bg-white/85 px-3.5 py-1.5 text-[12px] font-semibold text-ink-soft opacity-0 transition-opacity duration-500">Drag to turn it around</p>
   </div>
 
   <div class="wrap">
@@ -79,7 +78,6 @@ const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border bord
   const stageEl = root?.querySelector<HTMLElement>('[data-tour-stage]');
   if (root && stageEl) {
     const poster = root.querySelector<HTMLElement>('[data-tour-poster]')!;
-    const hint = root.querySelector<HTMLElement>('[data-tour-hint]')!;
     const viewBtns = [...root.querySelectorAll<HTMLButtonElement>('[data-tour-view]')];
     const doorsBtn = root.querySelector<HTMLButtonElement>('[data-tour-doors]')!;
     const paintBtns = [...root.querySelectorAll<HTMLButtonElement>('[data-tour-paint]')];
@@ -92,10 +90,6 @@ const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border bord
     let onScreen = false;
 
     const press = (list: HTMLButtonElement[], on: (b: HTMLButtonElement) => boolean) => list.forEach((b) => b.setAttribute('aria-pressed', String(on(b))));
-    const showHint = () => {
-      hint.textContent = want.view === 'interior' ? 'Drag to look around' : 'Drag to turn it around';
-      hint.style.opacity = viewer ? '1' : '0';
-    };
 
     async function load() {
       if (viewer || loading) return;
@@ -107,9 +101,7 @@ const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border bord
         if (want.doors) viewer.setDoors(true);
         if (want.view !== 'front') viewer.setView(want.view as never);
         viewer.setActive(onScreen);
-        viewer.onUserMove(() => { hint.style.opacity = '0'; });
         poster.style.opacity = '0';
-        showHint();
       } catch {
         // No WebGL or the script failed: the still stays and the buttons do nothing harmful.
         loading = false;
@@ -127,7 +119,6 @@ const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border bord
       want.view = b.dataset.tourView!;
       press(viewBtns, (x) => x === b);
       viewer?.setView(want.view as never);
-      showHint();
     }));
     doorsBtn.addEventListener('click', () => {
       want.doors = !want.doors;
