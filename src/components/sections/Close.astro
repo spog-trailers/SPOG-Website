@@ -11,18 +11,18 @@ import { closing } from '../../data/content';
 interface Props { trailer?: string; heading?: [string, string]; eyebrow?: boolean }
 const { trailer, heading = closing.heading, eyebrow = false } = Astro.props;
 const field = 'w-full rounded-[10px] border border-panel-line bg-black px-4 py-[14px] text-[16px] text-white placeholder:text-[#8a8a8a] focus-visible:border-gold';
-const label = 'mb-1.5 block text-[11px] font-semibold uppercase tracking-[.18em] text-mute';
+const label = 'mb-1.5 block t-label text-mute';
 ---
 <section id="cta" aria-label="Reserve or book a walkthrough" class="relative overflow-hidden border-t border-line bg-black pb-[110px] pt-[120px]">
   <div class="wrap relative z-[3] grid grid-cols-[1.05fr_1fr] items-start gap-[70px] max-[960px]:grid-cols-[repeat(1,1fr)] max-[960px]:gap-14">
     <div>
       {eyebrow && <Eyebrow gold={closing.eyebrow} text="Built in Middletown" />}
-      <h2 class:list={['mb-0 text-[clamp(48px,7vw,120px)] font-black uppercase leading-[.84] tracking-[-.05em] text-white', eyebrow && 'mt-4']}>
+      <h2 class:list={['mb-0 t-h1 text-white', eyebrow && 'mt-4']}>
         {heading[0]}<br />{heading[1]}
       </h2>
       <ul class="mt-10 grid gap-4">
         {closing.points.map((b) => (
-          <li class="flex items-start gap-3.5 text-[17px] text-bone">
+          <li class="flex items-start gap-3.5 t-body text-bone">
             <Icon name="check" class="mt-[3px] size-5 shrink-0 stroke-gold stroke-[2.5]" />{b}
           </li>
         ))}
@@ -32,8 +32,8 @@ const label = 'mb-1.5 block text-[11px] font-semibold uppercase tracking-[.18em]
     </div>
 
     <div id="walkthrough" class="scroll-mt-6 rounded-[24px] border border-[#1f1f22] bg-panel px-9 pb-9 pt-[38px] max-[560px]:px-6">
-      <h3 class="m-0 text-[30px] font-semibold leading-[1.1] tracking-[-.025em] text-white">{closing.walkthrough.title}</h3>
-      <p class="mb-0 mt-2.5 text-[16.5px] text-mute">{closing.walkthrough.body}</p>
+      <h3 class="m-0 t-h3 text-white">{closing.walkthrough.title}</h3>
+      <p class="mb-0 mt-2.5 t-body-sm text-mute">{closing.walkthrough.body}</p>
       <!-- TODO: connect this form to GoHighLevel -->
       <form class="mt-7 grid grid-cols-[repeat(2,1fr)] gap-x-3 gap-y-4 max-[560px]:grid-cols-[repeat(1,1fr)]" onsubmit="return false">
         <div><label for="wt-name" class={label}>Name</label><input id="wt-name" name="name" autocomplete="name" class={field} /></div>
@@ -47,7 +47,7 @@ const label = 'mb-1.5 block text-[11px] font-semibold uppercase tracking-[.18em]
           </select>
         </div>
         <div><label for="wt-town" class={label}>Town or ZIP</label><input id="wt-town" name="town" autocomplete="postal-code" class={field} /></div>
-        <button type="button" class="col-span-full mt-2 h-[50px] cursor-pointer border-[1.5px] border-white bg-white text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-black hover:border-gold hover:bg-gold">{closing.walkthrough.cta}</button>
+        <button type="button" class="col-span-full mt-2 h-[50px] cursor-pointer border-[1.5px] border-white bg-white t-btn text-black hover:border-gold hover:bg-gold">{closing.walkthrough.cta}</button>
       </form>
     </div>
   </div>
@@ -55,14 +55,14 @@ const label = 'mb-1.5 block text-[11px] font-semibold uppercase tracking-[.18em]
   <div id="sheet" class="wrap relative z-[3] mt-20">
     <div class="grid grid-cols-[1fr_auto] items-center gap-10 border-t border-line pt-10 max-[860px]:grid-cols-[repeat(1,1fr)] max-[860px]:gap-6">
       <div>
-        <b class="block text-[22px] font-semibold tracking-[-.02em] text-white">{closing.sheet.title}</b>
-        <span class="mt-1 block text-[16px] text-mute">{closing.sheet.body}</span>
+        <b class="block t-h3 text-white">{closing.sheet.title}</b>
+        <span class="mt-1 block t-body-sm text-mute">{closing.sheet.body}</span>
       </div>
       <!-- TODO: connect this form to GoHighLevel -->
       <form class="flex w-[min(460px,100%)] gap-2" onsubmit="return false">
         <label for="lm-email" class="sr-only">Email</label>
         <input id="lm-email" type="email" autocomplete="email" placeholder="you@company.com" class={`${field} flex-1`} />
-        <button type="button" class="cursor-pointer border-[1.5px] border-white/70 bg-transparent px-[22px] text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-white hover:border-white hover:bg-white hover:text-black">{closing.sheet.cta}</button>
+        <button type="button" class="cursor-pointer border-[1.5px] border-white/70 bg-transparent px-[22px] t-btn text-white hover:border-white hover:bg-white hover:text-black">{closing.sheet.cta}</button>
       </form>
     </div>
   </div>

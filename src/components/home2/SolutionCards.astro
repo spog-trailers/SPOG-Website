@@ -19,7 +19,7 @@ const row = 'm-0 mt-14 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-4 
 ---
 <section id="solutions" aria-label="Three problems solved" class="bg-stone pb-[120px] pt-[120px] text-ink max-[640px]:pb-16 max-[640px]:pt-16">
   <div class={gutter}>
-    <h2 class="m-0 max-w-[920px] text-[clamp(36px,4.6vw,62px)] font-semibold leading-[1.03] tracking-[-.035em] text-coal">
+    <h2 class="m-0 max-w-[920px] t-h2 text-coal">
       {solutions.heading.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}
     </h2>
     <ul class={row}>
@@ -38,17 +38,17 @@ const row = 'm-0 mt-14 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-4 
             )}
             {c.note && (
               <p class="absolute inset-x-4 bottom-4 m-0 rounded-[10px] border border-dashed border-white/45 bg-black/55 px-4 py-3 backdrop-blur-[6px]">
-                <span class="block text-[11px] font-semibold uppercase tracking-[.2em] text-gold">{c.note.tag}</span>
-                <span class="mt-1 block text-[14px] leading-[1.4] text-white/85">{c.note.shot}</span>
+                <span class="block t-label text-gold">{c.note.tag}</span>
+                <span class="mt-1 block t-fine text-white/85">{c.note.shot}</span>
               </p>
             )}
           </div>
           <div class="pr-6 max-[640px]:pr-2">
-            <span class="mt-7 flex items-center gap-3 text-[12px] font-semibold uppercase tracking-[.22em] text-ink max-[640px]:mt-5">
+            <span class="mt-7 flex items-center gap-3 t-label text-ink max-[640px]:mt-5">
               <Icon name={c.icon} class="size-7 shrink-0 stroke-coal stroke-[1.6]" />{c.title}
             </span>
-            <h3 class="mb-0 mt-3 text-[clamp(24px,2.2vw,32px)] font-semibold leading-[1.12] tracking-[-.03em] text-coal">{c.line}</h3>
-            <p class="mb-0 mt-3 max-w-[520px] text-[16px] leading-[1.6] text-ink-soft">{c.body}</p>
+            <h3 class="mb-0 mt-3 t-h3 text-coal">{c.line}</h3>
+            <p class="mb-0 mt-3 max-w-[520px] t-body-sm text-ink-soft">{c.body}</p>
           </div>
         </li>
       ))}

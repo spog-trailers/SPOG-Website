@@ -17,7 +17,7 @@ const links: [string, string][] = custom ?? [
   ['Lineup', '#lineup'],
   ['FAQ', '#faq'],
 ];
-const btn = 'flex h-10 shrink-0 items-center border-[1.5px] px-4 text-[11px] font-bold uppercase leading-[normal] tracking-[.18em] no-underline';
+const btn = 'flex h-10 shrink-0 items-center border-[1.5px] px-4 t-btn no-underline';
 ---
 <nav
   id="subnav"
@@ -25,7 +25,7 @@ const btn = 'flex h-10 shrink-0 items-center border-[1.5px] px-4 text-[11px] fon
   class="pointer-events-none fixed inset-x-0 top-[calc(env(safe-area-inset-top,0px)+12px)] z-[31] flex -translate-y-3 justify-center px-4 opacity-0 transition duration-300 data-[show]:pointer-events-auto data-[show]:translate-y-0 data-[show]:opacity-100 max-[640px]:top-[env(safe-area-inset-top,0px)] max-[640px]:px-0"
 >
   <div class="flex max-w-full items-center gap-1 rounded-[14px] border border-line bg-black/82 p-1.5 backdrop-blur-[16px] max-[640px]:w-full max-[640px]:rounded-none max-[640px]:border-x-0 max-[640px]:border-t-0">
-    <a href="#top" class="shrink-0 px-3 text-[12px] font-black uppercase tracking-[.14em] text-white no-underline max-[640px]:hidden">
+    <a href="#top" class="shrink-0 px-3 text-[14px] font-black uppercase tracking-[.08em] text-white no-underline max-[640px]:hidden">
       SPOG <span class="text-gold">{p.name}</span>
     </a>
     <ul class="no-scrollbar flex min-w-0 overflow-x-auto">
@@ -34,7 +34,7 @@ const btn = 'flex h-10 shrink-0 items-center border-[1.5px] px-4 text-[11px] fon
           <a
             href={href}
             data-spy
-            class="block rounded-[9px] px-3.5 py-[11px] text-[11.5px] font-semibold uppercase tracking-[.16em] text-[#A9AEB7] no-underline hover:text-white aria-[current=true]:bg-white/10 aria-[current=true]:text-white"
+            class="block rounded-[9px] px-3.5 py-[11px] t-label text-[#A9AEB7] no-underline hover:text-white aria-[current=true]:bg-white/10 aria-[current=true]:text-white"
           >{label}</a>
         </li>
       ))}

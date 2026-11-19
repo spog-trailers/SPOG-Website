@@ -20,7 +20,7 @@ const {
   id="masthead"
   class="fixed inset-x-0 top-[env(safe-area-inset-top,0px)] z-30 transition-transform duration-300 ease-out data-[tucked]:-translate-y-[34px]"
 >
-  <a href={lineupHref} class="flex h-[34px] items-center justify-center gap-3 border-b border-line bg-black px-4 text-[11px] font-semibold uppercase tracking-[.2em] text-bone no-underline hover:text-white">
+  <a href={lineupHref} class="flex h-[34px] items-center justify-center gap-3 border-b border-line bg-black px-4 t-label text-bone no-underline hover:text-white">
     <b class="font-semibold text-gold">{announcement.gold}</b>
     <span class="max-[640px]:hidden">{announcement.text}</span>
     <span class="underline underline-offset-4">{announcement.cta} &rarr;</span>
@@ -30,17 +30,17 @@ const {
       <a href="/" class="shrink-0"><img src={img.logoWhite} alt="SPOG Solar Power Off Grid" class="h-6 w-auto" /></a>
       <ul class="flex gap-[30px] whitespace-nowrap max-[1320px]:gap-5 max-[1240px]:gap-4 max-[1190px]:hidden">
         {links.map((l) => (
-          <li><a href={l.href} class="text-[12px] font-semibold uppercase tracking-[.16em] text-[#C7CAD0] no-underline hover:text-white">{l.label}</a></li>
+          <li><a href={l.href} class="t-label text-[#C7CAD0] no-underline hover:text-white">{l.label}</a></li>
         ))}
       </ul>
       <div class="ml-auto flex gap-2.5 whitespace-nowrap">
         <a href={demo.href} class={`${navBtn} border-white/70 text-white hover:border-white hover:bg-white hover:text-black max-[640px]:hidden`}>
-          {demo.small && <small class="text-[8.5px] font-semibold uppercase tracking-[.22em] opacity-70">{demo.small}</small>}
-          <span class="text-[11.5px] font-bold uppercase tracking-[.18em]">{demo.label}</span>
+          {demo.small && <small class="t-fine opacity-70">{demo.small}</small>}
+          <span class="t-btn">{demo.label}</span>
         </a>
         <a href={cta.href} class={`${navBtn} border-gold bg-gold text-black hover:border-white hover:bg-white`}>
-          {cta.small && <small class="text-[8.5px] font-semibold uppercase tracking-[.22em] opacity-70">{cta.small}</small>}
-          <span class="text-[11.5px] font-bold uppercase tracking-[.18em]">{cta.label}</span>
+          {cta.small && <small class="t-fine opacity-70">{cta.small}</small>}
+          <span class="t-btn">{cta.label}</span>
         </a>
       </div>
     </div>

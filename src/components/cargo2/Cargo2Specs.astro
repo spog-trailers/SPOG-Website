@@ -18,12 +18,12 @@ import { specs } from '../../data/cargo2Page';
         <dl class="m-0">
           {specs.rows.map(([label, value]) => (
             <div class="grid grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] gap-6 border-b border-line py-[18px] first:pt-0 max-[480px]:grid-cols-[minmax(0,1fr)] max-[480px]:gap-1">
-              <dt class="text-[14px] text-mute">{label}</dt>
-              <dd class="m-0 text-[15.5px] font-semibold leading-[1.45] text-white">{value}</dd>
+              <dt class="t-fine text-mute">{label}</dt>
+              <dd class="m-0 t-body-sm font-semibold text-white">{value}</dd>
             </div>
           ))}
         </dl>
-        <p class="mb-0 mt-6 text-[13px] leading-[1.55] text-mute">{specs.fine}</p>
+        <p class="mb-0 mt-6 t-fine text-mute">{specs.fine}</p>
       </div>
     </div>
   </div>

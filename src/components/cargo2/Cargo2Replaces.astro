@@ -14,18 +14,18 @@ import { replaces } from '../../data/cargo2Page';
   <div class="wrap">
     <WorkTitle lines={replaces.heading} tone="dark" />
     <div class="mt-10 grid grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] items-center gap-x-16 gap-y-8 max-[960px]:grid-cols-[minmax(0,1fr)]">
-      <p class="m-0 max-w-[560px] text-[18px] leading-[1.6] text-bone/80">{replaces.body}</p>
+      <p class="m-0 max-w-[560px] t-body text-bone/80">{replaces.body}</p>
       <div class="rounded-[18px] border border-panel-line bg-panel px-9 py-9 max-[640px]:px-6 max-[640px]:py-7">
-        <span class="block text-[clamp(40px,4.6vw,64px)] font-black leading-[1] tracking-[0em] text-white">{replaces.fuel.value}</span>
-        <span class="mt-3 block max-w-[400px] text-[15.5px] leading-[1.55] text-mute">{replaces.fuel.label}</span>
+        <span class="block t-h2 normal-case text-white">{replaces.fuel.value}</span>
+        <span class="mt-3 block max-w-[400px] t-body-sm text-mute">{replaces.fuel.label}</span>
       </div>
     </div>
     <ul class="m-0 mt-14 grid list-none grid-cols-[repeat(3,minmax(0,1fr))] gap-3 p-0 max-[900px]:grid-cols-[repeat(1,minmax(0,1fr))] max-[640px]:mt-10">
       {replaces.items.map((it) => (
         <li class="rounded-[18px] border border-panel-line bg-panel px-8 pb-9 pt-8 max-[640px]:px-6 max-[640px]:pb-7 max-[640px]:pt-6">
           <Icon name={it.icon} class="size-[46px] stroke-white stroke-[1.6]" />
-          <h3 class="mb-0 mt-7 text-[24px] font-black uppercase leading-[1.05] tracking-[0em] text-white">{it.title}</h3>
-          <p class="mb-0 mt-3 max-w-[380px] text-[16px] leading-[1.6] text-bone/75">{it.body}</p>
+          <h3 class="mb-0 mt-7 t-h3 text-white">{it.title}</h3>
+          <p class="mb-0 mt-3 max-w-[380px] t-body-sm text-bone/75">{it.body}</p>
         </li>
       ))}
     </ul>

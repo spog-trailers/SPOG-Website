@@ -3,6 +3,6 @@
 interface Props { gold?: string; text?: string; class?: string }
 const { gold, text, class: extra = '' } = Astro.props;
 ---
-<span class:list={['text-[11.5px] font-semibold uppercase tracking-[.24em] text-mute', extra]}>
+<span class:list={['t-label text-mute', extra]}>
   {gold && <b class="font-semibold text-gold">{gold}</b>}{gold && text && <Fragment set:html="&nbsp;&nbsp;" />}{text}
 </span>

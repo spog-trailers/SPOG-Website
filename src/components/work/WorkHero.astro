@@ -16,12 +16,12 @@ import { hero, ws } from '../../data/workstationPage';
   <div class="absolute inset-0 z-[1] bg-[linear-gradient(to_top,rgb(0_0_0/.9)_0%,rgb(0_0_0/.6)_40%,rgb(0_0_0/.22)_72%,rgb(0_0_0/.1)_100%),linear-gradient(to_right,rgb(0_0_0/.5)_0%,rgb(0_0_0/0)_55%),linear-gradient(to_bottom,rgb(0_0_0/.55)_0%,rgb(0_0_0/0)_22%)]"></div>
 
   <div class="wrap relative z-[3] w-full @container">
-    <h1 class="m-0 text-[12.1cqw] font-black uppercase leading-[.82] tracking-[0em] text-white">{ws.name}</h1>
+    <h1 class="m-0 t-display text-white" style="font-size:min(clamp(80px, calc(56.2px + 6.1vw), 144px), 12.1cqw)">{ws.name}</h1>
 
     <div class="mt-10 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-x-12 gap-y-10 max-[1180px]:grid-cols-[minmax(0,1fr)] max-[640px]:mt-8">
       <div>
-        <p class="m-0 max-w-[560px] text-[clamp(24px,2.4vw,34px)] font-semibold leading-[1.1] tracking-[-.03em]">{hero.tag}</p>
-        <p class="mb-0 mt-3 max-w-[500px] text-[17px] leading-[1.55] text-white/78">{hero.body}</p>
+        <p class="m-0 max-w-[560px] t-lead">{hero.tag}</p>
+        <p class="mb-0 mt-3 max-w-[500px] t-body text-white/78">{hero.body}</p>
         <div class="mt-8 flex flex-wrap gap-3">
           <Button href="#cta" variant="gold">{ws.cta}</Button>
           <Button href="#walkthrough" variant="outline">Book a walkthrough</Button>
@@ -30,8 +30,8 @@ import { hero, ws } from '../../data/workstationPage';
       <dl class="m-0 flex border-t border-white/25 max-[640px]:justify-between">
         {hero.stats.map(([k, v]) => (
           <div class="flex flex-col-reverse gap-2.5 pr-7 pt-5 not-first:border-l not-first:border-white/20 not-first:pl-7 max-[640px]:pr-2.5 max-[640px]:not-first:pl-2.5">
-            <dt class="text-[11px] font-semibold uppercase tracking-[.18em] text-white/60 max-[640px]:text-[9.5px] max-[640px]:tracking-[.12em]">{k}</dt>
-            <dd class="m-0 whitespace-nowrap text-[clamp(22px,2.2vw,30px)] font-black leading-none tracking-[-.04em] max-[640px]:text-[clamp(13px,3.9vw,16.5px)]">{v}</dd>
+            <dt class="t-label text-white/60">{k}</dt>
+            <dd class="m-0 mt-1 t-h3">{v}</dd>
           </div>
         ))}
       </dl>

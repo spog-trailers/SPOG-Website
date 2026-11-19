@@ -21,27 +21,27 @@ const cols = list.length === 4 ? 'grid-cols-[repeat(4,1fr)] max-[1100px]:grid-co
     <div class="grid grid-cols-[repeat(2,1fr)] items-end gap-14 max-[900px]:grid-cols-[repeat(1,1fr)] max-[900px]:gap-10">
       <div>
         <Heading class={work ? `text-white ${work}` : "text-white"}>What it runs.</Heading>
-        <p class="mb-0 mt-[18px] max-w-[460px] text-[19px] text-mute">Pick a battery size to see how long each one runs on a full charge.</p>
+        <p class="mb-0 mt-[18px] max-w-[460px] t-body text-mute">Pick a battery size to see how long each one runs on a full charge.</p>
       </div>
       <dl class="m-0 flex flex-wrap gap-y-6 border-t border-line">
         {headline.map(([k, v]) => (
           <div class="pr-10 pt-5 not-first:border-l not-first:border-line not-first:pl-10 max-[560px]:w-full max-[560px]:pr-0 max-[560px]:not-first:border-l-0 max-[560px]:not-first:border-t max-[560px]:not-first:pl-0">
-            <dt class="text-[11.5px] font-semibold uppercase tracking-[.18em] text-mute">{k}</dt>
-            <dd class="text-steel m-0 mt-2 whitespace-nowrap text-[clamp(28px,3.2vw,48px)] font-black leading-[1.05] tracking-[-.04em]">{v}</dd>
+            <dt class="t-label text-mute">{k}</dt>
+            <dd class="text-steel m-0 mt-2 whitespace-nowrap t-h2">{v}</dd>
           </div>
         ))}
       </dl>
     </div>
 
     <div class="mt-16 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-line pt-6">
-      <span id="power-label" class="text-[11.5px] font-semibold uppercase tracking-[.18em] text-mute">Battery size</span>
+      <span id="power-label" class="t-label text-mute">Battery size</span>
       <div class="flex flex-wrap gap-1.5" role="group" aria-labelledby="power-label">
         {batteries.map((b) => (
           <button
             type="button"
             data-kwh={b}
             aria-pressed={String(b === defaultBattery)}
-            class="h-10 cursor-pointer border-[1.5px] border-white/20 bg-transparent px-4 text-[13px] font-bold tracking-[.04em] text-bone hover:border-white aria-pressed:border-white aria-pressed:bg-white aria-pressed:text-black"
+            class="h-10 cursor-pointer border-[1.5px] border-white/20 bg-transparent px-4 t-label text-bone hover:border-white aria-pressed:border-white aria-pressed:bg-white aria-pressed:text-black"
           >{b} kWh</button>
         ))}
       </div>
@@ -52,18 +52,18 @@ const cols = list.length === 4 ? 'grid-cols-[repeat(4,1fr)] max-[1100px]:grid-co
         const f = formatHours(runHours(defaultBattery, d.kw));
         return (
           <li class="rounded-[20px] border border-panel-line bg-panel px-7 pb-7 pt-6" data-kw={d.kw}>
-            <span class="text-[12px] font-semibold uppercase tracking-[.16em] text-mute">{d.name}</span>
+            <span class="t-label text-mute">{d.name}</span>
             <b class="mt-5 flex items-baseline gap-2 font-black leading-none text-white">
-              <span data-value class="text-[clamp(40px,4.4vw,62px)] tracking-[-.045em] tabular-nums transition-opacity duration-200">{f.value}</span>
-              <span class="text-[17px] font-semibold tracking-normal text-mute">hrs</span>
+              <span data-value class="t-h1 tabular-nums transition-opacity duration-200">{f.value}</span>
+              <span class="t-body-sm font-semibold text-mute">hrs</span>
             </b>
-            <span data-days class="mt-2.5 block min-h-[1.5em] text-[14.5px] text-mute">{f.days}</span>
+            <span data-days class="mt-2.5 block min-h-[1.5em] t-fine text-mute">{f.days}</span>
           </li>
         );
       })}
     </ul>
 
-    <p class="mb-0 mt-7 max-w-[820px] text-[14px] leading-[1.6] text-mute">
+    <p class="mb-0 mt-7 max-w-[820px] t-fine text-mute">
       Hours of continuous use on a full battery, one device at a time, with no solar recharge counted. The figures come from the SPOG runtime guide.
       <a href="#sheet" class="whitespace-nowrap font-semibold text-bone underline underline-offset-4 hover:text-white">Get the run-time sheet &rarr;</a>
     </p>

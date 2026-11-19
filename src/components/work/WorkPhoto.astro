@@ -14,9 +14,9 @@ const top = align === 'top';
   <img src={image} srcset={srcset(image)} sizes="100vw" alt={alt} loading="lazy" class="absolute inset-0 size-full object-cover" style={`object-position:${position}`} />
   <div class:list={['absolute inset-0', top ? 'bg-[linear-gradient(to_bottom,rgb(0_0_0/.5)_0%,rgb(0_0_0/.12)_34%,rgb(0_0_0/0)_50%)]' : heading ? 'bg-[linear-gradient(to_top,rgb(0_0_0/.72)_0%,rgb(0_0_0/.25)_38%,rgb(0_0_0/0)_60%)]' : 'bg-[linear-gradient(to_top,rgb(0_0_0/.45)_0%,rgb(0_0_0/0)_28%)]']}></div>
   <div class:list={['wrap relative z-[2] w-full', top ? 'pt-[120px] max-[640px]:pt-[90px]' : 'pb-14 max-[640px]:pb-10']}>
-    {heading && <h2 class="m-0 max-w-[1100px] text-[clamp(38px,5.6vw,88px)] font-black uppercase leading-[.9] tracking-[0em]">{heading}</h2>}
+    {heading && <h2 class="m-0 max-w-[1100px] t-h1">{heading}</h2>}
     {caption && (
-      <span class="flex items-center gap-3 text-[11.5px] font-semibold uppercase tracking-[.24em] text-white/80">
+      <span class="flex items-center gap-3 t-label text-white/80">
         <i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>{caption}
       </span>
     )}

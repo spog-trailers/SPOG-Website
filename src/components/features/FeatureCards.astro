@@ -29,7 +29,7 @@ const { id, label, kicker, heading, features, look = 'brand', tone = 'light' } =
 const dark = tone === 'dark';
 const work = look === 'work';
 const edge = 'px-[max(36px,calc((100vw_-_1320px)/2_+_36px))] scroll-px-[max(36px,calc((100vw_-_1320px)/2_+_36px))] max-[640px]:px-5 max-[640px]:scroll-px-5';
-const nameType = work ? 'font-black uppercase tracking-[0em] leading-[.95]' : 'font-semibold tracking-[0em] leading-[1.05]';
+// Card and panel names follow the type system (t-h3 on cards, t-h2 in the panel), the same in both looks.
 const ctrl = dark
   ? 'border-white/25 text-white hover:border-white disabled:opacity-30'
   : 'border-coal/20 text-coal hover:border-coal disabled:opacity-30';
@@ -41,7 +41,7 @@ const ctrl = dark
     ) : (
       <div>
         {Astro.slots.has('kicker') ? <slot name="kicker" /> : <Eyebrow gold={kicker} />}
-        <h2 class:list={['m-0 mt-4 max-w-[920px] text-[clamp(36px,4.6vw,62px)] font-semibold leading-[1.03] tracking-[-.035em]', dark ? 'text-white' : 'text-coal']}>
+        <h2 class:list={['m-0 mt-4 max-w-[920px] t-h2', dark ? 'text-white' : 'text-coal']}>
           {heading.map((l, i) => <Fragment>{i > 0 && ' '}{l}</Fragment>)}
         </h2>
       </div>
@@ -76,8 +76,8 @@ const ctrl = dark
             <svg viewBox="0 0 24 24" class="size-[18px] fill-none stroke-current stroke-2"><path d="M12 5v14M5 12h14" /></svg>
           </span>
           <span class="absolute inset-x-0 bottom-0 block px-7 pb-7 max-[640px]:px-5 max-[640px]:pb-6">
-            <b class:list={['block text-[clamp(26px,2.4vw,34px)]', nameType]}>{f.title}</b>
-            <span class="mt-2 block text-[15.5px] leading-[1.45] text-white/80">{f.line}</span>
+            <b class="block t-h3">{f.title}</b>
+            <span class="mt-2 block t-body-sm text-white/80">{f.line}</span>
           </span>
         </button>
       </li>
@@ -112,10 +112,10 @@ const ctrl = dark
         <article data-fc-panel={f.id} hidden aria-labelledby={`${id}-${f.id}-title`}>
           <header class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-end gap-x-14 gap-y-5 px-14 pb-11 pt-16 max-[860px]:grid-cols-[minmax(0,1fr)] max-[640px]:px-6 max-[640px]:pb-8 max-[640px]:pt-20">
             <div>
-              <span class="flex items-center gap-3 text-[11.5px] font-semibold uppercase tracking-[.22em] text-ink-soft"><i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>{f.line}</span>
-              <h3 id={`${id}-${f.id}-title`} tabindex="-1" class:list={['m-0 mt-4 text-coal outline-none text-[clamp(40px,5vw,72px)]', nameType]}>{f.title}</h3>
+              <span class="flex items-center gap-3 t-label text-ink-soft"><i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>{f.line}</span>
+              <h3 id={`${id}-${f.id}-title`} tabindex="-1" class="m-0 mt-4 text-coal outline-none t-h2">{f.title}</h3>
             </div>
-            <p class="m-0 max-w-[460px] text-[17.5px] leading-[1.6] text-ink-soft">{f.panel.intro}</p>
+            <p class="m-0 max-w-[460px] t-body text-ink-soft">{f.panel.intro}</p>
           </header>
 
           {media && (media.width && media.natural ? (
@@ -137,8 +137,8 @@ const ctrl = dark
                 <dl class="m-0 grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-3">
                   {f.panel.stats.map(([k, v]) => (
                     <div class="flex flex-col-reverse items-center gap-2 rounded-[14px] bg-stone px-6 py-9 text-center">
-                      <dt class="text-[13px] text-ink-soft">{k}</dt>
-                      <dd class="m-0 text-[clamp(30px,3.4vw,46px)] font-black leading-none tracking-[-.04em] text-coal">{v}</dd>
+                      <dt class="t-fine text-ink-soft">{k}</dt>
+                      <dd class="m-0 mt-1 t-h2 text-coal">{v}</dd>
                     </div>
                   ))}
                 </dl>
@@ -147,8 +147,8 @@ const ctrl = dark
                 <ul class:list={['m-0 grid list-none grid-cols-[repeat(2,minmax(0,1fr))] gap-x-14 p-0 max-[640px]:grid-cols-[minmax(0,1fr)]', f.panel.stats && 'mt-12']}>
                   {f.panel.points.map((pt) => (
                     <li class="border-t border-stone-2 py-6">
-                      <b class="block text-[17px] font-bold text-coal">{pt.title}</b>
-                      <span class="mt-2 block text-[15.5px] leading-[1.6] text-ink-soft">{pt.body}</span>
+                      <b class="block t-h3 text-coal">{pt.title}</b>
+                      <span class="mt-2 block t-body-sm text-ink-soft">{pt.body}</span>
                     </li>
                   ))}
                 </ul>
@@ -161,7 +161,7 @@ const ctrl = dark
                 </div>
               )}
               {f.panel.link && (
-                <a href={f.panel.link.href} data-fc-leave class="mt-9 inline-flex h-[50px] items-center gap-[14px] border-[1.5px] border-coal px-[26px] text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-coal no-underline hover:bg-coal hover:text-white">
+                <a href={f.panel.link.href} data-fc-leave class="mt-9 inline-flex h-[50px] items-center gap-[14px] border-[1.5px] border-coal px-[26px] t-btn text-coal no-underline hover:bg-coal hover:text-white">
                   {f.panel.link.label}
                   <svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
                 </a>
@@ -171,12 +171,12 @@ const ctrl = dark
 
           <nav aria-label="More features" class="mt-10 flex items-stretch justify-between gap-3 border-t border-stone-2 px-14 py-6 max-[640px]:px-6">
             <button type="button" data-fc-go={prev.id} class="cursor-pointer border-0 bg-transparent p-0 text-left text-ink-soft hover:text-coal">
-              <span class="block text-[11px] font-semibold uppercase tracking-[.2em]">&larr; Previous</span>
-              <span class="mt-1 block text-[15px] font-semibold text-coal">{prev.title}</span>
+              <span class="block t-label">&larr; Previous</span>
+              <span class="mt-1 block t-body-sm font-semibold text-coal">{prev.title}</span>
             </button>
             <button type="button" data-fc-go={next.id} class="cursor-pointer border-0 bg-transparent p-0 text-right text-ink-soft hover:text-coal">
-              <span class="block text-[11px] font-semibold uppercase tracking-[.2em]">Next &rarr;</span>
-              <span class="mt-1 block text-[15px] font-semibold text-coal">{next.title}</span>
+              <span class="block t-label">Next &rarr;</span>
+              <span class="mt-1 block t-body-sm font-semibold text-coal">{next.title}</span>
             </button>
           </nav>
         </article>

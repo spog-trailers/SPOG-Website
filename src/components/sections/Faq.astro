@@ -14,18 +14,18 @@ const { items: faqs = homeFaqs, heading = 'Questions crews ask.', eyebrow = fals
     <div>
       {eyebrow && <Eyebrow gold="FAQ" />}
       <Heading class={eyebrow ? 'mt-4 max-w-[480px]' : 'max-w-[480px]'}>{heading}</Heading>
-      <p class="mt-[18px] max-w-[440px] text-[19px] text-ink-soft">Something else on your mind? Call the shop and talk to the people who build it.</p>
-      <a href={phone.href} class="mt-8 inline-block rounded-[9px] bg-ink px-[22px] py-[15px] text-[15px] font-semibold text-white no-underline hover:bg-black">Call {phone.display}</a>
+      <p class="mt-[18px] max-w-[440px] t-body text-ink-soft">Something else on your mind? Call the shop and talk to the people who build it.</p>
+      <a href={phone.href} class="mt-8 inline-block rounded-[9px] bg-ink px-[22px] py-[15px] t-btn text-white no-underline hover:bg-black">Call {phone.display}</a>
     </div>
 
     <div class="grid gap-3">
       {faqs.map((f, i) => (
         <details class="group rounded-[20px] bg-paper" open={i === 0}>
-          <summary class="flex cursor-pointer list-none items-center justify-between gap-6 px-[30px] py-[26px] text-[20px] font-semibold leading-[1.25] tracking-[-.02em] text-ink [&::-webkit-details-marker]:hidden">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-6 px-[30px] py-[26px] t-h3 text-ink [&::-webkit-details-marker]:hidden">
             {f.q}
             <Icon name="plus" class="size-6 shrink-0 stroke-ink stroke-2 transition-transform duration-300 group-open:rotate-45" />
           </summary>
-          <div class="-mt-1.5 px-[30px] pb-7 text-[16.5px] leading-[1.6] text-ink-soft">
+          <div class="-mt-1.5 px-[30px] pb-7 t-body-sm text-ink-soft">
             <p class="m-0 max-w-[640px]">{f.a}</p>
             {f.link && <a href={f.link.href} class="mt-3 inline-block font-semibold text-ink underline underline-offset-[5px]">{f.link.label} &rarr;</a>}
           </div>

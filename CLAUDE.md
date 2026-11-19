@@ -62,7 +62,16 @@ Code lives in the private repo https://github.com/spog-trailers/SPOG-Website (br
 ## Layout rules
 
 - **No small labels above headings (Nate, 2026-11-19).** He found the tracked eyebrow labels over every section heading looked AI-made, so they're gone from the homepage, Cargo 2, Workstation and the product template. `WorkTitle` has no kicker. `Faq` and `Close` show theirs only with the `eyebrow` prop, which only `/old-home` passes. The one exception kept is the "Solar Power Off Grid" line over "What SPOG is made of." because it spells out the name. Don't add new ones.
-- **Heavy uppercase titles use the font's own letter spacing (Nate, 2026-11-19).** He compared four spacings on the Cargo hero and picked the loosest, so every `font-black uppercase` title on the live pages uses `tracking-[0em]`, not the old negative tracking. Names sized in `cqw` to fill their box (the Workstation hero is now `12.1cqw`) were re-measured to still fit. `/old-home` and the held sections keep their old spacing.
+- **Type system (Nate, 2026-11-19).** Eight text styles in `global.css`, after Tesla's Model Y page. Use them, never a one-off `text-[..px]`:
+  - `t-display` 144px desktop / up to 80px phone, 900 uppercase: the product name in a hero, one per page. Long names cap to fit (Workstation uses `min(..., 12.1cqw)`, the product template uses `heroFit`).
+  - `t-h1` 56 / 36, 900 uppercase: a sentence headline (homepage hero), statement and photo bands, closes.
+  - `t-h2` 40 / 28, 900 uppercase: every section heading and big numbers (add `normal-case` to numbers like "$260 to $530").
+  - `t-h3` 24 / 20, 800 sentence case: card, row and tile titles.
+  - `t-lead` 22 / 20, 600: the line under a hero, short intro lines.
+  - `t-body` 18 (the body default), `t-body-sm` 16 for text in cards, tiles, lists and FAQ answers, `t-fine` 14 for fine print.
+  - `t-label` 14, 600 sentence case: small labels and nav links. `t-btn` 14, 800 uppercase: buttons.
+  - Nothing below 14px. Uppercase only for the display name, H1, H2 and buttons. Letter spacing is the font's own (option D). Headings drop their forced line breaks on phones (`WorkTitle`, Build) so they wrap cleanly.
+  - Exempt: form inputs stay 16px so phones don't zoom, the giant lineup names on the homepage are artwork, and the configurator keeps its own compact sizes for now. /old-home picks the system up only through shared components.
 - **Section rhythm:** never put two photo-background sections next to each other. Alternate photo, plain dark, light. Each page documents its pattern in a comment at the top.
 - **Old homepage only:** the next four rules (order, Compare, held sections, the run-time sheet) describe `/old-home`, plus the Close section the product pages still use. The nav on every other page shows Book a demo and Design yours. The homepage's own rules are under "Homepage".
 - **Old homepage order:** Nav (with announcement bar), Hero, Problem, Compare (2027 lineup + coming next), Statement (self-powered + key numbers), UseCaseTabs, Explore (hotspots + close-up photos), Process, Guarantee, Built, Faq, Close (reserve + walkthrough form + run-time sheet), Footer, MobileBar.

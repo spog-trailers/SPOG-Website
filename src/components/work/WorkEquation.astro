@@ -10,7 +10,7 @@ const op = 'flex items-center justify-center text-[34px] font-light leading-none
   <div class="wrap">
     <div class="flex flex-wrap items-end justify-between gap-x-12 gap-y-5">
       <WorkTitle lines={equation.heading} />
-      <p class="m-0 max-w-[340px] text-[18px] leading-[1.5] text-ink-soft">{equation.sub}</p>
+      <p class="m-0 max-w-[340px] t-body text-ink-soft">{equation.sub}</p>
     </div>
 
     <ol class="m-0 mt-16 grid list-none grid-cols-[minmax(0,1fr)_44px_minmax(0,1fr)_44px_minmax(0,1fr)_44px_minmax(0,1.15fr)] p-0 max-[1000px]:mt-12 max-[1000px]:grid-cols-[minmax(0,1fr)]">
@@ -20,20 +20,20 @@ const op = 'flex items-center justify-center text-[34px] font-light leading-none
           <li class="flex flex-col rounded-[14px] bg-paper px-7 pb-8 pt-7 max-[1000px]:flex-row max-[1000px]:items-center max-[1000px]:gap-6 max-[1000px]:py-6 max-[640px]:items-start max-[640px]:gap-5 max-[640px]:px-6">
             <Icon name={part.icon} class="size-9 shrink-0 stroke-coal stroke-[1.4]" />
             <div class="mt-8 max-[1000px]:mt-0">
-              <b class="block text-[22px] font-extrabold uppercase leading-none tracking-[-.025em] text-coal">{part.title}</b>
-              <span class="mt-3 block text-[15px] leading-[1.55] text-ink-soft max-[1000px]:mt-2">{part.body}</span>
+              <b class="block t-h3 text-coal">{part.title}</b>
+              <span class="mt-3 block t-body-sm text-ink-soft max-[1000px]:mt-2">{part.body}</span>
             </div>
           </li>
         </Fragment>
       ))}
       <li aria-hidden="true" class={op}>=</li>
       <li class="relative flex flex-col justify-between overflow-hidden rounded-[14px] bg-coal px-7 pb-8 pt-7 text-white @container">
-        <span class="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[.24em] text-mute">
+        <span class="flex items-center gap-3 t-label text-mute">
           <i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>{equation.result.label}
         </span>
         <div class="mt-8">
           <b class="block text-[13.4cqw] font-black uppercase leading-[.9] tracking-[0em] max-[1000px]:text-[clamp(30px,9cqw,56px)]">{ws.name}</b>
-          <span class="mt-3 block text-[15px] leading-[1.55] text-bone/80">{equation.result.body}</span>
+          <span class="mt-3 block t-body-sm text-bone/80">{equation.result.body}</span>
         </div>
       </li>
     </ol>

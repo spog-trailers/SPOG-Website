@@ -15,23 +15,23 @@ import { close, hero } from '../../data/home2';
  * Keep the ids cta, design and walkthrough so Nav, MobileBar and the lineup keep working.
  */
 const field = 'w-full rounded-[10px] border border-panel-line bg-black px-4 py-[14px] text-[16px] text-white placeholder:text-[#8a8a8a] focus-visible:border-gold';
-const label = 'mb-1.5 block text-[11px] font-semibold uppercase tracking-[.18em] text-mute';
-const tab = 'h-11 cursor-pointer rounded-[9px] border-0 bg-transparent px-2 text-[11.5px] font-bold uppercase leading-[normal] tracking-[.16em] text-mute hover:text-white aria-selected:bg-white aria-selected:text-black max-[420px]:text-[10.5px] max-[420px]:tracking-[.1em]';
-const send = 'col-span-full mt-2 h-[50px] cursor-pointer border-[1.5px] border-white bg-white text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-black hover:border-gold hover:bg-gold';
+const label = 'mb-1.5 block t-label text-mute';
+const tab = 'h-11 cursor-pointer rounded-[9px] border-0 bg-transparent px-2 t-label text-mute hover:text-white aria-selected:bg-white aria-selected:text-black';
+const send = 'col-span-full mt-2 h-[50px] cursor-pointer border-[1.5px] border-white bg-white t-btn text-black hover:border-gold hover:bg-gold';
 const { design, walkthrough } = close;
 ---
 <section id="cta" aria-label="Design your trailer or book a walkthrough" class="relative overflow-hidden border-t border-line bg-black pb-[110px] pt-[120px] max-[640px]:pb-20 max-[640px]:pt-20">
   <div class="wrap grid grid-cols-[1.05fr_1fr] items-start gap-[70px] max-[960px]:grid-cols-[repeat(1,1fr)] max-[960px]:gap-14">
     <div>
-      <h2 class="m-0 text-[clamp(40px,5.2vw,84px)] font-black uppercase leading-[.86] tracking-[0em] text-white max-[960px]:text-[clamp(40px,9.4vw,84px)]">
+      <h2 class="m-0 t-h1 text-white">
         {close.heading.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}
       </h2>
-      <p class="mb-0 mt-8 max-w-[460px] text-[18px] leading-[1.55] text-bone">{close.body}</p>
+      <p class="mb-0 mt-8 max-w-[460px] t-body text-bone">{close.body}</p>
       <div class="mt-9 flex flex-wrap gap-3">
         <Button href={hero.primary.href} variant="gold" arrow>{hero.primary.label}</Button>
         <Button href={hero.secondary.href}>{hero.secondary.label}</Button>
       </div>
-      <a href={close.call.href} class="mt-7 inline-block text-[15.5px] text-mute underline decoration-white/30 underline-offset-4 hover:text-white">{close.call.label}</a>
+      <a href={close.call.href} class="mt-7 inline-block t-body-sm text-mute underline decoration-white/30 underline-offset-4 hover:text-white">{close.call.label}</a>
     </div>
 
     <div data-cf class="relative rounded-[24px] border border-[#1f1f22] bg-panel px-9 pb-9 pt-7 max-[560px]:px-5 max-[560px]:pb-7 max-[560px]:pt-5">
@@ -44,8 +44,8 @@ const { design, walkthrough } = close;
       </div>
 
       <div role="tabpanel" id="cf-design" aria-labelledby="cf-tab-design" data-cf-panel="design" class="pt-8">
-        <h3 class="m-0 text-[30px] font-semibold leading-[1.1] tracking-[-.025em] text-white">{design.title}</h3>
-        <p class="mb-0 mt-2.5 text-[16.5px] text-mute">{design.body}</p>
+        <h3 class="m-0 t-h3 text-white">{design.title}</h3>
+        <p class="mb-0 mt-2.5 t-body-sm text-mute">{design.body}</p>
         <!-- TODO: connect this form to GoHighLevel. Read the GoHighLevel SOP in Notion first. -->
         <form class="mt-7 grid grid-cols-[repeat(2,1fr)] gap-x-3 gap-y-4 max-[560px]:grid-cols-[repeat(1,1fr)]" onsubmit="return false">
           <div>
@@ -73,8 +73,8 @@ const { design, walkthrough } = close;
       </div>
 
       <div role="tabpanel" id="cf-walkthrough" aria-labelledby="cf-tab-walkthrough" data-cf-panel="walkthrough" hidden class="pt-8">
-        <h3 class="m-0 text-[30px] font-semibold leading-[1.1] tracking-[-.025em] text-white">{walkthrough.title}</h3>
-        <p class="mb-0 mt-2.5 text-[16.5px] text-mute">{walkthrough.body}</p>
+        <h3 class="m-0 t-h3 text-white">{walkthrough.title}</h3>
+        <p class="mb-0 mt-2.5 t-body-sm text-mute">{walkthrough.body}</p>
         <!-- TODO: connect this form to GoHighLevel. Read the GoHighLevel SOP in Notion first. -->
         <form class="mt-7 grid grid-cols-[repeat(2,1fr)] gap-x-3 gap-y-4 max-[560px]:grid-cols-[repeat(1,1fr)]" onsubmit="return false">
           <div><label for="wt-name" class={label}>Name</label><input id="wt-name" name="name" autocomplete="name" class={field} /></div>

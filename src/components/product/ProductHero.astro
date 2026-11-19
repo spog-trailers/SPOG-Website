@@ -9,7 +9,7 @@ import { lineupEntry, type ProductPage } from '../../data/productPages';
 interface Props { page: ProductPage }
 const { page } = Astro.props;
 const p = lineupEntry(page.id);
-const nameStyle = `font-size:min(270px,${page.heroFit}vw);animation-delay:.2s`;
+const nameStyle = `font-size:min(clamp(80px, calc(56.2px + 6.1vw), 144px),${page.heroFit}vw);animation-delay:.2s`; // t-display, capped so long names fit
 const lineStyle = 'animation-delay:.55s';
 ---
 {page.hero.kind === 'photo' ? (
@@ -28,8 +28,8 @@ const lineStyle = 'animation-delay:.55s';
       </h1>
       <div class="mt-9 flex animate-rise-2 flex-wrap items-end justify-between gap-7" style={lineStyle}>
         <div class="max-w-[640px]">
-          <p class="m-0 text-[clamp(22px,2.3vw,32px)] font-semibold leading-[1.15] tracking-[-.025em] text-white">{p.tag}</p>
-          <p class="mb-0 mt-2.5 text-[16px] text-white/72">{page.hero.proof}</p>
+          <p class="m-0 t-lead text-white">{p.tag}</p>
+          <p class="mb-0 mt-2.5 t-body-sm text-white/72">{page.hero.proof}</p>
         </div>
         <div class="flex flex-wrap gap-3">
           <Button href="#cta" variant="gold" arrow>{p.cta}</Button>
@@ -47,8 +47,8 @@ const lineStyle = 'animation-delay:.55s';
           <span class="sr-only">SPOG </span>{p.name}
         </h1>
         <div class="animate-rise-2 max-[900px]:order-last" style={lineStyle}>
-          <p class="m-0 max-w-[540px] text-[clamp(22px,2.3vw,32px)] font-semibold leading-[1.15] tracking-[-.025em] text-ink">{p.tag}</p>
-          <p class="mb-0 mt-2.5 max-w-[540px] text-[16px] text-ink-soft">{page.hero.proof}</p>
+          <p class="m-0 max-w-[540px] t-lead text-ink">{p.tag}</p>
+          <p class="mb-0 mt-2.5 max-w-[540px] t-body-sm text-ink-soft">{page.hero.proof}</p>
           <div class="mt-8 flex flex-wrap gap-3">
             <Button href="#cta" variant="gold" arrow>{p.cta}</Button>
             <Button href="#walkthrough" variant="ink">Book a walkthrough</Button>

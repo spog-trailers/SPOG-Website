@@ -2,7 +2,7 @@
 // Phone-only action bar. Appears once the hero scrolls away and hides again at the Close section,
 // so it never covers the hero buttons or the forms. Any section marked data-hide-mobilebar
 // hides it too (the homepage lineup has its own buttons in the same spot).
-const btn = 'flex h-12 flex-1 items-center justify-center border-[1.5px] text-[11.5px] font-bold uppercase leading-[normal] tracking-[.16em] no-underline';
+const btn = 'flex h-12 flex-1 items-center justify-center border-[1.5px] t-btn no-underline';
 // `cta` is the gold button and `secondary` the outlined one. The defaults match the nav's (Nate, 2026-11-18).
 interface Props { cta?: { label: string; href: string }; secondary?: { label: string; href: string } }
 const { cta = { label: 'Design yours', href: '/configure' }, secondary = { label: 'Book a demo', href: '/demo' } } = Astro.props;

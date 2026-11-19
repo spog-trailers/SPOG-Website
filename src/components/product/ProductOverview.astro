@@ -12,7 +12,7 @@ const photo = o.photo;
 ---
 <section id="overview" aria-label={o.intro[0]} class="bg-stone pb-[120px] pt-[120px] text-ink max-[640px]:pb-20 max-[640px]:pt-20">
   <div class="wrap">
-    <h2 class="m-0 max-w-[920px] text-[clamp(30px,3.7vw,52px)] font-semibold leading-[1.08] tracking-[-.032em]">
+    <h2 class="m-0 max-w-[920px] t-h2">
       {o.intro[0]} <span class="text-ink-soft">{o.intro[1]}</span>
     </h2>
 
@@ -33,16 +33,16 @@ const photo = o.photo;
             />
           </div>
           <figcaption class="px-8 pb-8 pt-7">
-            <b class="block text-[22px] font-semibold leading-[1.2] tracking-[-.02em]">{photo.title}</b>
-            <span class="mt-2 block text-[16px] leading-[1.55] text-ink-soft">{photo.body}</span>
+            <b class="block t-h3">{photo.title}</b>
+            <span class="mt-2 block t-body-sm text-ink-soft">{photo.body}</span>
           </figcaption>
         </figure>
       )}
       {o.tiles.map((t) => (
         <div class="flex min-h-[250px] flex-col rounded-[20px] bg-paper px-8 pb-8 pt-8">
           <Icon name={t.icon} class="size-[34px] stroke-ink stroke-[1.5]" />
-          <h3 class="m-0 mt-auto pt-10 text-[22px] font-semibold leading-[1.2] tracking-[-.02em]">{t.title}</h3>
-          <p class="mb-0 mt-2 text-[16px] leading-[1.55] text-ink-soft">{t.body}</p>
+          <h3 class="m-0 mt-auto pt-10 t-h3">{t.title}</h3>
+          <p class="mb-0 mt-2 t-body-sm text-ink-soft">{t.body}</p>
         </div>
       ))}
     </div>

@@ -3,7 +3,7 @@ import { cards, wordmark, firstWordDialog } from '../../data/testHome';
 // The lineup, after Tesla's homepage card row: one card per trailer, nothing but a category,
 // the name in that trailer's own type, a status line and the buttons. The look lives in the
 // photo grade and the name. Swipe or use the arrows. Coming-next cards open a small signup.
-const btn = 'inline-flex h-[44px] items-center justify-center border-[1.5px] px-[22px] text-[11.5px] font-bold uppercase leading-[normal] tracking-[.2em] no-underline cursor-pointer max-[560px]:flex-1 max-[560px]:px-3';
+const btn = 'inline-flex h-[44px] items-center justify-center border-[1.5px] px-[22px] t-btn no-underline cursor-pointer max-[560px]:flex-1 max-[560px]:px-3';
 const field = 'h-[52px] w-full rounded-[10px] border border-panel-line bg-black px-4 text-[16px] text-white placeholder:text-[#8a8a8a] focus-visible:border-gold';
 import { srcset } from '../../data/content';
 ---
@@ -81,7 +81,7 @@ import { srcset } from '../../data/content';
       {firstWordDialog.options.map((o) => <option>{o}</option>)}
       <option>All of them</option>
     </select>
-    <button value="ok" class="mt-4 h-[52px] w-full cursor-pointer border-[1.5px] border-white bg-white text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-black hover:border-gold hover:bg-gold">{firstWordDialog.cta}</button>
+    <button value="ok" class="mt-4 h-[52px] w-full cursor-pointer border-[1.5px] border-white bg-white t-btn text-black hover:border-gold hover:bg-gold">{firstWordDialog.cta}</button>
   </form>
 </dialog>
 

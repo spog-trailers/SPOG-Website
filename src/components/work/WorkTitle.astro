@@ -6,14 +6,15 @@
  */
 interface Props { lines: string[]; as?: 'h2' | 'h3'; size?: 'lg' | 'md'; tone?: 'light' | 'dark'; class?: string }
 const { lines, as: Tag = 'h2', size = 'lg', tone = 'light', class: extra = '' } = Astro.props;
-const sizes = { lg: 'text-[clamp(36px,4.6vw,66px)]', md: 'text-[clamp(30px,3.2vw,46px)]' };
+// One heading size site-wide (type system, Nate 2026-11-19). `size` is kept so older calls still work.
+const sizes = { lg: 't-h2', md: 't-h2' };
 ---
 <div class={extra}>
   <Tag class:list={[
-    'm-0 font-black uppercase leading-[.92] tracking-[0em]',
+    'm-0',
     sizes[size],
     tone === 'light' ? 'text-coal' : 'text-white',
   ]}>
-    {lines.map((l, i) => <Fragment>{i > 0 && <br />}{l}</Fragment>)}
+    {lines.map((l, i) => <Fragment>{i > 0 && <Fragment><br class="max-[640px]:hidden" /><span class="min-[641px]:hidden"> </span></Fragment>}{l}</Fragment>)}
   </Tag>
 </div>
