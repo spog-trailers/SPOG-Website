@@ -185,7 +185,7 @@ export const replaces = {
   ],
   fuel: {
     value: '$260 to $530',
-    label: 'a month in fuel for a 7,500W gas generator at half load, at 2026 New York gas prices.', // SOURCE (messaging report, fuel math with Lowe's and AAA sources)
+    label: 'a month in fuel, estimated, for a 7,500W gas generator at half load. It burns about 1/2 to 3/4 gallon an hour at 2026 New York gas prices.', // SOURCE (messaging report, fuel math with Lowe's and AAA sources)
   },
 };
 
@@ -234,7 +234,7 @@ export const specs = {
     ['Battery storage', '5, 10, 20 or 40 kWh, or other'], // SOURCE (options sheet). CONFIRM 40 kWh on Cargo
     ['Output voltage', '120 V, 208 V, 240 V'], // SOURCE (options sheet)
     ['Shore power connection', '30, 50 or 100 amp'], // SOURCE (options sheet)
-    ['Doors', 'Large rear double doors and a side entry door'], // SOURCE (options sheet, Product Wiki)
+    ['Doors', 'Large rear double doors. Side entry door on the 20 ft shown'], // SOURCE (options sheet, Product Wiki). CONFIRM the side door on the 10 ft
     ['Interior', 'Basic, hardwearing finish'], // SOURCE (options sheet)
     ['Warranty', '1-year limited parts, 3-year limited structural'], // SOURCE (Warranty Policy)
     ['Service', 'Remote diagnosis and a mobile service fleet'], // SOURCE (Warranty Policy)

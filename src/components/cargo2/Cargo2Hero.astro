@@ -18,7 +18,7 @@ const btn = 'inline-flex h-[50px] items-center justify-center border-[1.5px] px-
       <div class="max-w-[760px]">
         <h1 class="m-0 text-[clamp(84px,13vw,210px)] font-black uppercase leading-[.8] tracking-[-.06em]">{hero.name}</h1>
         <p class="mb-0 mt-6 text-[clamp(21px,2vw,28px)] font-semibold leading-[1.25] tracking-[-.02em]">{hero.line}</p>
-        <p class="mb-0 mt-3 max-w-[600px] text-[16.5px] leading-[1.55] text-white/78">{hero.sub}</p>
+        <p class="mb-0 mt-3 max-w-[600px] text-[16.5px] leading-[1.55] text-white/78 max-[640px]:hidden">{hero.sub}</p>
       </div>
       <div class="flex shrink-0 gap-2.5 max-[420px]:w-full max-[420px]:flex-col">
         <a href={demo.href} class={`${btn} border-white/75 bg-black/25 text-white backdrop-blur-[6px] hover:border-white hover:bg-white hover:text-black`}>{demo.label}</a>

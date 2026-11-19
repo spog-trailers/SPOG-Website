@@ -16,7 +16,10 @@ import Faq from '../components/sections/Faq.astro';
 import Footer from '../components/sections/Footer.astro';
 import MobileBar from '../components/sections/MobileBar.astro';
 import { productPages } from '../data/productPages';
+import { footerColumns } from '../data/content';
 import { demo, design, faqs, features, featuresHead, meta, statement, subnavLinks } from '../data/cargo2Page';
+// This page has no walkthrough form, so the footer's Contact link goes to the demo page.
+const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, href]) => [label, href === '#walkthrough' ? demo.href : href]) }));
 ---
 <!--
   CARGO 2 (draft, 2026-11-19). Nate asked for a new pass on the Cargo sales page after the Tesla
@@ -53,6 +56,6 @@ import { demo, design, faqs, features, featuresHead, meta, statement, subnavLink
   <AboutBand />
   <Cargo2Close />
   <Faq items={faqs} heading="Questions about Cargo." />
-  <Footer />
+  <Footer columns={footer} />
   <MobileBar cta={design} />
 </Base>
