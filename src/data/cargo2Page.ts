@@ -278,7 +278,7 @@ export const close = {
 export const faqs = [
   {
     q: 'Will it hold up on a job site?', // NEW (Nate, 2026-11-19: the question GCs and subs ask)
-    a: "That's what it's built for. Every Cargo starts on a welded steel frame built to carry the weight of its solar and battery, and the structure is covered by a 3-year limited structural warranty.", // NEW, facts from Nate and the Warranty Policy
+    a: 'Yes, every Cargo starts on a welded steel frame built to carry the weight of its solar and battery, and the structure is covered by a 3-year limited structural warranty.', // NATE approved 2026-11-19, facts from Nate and the Warranty Policy
   },
   {
     q: 'Will it run my saws and compressor?', // SOURCE (buyer question, Objections & FAQ)
@@ -287,7 +287,7 @@ export const faqs = [
   },
   {
     q: "Why don't I just build one myself?", // SOURCE (Objections & FAQ)
-    a: "It's more than panels on a roof. The frame, welding and structure are built to carry the solar and battery weight, and the wiring, battery, solar and outlets are designed together and tested before it leaves Middletown. It arrives working, with a warranty in writing and a team behind it.", // SOURCE (Objections & FAQ, trimmed)
+    a: "You'd have to build a frame that carries the solar and battery weight, design and test the wiring, battery, solar and outlets together, and make sure the whole build is compliant. Our crew does all of that before every Cargo leaves Middletown, so yours arrives working and compliant, with a warranty and a service team behind it.", // NEW on SOURCE (Objections & FAQ), compliance NATE 2026-11-19. CONFIRM which standards to name
   },
   {
     q: 'Can I plug it in?', // NEW
