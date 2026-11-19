@@ -67,8 +67,8 @@ const shown = 'On the 20 ft shown here. Your SPOG contact will confirm what come
 export const features: Feature[] = [
   {
     id: 'doors',
-    title: 'Rear double doors',
-    line: 'Large doors that open wide for loading.', // SOURCE (options sheet, Cargo)
+    title: 'Rear barn doors', // NATE's term (Notion, 2026-11-19)
+    line: 'Large barn doors that open wide for loading.', // SOURCE (options sheet), NATE's "barn doors"
     image: shoot.cargoDoorsCard,
     alt: 'Rear barn doors of a black SPOG Cargo with two full-height chrome lock bars',
     position: '50% 50%',
@@ -274,7 +274,7 @@ export const specs = {
     ['Battery storage', '5, 10, 20 or 40 kWh, or other'], // SOURCE (options sheet). CONFIRM 40 kWh on Cargo
     ['Output voltage', '120 V, 208 V, 240 V'], // SOURCE (options sheet)
     ['Shore power connection', '30, 50 or 100 amp'], // SOURCE (options sheet)
-    ['Doors', 'Large rear double doors. Side entry door on the 20 ft shown'], // SOURCE (options sheet, Product Wiki). CONFIRM the side door on the 10 ft
+    ['Doors', 'Large rear barn doors. Side entry door on the 20 ft shown'], // SOURCE (options sheet, Product Wiki). CONFIRM the side door on the 10 ft
     ['Interior', 'Basic, hardwearing finish'], // SOURCE (options sheet)
     ['Warranty', '1-year limited parts, 3-year limited structural'], // SOURCE (Warranty Policy)
     ['Service', 'Remote diagnosis and a mobile service fleet'], // SOURCE (Warranty Policy)
