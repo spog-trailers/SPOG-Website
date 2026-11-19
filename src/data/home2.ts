@@ -60,7 +60,7 @@ export const lineup = {
       id: 'workstation', name: 'Workstation', tone: 'studio' as Tone, href: '/workstation', builder: '',
       line: 'The site office that works the day it lands.', // SOURCE. Nate wants a new line (2026-11-18, "sounds so AI"). Ten options went to him in chat.
       facts: ['From $15,000', '10 or 20 ft', 'Built-in climate control'], // NATE
-      image: '/images/lineup-workstation.webp', width: 1700, height: 783,
+      image: '/images/lineup-workstation.webp', width: 1495, height: 838, // Nate's own cut-out (2026-11-19, 'Workstation transparent background.png')
       alt: 'Navy SPOG Workstation trailer with two doors and steps',
       fit: [10.6, 30], shot: [92, 80], lap: 0.42,
     },
