@@ -156,8 +156,8 @@ export const features: Feature[] = [
     panel: {
       intro: 'The power is wherever you go, enough to run your tools, lights and chargers without a generator or fixed power.', // NATE (Notion, 2026-11-19)
       media: { src: shoot.cargoSolar, alt: 'Five solar panels across the roof of a black SPOG Cargo', width: 2400, height: 1600 },
-      stats: [['Roof solar', 'Standard'], ['Battery storage', 'Standard']], // SOURCE (options sheet: "Standard on every trailer")
-      link: { label: 'See the power options', href: '#power' }, // NEW
+      stats: [['Roof solar', 'Standard'], ['Battery storage', 'Up to 40 kWh']], // SOURCE (options sheet), 40 kWh NATE (Notion, 2026-11-19). CONFIRM 40 kWh on Cargo with Joe
+      link: { label: 'Battery and outlet options', href: '#power' }, // NEW. Closes the panel and jumps to the Power section
     },
   },
 ];
