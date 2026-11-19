@@ -3,7 +3,7 @@ import { srcset } from '../../data/content';
 import { demo, design, hero } from '../../data/cargo2Page';
 /**
  * Cargo 2 hero, after the Rivian R1T page: the real photo full bleed, the name set huge at the
- * bottom left with the promise under it, the two buttons at the bottom right, and three facts.
+ * bottom left with the promise under it, the two buttons at the bottom right, and the starting price (Nate, 2026-11-19, after Rivian).
  * The photo is the finished black 20 ft outside the SPOG shop (source photo 13).
  * Keep the id "top": the section bar and the phone action bar watch it.
  */
@@ -18,20 +18,13 @@ const btn = 'inline-flex h-[50px] items-center justify-center border-[1.5px] px-
       <div class="max-w-[760px]">
         <h1 class="m-0 text-[clamp(84px,13vw,210px)] font-black uppercase leading-[.8] tracking-[-.06em]">{hero.name}</h1>
         <p class="mb-0 mt-6 text-[clamp(21px,2vw,28px)] font-semibold leading-[1.25] tracking-[-.02em]">{hero.line}</p>
-        <p class="mb-0 mt-3 max-w-[600px] text-[16.5px] leading-[1.55] text-white/78 max-[640px]:hidden">{hero.sub}</p>
+        <p class="mb-0 mt-3 max-w-[600px] text-[16.5px] leading-[1.55] text-white/78 max-[640px]:text-[15px]">{hero.sub}</p>
       </div>
       <div class="flex shrink-0 gap-2.5 max-[420px]:w-full max-[420px]:flex-col">
         <a href={demo.href} class={`${btn} border-white/75 bg-black/25 text-white backdrop-blur-[6px] hover:border-white hover:bg-white hover:text-black`}>{demo.label}</a>
         <a href={design.href} class={`${btn} border-gold bg-gold text-black hover:border-white hover:bg-white`}>{design.label}</a>
       </div>
     </div>
-    <dl class="m-0 mt-10 flex flex-wrap gap-x-12 gap-y-4 border-t border-white/20 pt-6 max-[640px]:mt-8 max-[640px]:gap-x-8">
-      {hero.facts.map(([value, label]) => (
-        <div class="flex flex-col-reverse">
-          <dt class="text-[12.5px] text-white/65">{label}</dt>
-          <dd class="m-0 text-[clamp(18px,1.6vw,22px)] font-semibold tracking-[-.02em]">{value}</dd>
-        </div>
-      ))}
-    </dl>
+    <p class="mb-0 mt-10 border-t border-white/20 pt-6 text-[clamp(18px,1.6vw,22px)] font-semibold tracking-[-.02em] max-[640px]:mt-8">{hero.price}</p>
   </div>
 </header>
