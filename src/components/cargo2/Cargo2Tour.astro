@@ -16,14 +16,14 @@ import { design, tour } from '../../data/cargo2Page';
 const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border border-[#cfd0d2] bg-white/70 px-4 text-[12.5px] font-semibold text-ink transition-colors hover:border-[#8f9195] aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-white';
 ---
 <section id="tour" aria-label="Take a tour of the Cargo" data-hide-mobilebar class="overflow-hidden bg-[linear-gradient(to_bottom,#efefef_0%,#f7f7f7_45%,#ffffff_100%)] pb-[110px] pt-[120px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
-  <div class="wrap flex items-end justify-between gap-x-14 gap-y-5 max-[900px]:flex-col max-[900px]:items-start">
+  <div class="wrap">
     <WorkTitle lines={tour.heading} />
+    <a href={design.href} class="mt-8 inline-flex h-[50px] items-center justify-center border-[1.5px] border-coal bg-coal px-8 text-[12px] font-bold uppercase leading-[normal] tracking-[.18em] text-white no-underline transition-colors hover:border-gold hover:bg-gold hover:text-black">{design.label}</a>
   </div>
 
   <div class="relative mx-auto mt-6 h-[clamp(360px,64vh,740px)] max-w-[1640px] max-[640px]:h-[min(62svh,460px)]">
     <div data-tour-stage class="absolute inset-y-0 inset-x-6 cursor-grab overflow-hidden rounded-[22px] active:cursor-grabbing max-[640px]:inset-x-3"></div>
     <img data-tour-poster src={tour.poster} alt="Computer-generated model of the black 20 ft SPOG Cargo" class="pointer-events-none absolute inset-0 m-auto max-h-[80%] max-w-[86%] object-contain mix-blend-multiply transition-opacity duration-700" />
-    <p class="pointer-events-none absolute bottom-3 right-6 m-0 text-[11.5px] font-semibold text-ink-soft max-[640px]:right-4">Computer-generated model</p>
   </div>
 
   <div class="wrap">
@@ -49,10 +49,6 @@ const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border bord
         </div>
       ))}
     </dl>
-
-    <div class="mt-12 flex justify-center">
-      <a href={design.href} class="inline-flex h-[50px] items-center justify-center border-[1.5px] border-coal bg-coal px-8 text-[12px] font-bold uppercase leading-[normal] tracking-[.18em] text-white no-underline transition-colors hover:border-gold hover:bg-gold hover:text-black">{design.label}</a>
-    </div>
 
     <p class="mx-auto mb-0 mt-8 max-w-[640px] text-center text-[12.5px] leading-[1.55] text-ink-soft">{tour.model} {tour.extras}</p>
   </div>

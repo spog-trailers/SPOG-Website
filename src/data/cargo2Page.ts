@@ -184,7 +184,7 @@ export const build = {
 
 export const tour = {
   kicker: 'Take a tour', // NEW, after Rivian's "Take a tour"
-  heading: ['Turn it around.', 'Step inside.'], // NEW
+  heading: ['See how it works', 'for you.'], // NATE (Notion, 2026-11-19)
   views: [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street', 'Street side'], ['top', 'Roof'], ['interior', 'Inside']] as [string, string][],
   stats: [
     ['10 or 20 ft', 'Length'], // NATE
