@@ -101,7 +101,7 @@ export const overview = {
 export const power = {
   heading: ['Power that', 'runs the job.'], // NEW (2026-11-20)
   intro: 'Every Cargo carries its own battery and inverter. The 10 ft comes with 5 kWh and the 20 ft with 10 kWh, and you can add 5 kWh at a time up to 20 kWh, so the power fits the work your crew does.', // NEW. Battery SOURCE (price sheet 2026-11-20)
-  media: { src: '/images/cargo2-battery-card.jpg', alt: 'Two SPOG battery units in their open aluminum cages on a low white platform inside a Cargo' } as Media, // Better Interior 60, cropped to the batteries
+  media: { src: shoot.cargoPowerWide, alt: 'Inside a SPOG Cargo, battery units in open aluminum cages on the platforms down both walls, E-track above them', position: '50% 55%' } as Media, // Better Interior 60, wide crop (2026-11-20, second layout)
   points: [
     { title: 'Bring the bigger tools', body: 'Plug full-size corded tools like a table saw into the 120 V outlets, three outside and five inside, so the crew gets more done than it would on battery tools alone.' }, // NEW on Joe (Meeting with Alessandro and Joe, 2026-11-20: corded tools and production). Outlets SOURCE (price sheet 2026-11-20)
     { title: 'Charge every battery overnight', body: "Leave the tool batteries charging in the locked trailer at the end of the day, and they're ready when the crew comes back in the morning." }, // NEW on Jay (Meeting with Alessandro and Joe, 2026-11-20)
