@@ -9,23 +9,26 @@ import { built as wsBuilt, type Card, type Media } from '../../data/workstation2
  * the NATM inspection passes, Meeting with Alessandro and Joe, 2026-11-20), and service on site in
  * the slot where Cybertruck has Full Self-Driving.
  * Keeps the id "built".
- * Props (optional): Cargo 2 passes its own heading, line, a wide lead photo and two cards.
+ * Props (optional): Cargo 2 passes its own heading, line, a lead photo and three cards, and sets
+ * `contained` so the whole section sits in the page container (Nate, 2026-11-20: "it's too big").
+ * /workstation-2 keeps the wider cards Nate asked for there.
  */
-interface Props { heading?: string[]; sub?: string; lead?: Media; cards?: Card[] }
-const { heading = wsBuilt.heading, sub = wsBuilt.sub, lead, cards = wsBuilt.cards } = Astro.props;
+interface Props { heading?: string[]; sub?: string; lead?: Media; cards?: Card[]; contained?: boolean }
+const { heading = wsBuilt.heading, sub = wsBuilt.sub, lead, cards = wsBuilt.cards, contained = false } = Astro.props;
+const box = contained ? 'wrap' : 'mx-auto max-w-[1920px] px-6 max-[640px]:px-5';
 const cols = cards.length === 2 ? 'grid-cols-[repeat(2,minmax(0,1fr))]' : 'grid-cols-[repeat(3,minmax(0,1fr))]';
 const aspect = cards.length === 2 ? 'aspect-[16/10]' : 'aspect-[4/3]';
 ---
 <section id="built" aria-label="Built to last on the job site" class="bg-black pb-[130px] pt-[140px] text-bone max-[640px]:pb-20 max-[640px]:pt-24">
-  <div class="mx-auto max-w-[1920px] px-6 max-[640px]:px-5">
+  <div class={box}>
     <div class="max-w-[980px]">
       <WorkTitle lines={heading} tone="dark" />
       <p class="mb-0 mt-6 max-w-[640px] t-body text-bone/75">{sub}</p>
     </div>
-    {lead && <Ws2Media media={lead} sizes="100vw" class="mt-14 block aspect-[21/9] w-full rounded-[22px] bg-panel object-cover max-[640px]:mt-10 max-[640px]:aspect-[4/3]" />}
+    {lead && <Ws2Media media={lead} sizes={contained ? "(max-width: 1392px) 100vw, 1248px" : "100vw"} class="mt-14 block aspect-[21/9] w-full rounded-[22px] bg-panel object-cover max-[640px]:mt-10 max-[640px]:aspect-[4/3]" />}
   </div>
   <!-- The cards run wider than the page container (Nate, 2026-11-20), with a 24px gutter up to 1920px, like the homepage's solution cards. -->
-  <div class:list={['mx-auto mt-14 grid max-w-[1920px] gap-5 px-6 max-[1000px]:grid-cols-[minmax(0,1fr)] max-[1000px]:gap-12 max-[640px]:mt-12 max-[640px]:px-5', cols]}>
+  <div class:list={[box, 'mt-14 grid gap-5 max-[1000px]:grid-cols-[minmax(0,1fr)] max-[1000px]:gap-12 max-[640px]:mt-12', cols]}>
     {cards.map((c) => <Ws2Card card={c} aspect={aspect} tone="dark" sizes="(max-width: 1000px) 100vw, 33vw" />)}
   </div>
 </section>

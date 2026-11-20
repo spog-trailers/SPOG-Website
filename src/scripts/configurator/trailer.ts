@@ -1060,12 +1060,15 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   }
   if (cfg.starlink) {
     // The dish rides on top of the 6 ft light when there is one, as on the Workstation photos,
-    // else on a short pole over the nose. Starlink can go on Cargo (Nate, 2026-11-20).
+    // else on its own short pole on the curb half of the roof over the nose. It never goes on the
+    // 28 ft tower: the old center pole stood a foot behind the tower and read as mounted on it
+    // (Nate, 2026-11-20). Starlink can go on Cargo (Nate, 2026-11-20).
     const dish = new THREE.Group();
     if (cfg.light6) dish.position.set(mastX, lightTop + 0.22, lightZ);
     else {
-      g.add(cyl(0.06, 1.3, m.black, xf + 1.45, ROOF + 0.65, 0, 'y', 12));
-      dish.position.set(xf + 1.45, ROOF + 1.4, 0);
+      const px = xf + 0.45, pz = Math.min(1.25, (W / 2) * (1 - 0.45 / NOSE) - 0.9);
+      g.add(cyl(0.06, 1.3, m.black, px, ROOF + 0.65, pz, 'y', 12));
+      dish.position.set(px, ROOF + 1.4, pz);
     }
     dish.add(box(1.25, 0.09, 1.9, m.equipment, 0, 0, 0), box(0.3, 0.2, 0.3, m.graphite, 0, -0.13, 0));
     dish.rotation.z = -0.28;

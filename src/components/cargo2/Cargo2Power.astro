@@ -1,0 +1,41 @@
+---
+import Ws2Media from '../ws2/Ws2Media.astro';
+import WorkTitle from '../work/WorkTitle.astro';
+import { power } from '../../data/cargo2Page';
+/**
+ * The power system, its own section near the top of /cargo-2 (Nate, 2026-11-20): how much battery a
+ * Cargo carries and how it's sized, running full-size corded tools instead of only battery tools, and
+ * charging every tool battery overnight in the locked trailer. Dark, between the light overview and
+ * the light tour. The battery photo on the left, the words and a number row on the right.
+ * This is the one place the page sells the power system, so the overview has no power card.
+ * Keeps the id "power" for the section bar.
+ */
+---
+<section id="power" aria-label="The power system" class="bg-black pb-[120px] pt-[130px] text-bone max-[640px]:pb-16 max-[640px]:pt-20">
+  <div class="wrap grid grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] items-center gap-x-16 gap-y-10 max-[900px]:grid-cols-[minmax(0,1fr)]">
+    <Ws2Media media={power.media} sizes="(max-width: 900px) 100vw, 580px" class="block aspect-[4/5] w-full rounded-[22px] bg-panel object-cover max-[900px]:aspect-[4/3]" />
+
+    <div>
+      <WorkTitle lines={power.heading} tone="dark" />
+      <p class="mb-0 mt-6 max-w-[540px] t-body text-bone/80">{power.intro}</p>
+
+      <ul class="m-0 mt-10 list-none p-0">
+        {power.points.map((p) => (
+          <li class="border-t border-panel-line py-6">
+            <h3 class="m-0 t-h3 text-white">{p.title}</h3>
+            <p class="mb-0 mt-2 max-w-[540px] t-body-sm text-bone/75">{p.body}</p>
+          </li>
+        ))}
+      </ul>
+
+      <dl class="m-0 grid grid-cols-[repeat(3,minmax(0,1fr))] border-t border-panel-line max-[560px]:grid-cols-[minmax(0,1fr)]">
+        {power.stats.map(([v, k]) => (
+          <div class="flex flex-col-reverse gap-1.5 pt-6 not-first:border-l not-first:border-panel-line not-first:pl-6 max-[560px]:flex-row-reverse max-[560px]:items-baseline max-[560px]:justify-between max-[560px]:py-4 max-[560px]:not-first:border-l-0 max-[560px]:not-first:border-t max-[560px]:not-first:pl-0">
+            <dt class="t-label text-mute">{k}</dt>
+            <dd class="m-0 t-h3 normal-case text-white">{v}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </div>
+</section>

@@ -56,6 +56,7 @@ export const hero = {
 /** Section bar that replaces the masthead once the hero scrolls away. */
 export const subnavLinks: [string, string][] = [
   ['Overview', '#overview'],
+  ['Power', '#power'], // Nate 2026-11-20: the power system gets its own section
   ['Tour', '#tour'],
   ['Savings', '#savings'],
   ['Anywhere', '#anywhere'],
@@ -65,10 +66,10 @@ export const subnavLinks: [string, string][] = [
   ['FAQ', '#faq'],
 ];
 
-// ---------------------------------------------------------------- Redefining the job site trailer (Cybertruck: Redefining the Pickup Truck)
+// ---------------------------------------------------------------- Redefining the enclosed cargo trailer (Cybertruck: Redefining the Pickup Truck)
 
 export const overview = {
-  heading: ['Redefining the', 'job site trailer.'], // NEW (v3)
+  heading: ['Redefining the', 'enclosed cargo trailer.'], // NATE (2026-11-20)
   sub: 'Built around what your crew does every day, from loading out in the morning to locking up at night.', // NEW (v3)
   cards: [
     {
@@ -77,18 +78,13 @@ export const overview = {
       media: { src: shoot.cargoStorage, alt: 'A black SPOG Cargo with both barn doors swung open, the lit interior behind them', position: '50% 50%' },
     },
     {
-      title: 'Power on tap', // NEW (Cybertruck: Power On Tap)
-      body: "Plug full-size corded tools like a table saw into the 120 V outlets inside and outside the trailer (the 20 ft adds 208 V), so the crew gets more done than it would on battery tools. At the end of the day, leave the tool batteries charging in the locked trailer, and they're ready when the crew comes back in the morning.", // NEW (Meeting with Alessandro and Joe, 2026-11-20: Joe on corded tools and production, Jay's overnight charging). Voltages SOURCE (price sheet 2026-11-20: 120 V on the 10 ft, 120 and 208 V on the 20 ft, no 240 V). Battery, inverter, outlet counts and shore power live in Specs
-      media: { src: '/images/cargo2-battery-card.jpg', alt: 'Two SPOG battery units in their open aluminum cages on a low white platform inside a Cargo' }, // Better Interior 60, cropped to the batteries
-    },
-    {
       title: 'Set it up your way', // NEW (Cybertruck: Full Range of Motion)
       body: 'Every Cargo comes with a built-in work desk in the front corner for paperwork and a laptop. Add a workbench and E-track on the walls and floor, which takes the fold-down tables, tool holders and straps crews already buy, so every tool has a place and every load stays put.', // NEW. Desk standard SOURCE (price sheet 2026-11-20). Shelving, cabinets and overhead storage removed NATE (2026-11-20 answers). Workbench and E-track still offered (options sheet), E-track accessories from Joe (Meeting with Alessandro and Joe, 2026-11-20)
       media: { src: shoot.cargoEtrackCard, alt: 'E-track rails down the white wall of a SPOG Cargo, with the battery units on their platform', position: '50% 50%' },
     },
     {
       title: 'Lock down the site', // NEW (Cybertruck: Lockable Storage), Nate's security direction from /workstation-2
-      body: 'Full-height bars lock the rear doors at night. Either size can add a 6 ft telescopic light that lights up the lot and lets the crew keep working after the sun goes down, and the 20 ft can add a 28 ft light tower with a light, a horn and your pick of an AI or a regular security camera.', // NEW (reworded 2026-11-20 review: the tower reads as an add-on, not standard on the 20 ft). Add-ons SOURCE (price sheet 2026-11-20) and NATE (2026-11-20 answers: the 6 ft is a light only, no camera; one camera on the 28 ft tower, AI or regular, same price; no cameras on the 10 ft; no 360 camera, AI camera system or horn and strobe). The 6 ft light and the tower are said here only, nowhere else on the page
+      body: 'Full-height bars lock the rear doors at night, so the tools and materials stay on site. Either size can add a 6 ft telescopic light that lights up the lot and lets the crew keep working after the sun goes down.', // NEW (2026-11-20). Light SOURCE (price sheet 2026-11-20, a light only, NATE: work after dark). The 28 ft tower and its camera are their own card in Add what you need (Nate, 2026-11-20)
       media: { src: shoot.cargoDoorsCard, alt: 'The rear barn doors of a black SPOG Cargo, locked with two full-height bars', position: '50% 50%' },
     },
     {
@@ -97,6 +93,24 @@ export const overview = {
       media: { video: '/images/cargo2-weld-loop.mp4', poster: '/images/cargo2-weld-loop.jpg', alt: 'A welder joining the steel frame of a SPOG trailer in the Middletown shop' },
     },
   ] as Card[],
+};
+
+// ---------------------------------------------------------------- the power system (Nate, 2026-11-20: its own section near the top)
+
+/** The one place the page sells the power system: battery size, bigger tools, overnight charging. */
+export const power = {
+  heading: ['Power that', 'runs the job.'], // NEW (2026-11-20)
+  intro: 'Every Cargo carries its own battery and inverter. The 10 ft comes with 5 kWh and the 20 ft with 10 kWh, and you can add 5 kWh at a time up to 20 kWh, so the power fits the work your crew does.', // NEW. Battery SOURCE (price sheet 2026-11-20)
+  media: { src: '/images/cargo2-battery-card.jpg', alt: 'Two SPOG battery units in their open aluminum cages on a low white platform inside a Cargo' } as Media, // Better Interior 60, cropped to the batteries
+  points: [
+    { title: 'Bring the bigger tools', body: 'Plug full-size corded tools like a table saw into the 120 V outlets, three outside and five inside, so the crew gets more done than it would on battery tools alone.' }, // NEW on Joe (Meeting with Alessandro and Joe, 2026-11-20: corded tools and production). Outlets SOURCE (price sheet 2026-11-20)
+    { title: 'Charge every battery overnight', body: "Leave the tool batteries charging in the locked trailer at the end of the day, and they're ready when the crew comes back in the morning." }, // NEW on Jay (Meeting with Alessandro and Joe, 2026-11-20)
+  ],
+  stats: [
+    ['5 to 20 kWh', 'Battery storage'], // SOURCE (price sheet 2026-11-20)
+    ['Up to 6,000 W', 'Inverter'], // SOURCE (price sheet 2026-11-20: 3,000 W on the 10 ft, 6,000 W on the 20 ft)
+    ['208 V', 'Added on the 20 ft'], // SOURCE (price sheet 2026-11-20)
+  ] as [string, string][],
 };
 
 // ---------------------------------------------------------------- 3D tour
@@ -112,7 +126,7 @@ export const tour = {
 
 // ---------------------------------------------------------------- what it saves you (Tesla: More Affordable Than a Gas Car), unchanged from v2
 
-/** The one place the page argues the money. Tool charging moved to the Power on tap card (Meeting with Alessandro and Joe, 2026-11-20). */
+/** The one place the page argues the money. The power system and tool charging live in the Power section (Nate, 2026-11-20). */
 export const replaces = {
   heading: ['Spend less', 'on fuel.'], // NEW (v2, charging moved out 2026-11-20)
   body: 'A gas generator at half load burns half to three quarters of a gallon an hour.', // SOURCE (messaging report fuel math)
@@ -131,7 +145,7 @@ export const replaces = {
 export const anywhere = {
   heading: ['Take it', 'anywhere.'], // NATE (Workstation)
   sub: 'Wherever the next job is, Cargo goes with it, and the crew gets to work from the first hour.', // NEW (2026-11-20 facts pass: solar, Starlink and towing are each said once, in their cards)
-  lead: { src: shoot.cargoStatement, alt: 'Low drone view of a black SPOG Cargo outside the SPOG shop, SPOG painted on the bay doors', position: '50% 55%' } as Media,
+  lead: null, // Nate 2026-11-20: the statement drone photo is out, and the three cards run wider instead
   cards: [
     {
       title: 'Solar power',
@@ -160,7 +174,7 @@ export const anywhere = {
 
 export const built = {
   heading: ['Built for whatever', 'the job site brings.'], // NATE (2026-11-19)
-  sub: 'Other companies cut corners with staples and glue, and most cargo trailers go without insulation. Every Cargo is insulated in the walls, floor and ceiling, and every SPOG is designed and built by our own crew in Middletown, New York, from welding to wiring.', // NATE, insulation from Meeting with Alessandro and Joe, 2026-11-20. Walls, floor and ceiling SOURCE (price sheet 2026-11-20). CONFIRM "most cargo trailers go without insulation" (Joe said regular cargo trailers aren't insulated)
+  sub: 'Other companies cut corners with staples and glue. Every SPOG is designed and built by our own crew in Middletown, New York, from welding to wiring.', // NATE. Insulation moved to its own card (Nate, 2026-11-20)
   lead: { src: shoot.cargoFrame, alt: 'A welded steel trailer floor frame with steel crossmembers on the floor of the SPOG shop', position: '50% 72%' } as Media, // Nate's photo (2026-11-19)
   cards: [
     {
@@ -173,6 +187,11 @@ export const built = {
       body: 'Every Cargo comes with a 3-year limited structural warranty and a 1-year limited parts warranty, and if something needs work we diagnose it remotely and send our mobile service fleet to your site.', // NATE approved, facts SOURCE (Warranty Policy)
       media: { video: '/images/cargo2-shop-loop.mp4', poster: '/images/cargo2-shop-loop.jpg', alt: 'Flying through the SPOG shop floor, SPOG painted on the wall and an American flag at the far end' },
     },
+    {
+      title: 'Insulated in the walls, floor and ceiling', // NEW (Nate, 2026-11-20: "talk about how every SPOG is insulated")
+      body: 'Rigid foam board lines the walls, floor and ceiling of every SPOG we build, while most cargo trailers go without insulation, so the inside is easier to keep warm or cool.', // NEW. Insulation SOURCE (price sheet 2026-11-20), foam board from the photo, CONFIRM "most cargo trailers go without insulation" (Joe said regular cargo trailers aren't insulated)
+      media: { src: shoot.cargoInsulation, alt: 'A SPOG trailer frame wrapped in rigid foam insulation board on the shop floor, an American flag on the far wall', position: '30% 50%' }, // Nate's photo. The boards carry Owens Corning's Pink Panther branding
+    },
   ] as Card[],
 };
 
@@ -181,14 +200,19 @@ export const built = {
 /**
  * Large photo cards, small tiles, then the builder, which has the full options list and the add-on
  * prices (it replaced v2's checklist). Facts pass 2026-11-20: the Office desk card is gone because the
- * desk is standard (Set it up your way says so), Starlink lives in Take it anywhere and the lights and
- * tower in Lock down the site, so the carousel is two cards. Extra desks took the Whiteboard tile's
+ * desk is standard (Set it up your way says so), Starlink lives in Take it anywhere and the 6 ft light in
+ * Lock down the site. The 28 ft tower with its camera is a photo card here (Nate, 2026-11-20). Extra desks took the Whiteboard tile's
  * place (the whiteboard is still in the builder) to keep the tile row at four.
  */
 export const options = {
   heading: ['Add what', 'you need.'], // NEW (v3)
   sub: 'Pick the extras that fit your crew, or build your exact Cargo in the builder.', // NEW (v3)
   cards: [
+    {
+      title: '28 ft light tower with a camera', // NATE (2026-11-20: add the camera on the telescopic pole as a photo card)
+      body: 'On the 20 ft, add a 28 ft telescopic tower with a light, a horn and your pick of an AI or a regular security camera, so the camera keeps watch over the lot after the crew goes home.', // NEW. SOURCE (price sheet 2026-11-20: 20 ft only, AI or regular camera at the same price, light and horn)
+      media: { src: shoot.wsSecurityMast, alt: 'Work lights and a dome camera at the top of a SPOG telescopic tower', position: '50% 40%' }, // Nate's close-up, filed for both trailers. It shows two dome cameras and the package has one
+    },
     {
       title: 'Climate control', // Meeting with Alessandro and Joe, 2026-11-20
       body: 'Add heating and cooling, and the trailer becomes a place to warm up, cool off or take a call out of the weather.', // NEW, option SOURCE (price sheet 2026-11-20, an add-on on both Cargo sizes)

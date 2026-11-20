@@ -5,6 +5,7 @@ import ProductSubnav from '../components/product/ProductSubnav.astro';
 import Cargo2Hero from '../components/cargo2/Cargo2Hero.astro';
 import Cargo2Tour from '../components/cargo2/Cargo2Tour.astro';
 import Cargo2Replaces from '../components/cargo2/Cargo2Replaces.astro';
+import Cargo2Power from '../components/cargo2/Cargo2Power.astro';
 import Cargo2Specs from '../components/cargo2/Cargo2Specs.astro';
 import Cargo2Close from '../components/cargo2/Cargo2Close.astro';
 import Ws2Features from '../components/ws2/Ws2Features.astro';
@@ -40,25 +41,27 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
   Order (Cybertruck or Tesla section in brackets) and rhythm (never two photo sections next to each other;
   sections with inset media on a plain background don't count as photo sections):
     Hero P (real photo, name, line, buttons, starting price)                     [Cybertruck hero]
-    Redefining the job site trailer L (stone, five swipe cards)                  [Redefining the Pickup Truck]
+    Redefining the enclosed cargo trailer L (stone, four swipe cards)            [Redefining the Pickup Truck]
+    The power system D (battery photo, battery sizes, bigger tools, overnight charging, number row; its own section, Nate 2026-11-20)
     See how it works for you L (3D model of the real Cargo)
-    Spend less on fuel D (fuel number and two tiles)                             [Model Y: More Affordable Than a Gas Car]
-    Take it anywhere L (white, drone photo, three cards, weight/length/axle row) [Take on Any Terrain]
-    Built for whatever the job site brings D (frame photo, two wide cards)      [Designed to Be the Safest Truck]
-    Add what you need L (white, two-card photo carousel, four tiles, builder)    [Add What You Need]
+    Spend less on fuel D (heading and burn rate in one row, then one panel: fuel number and two points) [Model Y: More Affordable Than a Gas Car]
+    Take it anywhere L (white, no lead photo, three wider cards, weight/length/axle row) [Take on Any Terrain]
+    Built for whatever the job site brings D (in the page container: frame photo, then designed and tested, the warranty in the center, insulation) [Designed to Be the Safest Truck]
+    Add what you need L (white, three-card photo carousel with the 28 ft tower and camera, four tiles, builder) [Add What You Need]
     Specs L (stone, Cargo cut-out, so it reads apart from the white options above), Close D, FAQ L, Footer D
-  Keep the ids top, overview, tour, savings, anywhere, built, options, specs, cta and faq: the section
+  Keep the ids top, overview, power, tour, savings, anywhere, built, options, specs, cta and faq: the section
   bar, the phone bar and links point at them.
 -->
 <Base title={meta.title} description={meta.description} noindex>
   <Nav cta={design} />
   <ProductSubnav page={productPages.cargo} links={subnavLinks} buttons={[demo, design]} />
   <Cargo2Hero />
-  <Ws2Features label="Redefining the job site trailer" heading={overview.heading} sub={overview.sub} cards={overview.cards} />
+  <Ws2Features label="Redefining the enclosed cargo trailer" heading={overview.heading} sub={overview.sub} cards={overview.cards} />
+  <Cargo2Power />
   <Cargo2Tour />
   <Cargo2Replaces />
-  <Ws2Anywhere heading={anywhere.heading} sub={anywhere.sub} lead={anywhere.lead} cards={anywhere.cards} stats={anywhere.stats} />
-  <Ws2Built heading={built.heading} sub={built.sub} lead={built.lead} cards={built.cards} />
+  <Ws2Anywhere heading={anywhere.heading} sub={anywhere.sub} lead={anywhere.lead} cards={anywhere.cards} stats={anywhere.stats} wide />
+  <Ws2Built heading={built.heading} sub={built.sub} lead={built.lead} cards={built.cards} contained />
   <Ws2Options heading={options.heading} sub={options.sub} cards={options.cards} more={options.more} link={options.link} />
   <Cargo2Specs specs={specs} tone="stone" />
   <Cargo2Close />
