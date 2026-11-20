@@ -59,7 +59,7 @@ const splitUnit = (v: string): [string, string] => {
 
                 <div class="mt-[clamp(36px,4cqw,56px)] flex flex-wrap items-center gap-x-8 gap-y-4">
                   <Button href="#cta" variant="gold">{p.cta}</Button>
-                  <a href={`/${p.id}`} class="text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-white no-underline underline-offset-[6px] hover:underline">Explore {p.name} &rarr;</a>
+                  <a href={p.id === 'cargo' ? '/cargo-2' : `/${p.id}`} class="text-[12px] font-bold uppercase leading-[normal] tracking-[.2em] text-white no-underline underline-offset-[6px] hover:underline">Explore {p.name} &rarr;</a>
                 </div>
               </div>
             </div>

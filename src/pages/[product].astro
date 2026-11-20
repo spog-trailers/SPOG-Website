@@ -16,7 +16,9 @@ import { productIds, productPages, productFaqs, type ProductId } from '../data/p
 
 // Workstation has its own page (src/pages/workstation.astro). This template serves Cargo and Event.
 export function getStaticPaths() {
-  return productIds.filter((product) => product !== 'workstation').map((product) => ({ params: { product } }));
+  // Workstation has its own page, and Cargo moved to /cargo-2 (the old /cargo was retired on 2026-11-20, Nate),
+  // so this template now builds /event only.
+  return productIds.filter((product) => product !== 'workstation' && product !== 'cargo').map((product) => ({ params: { product } }));
 }
 
 const page = productPages[Astro.params.product as ProductId];

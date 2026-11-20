@@ -27,7 +27,7 @@ const { current } = Astro.props;
                 {here ? (
                   <span class="inline-flex h-[50px] items-center t-btn text-ink-soft">You're looking at it</span>
                 ) : (
-                  <Button href={`/${c.id}`} variant="ink" arrow>Explore {p.name}</Button>
+                  <Button href={c.id === 'cargo' ? '/cargo-2' : `/${c.id}`} variant="ink" arrow>Explore {p.name}</Button>
                 )}
               </div>
             </div>

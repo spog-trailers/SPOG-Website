@@ -53,7 +53,7 @@ export const cards: {
   id: string; name: string; category: string; status: string; live: boolean; href?: string;
   image: string; alt: string; position: string; look: Look; size: number;
 }[] = [
-  { id: 'cargo', name: 'Cargo', category: 'Utility trailer', status: 'Available now', live: true, href: '/cargo', image: img.cargoFront, alt: 'SPOG Cargo trailer from the front, solar roof and light mast', position: '50% 50%', look: 'studio', size: 10 },
+  { id: 'cargo', name: 'Cargo', category: 'Utility trailer', status: 'Available now', live: true, href: '/cargo-2', image: img.cargoFront, alt: 'SPOG Cargo trailer from the front, solar roof and light mast', position: '50% 50%', look: 'studio', size: 10 },
   { id: 'workstation', name: 'Workstation', category: 'Mobile office', status: 'Available now', live: true, href: '/workstation', image: shoot.wsNavyStudio, alt: 'Navy SPOG Workstation in the Middletown shop', position: '50% 66%', look: 'work', size: 7.6 },
   { id: 'event', name: 'Event', category: 'LED screen trailer', status: 'Buy it or rent it', live: true, href: '/event', image: shoot.eventNightCrowd, alt: 'SPOG Event trailer lit up at night with a crowd on the lawn', position: '30% 62%', look: 'event', size: 8.4 },
   { id: 'garage', name: 'Garage', category: 'Enclosed car hauler', status: 'Coming next', live: false, image: img.garageEv, alt: 'Electric car inside a lit SPOG Garage trailer', position: '55% 50%', look: 'garage', size: 8.4 },

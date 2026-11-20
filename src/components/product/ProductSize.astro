@@ -8,14 +8,18 @@ import { drawing, viewBox } from '../../scripts/sizeDrawing';
 // table sits underneath (id="specs"). The pickup is for scale only: never say what vehicle can
 // tow a SPOG (Nate, 2026-11-20). The words say "for reference" and "for scale" for that reason.
 // look="work" sets the heading in the heavy uppercase of the Cargo and Workstation pages.
-interface Props { page: ProductPage; look?: 'default' | 'work' }
-const { page, look = 'default' } = Astro.props;
+// /cargo-2 uses it as its Specs section (Nate, 2026-11-20: he liked the drawing on the old /cargo,
+// which was then retired). It passes its own spec rows, which are longer, so they run in one column
+// with the label on the left, plus its fine print and its own note.
+interface Props { page: ProductPage; look?: 'default' | 'work'; rows?: [string, string][]; fine?: string; note?: string }
+const { page, look = 'default', rows: ownRows, fine, note = 'Have a question about a spec? Ask on your walkthrough.' } = Astro.props;
 const work = look === 'work' ? 'font-black! uppercase leading-[.92]! tracking-[0em]!' : '';
 const p = lineupEntry(page.id);
 const { lengths, defaultLength } = page.size;
 const maxLength = lengths[lengths.length - 1];
 const lengthRange = (p.stats as [string, string][]).find(([k]) => k === 'Length')?.[1] ?? `${lengths[0]} to ${maxLength} ft`;
-const rows = specRows(page.id);
+const rows = ownRows ?? specRows(page.id);
+const oneCol = !!ownRows;
 ---
 <section id="size" aria-label="Size and specs" class="border-t border-line bg-black pb-[120px] pt-[130px] text-bone max-[640px]:pb-20 max-[640px]:pt-20">
   <div class="wrap">
@@ -57,16 +61,24 @@ const rows = specRows(page.id);
     <div id="specs" class="mt-24 grid grid-cols-[4fr_8fr] items-start gap-14 max-[900px]:mt-16 max-[900px]:grid-cols-[repeat(1,1fr)] max-[900px]:gap-8">
       <div>
         <h3 class="m-0 t-h3 text-white">Specs</h3>
-        <p class="mb-0 mt-3 max-w-[340px] t-body-sm text-mute">Have a question about a spec? Ask on your walkthrough.</p>
+        <p class="mb-0 mt-3 max-w-[340px] t-body-sm text-mute">{note}</p>
       </div>
-      <dl class="m-0 grid grid-cols-[repeat(2,1fr)] gap-x-12 border-t border-panel-line max-[640px]:grid-cols-[repeat(1,1fr)]">
-        {rows.map(([k, v]) => (
-          <div class="flex justify-between gap-6 border-b border-panel-line py-[18px] t-body-sm">
-            <dt class="text-mute">{k}</dt>
-            <dd class="m-0 text-right font-semibold text-white">{v}</dd>
-          </div>
-        ))}
-      </dl>
+      <div>
+        <dl class:list={['m-0 grid gap-x-12 border-t border-panel-line', oneCol ? 'grid-cols-[repeat(1,1fr)]' : 'grid-cols-[repeat(2,1fr)] max-[640px]:grid-cols-[repeat(1,1fr)]']}>
+          {rows.map(([k, v]) => oneCol ? (
+            <div class="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-6 border-b border-panel-line py-[18px] t-body-sm max-[560px]:grid-cols-[minmax(0,1fr)] max-[560px]:gap-1">
+              <dt class="text-mute">{k}</dt>
+              <dd class="m-0 font-semibold text-white">{v}</dd>
+            </div>
+          ) : (
+            <div class="flex justify-between gap-6 border-b border-panel-line py-[18px] t-body-sm">
+              <dt class="text-mute">{k}</dt>
+              <dd class="m-0 text-right font-semibold text-white">{v}</dd>
+            </div>
+          ))}
+        </dl>
+        {fine && <p class="mb-0 mt-6 max-w-[640px] t-fine text-mute">{fine}</p>}
+      </div>
     </div>
   </div>
 </section>

@@ -106,8 +106,7 @@ export const phone = { display: '1 (855) 720-2290', href: 'tel:18557202290' };
 // Absolute paths so the nav works on the homepage and the product pages.
 // Site nav (Nate, 2026-11-18). Homepage anchors start with "/" so they work from every page.
 export const navLinks = [
-  { label: 'Cargo', href: '/cargo' },
-  { label: 'Cargo 2', href: '/cargo-2' }, // TEMPORARY: the new Cargo page draft (2026-11-19). Remove once Nate picks a version.
+  { label: 'Cargo', href: '/cargo-2' }, // /cargo-2 is the Cargo page since 2026-11-20 (the old /cargo redirects there)
   { label: 'Workstation', href: '/workstation' },
   { label: 'Workstation 2', href: '/workstation-2' }, // TEMPORARY: the new Workstation page draft (2026-11-19). Remove once Nate picks a version.
   { label: 'Event', href: '/event' },
@@ -160,12 +159,12 @@ export const useCases = [
   {
     id: 'residential', tab: 'Residential crews', title: 'No outlet to ask for',
     body: "Pull into the driveway and the saws, lights and chargers run off the trailer. No generator under the neighbor's window, no extension cord through the client's garage.",
-    cta: 'See Cargo', href: '/cargo', image: img.cargo34, alt: 'SPOG Cargo trailer', studio: true,
+    cta: 'See Cargo', href: '/cargo-2', image: img.cargo34, alt: 'SPOG Cargo trailer', studio: true,
   },
   {
     id: 'commercial', tab: 'Commercial sites', title: 'Your own power before temp power',
     body: "On a ground-up build there's often no power until permanent service comes in. Your crew shows up with its own and doesn't wait on the GC.",
-    cta: 'See Cargo', href: '/cargo', image: img.workstationStudio, alt: 'SPOG Workstation trailer',
+    cta: 'See Cargo', href: '/cargo-2', image: img.workstationStudio, alt: 'SPOG Workstation trailer',
   },
   {
     id: 'office', tab: 'Site office', title: 'The office that works the day it lands',
@@ -357,7 +356,7 @@ export const runSheet = [
  * Contact opens the walkthrough form, which every page has. PLACEHOLDER: every "#" is a page that isn't built yet.
  */
 export const footerColumns = [
-  { title: 'Trailers', links: [['Cargo', '/cargo'], ['Cargo 2', '/cargo-2'], ['Workstation', '/workstation'], ['Workstation 2', '/workstation-2'], ['Event', '/event'], ['Future lineup', '/#future']] },
+  { title: 'Trailers', links: [['Cargo', '/cargo-2'], ['Workstation', '/workstation'], ['Workstation 2', '/workstation-2'], ['Event', '/event'], ['Future lineup', '/#future']] },
   { title: 'Company', links: [['About', '/#built'], ['Reviews', '#'], ['Become a Dealer', '#']] },
   { title: 'Support', links: [['FAQ', '/#faq'], ['Contact', '#walkthrough'], ['Warranty', '#'], ['Blog', '#']] },
 ];

@@ -6,7 +6,7 @@ import Cargo2Hero from '../components/cargo2/Cargo2Hero.astro';
 import Cargo2Tour from '../components/cargo2/Cargo2Tour.astro';
 import Cargo2Replaces from '../components/cargo2/Cargo2Replaces.astro';
 import Cargo2Power from '../components/cargo2/Cargo2Power.astro';
-import Cargo2Specs from '../components/cargo2/Cargo2Specs.astro';
+import ProductSize from '../components/product/ProductSize.astro';
 import Cargo2Close from '../components/cargo2/Cargo2Close.astro';
 import Ws2Features from '../components/ws2/Ws2Features.astro';
 import Ws2Anywhere from '../components/ws2/Ws2Anywhere.astro';
@@ -48,7 +48,8 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
     Take it anywhere L (white, no lead photo, three wider cards, weight/length/axle row) [Take on Any Terrain]
     Built for whatever the job site brings D (in the page container: frame photo, then designed and tested, the warranty in the center, insulation) [Designed to Be the Safest Truck]
     Add what you need L (white, three-card photo carousel with the 28 ft tower and camera, four tiles, builder) [Add What You Need]
-    Specs L (stone, Cargo cut-out, so it reads apart from the white options above), Close D, FAQ L, Footer D
+    Size and specs D (the to-scale drawing with a pickup and the length picker from the retired /cargo, Nate 2026-11-20,
+      then Cargo 2's own spec rows), FAQ L, Close D (moved after the FAQ so the dark size section and the close don't touch), Footer D
   Keep the ids top, overview, power, tour, savings, anywhere, built, options, specs, cta and faq: the section
   bar, the phone bar and links point at them.
 -->
@@ -63,9 +64,9 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
   <Ws2Anywhere heading={anywhere.heading} sub={anywhere.sub} lead={anywhere.lead} cards={anywhere.cards} stats={anywhere.stats} wide />
   <Ws2Built heading={built.heading} sub={built.sub} lead={built.lead} cards={built.cards} contained />
   <Ws2Options heading={options.heading} sub={options.sub} cards={options.cards} more={options.more} link={options.link} />
-  <Cargo2Specs specs={specs} tone="stone" />
-  <Cargo2Close />
+  <ProductSize page={productPages.cargo} look="work" rows={specs.rows} fine={specs.fine} note="Have a question about a spec? Ask on your demo." />
   <Faq items={faqs} heading="Questions about Cargo." />
+  <Cargo2Close />
   <Footer columns={footer} />
   <MobileBar cta={design} />
 </Base>

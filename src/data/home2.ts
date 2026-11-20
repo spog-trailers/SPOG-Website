@@ -51,7 +51,7 @@ export const lineup = {
   design: 'Design yours', // NATE
   panels: [
     {
-      id: 'cargo', name: 'Cargo', tone: 'studio' as Tone, href: '/cargo', builder: '/configure/cargo',
+      id: 'cargo', name: 'Cargo', tone: 'studio' as Tone, href: '/cargo-2', builder: '/configure/cargo',
       line: 'Haul all your gear, with the power to run your job.', // NATE
       facts: ['From $15,000', '10 or 20 ft', 'Up to 20 kWh'], // NATE (2026-11-20 answers), price and battery SOURCE (price sheet 2026-11-20: 10 ft $15,000, 20 kWh max)
       image: '/images/lineup-cargo.webp', width: 1509, height: 786, // Nate's image (2026-11-19, 'Cargo trailer transparent background.png'). Its checkerboard was painted in, so Vision cut it out.
