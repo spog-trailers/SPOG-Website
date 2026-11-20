@@ -86,6 +86,10 @@ export const shoot = {
   cargoStorageCard: '/images/cargo2-storage-card.jpg', // Better Interior 60: E-track down both walls, batteries on their platforms
   cargoHvac: '/images/cargo2-hvac.jpg', // Better Interior 66: wall-mounted heating and cooling unit over the desk, closet door at the nose
   cargoHvacCard: '/images/cargo2-hvac-card.jpg',
+  wsOptGenerator: '/images/ws2-opt-generator.jpg', // Nate 2026-11-20 (Optional generator hookuo.jpg): portable generator plugged into a white Workstation
+  wsOptTv: '/images/ws2-opt-tv.jpg', // Nate 2026-11-20 (Interior or case study workstation trailer.jpg): same shot as wsInteriorOffice, cropped to the TV wall where it's used
+  wsOptLogo: '/images/ws2-opt-logo.jpg', // Nate 2026-11-20 (Photo Jun 27 2026): navy Workstation with a customer's BSW branding. CONFIRM the customer's permission
+  wsOptTower: '/images/ws2-opt-tower.jpg', // Nate 2026-11-20 (ROB_9652.CR3): white Workstation on the lot with the 28 ft mast raised
   cargoInterior: '/images/cargo2-interior.jpg', // Better Interior 62: the long black-topped desk down the curb wall, batteries behind it, barn doors open
   cargoInteriorCard: '/images/cargo2-interior-card.jpg', // Better Interior 63: the desk, the window and the battery units
 };

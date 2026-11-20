@@ -10,13 +10,14 @@ import { built } from '../../data/workstation2Page';
  */
 ---
 <section id="built" aria-label="Built to last on the job site" class="bg-black pb-[130px] pt-[140px] text-bone max-[640px]:pb-20 max-[640px]:pt-24">
-  <div class="wrap">
+  <div class="mx-auto max-w-[1920px] px-6 max-[640px]:px-5">
     <div class="max-w-[980px]">
       <WorkTitle lines={built.heading} tone="dark" />
       <p class="mb-0 mt-6 max-w-[640px] t-body text-bone/75">{built.sub}</p>
     </div>
-    <div class="mt-14 grid grid-cols-[repeat(3,minmax(0,1fr))] gap-5 max-[1000px]:grid-cols-[minmax(0,1fr)] max-[1000px]:gap-12 max-[640px]:mt-12">
-      {built.cards.map((c) => <Ws2Card card={c} aspect="aspect-[4/3]" tone="dark" sizes="(max-width: 1000px) 100vw, 420px" />)}
-    </div>
+  </div>
+  <!-- The cards run wider than the page container (Nate, 2026-11-20), with a 24px gutter up to 1920px, like the homepage's solution cards. -->
+  <div class="mx-auto mt-14 grid max-w-[1920px] grid-cols-[repeat(3,minmax(0,1fr))] gap-5 px-6 max-[1000px]:grid-cols-[minmax(0,1fr)] max-[1000px]:gap-12 max-[640px]:mt-12 max-[640px]:px-5">
+    {built.cards.map((c) => <Ws2Card card={c} aspect="aspect-[4/3]" tone="dark" sizes="(max-width: 1000px) 100vw, 33vw" />)}
   </div>
 </section>

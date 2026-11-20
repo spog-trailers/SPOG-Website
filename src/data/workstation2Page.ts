@@ -197,18 +197,41 @@ export const built = {
 
 // ---------------------------------------------------------------- Add what you need (Cybertruck: Add What You Need)
 
+/**
+ * Laid out like Cybertruck's "Add What You Need" (Nate, 2026-11-20): the options with a photo run as
+ * a carousel of large cards, and the rest sit underneath as small tiles. The 28 ft security tower
+ * replaced the whiteboard at Nate's request.
+ */
 export const options = {
   heading: ['Add what', 'you need.'], // NEW
   sub: 'Pick the extras that fit your crew, and your SPOG contact will confirm what fits your build.', // NEW
-  items: [
+  cards: [
+    {
+      title: '28 ft security tower', // NATE (2026-11-20)
+      body: 'A taller telescopic mast lifts the work lights and cameras 28 ft over the site, so one trailer can watch more of the lot after the crew goes home.', // NEW, facts NATE
+      media: { src: shoot.wsOptTower, alt: 'A white SPOG Workstation on an empty lot with its 28 ft security mast raised', position: '50% 45%' },
+    },
+    {
+      title: 'TV or monitor',
+      body: 'Put the drawings and the schedule up on a big screen for site meetings.', // NEW
+      media: { src: shoot.wsOptTv, alt: 'A wall-mounted TV and four monitors on a blue wall inside a SPOG Workstation', position: '50% 18%' },
+    },
+    {
+      title: 'Company logo and colors',
+      body: "Pick the trailer color and put your company's name and logo on it, so everyone on the job knows whose office it is.", // NEW
+      media: { src: shoot.wsOptLogo, alt: "A navy SPOG Workstation in the shop with a customer's logo on the side and both doors open", position: '50% 62%' }, // CONFIRM the customer's permission to show their branding
+    },
+    {
+      title: 'Generator hookup',
+      body: 'Plug in a generator as a backup through a long stretch of cloudy days.', // NEW
+      media: { src: shoot.wsOptGenerator, alt: 'A portable generator on the grass plugged into a white SPOG Workstation', position: '50% 70%' },
+    },
+  ] as Card[],
+  more: [
     { icon: 'desk', name: 'Office desks', line: 'Add desks when more of your team works out of the trailer.' },
     { icon: 'plug', name: 'Refrigerator and microwave', line: 'Keep lunch and cold drinks in the office so nobody has to drive into town.' },
     { icon: 'wifi', name: 'Starlink', line: 'Satellite internet comes installed on the trailer and ready to use.' },
     { icon: 'pulse', name: 'Cellular router', line: 'A router gives you fast internet on sites where the cell signal is strong.' },
-    { icon: 'screen', name: 'TV or monitor', line: 'Put the drawings and the schedule up on a big screen for site meetings.' },
-    { icon: 'check', name: 'Whiteboard', line: 'Plan the week where the whole crew can see it.' },
-    { icon: 'tag', name: 'Company logo and colors', line: "Put your company's name on the trailer at the front of every job." },
-    { icon: 'fuel', name: 'Generator hookup', line: 'Plug in a generator as a backup through a long stretch of cloudy days.' },
   ], // NEW lines, options SOURCE (options sheet, Product Wiki)
 };
 

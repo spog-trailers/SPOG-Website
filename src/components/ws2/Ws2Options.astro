@@ -1,21 +1,42 @@
 ---
 import Icon from '../ui/Icon.astro';
+import Ws2Media from './Ws2Media.astro';
 import WorkTitle from '../work/WorkTitle.astro';
 import { options } from '../../data/workstation2Page';
 /**
- * "Add what you need.", after Cybertruck's accessories grid. Light gray tiles with a thin line icon,
- * the option's name and one full sentence (Tesla's tile look from the design language). The security
- * options live in the "Lock down the site" card, so they aren't repeated here.
+ * "Add what you need.", laid out like Cybertruck's "Add What You Need" (Nate, 2026-11-20): the options
+ * with a photo run as a carousel of large wide cards (photo, name, one or two sentences), the next card
+ * peeking in from the right, with arrows. The options without a photo sit underneath as small tiles.
+ * Rounded corners instead of Cybertruck's cut corners, which belong to the truck's shape.
  */
+const edge = 'px-[max(36px,calc((100vw_-_1320px)/2_+_36px))] scroll-px-[max(36px,calc((100vw_-_1320px)/2_+_36px))] max-[640px]:px-5 max-[640px]:scroll-px-5';
+const ctrl = 'flex size-11 cursor-pointer items-center justify-center rounded-full border-[1.5px] border-coal/20 bg-transparent text-coal hover:border-coal disabled:opacity-30';
 ---
-<section id="options" aria-label="Add what you need" class="bg-white pb-[120px] pt-[130px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
-  <div class="wrap">
-    <div class="max-w-[980px]">
+<section id="options" aria-label="Add what you need" data-ws2-opt class="overflow-hidden bg-white pb-[120px] pt-[130px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
+  <div class="wrap flex items-end justify-between gap-8">
+    <div>
       <WorkTitle lines={options.heading} />
       <p class="mb-0 mt-6 max-w-[640px] t-body text-ink-soft">{options.sub}</p>
     </div>
-    <ul class="m-0 mt-14 grid list-none grid-cols-[repeat(4,minmax(0,1fr))] gap-4 p-0 max-[1100px]:grid-cols-[repeat(2,minmax(0,1fr))] max-[560px]:grid-cols-[minmax(0,1fr)] max-[640px]:mt-10">
-      {options.items.map((o) => (
+    <div class="flex shrink-0 gap-2 max-[640px]:hidden" data-ws2-opt-ctrl>
+      <button type="button" data-ws2-opt-step="-1" aria-label="Previous option" disabled class={ctrl}><svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg></button>
+      <button type="button" data-ws2-opt-step="1" aria-label="Next option" class={ctrl}><svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg></button>
+    </div>
+  </div>
+
+  <ul data-ws2-opt-track class:list={['no-scrollbar m-0 mt-14 flex list-none snap-x snap-mandatory gap-5 overflow-x-auto p-0 max-[640px]:mt-10 max-[640px]:gap-3', edge]}>
+    {options.cards.map((c) => (
+      <li class="w-[min(1100px,84vw)] shrink-0 snap-start max-[640px]:w-[86vw]">
+        <Ws2Media media={c.media} sizes="(max-width: 640px) 86vw, 1100px" class="block aspect-[2.35/1] w-full rounded-[18px] bg-stone-2 object-cover max-[900px]:aspect-[16/10] max-[640px]:aspect-[4/3]" />
+        <h3 class="m-0 mt-6 t-h3 text-coal">{c.title}</h3>
+        <p class="mb-0 mt-2 max-w-[760px] t-body-sm text-ink-soft">{c.body}</p>
+      </li>
+    ))}
+  </ul>
+
+  <div class="wrap">
+    <ul class="m-0 mt-16 grid list-none grid-cols-[repeat(4,minmax(0,1fr))] gap-4 p-0 max-[1100px]:grid-cols-[repeat(2,minmax(0,1fr))] max-[560px]:grid-cols-[minmax(0,1fr)] max-[640px]:mt-12">
+      {options.more.map((o) => (
         <li class="rounded-[16px] bg-stone px-7 pb-8 pt-7">
           <Icon name={o.icon} class="size-8 stroke-coal stroke-[1.4]" />
           <h3 class="m-0 mt-6 t-h3 text-coal">{o.name}</h3>
@@ -25,3 +46,26 @@ import { options } from '../../data/workstation2Page';
     </ul>
   </div>
 </section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ws2-opt]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('[data-ws2-opt-track]')!;
+    const [prev, next] = [...root.querySelectorAll<HTMLButtonElement>('[data-ws2-opt-step]')];
+    const ctrl = root.querySelector<HTMLElement>('[data-ws2-opt-ctrl]')!;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const step = () => {
+      const items = track.children;
+      return items[1] ? (items[1] as HTMLElement).offsetLeft - (items[0] as HTMLElement).offsetLeft : track.clientWidth;
+    };
+    const sync = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      ctrl.style.visibility = max <= 2 ? 'hidden' : '';
+      prev.disabled = track.scrollLeft <= 2;
+      next.disabled = track.scrollLeft >= max - 2;
+    };
+    [prev, next].forEach((b) => b.addEventListener('click', () => track.scrollBy({ left: Number(b.dataset.ws2OptStep) * step(), behavior: reduce ? 'auto' : 'smooth' })));
+    track.addEventListener('scroll', sync, { passive: true });
+    addEventListener('resize', sync);
+    sync();
+  });
+</script>
