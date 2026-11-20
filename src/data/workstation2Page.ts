@@ -41,9 +41,9 @@ export const hero = {
   name: 'Workstation',
   line: 'Your site office shows up with its own solar power, heat and AC and a security mast, so you can run the job without relying on anyone else.', // NATE (Notion, 2026-11-20)
   price: null as string | null, // Ask Nate before showing a price (see CLAUDE.md)
-  video: shoot.wsHeroVideo,
-  poster: shoot.wsHeroPoster,
-  alt: 'Drone view of a SPOG Workstation on tow along a snowy mountain road',
+  video: '/images/ws2-hero-rivian.mp4', // Nate's Rivian clip (2026-11-20), the drone following the tow through the snow
+  poster: '/images/ws2-hero-rivian.jpg',
+  alt: 'Drone view of a SPOG Workstation on tow behind an SUV on a snowy mountain road',
   stats: [
     ['Battery', '5 to 40 kWh'], // SOURCE (Product Wiki)
     ['Length', '10 or 20 ft'], // NATE
@@ -117,8 +117,8 @@ export const comfort = {
     {
       title: 'Enter another world', // NEW (Cybertruck: Enter Another World)
       body: 'Step off a muddy lot, close the door and the job site goes quiet. With no generator running outside the window, you can take a client call at 6 a.m., and the crew can start early on a residential street without waking the neighbors.', // NEW on SOURCE (messaging report: generator noise at 5 or 6 a.m.)
-      // Stand-in: the trailer at sunset. Wanted: early morning on a residential site.
-      media: { src: shoot.wsRuralSunset, alt: 'A dark SPOG trailer at sunset beside a farm field', position: '40% 50%' },
+      // Stand-in: the navy Workstation with its doors open. Wanted: early morning on a residential site.
+      media: { src: shoot.wsNavyDoors, alt: 'A navy SPOG Workstation in the shop with both doors open and the lit wood interior showing', position: '50% 62%' },
     },
     {
       title: 'Bring the owner in', // NEW (Cybertruck: Have More Fun)
@@ -133,7 +133,7 @@ export const comfort = {
 export const anywhere = {
   heading: ['Take it', 'anywhere.'], // NATE
   sub: 'Solar power and heat and AC come built in, Starlink is one add-on away, and the whole office hitches up and tows, so you stay comfortable and connected wherever the job is.', // NEW
-  lead: { video: '/images/ws2-anywhere-loop.mp4', poster: '/images/ws2-anywhere-loop.jpg', alt: 'Drone view of a SPOG Workstation on tow behind an SUV on a snowy mountain road' } as Media, // Nate's new Rivian clip
+  lead: { src: shoot.wsRuralSunset, alt: 'A dark SPOG Workstation at sunset beside a farm field, its solar awning open', position: '50% 55%' } as Media, // The Rivian clip moved to the hero (Nate, 2026-11-20)
   cards: [
     {
       title: 'Solar power',
@@ -214,19 +214,21 @@ export const options = {
 
 // ---------------------------------------------------------------- Power anything (Cybertruck: Power Anything With Cybertruck)
 
-/** The shared run-time tool. 30 kWh is off because it isn't on the options sheet. It opens on 40 kWh so its tiles don't repeat the 20 kWh figures above them. */
+/** Battery sizes and devices for the run-time list. 30 kWh is off because it isn't on the options sheet. */
 export const runtime: ProductPage = {
   ...productPages.workstation,
-  power: { batteries: [5, 10, 20, 40], defaultBattery: 40, devices: ['computer', 'lightTower', 'saw', 'welder'] },
+  power: { batteries: [5, 10, 20, 40], defaultBattery: 20, devices: ['computer', 'lightTower', 'saw', 'welder'] },
 };
+/**
+ * Calmer layout (Nate, 2026-11-20, "it just feels kinda busy"): the welding clip on one side, and the
+ * heading, battery sizes and one short list of run times on the other. The three-number row is gone,
+ * because the list shows the same figures.
+ */
 export const power = {
-  heading: 'Power anything with Workstation.', // NATE
+  heading: ['Power anything', 'with Workstation.'], // NATE
   intro: 'Pick a battery size and see how long it runs the lights, laptops and equipment on your site.', // NEW
-  figures: [
-    ['Laptop and Wi-Fi, 20 kWh', '5+ days'],
-    ['Light tower, 20 kWh', '20 hrs'],
-    ['MIG welder, 20 kWh', '6.7 hrs'],
-  ] as [string, string][], // SOURCE (SPOG runtime guide, via runtime.ts)
+  media: { video: '/images/ws2-power-weld.mp4', poster: '/images/ws2-power-weld.jpg', alt: 'A welder in a flag-painted helmet at work behind a SPOG trailer' } as Media, // Nate's "Welding Outside" clip, the close-up half (the drone half shows other brands' trucks)
+  fine: 'Hours of continuous use on a full battery, one device at a time, with no solar recharge counted. The figures come from the SPOG runtime guide.', // SOURCE (product pages)
 };
 
 // ---------------------------------------------------------------- case study (Rivian Fleet: "Helping Amazon Electrify at Scale")
@@ -246,8 +248,8 @@ export const caseStudy = {
 
 export const specs = {
   heading: ['Workstation', 'at a glance.'], // NEW
-  image: shoot.wsNavyStudio,
-  alt: 'Navy SPOG Workstation in the Middletown shop, side view',
+  image: '/images/lineup-workstation.webp', // Nate's cut-out, on the light specs section (2026-11-20)
+  alt: 'Navy SPOG Workstation trailer with two doors and steps',
   rows: [
     ['Type', 'Site office trailer'], // NEW
     ['Length', '10 or 20 ft'], // NATE

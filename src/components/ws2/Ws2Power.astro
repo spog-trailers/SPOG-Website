@@ -1,0 +1,70 @@
+---
+import Ws2Media from './Ws2Media.astro';
+import WorkTitle from '../work/WorkTitle.astro';
+import { devices } from '../../data/productPages';
+import { formatHours, runHours } from '../../scripts/runtime';
+import { power, runtime } from '../../data/workstation2Page';
+/**
+ * "Power anything with Workstation.", after Cybertruck's "Power Anything With Cybertruck", in a
+ * calmer layout (Nate, 2026-11-20): his welding clip on one side, and on the other the heading, the
+ * battery sizes and one short list of run times. A light section, so the end of the page doesn't run
+ * dark for four sections. Figures are SPOG's runtime guide (scripts/runtime.ts).
+ * Keeps the id "runtime" for the section bar.
+ */
+const { batteries, defaultBattery } = runtime.power;
+const list = runtime.power.devices.map((id) => ({ id, ...devices[id] }));
+---
+<section id="runtime" aria-label="Power anything with Workstation" data-ws2-power class="bg-stone pb-[120px] pt-[130px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
+  <div class="wrap grid grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] items-center gap-x-16 gap-y-10 max-[900px]:grid-cols-[minmax(0,1fr)]">
+    <Ws2Media media={power.media} class="block aspect-[4/5] w-full rounded-[22px] bg-stone-2 object-cover max-[900px]:aspect-[4/3]" />
+
+    <div>
+      <WorkTitle lines={power.heading} />
+      <p class="mb-0 mt-6 max-w-[480px] t-body text-ink-soft">{power.intro}</p>
+
+      <div class="mt-9 flex flex-wrap gap-1.5" role="group" aria-label="Battery size">
+        {batteries.map((b) => (
+          <button
+            type="button"
+            data-kwh={b}
+            aria-pressed={String(b === defaultBattery)}
+            class="h-10 cursor-pointer rounded-full border-[1.5px] border-coal/20 bg-transparent px-4 t-label text-ink hover:border-coal aria-pressed:border-coal aria-pressed:bg-coal aria-pressed:text-white"
+          >{b} kWh</button>
+        ))}
+      </div>
+
+      <ul class="m-0 mt-8 list-none p-0" aria-live="polite">
+        {list.map((d) => {
+          const f = formatHours(runHours(defaultBattery, d.kw));
+          return (
+            <li class="flex items-baseline justify-between gap-6 border-t border-stone-2 py-4" data-kw={d.kw}>
+              <span class="t-body-sm font-semibold text-coal">{d.name}</span>
+              <span class="text-right">
+                <b class="t-h3 tabular-nums text-coal"><span data-value>{f.value}</span> <span class="t-body-sm font-semibold text-ink-soft">hrs</span></b>
+                <span data-days class="block t-fine text-ink-soft">{f.days}</span>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+      <p class="mb-0 mt-4 max-w-[520px] t-fine text-ink-soft">{power.fine}</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { formatHours, runHours } from '../../scripts/runtime';
+  document.querySelectorAll<HTMLElement>('[data-ws2-power]').forEach((section) => {
+    const buttons = [...section.querySelectorAll<HTMLButtonElement>('[data-kwh]')];
+    const rows = [...section.querySelectorAll<HTMLElement>('[data-kw]')];
+    const show = (kwh: number) => {
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(Number(b.dataset.kwh) === kwh)));
+      rows.forEach((r) => {
+        const f = formatHours(runHours(kwh, Number(r.dataset.kw)));
+        r.querySelector<HTMLElement>('[data-value]')!.textContent = f.value;
+        r.querySelector<HTMLElement>('[data-days]')!.textContent = f.days;
+      });
+    };
+    buttons.forEach((b) => b.addEventListener('click', () => show(Number(b.dataset.kwh))));
+  });
+</script>
