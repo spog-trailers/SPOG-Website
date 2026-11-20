@@ -2,8 +2,9 @@
  * Cargo dimensions in feet, measured off Nate's photos of the finished black 20 ft Cargo
  * (_photos-original/2026-11-17/Black Cargo Trailer). No three.js here, so pages can import it.
  *
- * The 20 ft length includes the V nose: an 18 ft box plus a 2 ft nose. The body is 7 ft wide with
- * the wheels outside it under aluminum fenders. Heights are scaled from the tire (about 27 in).
+ * The 20 ft length includes the V nose: an 18 ft box plus a 2 ft nose. The body is 7 ft wide, with
+ * the wheels tucked under it and their outer faces flush with the walls, inside aluminum radius
+ * fenders (Nate, 2026-11-20). Heights are scaled from the tire (about 27 in).
  */
 export const W = 7;
 export const H = 7.1;

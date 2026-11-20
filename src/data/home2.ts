@@ -17,7 +17,7 @@ import type { Feature } from './features';
 export const hero = {
   eyebrow: { gold: 'Powering the Builders of America' }, // SOURCE (tagline)
   heading: ['The trailer', 'that powers', 'your job.'], // NATE
-  sub: 'All-electric, solar-charged trailers with battery storage sized to your work, for hauling gear, running a site office or hosting an event. Built in the USA.', // NATE
+  sub: 'Trailers with their own solar power and battery on board, for hauling gear, running a site office or hosting an event. Built in the USA.', // NATE, plainer wording after the Meeting with Alessandro and Joe, 2026-11-20 (less techy, said in words a contractor already uses)
   primary: { label: 'Design your trailer', href: '/configure' }, // NATE. Opens the "which trailer" page.
   secondary: { label: 'Book a walkthrough', href: '#walkthrough' }, // SOURCE
 };
@@ -107,7 +107,7 @@ export const solutions: { heading: string[]; cards: Solution[] } = {
       alt: 'Crew welding beside an open SPOG trailer, then a close-up of the welder',
     },
     {
-      id: 'comfort', icon: 'climate', title: 'Comfort',
+      id: 'comfort', icon: 'climate', title: 'Climate control', // "Climate control", never "HVAC" (Meeting with Alessandro and Joe, 2026-11-20)
       line: 'Work in comfort on site.', // NEW
       body: 'Take calls and review plans in a room with heat and AC. It comes standard on the Workstation and is available on Cargo.', // NEW, facts from Nate
       poster: shoot.wsHvac, position: '60% 50%', // Nate's pick (2026-11-18)
@@ -200,7 +200,7 @@ export const values: Feature[] = [
     image: shoot.engineeringCad,
     alt: 'Engineer working on a trailer frame in CAD',
     position: '30% 50%',
-    panel: { intro: '3-year structural warranty, covering the solar, electrical, battery and HVAC on every SPOG.' }, // NATE, current terms kept for V1
+    panel: { intro: '3-year structural warranty, covering the solar, electrical, battery and climate control on every SPOG.' }, // NATE, current terms kept for V1. "Climate control" for HVAC (Meeting with Alessandro and Joe, 2026-11-20)
   },
   {
     id: 'made',

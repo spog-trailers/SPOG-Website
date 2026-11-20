@@ -8,12 +8,14 @@
  *   Street side (-z): sliding window over the axles, two-door storage hatch low at the front.
  *   Rear (-x):        barn doors with twin chrome lock bars, four oval tail lights.
  *   Nose:             two flat panels with a black tread-plate stone guard, spare on the tongue.
+ *   Wheels:           under the body, outer faces flush with the walls, in aluminum radius fenders.
  *   Roof:             silver, with solar panels laid across it and a low vent over the nose.
  * The body is hollow with a finished interior, so the doors can open and the camera can go inside.
  * The inside follows Nate's Better Interior photos (same folder, rebuilt 2026-11-19): glossy white
  * wall panels with faint seams, a black diamond-plate angle where walls meet the ceiling, two rows of
  * black-rimmed puck lights, a smooth charcoal rubber floor, a white nose wall with the heat and AC
- * head and a single-panel closet door, and open-cage battery units on low white platforms mid-length.
+ * head and a single-panel closet door, and open-cage battery units on the low white platforms that
+ * box in the wheels.
  */
 import * as THREE from 'three';
 import { FLOOR, H, NOSE, PANEL_ACROSS, PANEL_ALONG, PANEL_PITCH, ROOF, W, WALL, axleCenter, sideLength, tandem } from './dims';
@@ -493,34 +495,50 @@ function wheel(m: Materials) {
   return g;
 }
 
-/** Aluminum teardrop fender, a bent plate with a flat lip on its outer edge. Extends toward +z. */
-function fender(m: Materials, len: number) {
-  const top = TIRE_R * 2 + 0.2;
-  const bottom = FLOOR;
-  const r = 0.95;
-  const ring = (t: number) => {
-    const s = new THREE.Shape();
-    s.moveTo(-len / 2, bottom);
-    s.lineTo(-len / 2, top - r);
-    s.absarc(-len / 2 + r, top - r, r, Math.PI, Math.PI / 2, true);
-    s.lineTo(len / 2 - r, top);
-    s.absarc(len / 2 - r, top - r, r, Math.PI / 2, 0, true);
-    s.lineTo(len / 2, bottom);
-    s.lineTo(len / 2 - t, bottom);
-    s.lineTo(len / 2 - t, top - r);
-    s.absarc(len / 2 - r, top - r, r - t, 0, Math.PI / 2, false);
-    s.lineTo(-len / 2 + r, top - t);
-    s.absarc(-len / 2 + r, top - r, r - t, Math.PI / 2, Math.PI, false);
-    s.lineTo(-len / 2 + t, bottom);
-    s.closePath();
-    return s;
-  };
+/** The corner radius of a wheel arch. */
+const ARCH_R = 0.8;
+
+/**
+ * An arch-shaped band: the outline of a wheel arch `len` long from `bottom` up to `top`, with
+ * rounded top corners of radius `r`, and a band `t` thick running inside that outline.
+ */
+function archBand(len: number, bottom: number, top: number, r: number, t: number) {
+  const s = new THREE.Shape();
+  s.moveTo(-len / 2, bottom);
+  s.lineTo(-len / 2, top - r);
+  s.absarc(-len / 2 + r, top - r, r, Math.PI, Math.PI / 2, true);
+  s.lineTo(len / 2 - r, top);
+  s.absarc(len / 2 - r, top - r, r, Math.PI / 2, 0, true);
+  s.lineTo(len / 2, bottom);
+  s.lineTo(len / 2 - t, bottom);
+  s.lineTo(len / 2 - t, top - r);
+  s.absarc(len / 2 - r, top - r, r - t, 0, Math.PI / 2, false);
+  s.lineTo(-len / 2 + r, top - t);
+  s.absarc(-len / 2 + r, top - r, r - t, Math.PI / 2, Math.PI, false);
+  s.lineTo(-len / 2 + t, bottom);
+  s.closePath();
+  return s;
+}
+
+/**
+ * Aluminum radius fender around a wheel arch, as on the black Cargo and in Nate's close-up
+ * (2026-11-20): the wheels sit under the body, flush with the wall, so the fender is a trim that
+ * follows the arch cut into the wall. A narrow band lines the arch, rolled at its outer edge, with
+ * a flat flange on the wall around it. Local x is centered on the arch, the wall's outer face is
+ * at z = 0 and +z points outward.
+ */
+function archTrim(m: Materials, len: number, bottom: number, top: number) {
   const g = new THREE.Group();
-  const plate = new THREE.Mesh(new THREE.ExtrudeGeometry(ring(0.05), { depth: 0.86, bevelEnabled: false, curveSegments: 20 }), m.aluminum);
-  const lip = new THREE.Mesh(new THREE.ExtrudeGeometry(ring(0.24), { depth: 0.045, bevelEnabled: false, curveSegments: 20 }), m.aluminum);
-  lip.position.z = 0.83;
-  [plate, lip].forEach((p) => { p.castShadow = true; p.receiveShadow = true; });
-  g.add(plate, lip);
+  const part = (shape: THREE.Shape, depth: number, z: number) => {
+    const p = new THREE.Mesh(new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 20 }), m.aluminum);
+    p.position.z = z;
+    p.castShadow = true;
+    p.receiveShadow = true;
+    g.add(p);
+  };
+  part(archBand(len, bottom, top, ARCH_R, 0.06), 0.34, -0.24); // lines the arch
+  part(archBand(len + 0.08, bottom, top + 0.04, ARCH_R + 0.04, 0.1), 0.06, 0.04); // rolled edge
+  part(archBand(len + 0.4, bottom, top + 0.2, ARCH_R + 0.2, 0.2), 0.035, 0.002); // flange on the wall
   return g;
 }
 
@@ -557,7 +575,26 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
 
   const paintOut = (outward: Face, inward: Face) => faces(m.edge, { [outward]: m.paint, [inward]: m.liner });
 
+  // Running gear first, because the wheel arches cut into the floor and the side walls. The wheels
+  // sit under the body with their outer faces flush with the walls, inside aluminum radius fenders,
+  // and a boxed wheel well covers each set inside: the low white platforms the batteries stand on
+  // in the Better Interior photos. Nate corrected the outboard wheels on 2026-11-20.
+  const axleX = xf - axleCenter(L);
+  const axles = tandem(L) ? [axleX - 1.2, axleX + 1.2] : [axleX];
+  const fenderLen = tandem(L) ? 5.3 : 2.9;
+  const archX0 = axleX - fenderLen / 2;
+  const archX1 = axleX + fenderLen / 2;
+  const archTop = TIRE_R * 2 + 0.1;
+  const wz = W / 2 + 0.02 - 0.322; // wheel center, so the tire's outer face sits flush with the wall
+  const wellZ = wz - 0.322 - 0.08; // face of the wheel well, just inboard of the tire
+  const inArch = (x: number, pad = 0) => x > archX0 - pad && x < archX1 + pad;
+
   // ------------------------------------------------------------ floor, roof, ceiling
+  // The floor is notched around the wheels. The roof and ceiling keep the full outline.
+  const floorPrint = new THREE.Shape();
+  floorPrint.moveTo(xr, -W / 2);
+  for (const [x, z] of [[archX0, -W / 2], [archX0, -wellZ], [archX1, -wellZ], [archX1, -W / 2], [xf, -W / 2], [tip, 0], [xf, W / 2], [archX1, W / 2], [archX1, wellZ], [archX0, wellZ], [archX0, W / 2], [xr, W / 2]]) floorPrint.lineTo(x, z);
+  floorPrint.closePath();
   const footprint = new THREE.Shape();
   footprint.moveTo(xr, -W / 2);
   footprint.lineTo(xf, -W / 2);
@@ -565,16 +602,16 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   footprint.lineTo(xf, W / 2);
   footprint.lineTo(xr, W / 2);
   footprint.closePath();
-  const slab = (depth: number, y: number, mat: Mat) => {
-    const s = new THREE.Mesh(new THREE.ExtrudeGeometry(footprint, { depth, bevelEnabled: false }), mat);
+  const slab = (shape: THREE.Shape, depth: number, y: number, mat: Mat) => {
+    const s = new THREE.Mesh(new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false }), mat);
     s.rotation.x = -Math.PI / 2;
     s.position.y = y;
     s.castShadow = true;
     s.receiveShadow = true;
     return s;
   };
-  g.add(slab(0.13, FLOOR, m.chassis), slab(0.1, ROOF - 0.1, m.roof));
-  const floorTop = new THREE.Mesh(new THREE.ShapeGeometry(footprint), m.floor);
+  g.add(slab(floorPrint, 0.13, FLOOR, m.chassis), slab(footprint, 0.1, ROOF - 0.1, m.roof));
+  const floorTop = new THREE.Mesh(new THREE.ShapeGeometry(floorPrint), m.floor);
   floorTop.rotation.x = -Math.PI / 2;
   floorTop.position.y = y0;
   floorTop.receiveShadow = true;
@@ -583,8 +620,34 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   ceiling.position.y = ROOF - 0.11;
   g.add(floorTop, ceiling);
 
+  // ------------------------------------------------------------ side walls, with the wheel arches
+  /** A side wall from x0 to x1 (the arch lies between them), the arch cut out of its bottom edge. */
+  const sideWall = (x0: number, x1: number, sz: number) => {
+    const skin = sz > 0 ? paintOut('pz', 'nz') : paintOut('nz', 'pz');
+    const cz = sz * (W / 2 - WALL / 2);
+    g.add(box(archX0 - x0, H, WALL, skin, (x0 + archX0) / 2, yc, cz));
+    g.add(box(x1 - archX1, H, WALL, skin, (archX1 + x1) / 2, yc, cz));
+    // over the arch: the wall from the roof down to the arch, in two skins (paint out, liner in)
+    const s = new THREE.Shape();
+    s.moveTo(archX0, archTop - ARCH_R);
+    s.lineTo(archX0, ROOF);
+    s.lineTo(archX1, ROOF);
+    s.lineTo(archX1, archTop - ARCH_R);
+    s.absarc(archX1 - ARCH_R, archTop - ARCH_R, ARCH_R, 0, Math.PI / 2, false);
+    s.lineTo(archX0 + ARCH_R, archTop);
+    s.absarc(archX0 + ARCH_R, archTop - ARCH_R, ARCH_R, Math.PI / 2, Math.PI, false);
+    const skins: [Mat, number][] = sz > 0 ? [[m.paint, W / 2 - WALL / 2], [m.liner, W / 2 - WALL]] : [[m.paint, -W / 2], [m.liner, -W / 2 + WALL / 2]];
+    for (const [mat, z] of skins) {
+      const p = new THREE.Mesh(new THREE.ExtrudeGeometry(s, { depth: WALL / 2, bevelEnabled: false, curveSegments: 16 }), [mat, m.edge]);
+      p.position.z = z;
+      p.castShadow = true;
+      p.receiveShadow = true;
+      g.add(p);
+    }
+  };
+
   // ------------------------------------------------------------ street-side wall (-z)
-  g.add(box(S, H, WALL, paintOut('nz', 'pz'), xr + S / 2, yc, -W / 2 + WALL / 2));
+  sideWall(xr, xf, -1);
 
   // ------------------------------------------------------------ curb-side wall (+z), with the door opening
   const dw = 2.9;
@@ -594,7 +657,7 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   const doorBottom = FLOOR + 0.6;
   const doorTop = doorBottom + dh;
   const cz = W / 2 - WALL / 2;
-  g.add(box(doorRear - xr, H, WALL, paintOut('pz', 'nz'), (xr + doorRear) / 2, yc, cz));
+  sideWall(xr, doorRear, 1);
   g.add(box(dw, ROOF - doorTop, WALL, paintOut('pz', 'nz'), doorRear + dw / 2, (ROOF + doorTop) / 2, cz));
   g.add(box(dw, doorBottom - FLOOR, WALL, paintOut('pz', 'nz'), doorRear + dw / 2, (FLOOR + doorBottom) / 2, cz));
   g.add(box(xf - doorFront, H, WALL, paintOut('pz', 'nz'), (xf + doorFront) / 2, yc, cz));
@@ -668,11 +731,17 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   // ------------------------------------------------------------ side trim, seams and markers
   for (const sz of [1, -1]) {
     g.add(box(S, 0.3, 0.035, m.trim, xr + S / 2, ROOF - 0.15, sz * out));
-    g.add(box(S, 0.26, 0.035, m.trim, xr + S / 2, FLOOR + 0.13, sz * out));
+    // bottom rail, broken by the wheel arch and its fender flange
+    const a0 = archX0 - 0.22, a1 = archX1 + 0.22;
+    g.add(box(a0 - xr, 0.26, 0.035, m.trim, (xr + a0) / 2, FLOOR + 0.13, sz * out));
+    g.add(box(xf - a1, 0.26, 0.035, m.trim, (a1 + xf) / 2, FLOOR + 0.13, sz * out));
     g.add(box(0.2, H, 0.035, m.trim, xr + 0.1, yc, sz * out));
     for (let x = xr + 4; x < xf - 0.6; x += 4) {
       if (sz > 0 && x > doorRear - 0.2) continue;
-      g.add(box(0.014, H - 0.56, 0.008, m.seam, x, FLOOR + 0.26 + (H - 0.56) / 2, sz * (W / 2 + 0.004)));
+      // over the arch, a seam starts above the fender
+      const y1 = inArch(x, 0.3) ? archTop + 0.3 : FLOOR + 0.26;
+      const y2 = ROOF - 0.3;
+      g.add(box(0.014, y2 - y1, 0.008, m.seam, x, (y1 + y2) / 2, sz * (W / 2 + 0.004)));
     }
     for (let x = xr + 2; x < xf; x += 4) g.add(cyl(0.03, 0.03, m.marker, x, ROOF - 0.4, sz * (W / 2 + 0.012), 'z', 10));
     g.add(cyl(0.035, 0.03, m.tail, xr + 0.35, ROOF - 0.4, sz * (W / 2 + 0.03), 'z', 10));
@@ -693,7 +762,8 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   {
     const pts: [number, number, number][] = [];
     for (const sz of [1, -1]) for (let x = xr + 0.5; x < xf - 0.2; x += 0.72) {
-      pts.push([x, ROOF - 0.07, sz * (out + 0.02)], [x, FLOOR + 0.2, sz * (out + 0.02)]);
+      pts.push([x, ROOF - 0.07, sz * (out + 0.02)]);
+      if (!inArch(x, 0.3)) pts.push([x, FLOOR + 0.2, sz * (out + 0.02)]);
     }
     const rivets = new THREE.InstancedMesh(new THREE.SphereGeometry(0.022, 8, 6), m.rivet, pts.length);
     const mat4 = new THREE.Matrix4();
@@ -702,7 +772,6 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   }
 
   // ------------------------------------------------------------ street side: window and hatch
-  const axleX = xf - axleCenter(L);
   // The window sits over the axles. On the 10 ft it moves forward to clear the logo.
   const winX = Math.max(axleX, xr + 4.9);
   {
@@ -822,10 +891,8 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
 
   // ------------------------------------------------------------ running gear
   for (const sz of [1, -1]) g.add(box(S - 0.4, 0.3, 0.24, m.chassis, xr + S / 2 + 0.5, FLOOR - 0.15, sz * 2.3));
-  const axles = tandem(L) ? [axleX - 1.2, axleX + 1.2] : [axleX];
-  const wz = W / 2 + 0.45;
   for (const ax of axles) {
-    g.add(cyl(0.12, W + 0.5, m.chassis, ax, TIRE_R, 0, 'z', 12));
+    g.add(cyl(0.12, wz * 2 - 0.3, m.chassis, ax, TIRE_R, 0, 'z', 12));
     for (const sz of [1, -1]) {
       const w = wheel(m);
       w.position.set(ax, TIRE_R, sz * wz);
@@ -833,9 +900,8 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
       g.add(w);
     }
   }
-  const fenderLen = tandem(L) ? 5.3 : 2.9;
   for (const sz of [1, -1]) {
-    const f = fender(m, fenderLen);
+    const f = archTrim(m, fenderLen, FLOOR, archTop);
     f.position.set(axleX, 0, sz > 0 ? W / 2 : -W / 2);
     if (sz < 0) f.rotation.y = Math.PI;
     g.add(f);
@@ -864,14 +930,18 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   g.add(cyl(0.02, 0.5, m.aluminum, jackX, 2.42, 0.3, 'z', 8));
   g.add(cyl(0.02, 0.3, m.aluminum, jackX, 2.28, 0.54, 'y', 8));
   {
-    const sx = xf + 1.1;
-    const nz = (W / 2) * (1 - (sx - xf) / NOSE);
+    // The spare stands on a bracket on the street-side tongue rail, just ahead of the point of the
+    // nose, as in photos 15 and 36. It used to sit beside the nose and clipped into it (Nate, 2026-11-20).
+    const sx = tip + 0.5;
+    const railZ = 2.5 * (hitch - sx) / (hitch - (xf - 0.6)); // the rail's distance off center here
+    const sz0 = railZ + 0.45;
+    const sy = FLOOR + 1.05;
     const spare = wheel(m);
-    spare.position.set(sx, 1.72, -(nz + 0.52));
+    spare.position.set(sx, sy, -sz0);
     spare.rotation.y = Math.PI;
     g.add(spare);
-    g.add(box(0.16, 1.3, 0.16, m.chassis, sx, 1.55, -(nz + 0.14)));
-    g.add(box(0.5, 0.12, 0.5, m.chassis, sx, 1.0, -(nz + 0.3)));
+    g.add(box(0.16, sy - FLOOR + 0.25, 0.16, m.chassis, sx, (FLOOR + sy + 0.25) / 2, -(sz0 - 0.38)));
+    g.add(box(0.5, 0.12, 0.42, m.chassis, sx, FLOOR + 0.04, -(railZ + 0.12)));
   }
   // ------------------------------------------------------------ connectivity and security
   if (cfg.cameras) {
@@ -1006,33 +1076,40 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     g.add(box(0.012, 0.07, 0.34, m.display, px - 0.69, hy - 0.18, hz + 0.75));
   }
 
-  // Battery units, 5 kWh each, stand on low white platforms with black channel on top. On the 20 ft
-  // they sit mid-length by the window, with the desk running from them to the nose (as photographed).
-  // Short trailers keep them at the rear so the front stays open.
+  // Each set of wheels is boxed in under a low white platform with black channel on top, and the
+  // battery units, 5 kWh each, stand on those platforms, as in photo 60. On the 20 ft that puts them
+  // mid-length under the window, with the desk running from them to the nose. A longer battery run
+  // extends its platform toward the nose.
   const wallEnd: Record<number, number> = { [-1]: xf - 0.3, [1]: doorRear - 0.5 };
   /** Free stretches of each wall, rear to front, that the furniture packs into. */
   const free: Record<number, [number, number][]> = { [-1]: [[xr + 0.6, wallEnd[-1]]], [1]: [[xr + 0.6, wallEnd[1]]] };
   {
     const unit = 1.55;
-    const zone0 = S > 12 ? Math.max(xr + 5.8, winX - 1.0) : xr + 1.2; // about 6 ft in from the rear doors, as measured off photo 60
+    const ph = 1.0; // platform height over the floor, clear of the tires
+    const x0 = archX0;
     let left = cfg.batteryModules;
     for (const wall of [-1, 1]) {
-      const room = Math.max(0, Math.floor((wallEnd[wall] - zone0 - 0.5) / unit));
+      const room = Math.max(0, Math.floor((wallEnd[wall] - x0 - 0.5) / unit));
       const n = Math.min(wall < 0 ? Math.ceil(left / 2) : left, room, 4);
       left -= n;
+      const len = Math.max(fenderLen, n * unit + 0.5);
+      // The platform is hollow over the tires: an inner block, its outer face just inboard of the
+      // tires and dark where it shows through the arch, and a lid out to the wall over the tires.
+      const dark = wall > 0 ? { pz: m.chassis, ny: m.chassis } : { nz: m.chassis, ny: m.chassis };
+      const inner = zi - 1.3;
+      g.add(box(len, ph, wellZ - inner, faces(m.equipment, dark), x0 + len / 2, y0 + ph / 2, wall * (inner + wellZ) / 2));
+      g.add(box(len, 0.08, zi - wellZ, faces(m.equipment, dark), x0 + len / 2, y0 + ph - 0.04, wall * (wellZ + zi) / 2));
+      for (const off of [0.32, 1.05]) g.add(box(len - 0.12, 0.13, 0.15, m.black, x0 + len / 2, y0 + ph + 0.05, wall * (zi - off)));
+      // the platform splits the wall into a stretch behind it and one in front of it
+      free[wall] = [[xr + 0.6, x0 - 0.9], [x0 + len + 0.3, wallEnd[wall]]].filter(([a, b]) => b - a > 0.5) as [number, number][];
       if (!n) continue;
-      const len = n * unit + 0.5;
-      const x0 = zone0;
-      // platform with two runs of black channel along the top
-      g.add(box(len, 0.95, 1.3, m.equipment, x0 + len / 2, y0 + 0.475, wall * (zi - 0.65)));
-      for (const off of [0.32, 1.05]) g.add(box(len - 0.12, 0.13, 0.15, m.black, x0 + len / 2, y0 + 1.0, wall * (zi - off)));
       // a duplex outlet on the wall just behind the platform
       g.add(box(0.24, 0.38, 0.02, m.board, x0 - 0.45, y0 + 1.3, wall * (zi - 0.01)));
       for (const oy of [1.21, 1.39]) g.add(box(0.1, 0.06, 0.012, m.graphite, x0 - 0.45, y0 + oy, wall * (zi - 0.022)));
       for (let i = 0; i < n; i++) {
         // open aluminum cage around a white module, red terminal caps and cable on top
         const u = new THREE.Group();
-        u.position.set(x0 + 0.25 + unit * (i + 0.5), y0 + 1.07, wall * (zi - 0.48));
+        u.position.set(x0 + 0.25 + unit * (i + 0.5), y0 + ph + 0.12, wall * (zi - 0.48));
         if (wall > 0) u.rotation.y = Math.PI;
         const cw = 1.35, ch = 1.75, cd = 0.56;
         for (const ex of [-1, 1]) for (const ez of [-1, 1]) u.add(box(0.09, ch, 0.09, m.cage, ex * (cw / 2 - 0.045), ch / 2, ez * (cd / 2 - 0.045)));
@@ -1046,8 +1123,6 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
         }
         g.add(u);
       }
-      // the platform splits the wall into a stretch behind it and one in front of it
-      free[wall] = [[xr + 0.6, x0 - 0.9], [x0 + len + 0.3, wallEnd[wall]]].filter(([a, b]) => b - a > 0.5) as [number, number][];
     }
   }
 

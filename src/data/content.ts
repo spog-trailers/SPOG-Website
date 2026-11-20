@@ -269,7 +269,7 @@ export const numbers = [
 ];
 
 export const guarantees = [
-  { icon: 'shield', title: '3-year structural warranty', body: 'Covers solar, electrical, battery and HVAC.' },
+  { icon: 'shield', title: '3-year structural warranty', body: 'Covers solar, electrical, battery and climate control.' },
   { icon: 'truck', title: 'Mobile service fleet', body: 'Repairs on your site. Nothing ships back.' },
   { icon: 'pulse', title: 'Remote diagnosis', body: 'We check the system before anyone drives out.' },
   { icon: 'walk', title: 'Walkthrough first', body: 'See it run your tools before you put down a deposit.' },
@@ -323,7 +323,7 @@ export const faqs = [
   },
   {
     q: 'What happens if something needs repair?',
-    a: 'Our mobile service fleet comes to your site, and we check the system remotely before anyone drives out. The 3-year structural warranty covers solar, electrical, battery and HVAC.',
+    a: 'Our mobile service fleet comes to your site, and we check the system remotely before anyone drives out. The 3-year structural warranty covers solar, electrical, battery and climate control.',
   },
   {
     q: 'How fast can I get one?',

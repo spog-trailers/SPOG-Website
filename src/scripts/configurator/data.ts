@@ -76,7 +76,7 @@ export interface Option { id: string; name: string; desc?: string; price: number
 
 /** Section 4 of the sheet. `desc` is the sheet's wording where it gives one. */
 export const INTERIOR: Option[] = [
-  { id: 'hvac', group: 'Climate', name: 'Heating and cooling', desc: 'Included on the Workstation. Optional on the Cargo.', price: 3900, view: 'street' },
+  { id: 'hvac', group: 'Climate', name: 'Climate control', desc: 'Heating and cooling. Included on the Workstation, optional on the Cargo.', price: 3900, view: 'street' },
   { id: 'desk', group: 'Work surfaces and storage', name: 'Office desk', price: 900, view: 'interior' },
   { id: 'bench', group: 'Work surfaces and storage', name: 'Workbench', price: 950, view: 'interior' },
   { id: 'cabinets', group: 'Work surfaces and storage', name: 'Cabinets', price: 700, view: 'interior' },

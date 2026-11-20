@@ -66,12 +66,12 @@ export const overview = {
     },
     {
       title: 'Power on tap', // NEW (Cybertruck: Power On Tap)
-      body: "Up to 40 kWh of battery storage runs 120, 208 or 240 V outlets for the tools, lights and chargers on your site. Pick the battery and the voltage that fit your crew, and plug into site power with a 30, 50 or 100 amp connection when it's there. [40 kWh on Cargo: confirm with Joe]", // NEW, facts SOURCE (options sheet). GAP
+      body: "Plug full-size corded tools like a table saw into 120, 208 or 240 V outlets, so the crew gets more done than it would on battery tools. At the end of the day, leave the tool batteries charging in the locked trailer, and they're ready when the crew comes back in the morning.", // NEW (Meeting with Alessandro and Joe, 2026-11-20: Joe on corded tools and production, Jay's overnight charging). Voltages SOURCE (options sheet). Battery sizes and shore power live in Specs
       media: { src: '/images/cargo2-battery-card.jpg', alt: 'Two SPOG battery units in their open aluminum cages on a low white platform inside a Cargo' }, // Better Interior 60, cropped to the batteries
     },
     {
       title: 'Set it up your way', // NEW (Cybertruck: Full Range of Motion)
-      body: 'Lay out the inside with shelving, cabinets, overhead storage, a workbench and E-track, so every tool has a place. Your SPOG contact helps you plan it around how your crew works.', // NEW, options SOURCE (options sheet)
+      body: 'Lay out the inside with shelving, cabinets, overhead storage and a workbench. E-track on the walls and floor takes the fold-down tables, tool holders and straps crews already buy, so every tool has a place and every load stays put.', // NEW, options SOURCE (options sheet), E-track accessories from Joe (Meeting with Alessandro and Joe, 2026-11-20)
       media: { src: shoot.cargoEtrackCard, alt: 'E-track rails down the white wall of a SPOG Cargo, with the battery units on their platform', position: '50% 50%' },
     },
     {
@@ -81,7 +81,7 @@ export const overview = {
     },
     {
       title: 'Throw the job at it', // NEW (Cybertruck: Throw Anything at It)
-      body: 'Every Cargo rides on a welded steel frame with steel crossmembers across the floor, built to carry the weight of its solar and battery. Gravel lots, muddy driveways and a season of snow come with the job, and the frame is built to take them.', // NATE (steel frame), SOURCE (frame line)
+      body: 'Every Cargo rides on a welded steel frame with steel crossmembers across the floor, built to carry its solar and battery over gravel lots and muddy driveways. Inside, the white composite walls are backed by plywood and the floor is rubber, so the trailer takes the knocks of a working day.', // NATE (steel frame, rubber floor only), Joe (composite panels over plywood, standard), Meeting with Alessandro and Joe, 2026-11-20
       media: { video: '/images/cargo2-weld-loop.mp4', poster: '/images/cargo2-weld-loop.jpg', alt: 'A welder joining the steel frame of a SPOG trailer in the Middletown shop' },
     },
   ] as Card[],
@@ -94,19 +94,18 @@ export const tour = {
   heading: ['See how it works', 'for you.'], // NATE (Notion, 2026-11-19)
   views: [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street', 'Street side'], ['top', 'Roof'], ['interior', 'Inside']] as [string, string][],
   model: 'Computer-generated model. The finished trailer may differ.', // NATE asked for this notice (2026-11-18)
-  extras: 'Shown with optional heat and AC, an office desk and tie-down track on the walls.', // NEW, names the optional items the model shows
+  extras: 'Shown with optional climate control, an office desk and tie-down track on the walls.', // NEW, names the optional items the model shows. "Climate control", never "HVAC" (Meeting with Alessandro and Joe, 2026-11-20)
   poster: '/images/configure-cargo.jpg',
 };
 
 // ---------------------------------------------------------------- what it saves you (Tesla: More Affordable Than a Gas Car), unchanged from v2
 
-/** The one place the page argues the money. Tool charging lives only here (v3). */
+/** The one place the page argues the money. Tool charging moved to the Power on tap card (Meeting with Alessandro and Joe, 2026-11-20). */
 export const replaces = {
-  heading: ['Spend less on fuel', 'and on hours lost to charging.'], // NEW (v2)
-  body: 'A gas generator at half load burns half to three quarters of a gallon an hour, and charging tool batteries in an idling truck burns fuel a second time.', // NEW on SOURCE (messaging report fuel math and charging)
+  heading: ['Spend less', 'on fuel.'], // NEW (v2, charging moved out 2026-11-20)
+  body: 'A gas generator at half load burns half to three quarters of a gallon an hour.', // SOURCE (messaging report fuel math)
   items: [
     { icon: 'fuel', title: 'Fewer generator hours', body: 'Your tools run on stored solar, so the generator runs less and you buy and haul less fuel.' }, // NEW
-    { icon: 'battery', title: 'Charging on site', body: 'Charge tool batteries at the trailer, which keeps the truck engine off and the charging off your home power bill.' }, // NEW on SOURCE (messaging report)
     { icon: 'plug', title: 'Your own power', body: "Your crew shows up with its own power and doesn't depend on the client's outlet or the GC to keep tools running." }, // SOURCE (messaging report, commercial jobs)
   ],
   fuel: {
@@ -149,7 +148,7 @@ export const anywhere = {
 
 export const built = {
   heading: ['Built for whatever', 'the job site brings.'], // NATE (2026-11-19)
-  sub: 'Other companies cut corners with staples and glue. Every SPOG is designed and built by our own crew in Middletown, New York, from welding to wiring.', // NATE
+  sub: 'Other companies cut corners with staples and glue, and most cargo trailers go without insulation. Every Cargo has insulated walls and roof, and every SPOG is designed and built by our own crew in Middletown, New York, from welding to wiring.', // NATE, insulation added from Meeting with Alessandro and Joe, 2026-11-20. CONFIRM "most cargo trailers go without insulation" (Joe said regular cargo trailers aren't insulated)
   lead: { src: shoot.cargoFrame, alt: 'A welded steel trailer floor frame with steel crossmembers on the floor of the SPOG shop', position: '50% 72%' } as Media, // Nate's photo (2026-11-19)
   cards: [
     {
@@ -173,7 +172,7 @@ export const options = {
   sub: 'Pick the extras that fit your crew, or build your exact Cargo in the builder.', // NEW (v3)
   cards: [
     {
-      title: 'Heat and AC',
+      title: 'Climate control', // Meeting with Alessandro and Joe, 2026-11-20
       body: 'Add heating and cooling, and the trailer becomes a place to warm up, cool off or take a call out of the weather.', // NEW, option SOURCE (options sheet)
       media: { src: shoot.cargoHvac, alt: 'Inside a SPOG Cargo, a heating and cooling unit on the wall over the desk', position: '50% 35%' },
     },
@@ -213,7 +212,7 @@ export const specs = {
     ['Output voltage', '120 V, 208 V, 240 V'], // SOURCE (options sheet)
     ['Shore power connection', '30, 50 or 100 amp'], // SOURCE (options sheet)
     ['Doors', 'Large rear barn doors. Side entry door on the 20 ft shown'], // SOURCE (options sheet, Product Wiki). CONFIRM the side door on the 10 ft
-    ['Interior', 'Basic, hardwearing finish'], // SOURCE (options sheet)
+    ['Interior', 'White composite wall panels over plywood, rubber floor'], // Joe and NATE (Meeting with Alessandro and Joe, 2026-11-20): composite panels standard on every trailer, rubber floor only
     ['Warranty', '1-year limited parts, 3-year limited structural'], // SOURCE (Warranty Policy)
     ['Service', 'Remote diagnosis and a mobile service fleet'], // SOURCE (Warranty Policy)
     ['Built in', 'Middletown, New York'], // SOURCE

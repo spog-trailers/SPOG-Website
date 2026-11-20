@@ -24,7 +24,7 @@ import { productPages, type ProductPage } from './productPages';
 
 export const meta = {
   title: 'SPOG Workstation | Solar power site office trailer', // SOURCE (current /workstation)
-  description: 'The SPOG Workstation is a site office trailer with its own solar power, heat and AC and a security mast, built on a welded steel frame in Middletown, New York, in 10 or 20 ft.', // NEW
+  description: 'The SPOG Workstation is a site office trailer with its own solar power, climate control and a security mast, built on a welded steel frame in Middletown, New York, in 10 or 20 ft.', // NEW
 };
 
 /** Workstation has no builder yet, so "Design yours" opens the build request form with Workstation picked. */
@@ -39,7 +39,7 @@ export type Card = { title: string; body: string; media: Media };
 
 export const hero = {
   name: 'Workstation',
-  line: 'Your site office shows up with its own solar power, heat and AC and a security mast, so you can run the job without relying on anyone else.', // NATE (Notion, 2026-11-20)
+  line: 'Your site office shows up with its own solar power, climate control and a security mast, so you can run the job without relying on anyone else.', // NATE (Notion, 2026-11-20), "climate control" for "heat and AC" (Meeting with Alessandro and Joe, 2026-11-20)
   price: null as string | null, // Ask Nate before showing a price (see CLAUDE.md)
   video: '/images/ws2-hero-rivian.mp4', // Nate's Rivian clip (2026-11-20), the drone following the tow through the snow
   poster: '/images/ws2-hero-rivian.jpg',
@@ -82,8 +82,9 @@ export const overview = {
     {
       title: 'Make it yours', // NEW (Cybertruck: Full Range of Motion)
       body: 'Every Workstation is built to order, so the inside is laid out around how your team works. Pick the finish, the furniture and where everything goes with your SPOG contact.', // NEW
-      // Stand-in: the wall screen in the wood office. Wanted: a layout or walkthrough shot.
-      media: { video: '/images/ws2-card-interior.mp4', poster: '/images/ws2-card-interior.jpg', alt: 'A wall screen inside a wood-walled SPOG Workstation' },
+      // A push-in through the door into the empty office, from the influencer video (65 to 70 s), recut
+      // 2026-11-20 because Nate found the wall screen crop poor. A real layout or walkthrough shot would still be stronger.
+      media: { video: '/images/ws2-card-interior.mp4', poster: '/images/ws2-card-interior.jpg', alt: 'Moving through the door of a SPOG Workstation into a wood-walled office with a desk, two monitors and a chair' },
     },
     {
       title: 'Lock down the site', // NEW (Cybertruck: Lockable Storage), NATE's direction ("the full security system is what makes it unique")
@@ -132,7 +133,7 @@ export const comfort = {
 
 export const anywhere = {
   heading: ['Take it', 'anywhere.'], // NATE
-  sub: 'Solar power and heat and AC come built in, Starlink is one add-on away, and the whole office hitches up and tows, so you stay comfortable and connected wherever the job is.', // NEW
+  sub: 'Solar power and climate control come built in, Starlink is one add-on away, and the whole office hitches up and tows, so you stay comfortable and connected wherever the job is.', // NEW
   lead: { src: shoot.wsRuralSunset, alt: 'A dark SPOG Workstation at sunset beside a farm field, its solar awning open', position: '50% 55%' } as Media, // The Rivian clip moved to the hero (Nate, 2026-11-20)
   cards: [
     {
@@ -141,7 +142,7 @@ export const anywhere = {
       media: { src: '/images/ws2-card-roof.jpg', alt: 'Solar panels across the roof of a SPOG Workstation, seen from above' }, // Cropped from Nate's aerial photo (ws-aerial-mast), as approved in the doc
     },
     {
-      title: 'Heat and AC',
+      title: 'Climate control',
       body: 'Heating and cooling come standard, with a hyper-heating heat pump on the larger Workstations for cold mornings. [HEAT PUMP: which model the 10 and 20 ft get]', // NEW on SOURCE (messaging report). GAP
       media: { src: shoot.wsHvac, alt: 'Heating and cooling unit in an open side compartment of a white SPOG Workstation', position: '62% 50%' },
     },
@@ -183,8 +184,8 @@ export const built = {
       media: { video: '/images/about-shop-loop.mp4', poster: '/images/about-shop-loop.jpg', alt: 'Flying through the SPOG shop in Middletown, New York, past a welder at work' },
     },
     {
-      title: 'Certified and tested',
-      body: 'The wiring, battery, solar and outlets are designed together and tested as one system, and every Workstation is certified to [CERTIFICATION 1] and [CERTIFICATION 2].', // NEW on SOURCE (Objections & FAQ). GAP
+      title: 'Tested as one system',
+      body: 'The wiring, battery, solar and outlets are designed together and tested as one system in the shop.', // NEW on SOURCE (Objections & FAQ). Certifications held until the NATM inspection passes (Meeting with Alessandro and Joe, 2026-11-20). Name them here when it does
       media: { src: shoot.engineeringCad, alt: 'A SPOG engineer working on a trailer frame in CAD', position: '30% 50%' }, // Wanted: a testing or inspection shot
     },
     {
@@ -281,12 +282,12 @@ export const specs = {
     ['Battery storage', '5 to 40 kWh'], // SOURCE (Product Wiki)
     ['Roof solar', 'Standard'], // SOURCE (Product Wiki)
     ['Outlets', '120, 208 or 240 V, inside and outside'], // NATE (same as Cargo)
-    ['Heating and cooling', 'Standard'], // NATE, SOURCE (brand kit)
+    ['Climate control', 'Heating and cooling, standard'], // NATE, SOURCE (brand kit)
     ['Security', '6 ft mast with work lights and a camera, standard. 28 ft mast, 360 camera and horn, optional'], // NATE (2026-11-20)
     ['Interior', 'White composite or premium wood, with built-in desks'], // SOURCE (Product Wiki)
     ['Floor', 'Insulated vinyl'], // SOURCE (Product Wiki)
     ['Internet', 'Starlink or a cellular router, optional'], // SOURCE (Product Wiki, options sheet)
-    ['Certifications', '[CERTIFICATION 1] and [CERTIFICATION 2]'], // GAP
+    // ['Certifications', '[CERTIFICATION 1] and [CERTIFICATION 2]'], // held until the NATM inspection passes (Meeting with Alessandro and Joe, 2026-11-20)
     ['Warranty', '1-year limited parts, 3-year limited structural'], // SOURCE (Warranty Policy)
     ['Service', 'Remote diagnosis and a mobile service fleet'], // SOURCE (Warranty Policy)
     ['Built in', 'Middletown, New York'], // SOURCE
