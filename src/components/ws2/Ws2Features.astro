@@ -1,21 +1,24 @@
 ---
 import Ws2Card from './Ws2Card.astro';
 import WorkTitle from '../work/WorkTitle.astro';
-import { overview } from '../../data/workstation2Page';
+import { overview as wsOverview, type Card } from '../../data/workstation2Page';
 /**
  * "Redefining the site office.", after Cybertruck's "Redefining the Pickup Truck": one line under
  * the heading, then a swipe row of five cards (Bring the whole team, Power on tap, Make it yours,
  * Lock down the site, Throw the job at it), each a photo or clip with two sentences under it.
  * Arrows step through the row on desktop. On phones it swipes.
+ * Props (optional): Cargo 2 passes its own heading, line and cards. /workstation-2 uses the defaults.
  */
+interface Props { label?: string; heading?: string[]; sub?: string; cards?: Card[] }
+const { label = 'Redefining the site office', heading = wsOverview.heading, sub = wsOverview.sub, cards = wsOverview.cards } = Astro.props;
 const edge = 'px-[max(36px,calc((100vw_-_1320px)/2_+_36px))] scroll-px-[max(36px,calc((100vw_-_1320px)/2_+_36px))] max-[640px]:px-5 max-[640px]:scroll-px-5';
 const ctrl = 'flex size-11 cursor-pointer items-center justify-center rounded-full border-[1.5px] border-coal/20 bg-transparent text-coal hover:border-coal disabled:opacity-30';
 ---
-<section id="overview" aria-label="Redefining the site office" data-ws2-feat class="overflow-hidden bg-stone pb-[110px] pt-[120px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
+<section id="overview" aria-label={label} data-ws2-feat class="overflow-hidden bg-stone pb-[110px] pt-[120px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
   <div class="wrap flex items-end justify-between gap-8">
     <div>
-      <WorkTitle lines={overview.heading} />
-      <p class="mb-0 mt-5 max-w-[620px] t-body text-ink-soft">{overview.sub}</p>
+      <WorkTitle lines={heading} />
+      <p class="mb-0 mt-5 max-w-[620px] t-body text-ink-soft">{sub}</p>
     </div>
     <div class="flex shrink-0 gap-2 max-[640px]:hidden" data-ws2-feat-ctrl>
       <button type="button" data-ws2-step="-1" aria-label="Previous" disabled class={ctrl}><svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg></button>
@@ -24,7 +27,7 @@ const ctrl = 'flex size-11 cursor-pointer items-center justify-center rounded-fu
   </div>
 
   <ul data-ws2-feat-track class:list={['no-scrollbar m-0 mt-14 flex list-none snap-x snap-mandatory gap-5 overflow-x-auto p-0 max-[640px]:mt-10 max-[640px]:gap-3', edge]}>
-    {overview.cards.map((c) => (
+    {cards.map((c) => (
       <li class="w-[min(400px,80vw)] shrink-0 snap-start">
         <Ws2Card card={c} sizes="(max-width: 640px) 80vw, 400px" />
       </li>

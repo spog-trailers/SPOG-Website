@@ -3,56 +3,59 @@ import Base from '../layouts/Base.astro';
 import Nav from '../components/sections/Nav.astro';
 import ProductSubnav from '../components/product/ProductSubnav.astro';
 import Cargo2Hero from '../components/cargo2/Cargo2Hero.astro';
-import FeatureCards from '../components/features/FeatureCards.astro';
-import Cargo2Build from '../components/cargo2/Cargo2Build.astro';
 import Cargo2Tour from '../components/cargo2/Cargo2Tour.astro';
 import Cargo2Replaces from '../components/cargo2/Cargo2Replaces.astro';
-import Cargo2Options from '../components/cargo2/Cargo2Options.astro';
 import Cargo2Specs from '../components/cargo2/Cargo2Specs.astro';
 import Cargo2Close from '../components/cargo2/Cargo2Close.astro';
+import Ws2Features from '../components/ws2/Ws2Features.astro';
+import Ws2Anywhere from '../components/ws2/Ws2Anywhere.astro';
+import Ws2Built from '../components/ws2/Ws2Built.astro';
+import Ws2Options from '../components/ws2/Ws2Options.astro';
 import Faq from '../components/sections/Faq.astro';
 import Footer from '../components/sections/Footer.astro';
 import MobileBar from '../components/sections/MobileBar.astro';
 import { productPages } from '../data/productPages';
 import { footerColumns } from '../data/content';
-import { demo, design, faqs, features, featuresHead, meta, subnavLinks } from '../data/cargo2Page';
+import { anywhere, built, demo, design, faqs, meta, options, overview, specs, subnavLinks } from '../data/cargo2Page';
 // This page has no walkthrough form, so the footer's Contact link goes to the demo page.
 const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, href]) => [label, href === '#walkthrough' ? demo.href : href]) }));
 ---
 <!--
-  CARGO 2 (draft, 2026-11-19). Nate asked for a new pass on the Cargo sales page after the Tesla
-  Model Y and Rivian R1T product pages, with the configurator's 3D model on it and a notice that
-  the model is computer-generated. /cargo is untouched. Linked as "Cargo 2" in the nav and footer.
-  Not indexed while it's a draft (and while public sales wait on legal).
-  Copy and its approval marks live in src/data/cargo2Page.ts. Photos are Nate's black 20 ft.
+  CARGO 2 (draft). Nate's new Cargo sales page. /cargo is untouched. Linked as "Cargo 2" in the nav
+  and footer. Not indexed while it's a draft (and while public sales wait on legal).
+  Copy and its marks live in src/data/cargo2Page.ts. Photos are Nate's black 20 ft.
 
-  v2 (2026-11-19): built around what GCs and subs buy, power, security and storage, with heat and AC,
-  Starlink and a custom look as add-ons, tied together by build quality. The core pitch shows up only
-  in the hero, the Power card, the savings section and the close. The statement photo and the shared
-  shop video band were cut because they repeated the pitch and the Build section.
+  v3 (2026-11-20): rebuilt on the same pattern as /workstation-2 at Nate's request. Each feature is
+  said once, in one place, packaged under a few big ideas the way the Cybertruck page does it. It
+  shares the Workstation page's section components (src/components/ws2/) with Cargo's own copy, and
+  keeps what's Cargo's own: the real photo hero with the price, the 3D model of the real Cargo, the
+  fuel savings section and Nate's build heading. v2's click-to-open cards and options checklist are gone
+  (the builder at /configure/cargo has the full list).
 
-  Order and rhythm (never two photo sections next to each other):
-    Hero P (real photo, name huge, one line, two buttons, the starting price)
-    Get to know Cargo L (white, seven cards: solar power, security, storage, custom interior, heat and AC, Starlink, your look)
-    Built for the job site P+D (full-bleed frame photo with the headline, then three alternating rows on dark, two with video)
-    Take a tour L (light studio plate, the 3D model, views, doors, 12 colors)
-    What it saves you D (fuel number and three icon tiles, after Tesla)
-    Options L (white: the customization sheet, grouped like the cards)
-    Specs D (profile photo and the confirmed specs)
-    Close D, FAQ L, Footer D
-  Keep the ids top, overview, build, tour, savings, options, specs, cta and faq: the section bar,
-  the phone bar and the links in the copy point at them.
+  Order (Cybertruck or Tesla section in brackets) and rhythm (never two photo sections next to each other;
+  sections with inset media on a plain background don't count as photo sections):
+    Hero P (real photo, name, line, buttons, starting price)                     [Cybertruck hero]
+    Redefining the job site trailer L (stone, five swipe cards)                  [Redefining the Pickup Truck]
+    See how it works for you L (3D model of the real Cargo)
+    Spend less on fuel D (fuel number and three tiles)                           [Model Y: More Affordable Than a Gas Car]
+    Take it anywhere L (white, drone photo, three cards, number row)            [Take on Any Terrain]
+    Built for whatever the job site brings D (frame photo, two wide cards)      [Designed to Be the Safest Truck]
+    Add what you need L (white, photo carousel, tiles, link to the builder)     [Add What You Need]
+    Specs L (stone, Cargo cut-out, so it reads apart from the white options above), Close D, FAQ L, Footer D
+  Keep the ids top, overview, tour, savings, anywhere, built, options, specs, cta and faq: the section
+  bar, the phone bar and links point at them.
 -->
 <Base title={meta.title} description={meta.description} noindex>
   <Nav cta={design} />
   <ProductSubnav page={productPages.cargo} links={subnavLinks} buttons={[demo, design]} />
   <Cargo2Hero />
-  <FeatureCards id="overview" label="Get to know Cargo" kicker={featuresHead.kicker} heading={featuresHead.heading} features={features} look="work" tone="light" />
-  <Cargo2Build />
+  <Ws2Features label="Redefining the job site trailer" heading={overview.heading} sub={overview.sub} cards={overview.cards} />
   <Cargo2Tour />
   <Cargo2Replaces />
-  <Cargo2Options />
-  <Cargo2Specs />
+  <Ws2Anywhere heading={anywhere.heading} sub={anywhere.sub} lead={anywhere.lead} cards={anywhere.cards} stats={anywhere.stats} />
+  <Ws2Built heading={built.heading} sub={built.sub} lead={built.lead} cards={built.cards} />
+  <Ws2Options heading={options.heading} sub={options.sub} cards={options.cards} more={options.more} link={options.link} />
+  <Cargo2Specs specs={specs} tone="stone" />
   <Cargo2Close />
   <Faq items={faqs} heading="Questions about Cargo." />
   <Footer columns={footer} />

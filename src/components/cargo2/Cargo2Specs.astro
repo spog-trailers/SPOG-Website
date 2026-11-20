@@ -5,9 +5,9 @@ import { srcset } from '../../data/content';
 import { specs as cargoSpecs } from '../../data/cargo2Page';
 // Another page can pass its own specs (/workstation-2). Cargo 2 uses the default.
 // tone "light" (/workstation-2) puts the table on white with a cut-out, so a run of dark sections can break.
-interface Props { specs?: { heading: string[]; image: string; alt: string; rows: [string, string][]; fine: string }; tone?: 'dark' | 'light' }
+interface Props { specs?: { heading: string[]; image: string; alt: string; rows: [string, string][]; fine: string }; tone?: 'dark' | 'light' | 'stone' }
 const { specs = cargoSpecs, tone = 'dark' } = Astro.props;
-const light = tone === 'light';
+const light = tone !== 'dark';
 /**
  * Specs, after Tesla's "Model Y Specs": the side profile and one clean table. Only facts the
  * options sheet, the Warranty Policy or Nate confirmed (see cargo2Page.ts). No width, solar
@@ -15,7 +15,7 @@ const light = tone === 'light';
  * Keeps the id "specs" for the section bar.
  */
 ---
-<section id="specs" aria-label="Specs" class:list={['pb-[120px] pt-[130px] max-[640px]:pb-16 max-[640px]:pt-20', light ? 'bg-white text-ink' : 'border-t border-line bg-black text-bone']}>
+<section id="specs" aria-label="Specs" class:list={['pb-[120px] pt-[130px] max-[640px]:pb-16 max-[640px]:pt-20', tone === 'stone' ? 'bg-stone text-ink' : light ? 'bg-white text-ink' : 'border-t border-line bg-black text-bone']}>
   <div class="wrap">
     <WorkTitle lines={specs.heading} tone={light ? 'light' : 'dark'} />
     <div class="mt-14 grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] items-start gap-x-16 gap-y-10 max-[1000px]:grid-cols-[minmax(0,1fr)]">

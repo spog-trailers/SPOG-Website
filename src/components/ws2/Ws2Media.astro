@@ -13,3 +13,17 @@ const { media, class: cls = '', sizes = '(max-width: 900px) 100vw, 640px' } = As
 ) : (
   <img src={media.src} srcset={srcset(media.src!)} sizes={sizes} alt={media.alt} loading="lazy" class={cls} style={`object-position:${media.position ?? '50% 50%'}`} />
 )}
+
+<script>
+  const vids = [...document.querySelectorAll<HTMLVideoElement>('[data-ws2-video]')];
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (vids.length && !still && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        const v = e.target as HTMLVideoElement;
+        if (e.isIntersecting) { v.preload = 'auto'; v.play().catch(() => {}); } else v.pause();
+      }
+    }, { rootMargin: '200px 0px', threshold: 0.2 });
+    vids.forEach((v) => io.observe(v));
+  }
+</script>

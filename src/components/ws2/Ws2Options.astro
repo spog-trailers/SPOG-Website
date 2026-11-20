@@ -2,21 +2,25 @@
 import Icon from '../ui/Icon.astro';
 import Ws2Media from './Ws2Media.astro';
 import WorkTitle from '../work/WorkTitle.astro';
-import { options } from '../../data/workstation2Page';
+import { options as wsOptions, type Card } from '../../data/workstation2Page';
 /**
  * "Add what you need.", laid out like Cybertruck's "Add What You Need" (Nate, 2026-11-20): the options
  * with a photo run as a carousel of large wide cards (photo, name, one or two sentences), the next card
  * peeking in from the right, with arrows. The options without a photo sit underneath as small tiles.
  * Rounded corners instead of Cybertruck's cut corners, which belong to the truck's shape.
+ * Props (optional): Cargo 2 passes its own cards, tiles and a link to its builder.
  */
+type Tile = { icon: string; name: string; line: string };
+interface Props { heading?: string[]; sub?: string; cards?: Card[]; more?: Tile[]; link?: { label: string; href: string } }
+const { heading = wsOptions.heading, sub = wsOptions.sub, cards = wsOptions.cards, more = wsOptions.more, link } = Astro.props;
 const edge = 'px-[max(36px,calc((100vw_-_1320px)/2_+_36px))] scroll-px-[max(36px,calc((100vw_-_1320px)/2_+_36px))] max-[640px]:px-5 max-[640px]:scroll-px-5';
 const ctrl = 'flex size-11 cursor-pointer items-center justify-center rounded-full border-[1.5px] border-coal/20 bg-transparent text-coal hover:border-coal disabled:opacity-30';
 ---
 <section id="options" aria-label="Add what you need" data-ws2-opt class="overflow-hidden bg-white pb-[120px] pt-[130px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
   <div class="wrap flex items-end justify-between gap-8">
     <div>
-      <WorkTitle lines={options.heading} />
-      <p class="mb-0 mt-6 max-w-[640px] t-body text-ink-soft">{options.sub}</p>
+      <WorkTitle lines={heading} />
+      <p class="mb-0 mt-6 max-w-[640px] t-body text-ink-soft">{sub}</p>
     </div>
     <div class="flex shrink-0 gap-2 max-[640px]:hidden" data-ws2-opt-ctrl>
       <button type="button" data-ws2-opt-step="-1" aria-label="Previous option" disabled class={ctrl}><svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg></button>
@@ -25,7 +29,7 @@ const ctrl = 'flex size-11 cursor-pointer items-center justify-center rounded-fu
   </div>
 
   <ul data-ws2-opt-track class:list={['no-scrollbar m-0 mt-14 flex list-none snap-x snap-mandatory gap-5 overflow-x-auto p-0 max-[640px]:mt-10 max-[640px]:gap-3', edge]}>
-    {options.cards.map((c) => (
+    {cards.map((c) => (
       <li class="w-[min(1100px,84vw)] shrink-0 snap-start max-[640px]:w-[86vw]">
         <Ws2Media media={c.media} sizes="(max-width: 640px) 86vw, 1100px" class="block aspect-[2.35/1] w-full rounded-[18px] bg-stone-2 object-cover max-[900px]:aspect-[16/10] max-[640px]:aspect-[4/3]" />
         <h3 class="m-0 mt-6 t-h3 text-coal">{c.title}</h3>
@@ -36,7 +40,7 @@ const ctrl = 'flex size-11 cursor-pointer items-center justify-center rounded-fu
 
   <div class="wrap">
     <ul class="m-0 mt-16 grid list-none grid-cols-[repeat(4,minmax(0,1fr))] gap-4 p-0 max-[1100px]:grid-cols-[repeat(2,minmax(0,1fr))] max-[560px]:grid-cols-[minmax(0,1fr)] max-[640px]:mt-12">
-      {options.more.map((o) => (
+      {more.map((o) => (
         <li class="rounded-[16px] bg-stone px-7 pb-8 pt-7">
           <Icon name={o.icon} class="size-8 stroke-coal stroke-[1.4]" />
           <h3 class="m-0 mt-6 t-h3 text-coal">{o.name}</h3>
@@ -44,6 +48,12 @@ const ctrl = 'flex size-11 cursor-pointer items-center justify-center rounded-fu
         </li>
       ))}
     </ul>
+    {link && (
+      <a href={link.href} class="mt-10 inline-flex h-[50px] items-center gap-[14px] border-[1.5px] border-coal px-[26px] t-btn text-coal no-underline transition-colors hover:bg-coal hover:text-white">
+        {link.label}
+        <svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </a>
+    )}
   </div>
 </section>
 

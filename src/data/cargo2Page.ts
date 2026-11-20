@@ -1,32 +1,28 @@
 /**
- * Copy and data for /cargo-2, the new Cargo sales page (Nate, 2026-11-19), after the Tesla
- * Model Y and Rivian R1T product pages. /cargo stays as it was until Nate picks one.
+ * Copy and data for /cargo-2, the new Cargo sales page. /cargo stays as it was until Nate picks one.
  *
- * v2 (2026-11-19). Nate found v1 repeated "a trailer you need anyway, with power" in nearly
- * every section. v2 is built around what GCs and subs buy (power, security and storage, with
- * heat and AC, Starlink and a custom look as add-ons), tied together by build quality. The
- * core pitch appears four times only: the hero line, the Power card, the savings section and
- * the close. The copy was reviewed in Notion (Company Roadmap > Website Build > Cargo).
+ * v3 (2026-11-20). Rebuilt on the same pattern as /workstation-2, at Nate's request: each feature is
+ * said once, in one place, packaged under a few big ideas the way the Tesla Cybertruck page does it.
+ * v2's click-to-open cards repeated the options checklist, the steel frame was said twice and tool
+ * charging was in two places. What stays Cargo's own is the real photo hero with the price, the 3D
+ * model of the real Cargo, the fuel savings section and Nate's build heading. The copy is in Notion
+ * (Company Roadmap > Website Build > Cargo, Draft v3).
  * Cargo is SPOG's most utility trailer (Nate): blue-collar, ready to get dirty, Ford vibes.
- * Keep the polish for Workstation and Event.
  *
  * Copy marks:
  *   NATE     his own words, or his pick
- *   SOURCE   an approved line. Where it comes from is named: the Cargo Trailer Messaging Report,
- *            the Objections & FAQ doc and the Warranty Policy (Notion, Foundations Documents
- *            Database), or the Trailer Customization Options sheet (SPOG-D-0001, Nov 17 2026)
- *   NEW      written for this page, needs Nate's approval
- *   CONFIRM  a fact someone still has to confirm before launch
+ *   SOURCE   an approved line or fact: the Cargo Trailer Messaging Report, the Objections & FAQ doc,
+ *            the Warranty Policy, or the Trailer Customization Options sheet (SPOG-D-0001)
+ *   NEW      written for this page (v3 approved by Nate to go live, 2026-11-20)
+ *   GAP      a [BRACKET] fact Joe still has to supply. Brackets show highlighted on the page on purpose.
  *
- * Rules this page keeps (CLAUDE.md and the messaging report's guardrails):
+ * Rules this page keeps:
  *   - One price only, Nate's "Starting at $10,000" in the hero.
- *   - Only facts the options sheet or Nate confirmed. No solar watts, width, lead time, payload,
- *     tow weight or delivery, because none of those are settled.
- *   - Options shown as options. "Storage" always sits in a sentence with power.
+ *   - Only facts the options sheet or Nate confirmed. No solar watts, width, lead time or payload.
  *   - The 3D model is labeled computer-generated, and its optional extras are named.
  */
-import { img, shoot } from './content';
-import type { Feature } from './features';
+import { shoot } from './content';
+import type { Card, Media } from './workstation2Page';
 
 export const meta = {
   title: 'SPOG Cargo | Enclosed cargo trailer with solar power', // NATE ("enclosed", 2026-11-19)
@@ -38,8 +34,8 @@ export const design = { label: 'Design yours', href: '/configure/cargo' }; // NA
 export const demo = { label: 'Book a demo', href: '/demo' }; // NATE
 
 export const hero = {
-  name: 'Cargo', // The "Enclosed cargo trailer" line under it was cut at Nate's call (v2). The phrase stays in the title, description and specs.
-  line: 'Haul all your gear, lock it up at night and run your job on solar power, all on a welded steel frame.', // NEW. Nate asked to merge his line and the subhead into one (v2)
+  name: 'Cargo',
+  line: 'Haul all your gear, lock it up at night and run your job on solar power, all on a welded steel frame.', // NATE approved (v2)
   price: 'Starting at $10,000', // NATE (Notion, 2026-11-19: one price under the line, like Rivian)
   image: shoot.cargoHero,
   alt: 'Black SPOG Cargo trailer parked outside the SPOG shop in Middletown, New York',
@@ -48,147 +44,47 @@ export const hero = {
 /** Section bar that replaces the masthead once the hero scrolls away. */
 export const subnavLinks: [string, string][] = [
   ['Overview', '#overview'],
-  ['Build', '#build'],
   ['Tour', '#tour'],
   ['Savings', '#savings'],
+  ['Anywhere', '#anywhere'],
+  ['Build', '#built'],
   ['Options', '#options'],
   ['Specs', '#specs'],
   ['FAQ', '#faq'],
 ];
 
-// ---------------------------------------------------------------- Get to know Cargo
+// ---------------------------------------------------------------- Redefining the job site trailer (Cybertruck: Redefining the Pickup Truck)
 
-/** One card per thing a contractor is buying, after Tesla's "Meet Model Y" cards (v2). */
-export const featuresHead = {
-  kicker: 'Get to know Cargo',
-  heading: ['Solar power, security and storage', 'in one enclosed trailer.'], // NEW (v2), "Solar power" NATE (2026-11-19)
-};
-
-export const features: Feature[] = [
-  {
-    id: 'power',
-    title: 'Solar power', // NATE (2026-11-19), matches the heading
-    line: 'Free power wherever you go.', // NATE (Notion, 2026-11-19)
-    image: shoot.cargoSolarCard,
-    alt: 'SPOG Cargo from above, solar panels across the whole roof',
-    position: '50% 55%',
-    panel: {
-      intro: 'Solar panels on the roof charge the battery on board, and it runs your tools, lights and chargers through 120, 208 or 240 V outlets. When the site has power, plug in with a 30, 50 or 100 amp shore connection.', // NEW, facts SOURCE (options sheet)
-      media: { src: shoot.cargoSolar, alt: 'Five solar panels across the roof of a black SPOG Cargo', width: 2400, height: 1600 },
-      stats: [['Roof solar', 'Standard'], ['Battery', '5 to 40 kWh']], // SOURCE (options sheet). CONFIRM 40 kWh on Cargo with Joe
-      link: { label: 'Battery and outlet options', href: '#options' }, // NEW
-    },
-  },
-  {
-    id: 'security',
-    title: 'Security',
-    line: 'Your tools stay locked inside, with optional cameras and lights to watch them.', // NEW, Nate's direction (v2)
-    image: shoot.cargoSecurityCard,
-    alt: 'Two dome cameras and work lights on a SPOG security mast',
-    position: '50% 50%',
-    panel: {
-      intro: 'Full-height bars lock the barn doors shut, and you can add security cameras, the AI job site camera system, lights, and a horn and strobe that warn people away after hours.', // NEW. Lock bars from the photos, add-ons SOURCE (options sheet). CONFIRM lights, they aren't on the sheet
-      media: { src: shoot.cargoDoors, alt: 'Rear barn doors of a black SPOG Cargo, locked with two full-height bars', width: 2400, height: 1600 },
-      points: [{ title: 'Pick what you need', body: 'Cameras, lights and alarms are add-ons, and your SPOG contact will confirm what fits your build.' }], // NATE approved wording
-      link: { label: 'See all the options', href: '#options' },
-    },
-  },
-  {
-    id: 'storage',
-    title: 'Storage',
-    line: 'Keep your tools and materials on site, with power right where you store them.', // NEW. Storage with power, per the messaging guardrail
-    image: shoot.cargoStorageCard,
-    alt: 'Inside a SPOG Cargo, E-track down both walls and battery units on low platforms',
-    position: '50% 50%',
-    panel: {
-      intro: 'Up to 20 ft of enclosed space holds your tools and materials between jobs, so nothing gets lost in the shuffle. Large rear barn doors open wide for carts and gear, and shelving, cabinets, overhead storage and E-track keep everything in its place.', // NEW. "Lost in the shuffle" from the messaging report, options SOURCE. The workbench moved to the Custom interior card
-      media: { src: shoot.cargoStorage, alt: 'A black SPOG Cargo with both barn doors swung open, the lit interior behind them', width: 2400, height: 1600 },
-      stats: [['Length', '10 or 20 ft'], ['Doors', 'Rear barn doors, plus a side door on the 20 ft shown']], // NATE, SOURCE. CONFIRM the side door on the 10 ft
-    },
-  },
-  {
-    id: 'interior',
-    title: 'Custom interior', // NEW, Nate asked for a catch-all interior card (2026-11-19)
-    line: 'Add a desk, a workbench or a fridge and set up the inside the way your crew works.', // NEW
-    image: shoot.cargoInteriorCard,
-    alt: 'Inside a SPOG Cargo, a long black-topped desk under the window and battery units behind it',
-    position: '50% 50%',
-    panel: {
-      intro: 'Pick what goes inside from an office desk, a workbench, a whiteboard, a TV or monitor, a refrigerator, a microwave and a refreshment counter, and your SPOG contact will work out the layout with you.', // NEW, options SOURCE (options sheet)
-      media: { src: shoot.cargoInterior, alt: 'A long black-topped desk down the wall of a SPOG Cargo, battery units behind it and the barn doors open', width: 2400, height: 1600 },
-      points: [{ title: 'Pick what you need', body: 'Interior pieces are add-ons, and your SPOG contact will confirm what fits your build.' }], // NEW, follows Nate's approved wording on the other cards
-      link: { label: 'See all the options', href: '#options' },
-    },
-  },
-  {
-    id: 'climate',
-    title: 'Heat and AC',
-    line: 'Every Cargo comes insulated, and you can add heating and cooling for bad weather.', // NEW, folds in the old Insulation card
-    image: shoot.cargoHvacCard,
-    alt: 'Wall-mounted heating and cooling unit inside a SPOG Cargo, over a black-topped desk',
-    position: '50% 50%',
-    panel: {
-      intro: 'Rigid foam board lines the walls and roof of every trailer we build, and optional heating and cooling keeps the inside comfortable for your crew when the weather turns.', // NEW, built on Nate's "warmer in the winter"
-      media: { src: shoot.cargoHvac, alt: 'Inside a SPOG Cargo, a heating and cooling unit on the wall over the desk and a closet door at the nose', width: 2400, height: 1600 },
-      stats: [['Insulation', 'Standard'], ['Heating and cooling', 'Optional']], // SOURCE (options sheet)
-    },
-  },
-  {
-    id: 'starlink',
-    title: 'Starlink',
-    line: 'Stay connected on the job, even on the most rural sites, with optional Starlink.', // NATE (2026-11-19)
-    image: shoot.cargoStarlinkCard,
-    alt: 'Starlink dish on top of a SPOG mast against a blue sky',
-    position: '50% 30%',
-    panel: {
-      intro: 'Add Starlink to keep your crew online where cell service is weak, or a cellular router where it is strong.', // NEW, options from the sheet
-      media: { src: shoot.wsStarlink, alt: 'Starlink dish on a SPOG mast against the sky', width: 2400, height: 1600 },
-      points: [{ title: 'Pick what you need', body: 'Internet is an add-on, and your SPOG contact will confirm what fits your build.' }], // NATE approved wording
-      link: { label: 'See all the options', href: '#options' },
-    },
-  },
-  {
-    id: 'look',
-    title: 'Your look',
-    line: "Show up in your company's colors, with your logo on the trailer.", // NEW, Nate's direction (v2)
-    image: shoot.cargoNoseCard,
-    alt: 'The V nose of a black SPOG Cargo with the logo running down the corner',
-    position: '50% 50%',
-    panel: {
-      intro: 'Your trailer is the first thing a client sees when you pull into the driveway, so you pick the color from twelve choices and put your company logo and lettering on it.', // NEW. Options SOURCE, the driveway point from the messaging report ("it's gotta look right")
-      media: { src: shoot.cargoNose, alt: 'The nose of a black SPOG Cargo with its logo, tongue and spare', width: 2400, height: 1600 },
-      points: [{ title: 'Color match', body: 'Your SPOG contact will confirm the color match before the build.' }], // NATE approved
-      link: { label: 'See the colors', href: '#options' },
-    },
-  }, // CONFIRM the photo: a customer-branded Cargo or a model capture in a few colors would show "your look" better
-];
-
-// ---------------------------------------------------------------- built for the job site
-
-/** Build quality, the thread that ties the cards together (Nate, v2). Facts only. */
-export const build = {
-  heading: ['Built for whatever', 'the job site brings.'], // NATE (2026-11-19)
-  body: 'Other companies cut corners with staples and glue. Every SPOG is designed and built by our own crew in Middletown, New York, from welding to wiring.', // NATE
-  hero: { src: shoot.cargoFrame, alt: 'A welded steel trailer floor frame with steel crossmembers on the floor of the SPOG shop', position: '50% 72%' }, // Nate's photo (2026-11-19)
-  rows: [
+export const overview = {
+  heading: ['Redefining the', 'job site trailer.'], // NEW (v3)
+  sub: 'Built around what your crew does every day, from loading out in the morning to locking up at night.', // NEW (v3)
+  cards: [
     {
-      title: 'Welded steel frame',
-      body: 'Every Cargo starts on a welded steel frame, with steel crossmembers across the floor, built to carry the weight of its solar and battery.', // NATE (steel frame), SOURCE (frame line). The only place the page says this
-      src: shoot.shopWelding, alt: 'A welder joining the steel frame of a SPOG trailer in the Middletown shop', position: '50% 50%',
-      video: '/images/cargo2-weld-loop.mp4', poster: '/images/cargo2-weld-loop.jpg', // Nate's "welding on the ground" clip, half speed, smoothed and looped (2026-11-19)
+      title: 'Haul it all', // NEW (Cybertruck: Bring It All)
+      body: 'Up to 20 ft of enclosed space holds the tools and materials for the whole job, so nothing gets lost in the shuffle between sites. The rear barn doors swing wide for carts, ladders and gear.', // NEW, "lost in the shuffle" SOURCE (messaging report)
+      media: { src: shoot.cargoStorage, alt: 'A black SPOG Cargo with both barn doors swung open, the lit interior behind them', position: '50% 50%' },
     },
     {
-      title: 'Designed and tested in Middletown, NY, USA', // NATE (2026-11-19)
-      body: 'We draw the frame in CAD, and the wiring, battery, solar and outlets are designed together and tested before it leaves the shop.', // NEW, built on SOURCE (Objections & FAQ)
-      src: shoot.engineeringCad, alt: 'A SPOG engineer working on a trailer frame in CAD', position: '30% 50%',
+      title: 'Power on tap', // NEW (Cybertruck: Power On Tap)
+      body: "Up to 40 kWh of battery storage runs 120, 208 or 240 V outlets for the tools, lights and chargers on your site. Pick the battery and the voltage that fit your crew, and plug into site power with a 30, 50 or 100 amp connection when it's there. [40 kWh on Cargo: confirm with Joe]", // NEW, facts SOURCE (options sheet). GAP
+      media: { src: '/images/cargo2-battery-card.jpg', alt: 'Two SPOG battery units in their open aluminum cages on a low white platform inside a Cargo' }, // Better Interior 60, cropped to the batteries
     },
     {
-      title: 'Backed by a 3-year structural warranty', // NATE 2026-11-19
-      body: 'Every Cargo comes with a 3-year limited structural warranty and a 1-year limited parts warranty, and if something needs work we diagnose it remotely and send our mobile service fleet to your site.', // NATE approved 2026-11-19, facts SOURCE (Warranty Policy)
-      src: img.builtBg, alt: 'The Middletown shop floor, SPOG painted on the wall and an American flag at the far end', position: '50% 50%',
-      video: '/images/cargo2-shop-loop.mp4', poster: '/images/cargo2-shop-loop.jpg', // Nate's warehouse fly-through, half speed, plays forward then back (2026-11-19)
+      title: 'Set it up your way', // NEW (Cybertruck: Full Range of Motion)
+      body: 'Lay out the inside with shelving, cabinets, overhead storage, a workbench and E-track, so every tool has a place. Your SPOG contact helps you plan it around how your crew works.', // NEW, options SOURCE (options sheet)
+      media: { src: shoot.cargoEtrackCard, alt: 'E-track rails down the white wall of a SPOG Cargo, with the battery units on their platform', position: '50% 50%' },
     },
-  ],
+    {
+      title: 'Lock down the site', // NEW (Cybertruck: Lockable Storage), Nate's security direction from /workstation-2
+      body: "Full-height bars lock the rear doors at night, and you can add security cameras, an AI job site camera system and a horn and strobe that scare off anyone who shouldn't be there. [SECURITY: is the 6 ft mast with work lights and a camera offered on Cargo too?]", // NEW, add-ons SOURCE (options sheet). GAP
+      media: { src: shoot.cargoDoorsCard, alt: 'The rear barn doors of a black SPOG Cargo, locked with two full-height bars', position: '50% 50%' },
+    },
+    {
+      title: 'Throw the job at it', // NEW (Cybertruck: Throw Anything at It)
+      body: 'Every Cargo rides on a welded steel frame with steel crossmembers across the floor, built to carry the weight of its solar and battery. Gravel lots, muddy driveways and a season of snow come with the job, and the frame is built to take them.', // NATE (steel frame), SOURCE (frame line)
+      media: { video: '/images/cargo2-weld-loop.mp4', poster: '/images/cargo2-weld-loop.jpg', alt: 'A welder joining the steel frame of a SPOG trailer in the Middletown shop' },
+    },
+  ] as Card[],
 };
 
 // ---------------------------------------------------------------- 3D tour
@@ -202,9 +98,9 @@ export const tour = {
   poster: '/images/configure-cargo.jpg',
 };
 
-// ---------------------------------------------------------------- what it saves you
+// ---------------------------------------------------------------- what it saves you (Tesla: More Affordable Than a Gas Car), unchanged from v2
 
-/** The one place the page argues the money, after Tesla's "More Affordable Than a Gas Car" (v2). */
+/** The one place the page argues the money. Tool charging lives only here (v3). */
 export const replaces = {
   heading: ['Spend less on fuel', 'and on hours lost to charging.'], // NEW (v2)
   body: 'A gas generator at half load burns half to three quarters of a gallon an hour, and charging tool batteries in an idling truck burns fuel a second time.', // NEW on SOURCE (messaging report fuel math and charging)
@@ -219,38 +115,98 @@ export const replaces = {
   },
 };
 
-// ---------------------------------------------------------------- options
+// ---------------------------------------------------------------- Take it anywhere (Cybertruck: Take on Any Terrain)
 
-export const power = {
-  body: 'Pick the battery size, the outlet voltage and the plug-in that fit your crew.', // NEW (v2). "Come standard" lives in the Power card now
-  groups: [
-    { title: 'Battery storage', options: ['5 kWh', '10 kWh', '20 kWh', '40 kWh', 'Other'] }, // SOURCE (options sheet)
-    { title: 'Output voltage', options: ['120 V', '208 V', '240 V'] }, // SOURCE (options sheet)
-    { title: 'Shore power connection', options: ['30 amp', '50 amp', '100 amp'] }, // SOURCE (options sheet)
-  ],
+export const anywhere = {
+  heading: ['Take it', 'anywhere.'], // NATE (Workstation)
+  sub: 'Solar comes standard, Starlink is one add-on away, and the whole trailer hitches up and tows to the next job with the gear already inside.', // NEW (v3)
+  lead: { src: shoot.cargoStatement, alt: 'Low drone view of a black SPOG Cargo outside the SPOG shop, SPOG painted on the bay doors', position: '50% 55%' } as Media,
+  cards: [
+    {
+      title: 'Solar power',
+      body: 'Panels across the roof recharge the battery every sunny day, and roof solar comes standard on every Cargo.', // NEW, SOURCE (options sheet)
+      media: { src: shoot.cargoSolar, alt: 'A SPOG Cargo from above, five solar panels across the whole roof', position: '36% 20%' },
+    },
+    {
+      title: 'Stay connected',
+      body: 'Add Starlink and your crew stays online on rural sites where phones lose signal, so the daily report goes out from the job.', // NEW, NATE (Starlink)
+      media: { src: shoot.cargoStarlinkCard, alt: 'Starlink dish on top of a SPOG mast against a blue sky', position: '50% 30%' },
+    },
+    {
+      title: 'Hitch up and go',
+      body: 'Cargo tows to the next site with everything already loaded, so nobody packs the truck at the end of the day and unpacks it again in the morning.', // NEW
+      media: { src: shoot.cargoNoseCard, alt: 'The V nose of a black SPOG Cargo with the tongue, the jack and the spare', position: '50% 60%' },
+    },
+  ] as Card[],
+  stats: [
+    ['[WEIGHT] lbs', 'Weight'], // GAP
+    ['10 or 20 ft', 'Length'], // NATE
+    ['[TOW VEHICLE]', 'Tows behind'], // GAP
+  ] as [string, string][],
 };
 
-/** The full checklist, grouped like the cards (v2): power, security and internet, storage and interior, your look. */
+// ---------------------------------------------------------------- built (Cybertruck: Designed to Be the Safest Truck on the Road)
+
+export const built = {
+  heading: ['Built for whatever', 'the job site brings.'], // NATE (2026-11-19)
+  sub: 'Other companies cut corners with staples and glue. Every SPOG is designed and built by our own crew in Middletown, New York, from welding to wiring.', // NATE
+  lead: { src: shoot.cargoFrame, alt: 'A welded steel trailer floor frame with steel crossmembers on the floor of the SPOG shop', position: '50% 72%' } as Media, // Nate's photo (2026-11-19)
+  cards: [
+    {
+      title: 'Designed and tested in Middletown, NY, USA', // NATE (2026-11-19)
+      body: 'We draw the frame in CAD, and the wiring, battery, solar and outlets are designed together and tested before it leaves the shop.', // NATE approved (v2), on SOURCE (Objections & FAQ)
+      media: { src: shoot.engineeringCad, alt: 'A SPOG engineer working on a trailer frame in CAD', position: '30% 50%' },
+    },
+    {
+      title: 'Backed by a 3-year structural warranty', // NATE (2026-11-19)
+      body: 'Every Cargo comes with a 3-year limited structural warranty and a 1-year limited parts warranty, and if something needs work we diagnose it remotely and send our mobile service fleet to your site.', // NATE approved, facts SOURCE (Warranty Policy)
+      media: { video: '/images/cargo2-shop-loop.mp4', poster: '/images/cargo2-shop-loop.jpg', alt: 'Flying through the SPOG shop floor, SPOG painted on the wall and an American flag at the far end' },
+    },
+  ] as Card[],
+};
+
+// ---------------------------------------------------------------- Add what you need (Cybertruck: Add What You Need)
+
+/** Large photo cards, small tiles, then the builder, which has the full options list (it replaced v2's checklist). */
 export const options = {
-  heading: ['Build it', 'for your crew.'], // NEW
-  body: 'Every Cargo is built to order, so you pick the exact configuration that works for you and your crew.', // NATE 2026-11-19
-  look: [
-    { name: 'Exterior color', desc: 'Twelve choices' }, // NATE (colors)
-    { name: 'Company logo', desc: 'On the nose, either side or the rear' }, // SOURCE (options sheet)
-    { name: 'Vinyl lettering or numbers' }, // SOURCE (options sheet)
-  ],
-  fine: 'Power options depend on trailer length.', // SOURCE (options sheet). The rest prints once, under Specs
+  heading: ['Add what', 'you need.'], // NEW (v3)
+  sub: 'Pick the extras that fit your crew, or build your exact Cargo in the builder.', // NEW (v3)
+  cards: [
+    {
+      title: 'Heat and AC',
+      body: 'Add heating and cooling, and the trailer becomes a place to warm up, cool off or take a call out of the weather.', // NEW, option SOURCE (options sheet)
+      media: { src: shoot.cargoHvac, alt: 'Inside a SPOG Cargo, a heating and cooling unit on the wall over the desk', position: '50% 35%' },
+    },
+    {
+      title: 'Office desk',
+      body: 'Add a desk for paperwork, plans and a laptop, so the trailer works as a small office between jobs.', // NEW, option SOURCE (options sheet)
+      media: { src: shoot.cargoInterior, alt: 'A long black-topped desk down the wall of a SPOG Cargo, battery units behind it', position: '50% 62%' },
+    },
+    {
+      title: "Your company's look",
+      body: "Pick from twelve colors and put your logo and lettering on the nose, the sides or the rear, so the trailer looks right in the client's driveway.", // NEW, colors NATE, logo spots SOURCE (options sheet), driveway SOURCE (messaging report)
+      media: { src: shoot.cargoProfile, alt: 'Street-side profile of a black 20 ft SPOG Cargo with the SPOG logo at the nose', position: '50% 58%' }, // A customer-branded Cargo would be stronger when one exists
+    },
+  ] as Card[],
+  more: [
+    { icon: 'pulse', name: 'Cellular router', line: 'A router gives you fast internet on sites where the cell signal is strong.' },
+    { icon: 'plug', name: 'Refrigerator and microwave', line: 'Keep lunch and cold drinks on site so nobody has to drive into town.' },
+    { icon: 'screen', name: 'TV or monitor', line: 'Put the drawings and the schedule up on a big screen.' },
+    { icon: 'check', name: 'Whiteboard', line: 'Plan the week where the whole crew can see it.' },
+  ], // NEW lines, options SOURCE (options sheet)
+  link: { label: 'See every option in the builder', href: '/configure/cargo' }, // NEW
 };
 
 // ---------------------------------------------------------------- specs
 
 export const specs = {
   heading: ['Cargo', 'at a glance.'], // NEW
-  image: shoot.cargoProfile,
-  alt: 'Street-side profile of a black 20 ft SPOG Cargo, sliding window, tandem wheels and spare',
+  image: '/images/lineup-cargo.webp', // Nate's cut-out, on the light specs section (v3)
+  alt: 'Black SPOG Cargo trailer with solar on the roof',
   rows: [
     ['Type', 'Enclosed cargo trailer'], // NATE (2026-11-19)
     ['Length', '10 or 20 ft'], // NATE
+    ['Weight', '[WEIGHT] lbs'], // GAP
     ['Frame', 'Welded steel'], // NATE (2026-11-19)
     ['Standard on every trailer', 'Roof solar panels, battery storage, and insulated roof and walls'], // SOURCE (options sheet)
     ['Battery storage', '5, 10, 20 or 40 kWh, or other'], // SOURCE (options sheet). CONFIRM 40 kWh on Cargo
@@ -272,12 +228,8 @@ export const close = {
   body: 'See a SPOG up close and get your questions answered.', // NEW, as on the homepage close
 };
 
-/** Five Cargo questions (v2). Each answers its own question without repeating the Build section. */
+/** Three questions (v3). The frame card and the warranty card now answer the two that were cut. */
 export const faqs = [
-  {
-    q: 'Will it hold up on a job site?', // NEW (Nate, 2026-11-19)
-    a: 'Yes, our own crew builds every Cargo on a welded steel frame in Middletown, and the structure is covered by a 3-year limited structural warranty.', // NATE approved, trimmed in v2
-  },
   {
     q: 'Will it run my saws and compressor?', // SOURCE (Objections & FAQ)
     a: "It depends on the tools and the battery size. Book a demo and we'll show you the run time for the tools you use.", // NEW, as on the homepage
@@ -286,10 +238,6 @@ export const faqs = [
   {
     q: "Why don't I just build one myself?", // SOURCE (Objections & FAQ)
     a: "You'd have to build a frame that carries the solar and battery weight, design and test the wiring, battery, solar and outlets together, and make sure the whole build is compliant. Our crew does all of that before every Cargo leaves Middletown, so yours arrives working and compliant, with a warranty and a service team behind it.", // NATE approved. CONFIRM which standards to name
-  },
-  {
-    q: 'What happens if something needs repair?', // SOURCE (homepage FAQ question)
-    a: 'We can diagnose problems remotely, and our mobile service fleet repairs on site.', // SOURCE (Warranty Policy). Warranty terms live in the Build section and the first answer
   },
   {
     q: 'Can I see one before I buy?', // NEW
