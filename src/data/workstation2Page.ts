@@ -37,7 +37,7 @@ export const meta = {
 };
 
 /** Workstation has no builder yet, so "Design yours" opens the build request form with Workstation picked. */
-export const design = { label: 'Design yours', href: '/?trailer=Workstation#design' }; // NATE (button and flow, 2026-11-18)
+export const design = { label: 'Design yours', href: '/configure/workstation' }; // NATE (button), the Workstation builder since 2026-11-20
 export const demo = { label: 'Book a demo', href: '/demo' }; // NATE
 
 /** A photo or a looping video, with the words that go with it. */

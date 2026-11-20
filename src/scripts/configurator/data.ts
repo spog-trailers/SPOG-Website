@@ -28,11 +28,20 @@ import type { TrailerConfig } from './trailer';
  * The two Cargo sizes (SOURCE price sheet 2026-11-20). Every model is dual axle. Battery, solar,
  * inverter, voltage and outlet counts are the sheet's per size. Max battery is 20 kWh on both.
  */
-export const SIZES = [
+const CARGO_SIZES = [
   { ft: 10, name: 'Cargo 10', note: '10 ft, dual axle, 7,000 lbs max loaded weight', price: 15000, baseKwh: 5, solarW: 900, inverterW: 3000, volts: ['120'], outletsOut: 3, outletsIn: 5 }, // SOURCE price sheet 2026-11-20
   { ft: 20, name: 'Cargo 20', note: '20 ft, dual axle, 9,500 lbs max loaded weight', price: 50000, baseKwh: 10, solarW: 2800, inverterW: 6000, volts: ['120', '208'], outletsOut: 3, outletsIn: 5 }, // SOURCE price sheet 2026-11-20
 ];
-export type Size = (typeof SIZES)[number];
+/** The Workstation (SOURCE price sheet 2026-11-20): a 10 ft Cargo with climate control included, and the 20 ft office. */
+const WS_SIZES: typeof CARGO_SIZES = [
+  { ft: 10, name: 'Workstation 10', note: '10 ft, dual axle, 7,000 lbs max loaded weight', price: 18500, baseKwh: 5, solarW: 900, inverterW: 3000, volts: ['120'], outletsOut: 3, outletsIn: 5 }, // SOURCE price sheet 2026-11-20
+  { ft: 20, name: 'Workstation 20', note: '20 ft, dual axle, 14,000 lbs max loaded weight', price: 75000, baseKwh: 10, solarW: 2800, inverterW: 6000, volts: ['120', '208'], outletsOut: 4, outletsIn: 8 }, // SOURCE price sheet 2026-11-20
+];
+/** Which trailer the builder is serving. Set once per page with useKind() (Cargo by default). */
+export type Kind = 'cargo' | 'workstation';
+export let KIND: Kind = 'cargo';
+export let SIZES = CARGO_SIZES;
+export type Size = (typeof CARGO_SIZES)[number];
 export const sizeOf = (length: number): Size => SIZES.find((z) => z.ft === length) ?? SIZES[SIZES.length - 1];
 
 /** Exterior colors, in the order Nate sent them. Hex values are matched by eye to the names. */
@@ -82,7 +91,7 @@ export const SHORE = [
 export interface Option { id: string; name: string; desc?: string; price: number | null; bySize?: Record<number, number>; only?: number; view: string; group: string }
 
 /** Interior. The built-in front corner work desk is standard on every Cargo (SOURCE price sheet 2026-11-20). */
-export const INTERIOR: Option[] = [
+const CARGO_INTERIOR: Option[] = [
   { id: 'hvac', group: 'Climate', name: 'Climate control', desc: 'Heating and cooling keep the crew comfortable inside.', price: 3500, bySize: { 10: 3500, 20: 5000 }, view: 'street' }, // SOURCE price sheet 2026-11-20 (prices); NEW 2026-11-20 (desc)
   { id: 'extraDesk', group: 'Work surfaces', name: 'Extra desk', desc: 'Add one or two desks beside the battery units.', price: null, view: 'interior' }, // CONFIRM (Alessandro on the 2026-11-20 call: a desk can go on either side of the battery platform). Not on the price sheet, quoted
   { id: 'bench', group: 'Work surfaces', name: 'Workbench', price: null, view: 'interior' }, // NATE (2026-11-20 answers): still offered, quoted
@@ -96,7 +105,7 @@ export const INTERIOR: Option[] = [
 ];
 
 /** Connectivity and security. SOURCE price sheet 2026-11-20 and NATE (2026-11-20 answers). */
-export const CONNECT: Option[] = [
+export let CONNECT: Option[] = [
   { id: 'starlink', group: 'Internet', name: 'Starlink', desc: 'The price covers the dish and the install. You set up your own Starlink plan.', price: 850, view: 'street' }, // SOURCE price sheet (Workstation table), NATE: Starlink can go on Cargo
   { id: 'cellular', group: 'Internet', name: 'Cellular router', desc: 'Internet through cell towers', price: null, view: 'top' }, // quoted
   { id: 'light6', group: 'Security', name: '6 ft telescopic light', desc: 'Lights up the lot at night and lets the crew keep working after the sun goes down.', price: 3000, view: 'street' }, // SOURCE price sheet, NATE: a light only, no camera
@@ -148,7 +157,7 @@ export interface BuildState {
 }
 
 /** The trailer in Nate's photos: black, 20 ft. The battery starts at the 20 ft's base. Shore power is a starting pick. */
-export const DEFAULT_BUILD: BuildState = {
+const CARGO_DEFAULT: BuildState = {
   length: 20,
   paint: 'black',
   logoSpots: [],
@@ -166,6 +175,38 @@ export const DEFAULT_BUILD: BuildState = {
   zip: '',
 };
 
+/**
+ * Workstation options (SOURCE price sheet 2026-11-20, NATE 2026-11-20 answers): climate control,
+ * the built-in desk and the interior finish are included, so they aren't options here. The rest
+ * are quoted, as on Cargo. Shelving, cabinets and overhead storage are not offered.
+ */
+const WS_INTERIOR: Option[] = [
+  { id: 'extraDesk', group: 'Work surfaces', name: 'Extra desk', desc: 'Add desks when more of your team works in the office.', price: null, view: 'interior' }, // quoted
+  { id: 'generator', group: 'Power', name: 'Generator hookup', desc: 'Plug in a generator as a backup through a long stretch of cloudy days.', price: null, view: 'front' }, // quoted, Workstation 2 copy
+  { id: 'whiteboard', group: 'Fixtures and appliances', name: 'Whiteboard', price: null, view: 'interior' }, // quoted
+  { id: 'tv', group: 'Fixtures and appliances', name: 'TV or monitor', price: null, view: 'interior' }, // quoted
+  { id: 'fridge', group: 'Fixtures and appliances', name: 'Refrigerator', price: null, view: 'interior' }, // quoted
+  { id: 'microwave', group: 'Fixtures and appliances', name: 'Microwave', price: null, view: 'interior' }, // quoted
+];
+/** The white 20 ft from Nate's drone photos. The battery starts at the 20 ft's base. */
+const WS_DEFAULT: BuildState = { ...CARGO_DEFAULT, kind: 'workstation', interior: 'composite', paint: 'white', tools: ['office', 'lights'] };
+
+/** Interior finishes on the 20 ft Workstation, a free choice (NATE 2026-11-20). The 10 ft is white composite. */
+export const FINISHES = [
+  { id: 'composite', name: 'White composite' },
+  { id: 'wood', name: 'Premium wood' },
+];
+
+export let INTERIOR: Option[] = CARGO_INTERIOR;
+export let DEFAULT_BUILD: BuildState = CARGO_DEFAULT;
+/** Point the builder at one trailer. Called before anything reads SIZES, INTERIOR or DEFAULT_BUILD. */
+export function useKind(k: Kind) {
+  KIND = k;
+  SIZES = k === 'workstation' ? WS_SIZES : CARGO_SIZES;
+  INTERIOR = k === 'workstation' ? WS_INTERIOR : CARGO_INTERIOR;
+  DEFAULT_BUILD = k === 'workstation' ? WS_DEFAULT : CARGO_DEFAULT;
+}
+
 // ---------------------------------------------------------------- rules
 
 export const batteryKwh = (s: BuildState) => Number(s.battery);
@@ -177,6 +218,15 @@ export const fits = (s: BuildState, o: Option) => !o.only || o.only === s.length
 export function enforceRules(s: BuildState) {
   const notes: string[] = [];
   if (!SIZES.some((z) => z.ft === s.length)) s.length = DEFAULT_BUILD.length;
+  if (KIND === 'workstation') {
+    s.kind = 'workstation';
+    // Premium wood is on the 20 ft only; climate control is included, so it's never an option.
+    if (s.interior !== 'wood' || s.length !== 20) {
+      if (s.interior === 'wood' && s.length !== 20) notes.push('Premium wood is on the 20 ft only, so this build is white composite.');
+      s.interior = 'composite';
+    }
+    s.options = s.options.filter((id) => id !== 'hvac');
+  }
   const size = sizeOf(s.length);
   if (!PAINTS.some((p) => p.id === s.paint)) s.paint = DEFAULT_BUILD.paint;
   if (!SHORE.some((x) => x.id === s.shore)) s.shore = DEFAULT_BUILD.shore;
@@ -217,7 +267,7 @@ const HVAC_KWH = 4.8; // estimate
 export function runtime(s: BuildState) {
   const tools = TOOLS.filter((t) => s.tools.includes(t.id));
   const toolKwh = tools.reduce((sum, t) => sum + (t.watts * t.hours) / 1000, 0);
-  const load = toolKwh + (has(s, 'hvac') ? HVAC_KWH : 0);
+  const load = toolKwh + (has(s, 'hvac') || s.kind === 'workstation' ? HVAC_KWH : 0);
   const battery = batteryKwh(s) * USABLE;
   const solar = (sizeOf(s.length).solarW / 1000) * SUN_HOURS * SOLAR_DERATE; // SOURCE price sheet roof solar watts
   const supply = battery + solar;
@@ -260,7 +310,7 @@ export function optionPrice(s: BuildState, o: Option): number | null {
 export function optionLabel(s: BuildState, o: Option) {
   if (o.id === 'extraDesk') return s.desks > 1 ? `${s.desks} extra desks` : 'Extra desk';
   if (o.id === 'bench') return `${s.benchLength} ft workbench`;
-  if (o.id === 'tower') return `28 ft light tower, ${pick(TOWER_CAMERAS, s.towerCamera).name.toLowerCase()}`;
+  if (o.id === 'tower') return `28 ft light tower, ${s.towerCamera === 'ai' ? 'AI camera' : 'regular camera'}`; // keeps "AI" in capitals
   return o.name;
 }
 
@@ -271,7 +321,11 @@ export function priceLines(s: BuildState): Line[] {
   lines.push({ label: `${pick(PAINTS, s.paint).name} exterior`, price: 0 });
   lines.push({ label: `Roof solar, ${size.solarW.toLocaleString()} W`, price: 0 });
   lines.push({ label: `${batteryKwh(s)} kWh battery`, price: batteryPrice(s) });
-  lines.push({ label: 'Built-in corner work desk', price: 0 });
+  if (s.kind === 'workstation') {
+    lines.push({ label: s.length === 20 ? 'Climate control, hyper-heating heat pump' : 'Climate control', price: 0 }); // SOURCE price sheet 2026-11-20: included
+    lines.push({ label: `${(FINISHES.find((f) => f.id === s.interior) ?? FINISHES[0]).name} interior`, price: 0 });
+    lines.push({ label: s.length === 20 ? 'Built-in work desk' : 'Built-in corner work desk', price: 0 });
+  } else lines.push({ label: 'Built-in corner work desk', price: 0 });
   lines.push({ label: `${pick(SHORE, s.shore).name} shore power`, price: pick(SHORE, s.shore).price });
   if (s.logoSpots.length) lines.push({ label: `Company logo, ${s.logoSpots.length} spot${s.logoSpots.length > 1 ? 's' : ''}`, price: LOGO_PRICE });
   if (s.lettering) lines.push({ label: 'Vinyl lettering or numbers', price: null });

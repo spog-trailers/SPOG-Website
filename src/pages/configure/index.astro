@@ -1,27 +1,28 @@
 ---
 /**
  * First step of "Design your trailer" (Nate, 2026-11-18): pick which trailer to design.
- * Only the Cargo has a builder so far, so Workstation and Event are greyed out. Each greyed card
- * still offers the build request form, so those buyers have a way forward. NATE (2026-11-20):
- * Workstation stays greyed out until it has its own 3D model, even though its prices are now on
- * the price sheet. Checked 2026-11-20 against the price sheet: nothing on this page states a price
+ * Cargo and Workstation have builders. The Workstation opened on 2026-11-20 once it had its own 3D
+ * model (Nate had it greyed out until then). Event is still greyed out and offers the build request
+ * form, so those buyers have a way forward. Checked 2026-11-20 against the price sheet: nothing on this page states a price
  * or spec, so nothing here changed.
  *
  * Where "Design yours" goes across the site:
  *   - Anywhere general (nav, homepage hero, phone bar, /demo): here.
  *   - On the Cargo lineup panel and the Cargo page: straight to /configure/cargo.
- *   - On Workstation and Event: the build request form on the homepage, with that trailer picked.
+ *   - On Workstation: straight to /configure/workstation (2026-11-20).
+ *   - On Event: the build request form on the homepage, with that trailer picked.
  * Trailer names, lines and images come from the homepage lineup in src/data/home2.ts.
  */
 import Base from '../../layouts/Base.astro';
 import { img, phone } from '../../data/content';
 import { lineup } from '../../data/home2';
 
-const builders: Record<string, string> = { cargo: '/configure/cargo' };
+const builders: Record<string, string> = { cargo: '/configure/cargo', workstation: '/configure/workstation' };
 // The Cargo card shows the builder's own 3D model (a capture of /configure/cargo on white, laid
 // over the gray plate with a multiply blend). Remake it if the model's default look changes.
 const art: Record<string, { image: string; width: number; height: number; alt: string }> = {
   cargo: { image: '/images/configure-cargo.jpg', width: 1037, height: 640, alt: 'Black 20 ft SPOG Cargo trailer, seen from the front curb side' },
+  workstation: { image: '/images/configure-workstation.jpg', width: 1037, height: 640, alt: 'White 20 ft SPOG Workstation trailer, seen from the front curb side' }, // capture of the Workstation model (2026-11-20)
 };
 const cards = lineup.panels.map((p) => ({ ...p, ...(art[p.id] ?? {}), blend: !!art[p.id], builder: builders[p.id] }));
 ---
@@ -73,7 +74,7 @@ const cards = lineup.panels.map((p) => ({ ...p, ...(art[p.id] ?? {}), blend: !!a
           </li>
         ))}
       </ul>
-      <p class="mb-0 mt-5 text-center text-[12.5px] text-ink-soft">The Cargo shown is a computer-generated model. The finished trailer may differ.</p>
+      <p class="mb-0 mt-5 text-center text-[12.5px] text-ink-soft">The Cargo and Workstation shown are computer-generated models. The finished trailer may differ.</p>
     </main>
   </div>
 </Base>

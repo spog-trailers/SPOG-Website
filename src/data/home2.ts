@@ -59,7 +59,7 @@ export const lineup = {
       fit: [22, 46], shot: [92, 78], lap: 0.26,
     },
     {
-      id: 'workstation', name: 'Workstation', tone: 'studio' as Tone, href: '/workstation', builder: '',
+      id: 'workstation', name: 'Workstation', tone: 'studio' as Tone, href: '/workstation', builder: '/configure/workstation', // the Workstation builder since 2026-11-20
       line: 'The site office that works the day it lands.', // SOURCE. Nate wants a new line (2026-11-18, "sounds so AI"). Ten options went to him in chat.
       facts: ['From $18,500', '10 or 20 ft', 'Built-in climate control'], // NATE (2026-11-20 answers), price SOURCE (price sheet 2026-11-20: 10 ft $18,500)
       image: '/images/lineup-workstation.webp', width: 1495, height: 838, // Nate's own cut-out (2026-11-19, 'Workstation transparent background.png')

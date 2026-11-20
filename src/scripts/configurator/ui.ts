@@ -9,7 +9,7 @@
 import { TEXT_ASPECT, createController } from './controller';
 import {
   CONNECT, DEFAULT_BUILD, INTERIOR, LOGO_PRICE, LOGO_SPOTS, MAX_DESKS, PAINTS, SHORE, BATTERY_MAX, BATTERY_STEP_PRICE,
-  batteryKwh, batteryPrice, buildCode, enforceRules, fits, has, money, moneyTotal, optionPrice, runtime, sizeOf, summaryLine, toTrailerConfig, totals, voltsLabel,
+  batteryKwh, batteryPrice, useKind, buildCode, enforceRules, fits, has, money, moneyTotal, optionPrice, runtime, sizeOf, summaryLine, toTrailerConfig, totals, voltsLabel,
   type BuildState,
 } from './data';
 import { VIEW_ORDER, createStage, type ViewName } from './scene';
@@ -17,7 +17,7 @@ import { VIEW_ORDER, createStage, type ViewName } from './scene';
 type Step = 'design' | 'order' | 'done';
 type ListKey = 'logoSpots' | 'options' | 'tools';
 // 2026-11-20 (price sheet): volts, batteryOther and cabinets are gone from the link, towerCamera is new.
-const SHARED: (keyof BuildState)[] = ['length', 'paint', 'logoSpots', 'brandText', 'lettering', 'letteringText', 'battery', 'shore', 'options', 'desks', 'benchLength', 'towerCamera', 'tools'];
+const SHARED: (keyof BuildState)[] = ['length', 'interior', 'paint', 'logoSpots', 'brandText', 'lettering', 'letteringText', 'battery', 'shore', 'options', 'desks', 'benchLength', 'towerCamera', 'tools'];
 const COUNT_MAX: Record<string, number> = { desks: MAX_DESKS };
 
 function loadState(): BuildState {
@@ -50,6 +50,8 @@ export function initConfigurator() {
   const root = document.getElementById('cfg');
   const stageEl = document.getElementById('stage');
   if (!root || !stageEl) return;
+  // The page says which trailer this builder is for (/configure/cargo or /configure/workstation, 2026-11-20).
+  useKind(root.dataset.kind === 'workstation' ? 'workstation' : 'cargo');
   const $$ = <T extends HTMLElement>(sel: string) => [...root.querySelectorAll<T>(sel)];
   const byId = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
   const out = (key: string, text: string) => $$(`[data-out="${key}"]`).forEach((el) => { el.textContent = text; });
@@ -130,6 +132,8 @@ export function initConfigurator() {
     out('price-battery', money(batteryPrice(state)));
     out('battery-sub', `The ${size.ft} ft comes with ${size.baseKwh} kWh. Each extra 5 kWh is ${moneyTotal(BATTERY_STEP_PRICE)}, up to ${BATTERY_MAX} kWh.`);
     $$<HTMLButtonElement>('[data-opt="battery"]').forEach((b) => { b.disabled = Number(b.dataset.value) < size.baseKwh; });
+    // Premium wood is on the 20 ft Workstation only (NATE 2026-11-20)
+    $$<HTMLButtonElement>('[data-opt="interior"][data-value="wood"]').forEach((b) => { b.disabled = state.length !== 20; });
     out('power-included', `A ${size.inverterW.toLocaleString()} W inverter on a 48 V DC system, with ${voltsLabel(state)} outlets, ${size.outletsOut} outside and ${size.outletsIn} inside.`);
     out('price-shore', money((SHORE.find((x) => x.id === state.shore) ?? SHORE[0]).price));
     // Options priced by length show this length's price. One that doesn't fit this length is greyed out with the reason.

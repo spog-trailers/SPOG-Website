@@ -228,6 +228,7 @@ Each product page is written for its own buyer. The single shared `[product].ast
 ## Configurator (rebuilt 2026-11-18)
 
 - `/configure/cargo` follows Tesla's design studio (tesla.com/model3/design), at Nate's request: a white viewer on the left that you drag all the way around, one scrolling column of choices on the right, and a bar along the bottom with the price and the order button. The first version is saved in `_archive/2026-11-18-configurator-v1/`.
+- **The Workstation builder (2026-11-20).** `/configure/workstation` opened once the Workstation had its own 3D model. Both builders are one page, `src/components/configure/Builder.astro`, with `kind`; `data.ts` switches sizes, options and defaults with `useKind()`. Workstation: 10 ft $18,500 and 20 ft $75,000, climate control and the built-in desk included, white composite or premium wood (free, 20 ft only), Starlink $850, 6 ft light $3,000, 28 ft tower $13,300 (20 ft), and generator hookup, extra desks, fridge, microwave, TV and whiteboard quoted. Every Workstation "Design yours" now goes there; the /configure card uses `configure-workstation.jpg`, a capture of the model.
 - **Where "Design yours" goes (Nate, 2026-11-18):**
   - Anywhere general (nav, homepage hero, phone bar, `/demo`): `/configure`, which asks which trailer. Only Cargo has a builder, so Workstation and Event are greyed out there with a "Request a build" link.
   - On the Cargo lineup panel and the Cargo page: straight to `/configure/cargo`.
