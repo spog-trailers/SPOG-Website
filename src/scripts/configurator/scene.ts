@@ -22,7 +22,15 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { HorizontalBlurShader } from 'three/addons/shaders/HorizontalBlurShader.js';
 import { VerticalBlurShader } from 'three/addons/shaders/VerticalBlurShader.js';
 import { FLOOR, NOSE, axleCenter, heightFor, roofFor, widthFor } from './dims';
-import { interiorView } from './trailer';
+import type { Body } from './trailer';
+
+/** A Cargo's body, for framing before the first trailer is built. The trailer reports its own (TrailerParts.body). */
+const cargoBody = (L: number): Body => ({
+  length: L, W: widthFor(L), H: heightFor(L), floor: FLOOR, roof: roofFor(L),
+  wheels: new THREE.Vector3(L / 2 - NOSE - axleCenter(L), 1.7, widthFor(L) / 2),
+  eye: new THREE.Vector3(-L / 2 + 0.35, FLOOR + 4.7, 0),
+  look: new THREE.Vector3(L / 2 - NOSE - 0.5, FLOOR + 3.3, 0),
+});
 
 export type ViewName = 'front' | 'side' | 'rear' | 'street' | 'top' | 'wheels' | 'interior';
 export const VIEW_ORDER: ViewName[] = ['front', 'side', 'rear', 'street', 'top', 'interior'];
@@ -220,7 +228,8 @@ export function createStage(container: HTMLElement, options: StageOptions = {}) 
   }
 
   // ---------------------------------------------------------------- sizing
-  let trailerLength = 20;
+  // The body being shown. The Workstation is longer and taller than the Cargo (2026-11-20), so framing reads it.
+  let body: Body = cargoBody(20);
   let tall = false; // a mast stands well above the roof, so the camera backs off and aims higher
   let tallTop = 0; // height of the highest part off the ground, in feet. // SOURCE (price sheet 2026-11-20): the 28 ft tower
   /**
@@ -229,7 +238,7 @@ export function createStage(container: HTMLElement, options: StageOptions = {}) 
    * the tower's light bar stays in frame on a 16:9 stage as well as on a phone.
    */
   // SOURCE (price sheet 2026-11-20): the tower is 28 ft, drawn at full height.
-  const liftFor = () => (tall ? Math.max(1, 1 + (tallTop - roofFor(trailerLength) - 6.6) / 3.8) : 0);
+  const liftFor = () => (tall ? Math.max(1, 1 + (tallTop - body.roof - 6.6) / 3.8) : 0);
   const resize = () => {
     const w = container.clientWidth || 1;
     const h = container.clientHeight || 1;
@@ -266,7 +275,7 @@ export function createStage(container: HTMLElement, options: StageOptions = {}) 
 
   function viewPose(name: ViewName) {
     if (name === 'interior') {
-      const { eye, look } = interiorView(trailerLength);
+      const eye = body.eye.clone(), look = body.look.clone();
       const dir = look.clone().sub(eye).normalize();
       return { pos: eye, target: eye.clone().add(dir.multiplyScalar(0.6)), fov: FOV_INSIDE };
     }
@@ -274,14 +283,13 @@ export function createStage(container: HTMLElement, options: StageOptions = {}) 
     const narrow = Math.max(1, 1.5 / camera.aspect);
     const lift = name !== 'wheels' ? liftFor() : 0;
     // The 10 ft is 6.5 ft wide and lower, the 20 ft 8 ft wide. // SOURCE (price sheet 2026-11-20)
-    const W = widthFor(trailerLength);
-    const H = heightFor(trailerLength);
-    const r = (19 + trailerLength * 0.6) * (1 + lift * 0.24) * distance * v.zoom * (name === 'wheels' ? Math.sqrt(narrow) : narrow);
+    const H = body.H;
+    const r = (19 + body.length * 0.6) * (1 + lift * 0.24) * distance * v.zoom * (name === 'wheels' ? Math.sqrt(narrow) : narrow);
     const az = THREE.MathUtils.degToRad(v.az);
     const el = THREE.MathUtils.degToRad(v.el);
     const target = name === 'wheels'
-      ? new THREE.Vector3(trailerLength / 2 - NOSE - axleCenter(trailerLength), 1.7, W / 2)
-      : new THREE.Vector3(v.x, FLOOR + H * (name === 'top' ? 0.5 : 0.4) + lift * 2.2, 0);
+      ? body.wheels.clone()
+      : new THREE.Vector3(v.x, body.floor + H * (name === 'top' ? 0.5 : 0.4) + lift * 2.2, 0);
     const pos = new THREE.Vector3(Math.cos(el) * Math.cos(az), Math.sin(el), Math.cos(el) * Math.sin(az)).multiplyScalar(r).add(target);
     return { pos, target, fov: FOV };
   }
@@ -311,8 +319,14 @@ export function createStage(container: HTMLElement, options: StageOptions = {}) 
     moveHooks.forEach((f) => f());
   });
 
+  /** Frame a trailer by its own body (from TrailerParts.body). */
+  function setBody(b: Body) {
+    body = b;
+    if (!userMoved) setView(currentView, true);
+  }
+
   function setLength(L: number) {
-    trailerLength = L;
+    body = cargoBody(L);
     if (!userMoved) setView(currentView, true);
   }
 
@@ -377,6 +391,7 @@ export function createStage(container: HTMLElement, options: StageOptions = {}) 
     renderer,
     setView,
     setLength,
+    setBody,
     setTall,
     setActive,
     project,

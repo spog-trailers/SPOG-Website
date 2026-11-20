@@ -19,7 +19,7 @@ import Faq from '../components/sections/Faq.astro';
 import Footer from '../components/sections/Footer.astro';
 import MobileBar from '../components/sections/MobileBar.astro';
 import { footerColumns } from '../data/content';
-import { band, close, demo, design, faqs, meta, overview, overviewFeatures, runtime, specs, subnavLinks, tour, tourStandIn } from '../data/workstation2Page';
+import { band, close, demo, design, faqs, meta, overview, overviewFeatures, runtime, specs, subnavLinks, tour } from '../data/workstation2Page';
 // This page has no walkthrough form, so the footer's Contact link goes to the demo page.
 const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, href]) => [label, href === '#walkthrough' ? demo.href : href]) }));
 ---
@@ -40,7 +40,7 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
   each other; sections with inset media on a plain background don't count as photo sections):
     Hero P (Rivian drone clip, name, Nate's line, buttons, three numbers, "Starting at $18,500")  Cybertruck hero
     Redefining the site office L (stone, five tall cards in /workstation's feature card look: name and line on the photo or video, + opens the detail; Nate 2026-11-20)   Redefining the Pickup Truck
-    See how it works for you L (3D tour, Cargo model as a stand-in)          Nate's call, no Cybertruck twin
+    See how it works for you L (3D tour of the real Workstation model, 2026-11-20)        Nate's call, no Cybertruck twin
     Tough on the outside, comfortable on the inside D (warm, interior video)  same section, one-to-one
     Take it anywhere L (white, rural sunset photo, four cards, number row)  Take on Any Terrain
     Photo band P ("Powering the Builders of America." over the drone shot with the mast up; Nate 2026-11-20)
@@ -59,7 +59,7 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
   <ProductSubnav page={runtime} links={subnavLinks} buttons={[demo, design]} />
   <Ws2Hero />
   <FeatureCards id="overview" label="Redefining the site office" kicker="" heading={overview.heading} sub={overview.sub} features={overviewFeatures} look="work" tone="stone" />
-  <Cargo2Tour tour={tour} design={design} standIn={tourStandIn} />
+  <Cargo2Tour tour={tour} design={design} kind="workstation" posterAlt="Computer-generated model of the white 20 ft SPOG Workstation" />
   <Ws2Comfort />
   <Ws2Anywhere />
   <WorkPhoto id="band" image={band.image} alt={band.alt} position={band.position} heading={band.heading} />

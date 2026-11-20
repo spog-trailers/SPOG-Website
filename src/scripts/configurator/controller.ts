@@ -48,7 +48,7 @@ export function createController(stage: Stage, initial: TrailerConfig, onBuild?:
     }
     parts = buildTrailer(cfg, mats);
     stage.scene.add(parts.group);
-    stage.setLength(cfg.length);
+    stage.setBody(parts.body); // the Workstation is longer and taller than the Cargo
     stage.setTall(parts.tall, parts.top); // how high the 6 ft light or the 28 ft tower reaches, so the camera backs off far enough
     poseDoors(parts, doorT);
     onBuild?.(parts);

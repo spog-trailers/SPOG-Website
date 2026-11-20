@@ -125,6 +125,10 @@ export const TOOLS = [
 ];
 
 export interface BuildState {
+  /** Which trailer. Missing means the Cargo, so old Cargo links still work. */
+  kind?: 'cargo' | 'workstation';
+  /** Workstation interior. Premium wood is a free choice on the 20 ft only (SOURCE price sheet 2026-11-20). */
+  interior?: 'composite' | 'wood';
   length: number;
   paint: string;
   logoSpots: string[];
@@ -301,7 +305,10 @@ export function buildCode(s: BuildState) {
 /** What the 3D model draws. `desks` is the EXTRA desks; the standard corner desk is always on the model. */
 export function toTrailerConfig(s: BuildState, view: { doorsOpen: boolean; logoAspect: number }): TrailerConfig {
   const paint = pick(PAINTS, s.paint);
+  const kind = s.kind === 'workstation' ? 'workstation' : 'cargo';
   return {
+    kind,
+    interior: kind === 'workstation' && s.length === 20 && s.interior === 'wood' ? 'wood' : 'composite',
     length: s.length,
     paint: paint.hex,
     paintDark: paint.dark,
@@ -311,7 +318,7 @@ export function toTrailerConfig(s: BuildState, view: { doorsOpen: boolean; logoA
     logoSpots: [...s.logoSpots].sort().join(','),
     brand: s.logoSpots.length ? s.brandText.trim() || LOGO_PLACEHOLDER : '',
     logoAspect: view.logoAspect,
-    hvac: has(s, 'hvac'),
+    hvac: kind === 'workstation' || has(s, 'hvac'), // SOURCE (price sheet 2026-11-20): heating and cooling is included on every Workstation
     desks: has(s, 'extraDesk') ? s.desks : 0,
     benchLength: has(s, 'bench') ? s.benchLength : 0,
     whiteboard: has(s, 'whiteboard'),

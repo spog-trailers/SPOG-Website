@@ -33,6 +33,11 @@ import { FLOOR, NOSE, PANEL_ALONG, PANEL_PITCH, WALL, axleCenter, gearFor, heigh
  * cameras and the horn and strobe system were removed. // NATE (2026-11-20 answers)
  */
 export interface TrailerConfig {
+  /** Which trailer. 'cargo' (the default) builds the Cargo. 'workstation' builds the white 20 ft
+   *  Workstation from Nate's drone photos, or on the 10 ft the Cargo body with climate control. */
+  kind?: 'cargo' | 'workstation';
+  /** Workstation interior: white composite, or premium wood (20 ft only). */
+  interior?: 'composite' | 'wood';
   length: number;
   paint: string;
   paintDark: boolean;
@@ -382,6 +387,15 @@ export function createMaterials() {
     module: new THREE.MeshStandardMaterial({ color: '#e7e8e6', roughness: 0.55, metalness: 0.05 }),
     logo: decal(),
     brand: decal(),
+    // The Workstation (2026-11-20, from Nate's drone photos and the interior photos): gloss charcoal
+    // fenders, a white roof deck, and the premium wood interior's oak walls, walnut ceiling, black
+    // casework and warm light strip.
+    fender: new THREE.MeshPhysicalMaterial({ color: '#1c1d20', roughness: 0.35, metalness: 0.3, clearcoat: 0.5, clearcoatRoughness: 0.3 }),
+    roofWhite: new THREE.MeshStandardMaterial({ color: '#eceeed', roughness: 0.5, metalness: 0.1 }),
+    veneer: new THREE.MeshStandardMaterial({ map: (() => { const t = tile(woodTexture([196, 140, 80], 0), 4); t.rotation = Math.PI / 2; return t; })(), roughness: 0.35, metalness: 0 }),
+    walnut: new THREE.MeshStandardMaterial({ map: tile(woodTexture([110, 70, 40], 0), 4), roughness: 0.4, metalness: 0, side: THREE.DoubleSide }),
+    casework: new THREE.MeshStandardMaterial({ color: '#18181a', roughness: 0.75, metalness: 0.05 }),
+    amberStrip: new THREE.MeshStandardMaterial({ color: '#ffb366', emissive: '#ff9a3c', emissiveIntensity: 1.2, roughness: 0.4 }),
   };
 }
 export type Materials = ReturnType<typeof createMaterials>;
@@ -540,10 +554,10 @@ function archBand(len: number, bottom: number, top: number, r: number, t: number
  * a flat flange on the wall around it. Local x is centered on the arch, the wall's outer face is
  * at z = 0 and +z points outward.
  */
-function archTrim(m: Materials, len: number, bottom: number, top: number, flange = 0.2) {
+function archTrim(m: Materials, len: number, bottom: number, top: number, flange = 0.2, mat: Mat = m.aluminum) {
   const g = new THREE.Group();
   const part = (shape: THREE.Shape, depth: number, z: number) => {
-    const p = new THREE.Mesh(new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 20 }), m.aluminum);
+    const p = new THREE.Mesh(new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 20 }), mat);
     p.position.z = z;
     p.castShadow = true;
     p.receiveShadow = true;
@@ -558,8 +572,25 @@ function archTrim(m: Materials, len: number, bottom: number, top: number, flange
 
 // ---------------------------------------------------------------- the trailer
 
+/** The body's size and the inside camera, so the stage can frame any trailer (scene.ts). */
+export interface Body {
+  /** Overall body length, rear face to front face. */
+  length: number;
+  W: number;
+  H: number;
+  floor: number;
+  roof: number;
+  /** Where the wheels view looks. */
+  wheels: THREE.Vector3;
+  eye: THREE.Vector3;
+  look: THREE.Vector3;
+}
+
 export interface TrailerParts {
   group: THREE.Group;
+  body: Body;
+  /** Other doors that swing like the side door (the Workstation's second curb door). */
+  moreDoors?: THREE.Object3D[];
   barn: THREE.Object3D[];
   ramp: THREE.Object3D | null;
   sideDoor: THREE.Object3D;
@@ -576,6 +607,12 @@ export interface TrailerParts {
 }
 
 export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
+  // The 20 ft Workstation has its own body. The 10 ft Workstation is the 10 ft Cargo with climate
+  // control included (SOURCE price sheet 2026-11-20), so it takes the Cargo path with hvac on.
+  if (cfg.kind === 'workstation') {
+    if (cfg.length >= 16) return buildWorkstation20(cfg, m);
+    cfg = { ...cfg, hvac: true, interior: 'composite' };
+  }
   const g = new THREE.Group();
   const L = cfg.length;
   // Width, height and running gear depend on the length (dims.ts). // SOURCE (price sheet 2026-11-20)
@@ -1390,8 +1427,10 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     wheels: new THREE.Vector3(axleX - gear.spread, 0.5, wz + 0.3),
   };
 
+  const view = interiorView(L);
   return {
     group: g,
+    body: { length: L, W, H, floor: FLOOR, roof: ROOF, wheels: new THREE.Vector3(xf - gear.center, 1.7, W / 2), eye: view.eye, look: view.look },
     barn,
     ramp: null,
     sideDoor,
@@ -1415,6 +1454,7 @@ export function poseDoors(parts: TrailerParts, t: number) {
   parts.barn.forEach((door) => { door.rotation.y = Math.sign(door.position.z) * e * 1.95; });
   if (parts.ramp) parts.ramp.rotation.z = e * parts.rampAngle;
   parts.sideDoor.rotation.y = e * 1.7;
+  parts.moreDoors?.forEach((d) => { d.rotation.y = e * 1.7; });
 }
 
 /** Where the interior camera stands and looks, for a given length. */
@@ -1425,5 +1465,439 @@ export function interiorView(length: number) {
     // from the rear doors, at about chest height, looking straight down the middle (photo 60)
     eye: new THREE.Vector3(xr + 0.35, FLOOR + 4.7, 0),
     look: new THREE.Vector3(xf - 0.5, FLOOR + 3.3, 0),
+  };
+}
+
+// ---------------------------------------------------------------- the 20 ft Workstation
+
+/**
+ * The white 20 ft Workstation, built from Nate's drone photos of the finished trailer
+ * (_photos-original/2026-11-17/Website Photos, A013C0279 to A013C0321, 2026-11-20) and the interior
+ * photos, measured off the 30 in tires and the price sheet's 20 ft and 8 ft. The full build spec
+ * with every measurement and its photo is kept with the session notes; the main facts:
+ *   Body:  a 20 ft flat side plus a 2.85 ft truncated V nose (a 2.05 ft flat front face between two
+ *          chamfers), 8 ft wide (SOURCE price sheet), 8 ft tall box sitting 1.75 ft off the ground.
+ *   Nose:  gloss black diamond plate on its lower 4 ft, vertical SPOG marks, amber lights, and four
+ *          small black covers that are most likely the four outdoor outlets.
+ *   Curb:  two entry doors with windows and fold-down steps, one at each end, as in the photos.
+ *          (The sheet says one 36 in door plus a single rear door. Open question for Nate.)
+ *   Sides: one window each side over the axles, the SPOG logo under it. A low hatch at the front
+ *          of the street side and a louvered vent at its rear corner.
+ *   Rear:  one painted face with the climate control hatch low on the street side, five red lights.
+ *   Roof:  white, with five large all-black panels across it and a white vent over the nose.
+ *   Gear:  two axles about midway, 30 in tires flush with the walls in gloss charcoal fenders.
+ *   Masts: the 28 ft tower stands on the tongue just ahead of the face, with one camera, two
+ *          flood lights and a horn (SOURCE price sheet: one camera). The 6 ft light rises from the
+ *          nose roof. Starlink rides on the 6 ft light, else its own short pole, never the tower.
+ *   Inside: white composite or premium wood (oak walls, walnut ceiling, black casework, a warm
+ *          light strip), a vinyl floor, the climate control head and a closet door on the nose
+ *          wall, the battery units in closed boxes over the wheels, and the built-in work desk on
+ *          the street wall (placement is a modeling choice, no photo shows it).
+ */
+function buildWorkstation20(cfg: TrailerConfig, m: Materials): TrailerParts {
+  const g = new THREE.Group();
+  const S = 20, NZ = 2.85, FH = 1.025; // flat side, nose depth, half the front face
+  const W = 8, H = 8.05, FL = 1.75, RF = FL + H, Y0 = 2.05, CEIL = 9.35, WL = 0.2;
+  const xr = -(S + NZ) / 2, xf = xr + S, tip = xf + NZ;
+  const zi = W / 2 - WL, out = W / 2 + 0.02;
+  const at = (feet: number) => xr + feet; // feet forward of the rear corner
+  const wood = cfg.interior === 'wood';
+  const inner = wood ? m.veneer : m.liner;
+  const spots = new Set(cfg.brand ? cfg.logoSpots.split(',') : []);
+  const aspect = cfg.logoAspect || 4.876;
+
+  // running gear: two axles about midway, 30 in tires flush with the walls
+  const TR = 1.25, ts = TR / TIRE_R;
+  const axleX = at(9.9), spread = 1.35;
+  const archX0 = at(7.0), archX1 = at(12.6), archTop = 2.9;
+  const wz = W / 2 + 0.02 - 0.322 * ts;
+  const wellZ = wz - 0.322 * ts - 0.08;
+
+  // ------------------------------------------------------------ floor, roof, ceiling
+  const outline: [number, number][] = [[xr, -W / 2], [xf, -W / 2], [tip, -FH], [tip, FH], [xf, W / 2], [xr, W / 2]];
+  const notched: [number, number][] = [[xr, -W / 2], [archX0, -W / 2], [archX0, -wellZ], [archX1, -wellZ], [archX1, -W / 2], [xf, -W / 2], [tip, -FH], [tip, FH], [xf, W / 2], [archX1, W / 2], [archX1, wellZ], [archX0, wellZ], [archX0, W / 2], [xr, W / 2]];
+  const shapeOf = (pts: [number, number][]) => {
+    const sh = new THREE.Shape();
+    sh.moveTo(pts[0][0], pts[0][1]);
+    pts.slice(1).forEach(([a, b]) => sh.lineTo(a, b));
+    sh.closePath();
+    return sh;
+  };
+  const slab = (sh: THREE.Shape, depth: number, y: number, mat: Mat) => {
+    const mesh = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth, bevelEnabled: false }), mat);
+    mesh.rotation.x = -Math.PI / 2;
+    mesh.position.y = y;
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    return mesh;
+  };
+  g.add(slab(shapeOf(notched), Y0 - FL, FL, m.chassis), slab(shapeOf(outline), 0.1, RF - 0.1, m.roofWhite));
+  const floorTop = new THREE.Mesh(new THREE.ShapeGeometry(shapeOf(notched)), m.floor);
+  floorTop.rotation.x = -Math.PI / 2;
+  floorTop.position.y = Y0 + 0.002;
+  floorTop.receiveShadow = true;
+  const ceiling = new THREE.Mesh(new THREE.ShapeGeometry(shapeOf(outline)), wood ? m.walnut : m.ceiling);
+  ceiling.rotation.x = -Math.PI / 2;
+  ceiling.position.y = CEIL;
+  g.add(floorTop, ceiling);
+
+  // ------------------------------------------------------------ side walls, with the arches and the curb doors cut out
+  const doorSpans: [number, number][] = [[0.77, 3.92], [16.1, 19.25]]; // leaf, feet forward of the rear corner, measured off ws-282 and ws-283
+  const DH = 6.6;
+  const R = ARCH_R;
+  const wallShape = (holes: [number, number, number, number][]) => {
+    const sh = new THREE.Shape();
+    sh.moveTo(xr, FL);
+    sh.lineTo(archX0, FL);
+    sh.lineTo(archX0, archTop - R);
+    sh.absarc(archX0 + R, archTop - R, R, Math.PI, Math.PI / 2, true);
+    sh.lineTo(archX1 - R, archTop);
+    sh.absarc(archX1 - R, archTop - R, R, Math.PI / 2, 0, true);
+    sh.lineTo(archX1, FL);
+    sh.lineTo(xf, FL);
+    sh.lineTo(xf, RF);
+    sh.lineTo(xr, RF);
+    sh.closePath();
+    for (const [a, b, c, d] of holes) {
+      const h = new THREE.Path();
+      h.moveTo(a, c); h.lineTo(a, d); h.lineTo(b, d); h.lineTo(b, c); h.closePath();
+      sh.holes.push(h);
+    }
+    return sh;
+  };
+  for (const sz of [1, -1]) {
+    const sh = wallShape(sz > 0 ? doorSpans.map(([a, b]) => [at(a), at(b), Y0, Y0 + DH] as [number, number, number, number]) : []);
+    const skins: [Mat, number][] = sz > 0 ? [[m.paint, W / 2 - WL / 2], [inner, W / 2 - WL]] : [[m.paint, -W / 2], [inner, -W / 2 + WL / 2]];
+    for (const [mat, z] of skins) {
+      const p = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: WL / 2, bevelEnabled: false, curveSegments: 16 }), [mat, m.edge]);
+      p.position.z = z;
+      p.castShadow = true;
+      p.receiveShadow = true;
+      g.add(p);
+    }
+    // black diamond-plate cap along the top, the bottom rail broken by the fender, and the rear corner post
+    g.add(box(S, 0.31, 0.035, m.trim, xr + S / 2, RF - 0.155, sz * out));
+    g.add(box(archX0 - 0.22 - xr, 0.26, 0.035, m.trim, (xr + archX0 - 0.22) / 2, FL + 0.13, sz * out));
+    g.add(box(xf - archX1 - 0.22, 0.26, 0.035, m.trim, (archX1 + 0.22 + xf) / 2, FL + 0.13, sz * out));
+    g.add(box(0.24, H + 0.2, 0.035, m.trim, xr + 0.12, FL + (H + 0.2) / 2, sz * out));
+    // amber clearance lights along the top, red markers low at the rear
+    for (const f of [0.35, 4.75, 14.0, 19.6]) g.add(cyl(0.045, 0.03, m.marker, at(f), RF - 0.5, sz * (W / 2 + 0.012), 'z', 10));
+    for (const f of [0.45, 4.9]) g.add(cyl(0.045, 0.03, m.tail, at(f), FL + 0.4, sz * (W / 2 + 0.012), 'z', 10));
+    g.add(cyl(0.045, 0.03, m.tail, at(9.8), FL + 1.37, sz * (W / 2 + 0.012), 'z', 10));
+    // the window over the axles: 60 by 30 in (SOURCE price sheet), one on each side as in the photos
+    const wx = at(9.5), wy = FL + 5.75, ww = 5.0, wh = 2.5;
+    const fo = frame(ww + 0.2, wh + 0.2, 0.1, 0.05, m.black);
+    fo.position.set(wx, wy, sz * (W / 2 + 0.03));
+    const pane = plane(ww, wh, m.glass, wx, wy, sz * (W / 2 + 0.032));
+    if (sz < 0) pane.rotation.y = Math.PI;
+    g.add(fo, pane, box(0.06, wh, 0.04, m.black, wx, wy, sz * (W / 2 + 0.04)));
+    const fi = frame(ww + 0.2, wh + 0.2, 0.1, 0.03, m.black);
+    fi.position.set(wx, wy, sz * (zi - 0.02));
+    const day = plane(ww, wh, m.daylight, wx, wy, sz * (zi - 0.012));
+    if (sz > 0) day.rotation.y = Math.PI;
+    g.add(fi, day);
+    // the SPOG logo under the window, reading left to right on both sides
+    const logo = plane(3.1, 0.93, m.logo, at(9.6), FL + 3.6, sz * (W / 2 + 0.012));
+    if (sz < 0) logo.rotation.y = Math.PI;
+    g.add(logo);
+    // the buyer's logo, high between the rear door and the window, as on the BSW trailer
+    if (spots.has(sz > 0 ? 'right' : 'left')) {
+      const bh = Math.min(1.2, 2.2 / aspect);
+      const brand = plane(bh * aspect, bh, m.brand, at(5.5), FL + 7.0 - bh / 2, sz * (W / 2 + 0.014));
+      if (sz < 0) brand.rotation.y = Math.PI;
+      g.add(brand);
+    }
+  }
+
+  // ------------------------------------------------------------ street side: front hatch and rear vent
+  {
+    const hx = at(18.6);
+    const hf = frame(2.37, 1.94, 0.15, 0.05, m.trim);
+    hf.position.set(hx, FL + 1.33, -out);
+    g.add(hf, box(1.93, 1.45, 0.03, faces(m.edge, { nz: m.paint }), at(18.69), FL + 1.275, -out));
+    g.add(cyl(0.07, 0.06, m.chrome, at(18.7), FL + 0.62, -(out + 0.03), 'z', 16));
+    g.add(box(0.82, 1.4, 0.04, m.black, at(0.93), FL + 1.56, -out));
+    for (let i = 0; i < 8; i++) g.add(box(0.7, 0.05, 0.08, m.graphite, at(0.93), FL + 0.98 + i * 0.165, -(out + 0.03)));
+  }
+
+  // ------------------------------------------------------------ the two curb doors, steps and the grab rail
+  const doors: THREE.Group[] = [];
+  for (const [a, b] of doorSpans) {
+    const x0 = at(a), x1 = at(b), dw = x1 - x0, cx = (x0 + x1) / 2;
+    const tr = frame(dw + 0.38, DH + 0.25, 0.19, 0.05, m.trim);
+    tr.position.set(cx, Y0 + DH / 2 + 0.06, out);
+    g.add(tr);
+    const door = new THREE.Group();
+    door.position.set(x1, Y0, W / 2 - 0.02); // hinged on its nose-side edge, as in the photos
+    door.add(box(dw - 0.04, DH - 0.04, 0.09, faces(m.edge, { pz: m.paint, nz: inner }), -dw / 2, DH / 2, 0));
+    const gw = 1.92, gh = 3.06, gy = DH - 0.47 - gh / 2;
+    const ring = frame(gw + 0.2, gh + 0.2, 0.1, 0.03, m.board);
+    ring.position.set(-dw / 2, gy, 0.055);
+    door.add(ring, plane(gw, gh, m.glass, -dw / 2, gy, 0.052));
+    const inside = plane(gw, gh, m.daylight, -dw / 2, gy, -0.05);
+    inside.rotation.y = Math.PI;
+    door.add(inside);
+    door.add(cyl(0.07, 0.1, m.black, -dw + 0.31, FL + 3.66 - Y0, 0.07, 'z', 16));
+    for (const hy of [0.8, 3.4, 6.3]) door.add(box(0.07, 0.3, 0.05, m.black, -0.03, hy, 0.06));
+    g.add(door);
+    doors.push(door);
+    // fold-down steps: two ribbed aluminum treads on black stringers, with telescoping legs
+    g.add(box(dw - 0.9, 0.12, 0.3, m.black, cx, Y0 - 0.1, W / 2 + 0.15));
+    for (const [ty, tz] of [[1.33, W / 2 + 0.55], [0.67, W / 2 + 1.25]]) g.add(box(2.0, 0.07, 0.67, m.aluminum, cx, ty, tz));
+    for (const sx of [-1, 1]) {
+      const st = box(0.06, 2.3, 0.14, m.black, cx + sx * 1.03, (Y0 + 0.35) / 2, W / 2 + 0.85);
+      st.rotation.x = -Math.atan2(1.4, 1.7);
+      g.add(st, cyl(0.03, 0.67, m.chrome, cx + sx * 0.95, 0.335, W / 2 + 1.5, 'y', 10));
+    }
+  }
+  // a stainless grab rail at the front door, fixed to the wall
+  {
+    const a = new THREE.Vector3(at(15.95), FL + 3.3, W / 2 + 0.05), b = new THREE.Vector3(at(17.1), FL + 1.0, W / 2 + 1.3);
+    for (const off of [-0.12, 0.12]) {
+      const len = a.distanceTo(b);
+      const rail = cyl(0.04, len, m.chrome, (a.x + b.x) / 2 + off, (a.y + b.y) / 2, (a.z + b.z) / 2, 'y', 10);
+      rail.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
+      g.add(rail);
+    }
+  }
+
+  // ------------------------------------------------------------ the truncated V nose
+  const Ln = Math.hypot(NZ, W / 2 - FH);
+  const th = Math.atan2(W / 2 - FH, NZ);
+  for (const sz of [1, -1]) {
+    const n = new THREE.Group();
+    n.position.set((xf + tip) / 2, 0, (sz * (W / 2 + FH)) / 2);
+    n.rotation.y = sz > 0 ? th : Math.PI - th;
+    const corner = sz > 0 ? -1 : 1; // which end of the facet meets the side wall
+    n.add(box(Ln, H, WL, faces(m.edge, { pz: m.paint, nz: inner }), 0, FL + H / 2, -WL / 2));
+    n.add(box(Ln, 4.0, 0.035, m.trim, 0, FL + 2.0, 0.018)); // gloss black diamond plate on the lower 4 ft
+    n.add(box(Ln, 0.31, 0.035, m.trim, 0, RF - 0.155, 0.018));
+    const mark = plane(1.02, 0.306, m.logo, corner * (Ln / 2 - 0.5), RF - 1.1, 0.012);
+    mark.rotation.z = -Math.PI / 2;
+    n.add(mark);
+    for (const f of [0.2, 0.75]) n.add(cyl(0.04, 0.03, m.marker, corner * (Ln / 2 - f * Ln), RF - 0.42, 0.012, 'z', 10));
+    for (const f of [0.26, 0.61]) n.add(box(0.22, 0.42, 0.06, m.black, corner * (Ln / 2 - f * Ln), FL + 1.41, 0.05)); // the outdoor outlets
+    if (spots.has(sz > 0 ? 'noseRight' : 'noseLeft')) {
+      const bw = Math.min(2.4, 1.3 * aspect);
+      n.add(plane(bw, bw / aspect, m.brand, 0, FL + 5.6, 0.014));
+    }
+    g.add(n);
+  }
+  g.add(box(WL, H, FH * 2, faces(m.edge, { px: m.paint, nx: inner }), tip - WL / 2, FL + H / 2, 0));
+  g.add(box(0.035, 4.0, FH * 2, m.trim, tip + 0.018, FL + 2.0, 0), box(0.035, 0.31, FH * 2, m.trim, tip + 0.018, RF - 0.155, 0));
+  for (const sz of [1, -1]) g.add(cyl(0.07, H, m.trim, xf, FL + H / 2, sz * (W / 2 - 0.03)), cyl(0.07, H, m.trim, tip - 0.03, FL + H / 2, sz * (FH - 0.03)));
+
+  // ------------------------------------------------------------ rear face: climate control hatch, lights, flag-side logo
+  g.add(box(WL, H, W, faces(m.edge, { nx: m.paint, px: inner }), xr + WL / 2, FL + H / 2, 0));
+  for (const sz of [1, -1]) g.add(box(0.05, H + 0.2, 0.24, m.trim, xr - 0.01, FL + (H + 0.2) / 2, sz * (W / 2 - 0.12)));
+  g.add(box(0.05, 0.25, W, m.trim, xr - 0.01, RF - 0.125, 0), box(0.06, 0.4, W, m.trim, xr - 0.01, FL + 0.11, 0));
+  for (const zs of [0.44, 2.98, 3.97, 4.95, 7.55]) g.add(cyl(0.045, 0.03, m.tail, xr - 0.03, FL + 7.7, -W / 2 + zs, 'x', 10));
+  {
+    const zc = -W / 2 + (0.2 + 3.85) / 2;
+    const hf = frame(3.65, 3.72, 0.2, 0.05, m.trim);
+    hf.position.set(xr - 0.03, FL + 2.22, zc);
+    hf.rotation.y = Math.PI / 2;
+    g.add(hf, box(0.04, 3.06, 3.12, faces(m.edge, { nx: m.paint }), xr - 0.035, FL + 2.23, -W / 2 + 1.96));
+    g.add(cyl(0.07, 0.06, m.chrome, xr - 0.06, FL + 0.95, -W / 2 + 1.96, 'x', 16));
+    const rl = plane(0.94, 0.28, m.logo, xr - 0.035, FL + 6.9, -W / 2 + 7.0);
+    rl.rotation.y = -Math.PI / 2;
+    g.add(rl);
+    if (spots.has('rear')) {
+      const bw = Math.min(2.6, 1.3 * aspect);
+      const br = plane(bw, bw / aspect, m.brand, xr - 0.036, FL + 5.75, 1.8);
+      br.rotation.y = -Math.PI / 2;
+      g.add(br);
+    }
+  }
+
+  // ------------------------------------------------------------ roof: five large black panels on a white deck, a white vent
+  for (let i = 0; i < 5; i++) {
+    const px = xr + 0.61 + 3.76 / 2 + i * 3.82;
+    g.add(box(3.76, 0.1, 6.8, m.pvFrame, px, RF + 0.12, 0));
+    const top = plane(6.8, 3.76, m.pvTop, px, RF + 0.172, 0);
+    top.rotation.x = -Math.PI / 2;
+    top.rotation.z = Math.PI / 2;
+    top.receiveShadow = true;
+    g.add(top);
+  }
+  g.add(box(1.5, 0.06, 1.5, m.roofWhite, tip - 1.7, RF + 0.03, 0), box(1.2, 0.3, 1.2, m.equipment, tip - 1.7, RF + 0.2, 0));
+
+  // ------------------------------------------------------------ running gear and tongue
+  for (const sz of [1, -1]) g.add(box(S - 0.4, 0.3, 0.24, m.chassis, xr + S / 2 + 0.3, FL - 0.15, sz * 2.6));
+  for (const ax of [axleX - spread, axleX + spread]) {
+    g.add(cyl(0.12, wz * 2 - 0.3, m.chassis, ax, TR, 0, 'z', 12));
+    for (const sz of [1, -1]) {
+      const w = wheel(m);
+      w.scale.setScalar(ts);
+      w.position.set(ax, TR, sz * wz);
+      if (sz < 0) w.rotation.y = Math.PI;
+      g.add(w);
+    }
+  }
+  for (const sz of [1, -1]) {
+    const f = archTrim(m, archX1 - archX0, FL, archTop, 0.2, m.fender);
+    f.position.set((archX0 + archX1) / 2, 0, sz * W / 2);
+    if (sz < 0) f.rotation.y = Math.PI;
+    g.add(f);
+  }
+  const hitch = tip + 3.4;
+  for (const sz of [1, -1]) {
+    const x0 = xf - 0.4, z0 = sz * 3.0;
+    const len = Math.hypot(hitch - x0, z0);
+    const rail = box(len, 0.3, 0.2, m.chassis, (x0 + hitch) / 2, FL - 0.16, z0 / 2);
+    rail.rotation.y = Math.atan2(z0, hitch - x0);
+    g.add(rail);
+  }
+  g.add(box(0.9, 0.24, 0.3, m.chassis, hitch + 0.25, FL - 0.16, 0), cyl(0.16, 0.2, m.chassis, hitch + 0.62, FL - 0.2, 0, 'y', 14));
+  const jackX = hitch - 1.7;
+  g.add(cyl(0.1, FL + 1.0, m.chassis, jackX, (FL + 1.2) / 2, 0, 'y', 14), cyl(0.07, 0.5, m.aluminum, jackX, 0.3, 0, 'y', 12));
+  g.add(box(0.42, 0.04, 0.42, m.aluminum, jackX, 0.03, 0), box(0.2, 0.16, 0.2, m.aluminum, jackX, FL + 1.25, 0));
+
+  // ------------------------------------------------------------ the 6 ft light, the 28 ft tower, Starlink, cellular
+  // SOURCE (price sheet 2026-11-20): the 6 ft light is lights only; the 28 ft tower carries one
+  // camera, a light and a horn and is offered on the 20 ft. Both are drawn raised.
+  const lightX = tip - 0.45, lightTop = RF + 6.2;
+  if (cfg.light6) {
+    g.add(box(0.6, 0.06, 0.6, m.black, lightX, RF + 0.03, 0));
+    g.add(cyl(0.16, 3.2, m.black, lightX, RF + 1.66, 0, 'y', 16), cyl(0.12, 2.8, m.black, lightX, RF + 4.6, 0, 'y', 14));
+    g.add(box(0.12, 0.12, 1.5, m.black, lightX, lightTop - 0.6, 0));
+    for (const sz of [1, -1]) for (const dy of [-0.31, 0.31]) {
+      g.add(box(0.3, 0.55, 0.55, m.black, lightX, lightTop - 0.6 + dy, sz * 0.42));
+      g.add(box(0.02, 0.42, 0.42, m.lamp, lightX + 0.16, lightTop - 0.6 + dy, sz * 0.42));
+    }
+  }
+  const towerTop = 28;
+  if (cfg.tower) {
+    const mx = tip + 0.68;
+    g.add(box(0.9, 0.7, 2.0, m.trim, tip + 0.45, FL + 0.05, 0));
+    const stages: [number, number, number][] = [[0.26, FL + 0.4, 13.0], [0.2, 12.6, 18.5], [0.15, 18.1, 23.5], [0.11, 23.1, towerTop - 0.4]];
+    for (const [rr, y1, y2] of stages) {
+      g.add(cyl(rr, y2 - y1, m.black, mx, (y1 + y2) / 2, 0, 'y', 18));
+      g.add(cyl(rr + 0.04, 0.16, m.graphite, mx, y2 - 0.08, 0, 'y', 18));
+    }
+    g.add(box(mx - tip, 0.12, 0.3, m.black, (mx + tip) / 2, FL + 3.8, 0));
+    const torus = new THREE.Mesh(new THREE.TorusGeometry(0.38, 0.04, 8, 28), m.black);
+    torus.rotation.x = Math.PI / 2;
+    torus.position.set(mx, FL + 5.3, 0);
+    g.add(torus);
+    // head: a crossbar, two flood lights above it, one camera hanging from the curb end, the horn in the middle
+    const cy = towerTop - 0.9;
+    g.add(box(0.35, 0.08, 2.3, m.black, mx, cy, 0));
+    for (const sz of [1, -1]) {
+      const fl = new THREE.Group();
+      fl.position.set(mx, cy + 0.5, sz * 0.5);
+      fl.rotation.y = sz * 0.2;
+      fl.add(box(0.3, 0.67, 0.92, m.black, 0, 0, 0), box(0.02, 0.55, 0.8, m.lamp, 0.16, 0, 0));
+      g.add(fl);
+    }
+    g.add(cyl(0.04, 0.8, m.black, mx, cy - 0.4, 1.05, 'y', 8), cyl(0.3, 0.6, m.graphite, mx, cy - 1.1, 1.05, 'y', 20));
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(0.24, 20, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), m.glass);
+    dome.position.set(mx, cy - 1.4, 1.05);
+    g.add(dome);
+    const horn = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.26, 0.5, 22), m.equipment);
+    horn.rotation.z = Math.PI / 2;
+    horn.position.set(mx + 0.4, cy - 0.35, 0);
+    g.add(horn);
+  }
+  if (cfg.starlink) {
+    const dish = new THREE.Group();
+    if (cfg.light6) dish.position.set(lightX, lightTop + 0.22, 0);
+    else {
+      g.add(cyl(0.06, 1.3, m.black, xf + 0.45, RF + 0.65, 1.25, 'y', 12));
+      dish.position.set(xf + 0.45, RF + 1.4, 1.25);
+    }
+    dish.add(box(1.25, 0.09, 1.9, m.equipment, 0, 0, 0), box(0.3, 0.2, 0.3, m.graphite, 0, -0.13, 0));
+    dish.rotation.z = -0.28;
+    g.add(dish);
+  }
+  if (cfg.cellular) g.add(cyl(0.28, 0.14, m.black, xf + 0.32, RF + 0.07, 2.3, 'y', 24), cyl(0.02, 0.9, m.black, xf + 0.32, RF + 0.55, 2.3, 'y', 8));
+
+  // ------------------------------------------------------------ interior
+  // The nose wall, with the climate control head on its street half and a closet door on its curb half
+  const nwx = xf - 0.06;
+  g.add(box(0.12, CEIL - Y0, zi * 2, faces(m.edge, { nx: inner, px: inner }), nwx, (Y0 + CEIL) / 2, 0));
+  g.add(box(0.7, 2.2, 3.0, m.module, nwx - 0.41, Y0 + 3.8, -1.0));
+  g.add(box(0.02, 1.7, 2.7, m.board, nwx - 0.77, Y0 + 3.9, -1.0), box(0.02, 0.12, 2.6, m.black, nwx - 0.77, Y0 + 2.9, -1.0));
+  {
+    const cd = box(0.05, 6.67, 2.67, faces(m.edge, { nx: wood ? m.casework : m.board }), nwx - 0.09, Y0 + 3.335, 2.07);
+    const ct = frame(2.67 + 0.2, 6.67 + 0.15, 0.1, 0.03, m.black);
+    ct.position.set(nwx - 0.08, Y0 + 3.4, 2.07);
+    ct.rotation.y = Math.PI / 2;
+    g.add(cd, ct, cyl(0.07, 0.1, m.black, nwx - 0.14, Y0 + 3.0, 0.9, 'x', 14));
+  }
+  // the battery units, in closed boxes over the wheels (white with black banding, or black on wood),
+  // one lift-out panel per 5 kWh unit, street side first
+  let left = cfg.batteryModules;
+  for (const wall of [-1, 1]) {
+    const n = Math.min(wall < 0 ? Math.ceil(left / 2) : left, 2);
+    left -= n;
+    const ex0 = at(6.8), ex1 = at(13.0), el = ex1 - ex0, eh = wood ? 3.4 : 2.8;
+    const shell = wood ? m.casework : m.equipment;
+    const dark = wall > 0 ? { pz: m.chassis, ny: m.chassis } : { nz: m.chassis, ny: m.chassis };
+    const innerZ = zi - 1.2;
+    g.add(box(el, eh, wellZ - innerZ, faces(shell, dark), (ex0 + ex1) / 2, Y0 + eh / 2, wall * (innerZ + wellZ) / 2));
+    g.add(box(el, 0.08, zi - wellZ, faces(shell, dark), (ex0 + ex1) / 2, Y0 + eh - 0.04, wall * (wellZ + zi) / 2));
+    g.add(box(el + 0.16, 0.06, 1.36, wood ? m.casework : m.black, (ex0 + ex1) / 2, Y0 + eh + 0.03, wall * (zi - 0.62)));
+    // close the ends over the tire, so the wheel doesn't show from the room
+    for (const ex of [ex0 + 0.03, ex1 - 0.03]) g.add(box(0.06, eh, zi - wellZ, shell, ex, Y0 + eh / 2, wall * (wellZ + zi) / 2));
+    for (let i = 0; i < n; i++) {
+      const ux = ex0 + (el * (i + 0.5)) / Math.max(n, 1) + (n === 1 ? 0 : 0);
+      g.add(box(0.06, eh * 0.55, 0.02, m.black, ux, Y0 + eh * 0.5, wall * (innerZ - 0.012)));
+    }
+  }
+  // the built-in work desk (standard), on the street wall ahead of the battery box
+  {
+    const d0 = at(13.3), d1 = at(17.15), dz = -(zi - 1.0);
+    g.add(box(d1 - d0, 0.08, 2.0, wood ? m.casework : m.equipment, (d0 + d1) / 2, Y0 + 2.5, dz));
+    for (const ex of [d0 + 0.25, d1 - 0.25]) {
+      g.add(box(0.08, 0.08, 1.8, m.black, ex, Y0 + 2.42, dz));
+      g.add(box(0.08, 1.2, 0.08, m.black, ex, Y0 + 1.86, -(zi - 0.06)));
+    }
+    // the front street corner box behind the street hatch, and the climate control box at the rear
+    g.add(box(xf - 0.12 - at(17.4), 1.8, 1.5, wood ? m.veneer : m.equipment, (at(17.4) + xf - 0.12) / 2, Y0 + 0.9, -(zi - 0.75)));
+    g.add(box(2.4, 3.9, zi - 0.1, faces(wood ? m.veneer : m.equipment, {}), xr + WL + 1.2, Y0 + 1.95, -(zi + 0.1) / 2));
+  }
+  // lights: two rows of round recessed downlights, and on wood a warm strip where the walls meet the ceiling
+  for (let i = 0; i < 7; i++) for (const sz of [1, -1]) {
+    const lx = xr + (S * (i + 0.5)) / 7;
+    g.add(cyl(0.25, 0.03, m.board, lx, CEIL - 0.015, sz * 1.95, 'y', 28), cyl(0.2, 0.034, m.lamp, lx, CEIL - 0.02, sz * 1.95, 'y', 28));
+  }
+  if (wood) {
+    for (const sz of [1, -1]) g.add(box(S - 0.4, 0.05, 0.05, m.amberStrip, xr + S / 2, CEIL - 0.04, sz * (zi - 0.04)));
+    g.add(box(0.05, 0.05, zi * 2, m.amberStrip, xr + WL + 0.04, CEIL - 0.04, 0), box(0.05, 0.05, zi * 2, m.amberStrip, nwx - 0.1, CEIL - 0.04, 0));
+  } else {
+    for (const sz of [1, -1]) g.add(box(S - 0.2, 0.12, 0.12, m.black, xr + S / 2, CEIL - 0.06, sz * (zi - 0.06)));
+  }
+  for (const lx of [xr + S * 0.2, xr + S * 0.5, xr + S * 0.8]) {
+    const light = new THREE.PointLight(wood ? '#ffe2b8' : '#f6f8fc', 7, 22, 1.6);
+    light.position.set(lx, CEIL - 0.9, 0);
+    g.add(light);
+  }
+
+  const eye = new THREE.Vector3(xr + 0.9, Y0 + 4.3, 0.9);
+  const look = new THREE.Vector3(xf - 0.3, Y0 + 3.0, -0.2);
+  return {
+    group: g,
+    body: { length: S + NZ, W, H, floor: FL, roof: RF, wheels: new THREE.Vector3(axleX, 1.9, W / 2), eye, look },
+    barn: [],
+    ramp: null,
+    sideDoor: doors[1],
+    moreDoors: [doors[0]],
+    skipped: [],
+    tall: !!(cfg.light6 || cfg.tower),
+    top: cfg.tower ? towerTop + 0.4 : cfg.light6 ? lightTop + 0.3 : RF + 1.5,
+    rampAngle: 0,
+    anchors: {
+      solar: new THREE.Vector3(xr + S * 0.42, RF + 0.2, 0.6),
+      door: new THREE.Vector3(at(17.7), Y0, W / 2),
+      power: new THREE.Vector3(xf + 1.55, RF, 1.2),
+      wheels: new THREE.Vector3(axleX - spread, 0.6, wz + 0.3),
+    },
+    dispose() {
+      g.traverse((o) => {
+        const mesh = o as THREE.Mesh;
+        if (mesh.geometry) mesh.geometry.dispose();
+      });
+    },
   };
 }

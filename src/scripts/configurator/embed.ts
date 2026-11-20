@@ -14,10 +14,17 @@ import { createStage, type ViewName } from './scene';
 
 export { PAINTS };
 
-export function mountViewer(container: HTMLElement) {
+export function mountViewer(container: HTMLElement, opts: { kind?: 'cargo' | 'workstation' } = {}) {
   const state: BuildState = structuredClone(DEFAULT_BUILD);
   state.battery = '10'; // SOURCE price sheet 2026-11-20: the 20 ft's standard battery, so the tour shows the trailer as it comes
   state.options = ['hvac', 'etrackWalls']; // 2026-11-20: the desk is standard now, so it's not an option
+  if (opts.kind === 'workstation') {
+    // The white 20 ft Workstation as it comes: climate control included, the white composite
+    // interior, no mast (Nate's drone photos, 2026-11-20). /workstation-2's tour.
+    state.kind = 'workstation';
+    state.paint = 'white';
+    state.options = [];
+  }
   let doorsOpen = false;
   const config = () => toTrailerConfig(state, { doorsOpen, logoAspect: TEXT_ASPECT });
 

@@ -151,9 +151,9 @@ export const overviewFeatures: Feature[] = overview.cards.map((c, i) => {
 export const tour = {
   ...cargoTour,
   heading: ['See how it works', 'for you.'], // NATE (Cargo 2)
-  extras: 'Shown with optional E-track on the walls.', // NEW (2026-11-20 facts pass): overrides Cargo 2's line, because climate control is standard on every Workstation (price sheet 2026-11-20)
+  extras: 'Shown as the 20 ft comes, with climate control and the white composite interior.', // NEW (2026-11-20): the real Workstation model replaced the Cargo stand-in. Climate control standard SOURCE (price sheet 2026-11-20)
+  poster: '/images/configure-workstation.jpg', // a capture of the Workstation model (2026-11-20)
 };
-export const tourStandIn = 'This is the Cargo model, standing in until the Workstation model is built from the 360 shoot.'; // NEW, PLACEHOLDER (Nate: "Cargo 3d model for now")
 
 // ---------------------------------------------------------------- Tough on the outside, comfortable on the inside (Cybertruck, one-to-one)
 

@@ -18,11 +18,13 @@ import * as cargo from '../../data/cargo2Page';
  * (/workstation-2 shows the Cargo model until the Workstation model exists).
  */
 type Link = { label: string; href: string };
-interface Props { tour?: typeof cargo.tour; design?: Link; standIn?: string }
-const { tour = cargo.tour, design = cargo.design, standIn } = Astro.props;
+// kind: which trailer the model draws (the Workstation since 2026-11-20). posterAlt describes the still.
+interface Props { tour?: typeof cargo.tour; design?: Link; standIn?: string; kind?: 'cargo' | 'workstation'; posterAlt?: string }
+const { tour = cargo.tour, design = cargo.design, standIn, kind = 'cargo', posterAlt = 'Computer-generated model of the black 20 ft SPOG Cargo' } = Astro.props;
+const paint0 = kind === 'workstation' ? 0 : 1; // White for the Workstation, Black for the Cargo, as in the photos
 const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border border-[#cfd0d2] bg-white/70 px-4 t-label text-ink transition-colors hover:border-[#8f9195] aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-white';
 ---
-<section id="tour" aria-label="Take a tour of the Cargo" data-hide-mobilebar class="overflow-hidden bg-[linear-gradient(to_bottom,#efefef_0%,#f7f7f7_45%,#ffffff_100%)] pb-[110px] pt-[120px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
+<section id="tour" aria-label={kind === 'workstation' ? 'Take a tour of the Workstation' : 'Take a tour of the Cargo'} data-kind={kind} data-paint={PAINTS[paint0].id} data-hide-mobilebar class="overflow-hidden bg-[linear-gradient(to_bottom,#efefef_0%,#f7f7f7_45%,#ffffff_100%)] pb-[110px] pt-[120px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
   <div class="wrap flex flex-col items-center text-center"><!-- centered over the model (Nate, 2026-11-19) -->
     <WorkTitle lines={tour.heading} />
     <a href={design.href} class="mt-8 inline-flex h-[50px] items-center justify-center border-[1.5px] border-coal bg-coal px-8 t-btn text-white no-underline transition-colors hover:border-gold hover:bg-gold hover:text-black">{design.label}</a>
@@ -30,7 +32,7 @@ const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border bord
 
   <div class="relative mx-auto mt-6 h-[clamp(360px,64vh,740px)] max-w-[1640px] max-[640px]:h-[min(62svh,460px)]">
     <div data-tour-stage class="absolute inset-y-0 inset-x-6 cursor-grab overflow-hidden rounded-[22px] active:cursor-grabbing max-[640px]:inset-x-3"></div>
-    <img data-tour-poster src={tour.poster} alt="Computer-generated model of the black 20 ft SPOG Cargo" class="pointer-events-none absolute inset-0 m-auto max-h-[80%] max-w-[86%] object-contain mix-blend-multiply transition-opacity duration-700" />
+    <img data-tour-poster src={tour.poster} alt={posterAlt} class="pointer-events-none absolute inset-0 m-auto max-h-[80%] max-w-[86%] object-contain mix-blend-multiply transition-opacity duration-700" />
     {standIn && <p class="pointer-events-none absolute left-10 top-4 z-[2] m-0 max-w-[340px] rounded-[10px] border border-dashed border-ink/35 bg-white/80 px-4 py-3 t-fine text-ink backdrop-blur-[6px] max-[640px]:left-6 max-[640px]:right-6">{standIn}</p>}
   </div>
 
@@ -44,9 +46,9 @@ const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border bord
 
     <div class="mt-6 flex flex-col items-center">
       <div role="group" aria-label="Exterior colors" class="flex flex-wrap justify-center gap-0.5">
-        {PAINTS.map((p, i) => <button type="button" data-tour-paint={p.id} data-name={p.name} aria-label={p.name} title={p.name} aria-pressed={i === 1 ? 'true' : 'false'} class:list={['tsw', p.matte && 'tsw-matte']} style={`--c:${p.hex}`}></button>)}
+        {PAINTS.map((p, i) => <button type="button" data-tour-paint={p.id} data-name={p.name} aria-label={p.name} title={p.name} aria-pressed={i === paint0 ? 'true' : 'false'} class:list={['tsw', p.matte && 'tsw-matte']} style={`--c:${p.hex}`}></button>)}
       </div>
-      <p class="mb-0 mt-2 t-label text-ink"><span data-tour-paint-name>{PAINTS[1].name}</span></p>
+      <p class="mb-0 mt-2 t-label text-ink"><span data-tour-paint-name>{PAINTS[paint0].name}</span></p>
     </div>
 
 
@@ -80,7 +82,7 @@ const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border bord
     const paintName = root.querySelector<HTMLElement>('[data-tour-paint-name]')!;
 
     // What the visitor picked. Clicks before the model loads are kept and applied when it does.
-    const want = { view: 'front', doors: false, paint: 'black' };
+    const want = { view: 'front', doors: false, paint: root.dataset.paint || 'black' };
     let viewer: Viewer | null = null;
     let loading = false;
     let onScreen = false;
@@ -92,7 +94,7 @@ const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border bord
       loading = true;
       try {
         const { mountViewer } = await import('../../scripts/configurator/embed');
-        viewer = mountViewer(stageEl!);
+        viewer = mountViewer(stageEl!, { kind: root.dataset.kind === 'workstation' ? 'workstation' : 'cargo' });
         viewer.setPaint(want.paint);
         if (want.doors) viewer.setDoors(true);
         if (want.view !== 'front') viewer.setView(want.view as never);
