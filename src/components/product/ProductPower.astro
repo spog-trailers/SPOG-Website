@@ -9,23 +9,25 @@ import { formatHours, runHours } from '../../scripts/runtime';
 // look="work" sets the heading in the heavy uppercase of the Cargo and Workstation pages.
 // id and keys are optional: /workstation-2 moves the section to #runtime and shows only the battery figure.
 // sheet: false hides the run-time sheet link on pages without the #sheet form.
-interface Props { page: ProductPage; look?: 'default' | 'work'; id?: string; keys?: string[]; sheet?: boolean }
-const { page, look = 'default', id = 'power', keys = ['Battery', 'Solar up to'], sheet = true } = Astro.props;
+// heading, intro and figures replace the default heading, line and headline numbers (/workstation-2).
+interface Props { page: ProductPage; look?: 'default' | 'work'; id?: string; keys?: string[]; sheet?: boolean; heading?: string; intro?: string; figures?: [string, string][]; battery?: number }
+const { page, look = 'default', id = 'power', keys = ['Battery', 'Solar up to'], sheet = true, heading = 'What it runs.', intro = 'Pick a battery size to see how long each one runs on a full charge.', figures, battery } = Astro.props;
 const work = look === 'work' ? 'font-black! uppercase leading-[.92]! tracking-[0em]!' : '';
 const p = lineupEntry(page.id);
-const headline = (p.stats as [string, string][]).filter(([k]) => keys.includes(k));
-const { batteries, defaultBattery } = page.power;
+const headline = figures ?? (p.stats as [string, string][]).filter(([k]) => keys.includes(k));
+const { batteries } = page.power;
+const defaultBattery = battery ?? page.power.defaultBattery;
 const list = page.power.devices.map((id) => ({ id, ...devices[id] }));
 const cols = list.length === 4 ? 'grid-cols-[repeat(4,1fr)] max-[1100px]:grid-cols-[repeat(2,1fr)]' : 'grid-cols-[repeat(3,1fr)] max-[900px]:grid-cols-[repeat(2,1fr)]';
 ---
-<section id={id} aria-label="Power" class="bg-black py-[130px] text-bone max-[640px]:py-20">
+<section id={id} aria-label="Power" data-power-tool class="bg-black py-[130px] text-bone max-[640px]:py-20">
   <div class="wrap">
-    <div class="grid grid-cols-[repeat(2,1fr)] items-end gap-14 max-[900px]:grid-cols-[repeat(1,1fr)] max-[900px]:gap-10">
+    <div class:list={['grid items-end', figures ? 'grid-cols-[minmax(0,1fr)] gap-12' : 'grid-cols-[repeat(2,1fr)] gap-14 max-[900px]:grid-cols-[repeat(1,1fr)] max-[900px]:gap-10']}>
       <div>
-        <Heading class={work ? `text-white ${work}` : "text-white"}>What it runs.</Heading>
-        <p class="mb-0 mt-[18px] max-w-[460px] t-body text-mute">Pick a battery size to see how long each one runs on a full charge.</p>
+        <Heading class={work ? `text-white ${work}` : "text-white"}>{heading}</Heading>
+        <p class="mb-0 mt-[18px] max-w-[460px] t-body text-mute">{intro}</p>
       </div>
-      <dl class="m-0 flex flex-wrap gap-y-6 border-t border-line">
+      <dl class:list={['m-0 border-t border-line', figures ? 'grid grid-cols-[repeat(3,minmax(0,1fr))] max-[640px]:grid-cols-[minmax(0,1fr)]' : 'flex flex-wrap gap-y-6']}>
         {headline.map(([k, v]) => (
           <div class="pr-10 pt-5 not-first:border-l not-first:border-line not-first:pl-10 max-[560px]:w-full max-[560px]:pr-0 max-[560px]:not-first:border-l-0 max-[560px]:not-first:border-t max-[560px]:not-first:pl-0">
             <dt class="t-label text-mute">{k}</dt>
@@ -74,7 +76,8 @@ const cols = list.length === 4 ? 'grid-cols-[repeat(4,1fr)] max-[1100px]:grid-co
 
 <script>
   import { formatHours, runHours } from '../../scripts/runtime';
-  const section = document.getElementById('power')!;
+  // Found by data attribute, so the tool works whatever id the page gives the section.
+  document.querySelectorAll<HTMLElement>('[data-power-tool]').forEach((section) => {
   const buttons = [...section.querySelectorAll<HTMLButtonElement>('[data-kwh]')];
   const tiles = [...section.querySelectorAll<HTMLElement>('[data-kw]')];
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -99,4 +102,5 @@ const cols = list.length === 4 ? 'grid-cols-[repeat(4,1fr)] max-[1100px]:grid-co
     });
   }
   buttons.forEach((b) => b.addEventListener('click', () => show(Number(b.dataset.kwh))));
+  });
 </script>

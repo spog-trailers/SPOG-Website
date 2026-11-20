@@ -1,0 +1,33 @@
+---
+import Ws2Card from './Ws2Card.astro';
+import Ws2Media from './Ws2Media.astro';
+import Ws2Text from './Ws2Text.astro';
+import WorkTitle from '../work/WorkTitle.astro';
+import { anywhere } from '../../data/workstation2Page';
+/**
+ * "Take it anywhere.", after Cybertruck's "Take on Any Terrain": the line, Nate's Rivian clip
+ * running large, four cards in the place of Cybertruck's drive modes (solar power, heat and AC,
+ * Starlink, hitch up and go), then the number row where Cybertruck puts 0 to 60, towing and power.
+ * The weight and tow vehicle are bracketed gaps until Joe supplies them.
+ */
+---
+<section id="anywhere" aria-label="Take it anywhere" class="bg-white pb-[120px] pt-[130px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
+  <div class="wrap">
+    <div class="max-w-[980px]">
+      <WorkTitle lines={anywhere.heading} />
+      <p class="mb-0 mt-6 max-w-[640px] t-body text-ink-soft">{anywhere.sub}</p>
+    </div>
+    <Ws2Media media={anywhere.lead} sizes="(max-width: 1392px) 100vw, 1248px" class="mt-14 block aspect-[16/9] w-full rounded-[22px] bg-stone-2 object-cover max-[640px]:mt-10 max-[640px]:aspect-[4/3]" />
+    <div class="mt-14 grid grid-cols-[repeat(4,minmax(0,1fr))] gap-5 max-[1100px]:grid-cols-[repeat(2,minmax(0,1fr))] max-[1100px]:gap-y-12 max-[560px]:grid-cols-[minmax(0,1fr)] max-[640px]:mt-12">
+      {anywhere.cards.map((c) => <Ws2Card card={c} sizes="(max-width: 560px) 100vw, (max-width: 1100px) 50vw, 320px" />)}
+    </div>
+    <dl class="m-0 mt-16 grid grid-cols-[repeat(3,minmax(0,1fr))] border-t border-stone-2 max-[640px]:mt-12 max-[640px]:grid-cols-[minmax(0,1fr)]">
+      {anywhere.stats.map(([v, k]) => (
+        <div class="flex flex-col-reverse gap-2 pt-7 not-first:border-l not-first:border-stone-2 not-first:pl-10 max-[640px]:flex-row-reverse max-[640px]:items-baseline max-[640px]:justify-between max-[640px]:py-5 max-[640px]:not-first:border-l-0 max-[640px]:not-first:border-t max-[640px]:not-first:pl-0">
+          <dt class="t-label text-ink-soft">{k}</dt>
+          <dd class="m-0 t-h2 normal-case text-coal"><Ws2Text text={v} /></dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>

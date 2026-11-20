@@ -1,34 +1,22 @@
 /**
- * Copy and data for /workstation-2, the new Workstation sales page draft (Nate, 2026-11-19).
- * /workstation stays as it was until Nate picks one.
+ * Copy and data for /workstation-2, the new Workstation sales page draft. /workstation stays as
+ * it was until Nate picks one.
  *
- * The brief (Nate, 2026-11-19): the buyers are general contractors and the business people
- * behind a construction job, and owners and executives visit the site, so comfort matters.
- * They care about power, security, connectivity and quality. Workstation is often the first
- * trailer on a site with no power. Heat and AC and the security mast come standard. It's also a
- * mobile office for content creators and digital nomads. It's rugged like every SPOG, and a step
- * more upscale than Cargo because of the premium, customizable interior.
- * He asked that the layout not copy Cargo 2. Tesla and Rivian only change a page's structure when
- * the buyer changes (research 2026-11-19), so this page is built from Cybertruck and Model S
- * chapters (one heading, one paragraph, big inset media, a stat row), R2's "Includes and
- * Optional" lists, Semi's service section and Fleet's "for" lines. No swipe cards, no options
- * checklist and no savings section, which are Cargo 2's.
+ * v3 (2026-11-20). Nate found v1 said the same thing over and over. The copy was rebuilt one-to-one
+ * on the Tesla Cybertruck page and reviewed in Notion (Company Roadmap > Website Build > "Workstation"),
+ * where every line below was approved. Each feature is said once, in one place. Each block names the
+ * Cybertruck section it mirrors.
  *
  * Copy marks:
- *   NATE     his own words, or his pick
- *   SOURCE   an approved line or fact. Where it comes from is named: the Workstation Trailer
- *            Messaging Report, the Product Wiki (Workstation Office SPOG Trailer), the Warranty
- *            Policy, the brand kit or the Trailer Customization Options sheet (SPOG-D-0001)
- *   NEW      written for this page, needs Nate's approval
- *   CONFIRM  a fact someone still has to confirm before launch
+ *   NATE     his own words, or his pick (Notion comments, 2026-11-19 and 20)
+ *   SOURCE   an approved fact: the Workstation Trailer Messaging Report, the Product Wiki, the
+ *            Warranty Policy, the Trailer Customization Options sheet or the SPOG runtime guide
+ *   NEW      written for this page and approved by Nate in the Notion doc (v3)
+ *   GAP      a [BRACKET] fact Joe still has to supply. Brackets show on the page on purpose.
  *
- * Rules this page keeps:
- *   - Lead with what's running (power, heat, AC, security, internet), then the interior as
- *     reassurance that it's a real office (messaging report guardrails).
- *   - No "unlimited power" and no year-round or off-grid absolutes until winter run time is
- *     tested. "No generator outside the office window" is the report's own line.
- *   - Nate's lengths only (10 or 20 ft). No solar watts, no price until Nate confirms one.
- *   - Every size is a "Workstation trailer". No edition names.
+ * Facts from Nate's comments: the 6 ft mast with work lights and a camera is standard, the 28 ft
+ * mast, a 360 camera and a horn are options. Outlets are 120, 208 or 240 V, as on Cargo. People
+ * power lights and laptops more than they charge tools. Joby gave permission for the case study.
  */
 import { shoot } from './content';
 import { tour as cargoTour } from './cargo2Page';
@@ -36,239 +24,222 @@ import { productPages, type ProductPage } from './productPages';
 
 export const meta = {
   title: 'SPOG Workstation | Solar power site office trailer', // SOURCE (current /workstation)
-  description: 'The SPOG Workstation is a site office trailer with its own solar power, heat and AC and a security mast, built in Middletown, New York, in 10 or 20 ft.', // NEW
+  description: 'The SPOG Workstation is a site office trailer with its own solar power, heat and AC and a security mast, built on a welded steel frame in Middletown, New York, in 10 or 20 ft.', // NEW
 };
 
 /** Workstation has no builder yet, so "Design yours" opens the build request form with Workstation picked. */
 export const design = { label: 'Design yours', href: '/?trailer=Workstation#design' }; // NATE (button and flow, 2026-11-18)
 export const demo = { label: 'Book a demo', href: '/demo' }; // NATE
 
+/** A photo or a looping video, with the words that go with it. */
+export type Media = { src?: string; video?: string; poster?: string; alt: string; position?: string };
+export type Card = { title: string; body: string; media: Media };
+
+// ---------------------------------------------------------------- hero (Cybertruck: the hero)
+
 export const hero = {
   name: 'Workstation',
-  line: 'Your site office shows up with its own solar power, heat and AC and a security mast, so you can run the job from day one.', // NEW. Nate wants a new line in place of "the day it lands"
-  // CONFIRM with Nate: "Starting at $15,000" as on Cargo 2? The homepage says "From $15,000" next to
-  // "10 or 20 ft", but the messaging report puts $15,000 on the 8 ft build. Null shows no price.
-  price: null as string | null,
-  video: shoot.wsHeroVideo, // Nate's drone loop, a Workstation on tow on a snowy mountain road
+  line: 'Your site office shows up with its own solar power, heat and AC and a security mast, so you can run the job without relying on anyone else.', // NATE (Notion, 2026-11-20)
+  price: null as string | null, // Ask Nate before showing a price (see CLAUDE.md)
+  video: shoot.wsHeroVideo,
   poster: shoot.wsHeroPoster,
   alt: 'Drone view of a SPOG Workstation on tow along a snowy mountain road',
   stats: [
-    ['Length', '10 or 20 ft'], // NATE (homepage lineup)
-    ['Battery', '5 to 40 kWh'], // SOURCE (Product Wiki, messaging report)
-    ['Heat, AC and security mast', 'Standard'], // NATE (2026-11-19)
+    ['Battery', '5 to 40 kWh'], // SOURCE (Product Wiki)
+    ['Length', '10 or 20 ft'], // NATE
+    ['Structural warranty', '3-year'], // SOURCE (Warranty Policy)
   ] as [string, string][],
 };
 
 export const subnavLinks: [string, string][] = [
   ['Overview', '#overview'],
-  ['Power', '#power'],
-  ['Security', '#security'],
-  ['Internet', '#internet'],
   ['Tour', '#tour'],
   ['Inside', '#inside'],
+  ['Anywhere', '#anywhere'],
+  ['Build', '#built'],
+  ['Power', '#runtime'],
   ['Specs', '#specs'],
   ['FAQ', '#faq'],
 ];
 
-// ---------------------------------------------------------------- key features (video cards, Nate 2026-11-19)
+// ---------------------------------------------------------------- Redefining the site office (Cybertruck: Redefining the Pickup Truck)
 
-/**
- * Nate asked for a card section that shows off the key features, ideally with video. Order follows
- * what the buyer cares about (Nate): power, security, connectivity, comfort, then quality.
- * Videos are 4:5 loops cut from Nate's footage (forward then back, slowed and smoothed where needed).
- * Cards with a photo are waiting on footage: the mast going up at night and the heat and AC running
- * (both on the shot list).
- */
-type Card = { id: string; icon: string; title: string; line: string; poster: string; alt: string; video?: string; position?: string };
-export const features: { heading: string[]; cards: Card[] } = {
-  heading: ['Built around the people', 'who run the job.'], // NEW, on the messaging report's "the super, PM or owner is the hero"
+export const overview = {
+  heading: ['Redefining the', 'site office.'], // NEW
+  sub: 'Whatever the job, the lot or the crew, Workstation was built to be the office that runs it.', // NEW
   cards: [
     {
-      id: 'solar', icon: 'sun', title: 'Solar power',
-      line: 'Solar panels charge the battery that runs the lights, outlets, heat and AC and internet.', // NEW, facts SOURCE (messaging report)
-      video: '/images/ws2-card-solar.mp4', poster: '/images/ws2-card-solar.jpg', // From Nate's influencer video. CONFIRM the tilt-up side panel ships on the 10 and 20 ft
-      alt: 'A solar panel raised on the side of a dark SPOG Workstation, orange light along its edge',
+      title: 'Bring the whole team', // NEW (Cybertruck: Bring It All)
+      body: 'Up to 20 ft of finished office gives your super, PM and the subs room to work, with built-in desks and storage for plans, laptops and files. Daily reports, plan reviews and calls all happen in one place.', // NEW
+      media: { src: shoot.wsInteriorOffice, alt: 'Inside a SPOG Workstation, white walls, built-in desks and monitors on a blue accent wall', position: '45% 50%' },
     },
     {
-      id: 'security', icon: 'camera', title: 'Security mast',
-      line: 'Work lights and cameras rise over the site after the crew goes home.', // NEW on NATE (standard)
-      poster: shoot.wsMastTall, position: '50% 30%', // Video wanted: the mast going up at night (shot list)
-      alt: 'SPOG Workstation on a lot with its telescopic mast fully raised',
+      title: 'Power on tap', // NEW (Cybertruck: Power On Tap)
+      body: 'Up to 40 kWh of battery storage runs 120, 208 or 240 V outlets inside the office and on the outside of the trailer. Plug in work lights on the lot and the laptops, printers and monitors at the desks, and the battery runs all of it on stored solar power.', // NEW, voltages NATE (same as Cargo)
+      // Stand-in: SPOG's battery units, photographed in the black Cargo (the same system). Wanted (shot list): the batteries in a Workstation, and work lights plugged into the outside outlet.
+      media: { src: shoot.cargoStorageCard, alt: 'SPOG battery units standing on a low platform inside a trailer', position: '50% 60%' },
     },
     {
-      id: 'starlink', icon: 'wifi', title: 'Starlink',
-      line: 'Optional Starlink keeps the office online on rural sites with no cell signal.', // NEW, SOURCE (messaging report)
-      poster: shoot.cargoStarlinkCard, position: '50% 30%',
-      alt: 'Starlink dish on top of a SPOG mast against a blue sky',
+      title: 'Make it yours', // NEW (Cybertruck: Full Range of Motion)
+      body: 'Every Workstation is built to order, so the inside is laid out around how your team works. Pick the finish, the furniture and where everything goes with your SPOG contact.', // NEW
+      // Stand-in: the wall screen in the wood office. Wanted: a layout or walkthrough shot.
+      media: { video: '/images/ws2-card-interior.mp4', poster: '/images/ws2-card-interior.jpg', alt: 'A wall screen inside a wood-walled SPOG Workstation' },
     },
     {
-      id: 'climate', icon: 'climate', title: 'Heat and AC',
-      line: 'Heating and cooling come standard for the people who work in the office all day.', // NATE (standard), SOURCE (messaging report)
-      poster: shoot.wsHvac, position: '62% 50%', // Video wanted: the heat and AC running inside (shot list)
-      alt: 'Heating and cooling unit in an open side compartment of a white SPOG Workstation',
+      title: 'Lock down the site', // NEW (Cybertruck: Lockable Storage), NATE's direction ("the full security system is what makes it unique")
+      body: "A 6 ft mast with work lights and a camera comes standard and keeps watch over the site after the crew goes home. Step up to the optional 28 ft mast to see more of the lot, and add a 360 camera and a horn that scares off anyone who shouldn't be there.", // NEW, facts NATE (2026-11-20)
+      // Wanted: a night video of the mast going up with the lights on.
+      media: { src: shoot.wsSecurityMast, alt: 'Work lights and two dome cameras on top of a SPOG security mast', position: '50% 45%' },
     },
     {
-      id: 'interior', icon: 'desk', title: 'Premium interior',
-      line: 'Wood walls, warm lighting and room for your screens, plans and client meetings.', // NEW
-      video: '/images/ws2-card-interior.mp4', poster: '/images/ws2-card-interior.jpg', // From Nate's influencer video (the wall screen and wood slats)
-      alt: 'A wall screen showing a SPOG trailer inside a wood-walled SPOG Workstation',
+      title: 'Throw the job at it', // NEW (Cybertruck: Throw Anything at It)
+      body: 'Every Workstation rides on a welded steel frame, drawn in CAD to carry the weight of the solar, the battery and the whole office. Gravel roads, muddy lots and a season of snow come with the job, and the frame is built to take them.', // NEW, steel frame NATE
+      media: { video: '/images/cargo2-weld-loop.mp4', poster: '/images/cargo2-weld-loop.jpg', alt: 'A welder joining a steel trailer frame in the SPOG shop' },
     },
-    {
-      id: 'tow', icon: 'truck', title: 'Moves with the job',
-      line: 'It rides on its own trailer frame, so the office tows to the next site with you.', // NEW on SOURCE (messaging report: "tow on a trailer frame and move with the job")
-      video: '/images/ws2-card-tow.mp4', poster: '/images/ws2-card-tow.jpg', // Nate's "Mountain Shot", cropped to keep the pickup out
-      alt: 'A dark SPOG Workstation parked on a hilltop with snowy mountains behind it',
-    },
-    {
-      id: 'built', icon: 'shield', title: 'Built in Middletown',
-      line: 'Welded, wired and tested by our own crew in Middletown, NY, USA.', // NEW on SOURCE (Objections & FAQ), place NATE (Cargo 2)
-      video: '/images/cargo2-weld-loop.mp4', poster: '/images/cargo2-weld-loop.jpg', // Same welding loop as Cargo 2
-      alt: 'A welder joining a steel trailer frame in the SPOG shop',
-    },
-  ],
+  ] as Card[],
 };
 
-// ---------------------------------------------------------------- comes standard (R2 "Includes" and "Optional")
+// ---------------------------------------------------------------- 3D tour (no Cybertruck twin), placed by Nate after the overview
 
-export const standard = {
-  heading: ['Power, heat, AC and security', 'come standard.'], // NEW
-  body: 'Every Workstation trailer leaves Middletown with the essentials built in, and you add the rest to fit how your team works.', // NEW
-  image: '/images/lineup-workstation.webp', // Nate's own cut-out of the navy Workstation (2026-11-19)
-  imageSize: [1495, 838],
-  alt: 'Navy SPOG Workstation trailer with two doors and steps',
-  includes: [
-    { icon: 'sun', name: 'Roof solar and battery storage' }, // SOURCE (Product Wiki)
-    { icon: 'climate', name: 'Heating and cooling' }, // NATE, SOURCE (brand kit)
-    { icon: 'camera', name: 'Security mast with lights and cameras' }, // NATE (2026-11-19). CONFIRM on every size, and which cameras ship
-    { icon: 'desk', name: 'Built-in desks' }, // SOURCE (Product Wiki)
-    { icon: 'house', name: 'Insulated vinyl floor' }, // SOURCE (Product Wiki). CONFIRM insulated walls on every size (the messaging report says the larger Workstations are fully insulated)
-    { icon: 'check', name: 'White composite or premium wood interior' }, // SOURCE (Product Wiki). CONFIRM whether wood is an upgrade
-  ],
-  optional: ['Starlink', 'Cellular router', 'TV or monitor', 'Refrigerator and microwave', 'Company logo and colors', 'Generator hookup'], // SOURCE (Product Wiki, options sheet, Nate's photo labels). CONFIRM the options sheet applies to Workstation
-  fine: 'Your SPOG contact will confirm what fits your build.', // NATE approved wording (Cargo 2)
-};
-
-// ---------------------------------------------------------------- chapters (Cybertruck and Model S)
-
-export const power = {
-  heading: ['First on site,', 'running on its own power.'], // NEW
-  body: 'On a ground-up job the site office is often the first thing on the lot, and permanent power comes much later. Solar on the roof charges the battery that runs the lights, outlets, heat and AC and internet, with no generator outside the office window.', // NEW, last phrase SOURCE (messaging report one-liner)
-  media: { src: shoot.wsAerialMast, alt: 'SPOG Workstation from above, solar panels across the roof and the mast raised', position: '50% 50%' },
-  stats: [
-    ['5 to 40 kWh', 'Battery storage'], // SOURCE (Product Wiki)
-    ['Standard', 'Roof solar'], // SOURCE (Product Wiki)
-    ['Standard', 'Heat and AC'], // NATE, SOURCE (brand kit). No "hookup not needed" claim until winter run time is tested
-  ] as [string, string][],
-};
-
-/** The shared run-time tool, fed this page's battery sizes. 30 kWh is off because it isn't on the options sheet. */
-export const runtime: ProductPage = {
-  ...productPages.workstation,
-  power: { batteries: [5, 10, 20, 40], defaultBattery: 20, devices: ['computer', 'lightTower', 'saw', 'welder'] },
-};
-
-export const security = {
-  heading: ['Lights and cameras', 'over your site at night.'], // NEW
-  body: "A telescopic mast comes standard on the Workstation. It raises work lights and dome cameras above the site, so you can keep an eye on the job and the trailer after the crew goes home.", // NEW on NATE (standard, 2026-11-19). CONFIRM every size, and the camera setup that ships
-  media: [
-    { src: shoot.wsWarehouseMast, alt: 'White SPOG Workstation in the Middletown shop with its security mast raised', position: '58% 50%', caption: 'Raised on a Workstation in the Middletown shop' }, // NEW captions
-    { src: shoot.wsSecurityMast, alt: 'Work lights and two dome cameras on top of a SPOG security mast', position: '50% 45%', caption: 'Work lights and dome cameras' },
-  ],
-};
-
-export const internet = {
-  heading: ['Stay online where', 'cell service', 'drops out.'], // NEW
-  body: 'Add Starlink to keep email, plans and calls working on rural sites, or a cellular router where the signal is strong. Your super stays on site and online instead of driving off to find a signal.', // NEW, last line SOURCE (messaging report). Options SOURCE (Product Wiki, options sheet)
-  media: { src: shoot.wsStarlink, alt: 'Starlink dish on a SPOG mast against a blue sky', position: '50% 45%' },
-  note: 'Starlink and the cellular router are options.', // NEW
-};
-
-// ---------------------------------------------------------------- 3D tour (stand-in)
-
-/** The Cargo 2 tour, with the Cargo model standing in until the Workstation model exists (Nate, 2026-11-19). */
 export const tour = {
   ...cargoTour,
   heading: ['See how it works', 'for you.'], // NATE (Cargo 2)
-  extras: 'Shown with optional heat and AC, an office desk and tie-down track on the walls.',
 };
-export const tourStandIn = 'This is the Cargo model, standing in until the Workstation model is built from the 360 shoot.'; // NEW, PLACEHOLDER (Nate asked for the Cargo model for now)
+export const tourStandIn = 'This is the Cargo model, standing in until the Workstation model is built from the 360 shoot.'; // NEW, PLACEHOLDER (Nate: "Cargo 3d model for now")
 
-// ---------------------------------------------------------------- inside (Model S "interior" and R2 "Take a closer look")
+// ---------------------------------------------------------------- Tough on the outside, comfortable on the inside (Cybertruck, one-to-one)
 
-/**
- * Two real builds side by side, one in each finish (they're different trailers with different
- * layouts, so this isn't a finish switch). The 3D interior goes here once the 360 shoot exists.
- */
-export const inside = {
-  heading: ['An office you can', 'bring the client into.'], // NEW, built on SOURCE (messaging report: "looks professional when the client or the inspector walks in")
-  body: 'Your super spends the whole day in here, and owners, clients and inspectors walk through it, so every Workstation is heated and cooled and finished like a real office. Pick the interior that fits your company.', // NEW
-  builds: [
+export const comfort = {
+  heading: ['Tough on the outside,', 'comfortable on the inside.'], // NATE (Cybertruck's line)
+  sub: 'The outside is built for the job site, and the inside is a premium office. Choose wood walls with warm strip lighting and dark cabinets, or bright white composite, both on insulated vinyl floors.', // NEW, finishes SOURCE (Product Wiki)
+  lead: { video: '/images/ws2-comfort-loop.mp4', poster: '/images/ws2-comfort-loop.jpg', alt: 'The empty wood-walled office inside a SPOG Workstation, a desk and two monitors under warm light' } as Media, // Nate's Workstation Interior video, the empty office
+  cards: [
     {
-      name: 'White composite', // SOURCE (Product Wiki)
-      body: 'Bright, wipe-clean walls with built-in desks and a display wall for drawings, schedules and site meetings.', // NEW, display SOURCE (homepage specs)
-      src: shoot.wsInteriorOffice,
-      alt: 'Inside a SPOG Workstation, white walls, built-in desks and monitors on a blue accent wall',
-      position: '45% 50%',
+      title: 'Enter another world', // NEW (Cybertruck: Enter Another World)
+      body: 'Step off a muddy lot, close the door and the job site goes quiet. With no generator running outside the window, you can take a client call at 6 a.m., and the crew can start early on a residential street without waking the neighbors.', // NEW on SOURCE (messaging report: generator noise at 5 or 6 a.m.)
+      // Stand-in: the trailer at sunset. Wanted: early morning on a residential site.
+      media: { src: shoot.wsRuralSunset, alt: 'A dark SPOG trailer at sunset beside a farm field', position: '40% 50%' },
     },
     {
-      name: 'Premium wood', // SOURCE (Product Wiki, Nate's photo label). CONFIRM whether it's an upgrade
-      body: 'Wood walls, warm strip lighting and dark cabinets, for an office that looks the part when the owner comes through.', // NEW
-      src: shoot.wsInteriorPremium,
-      alt: 'Inside a SPOG Workstation, wood walls, dark cabinets and warm strip lighting along the ceiling',
-      position: '50% 50%',
+      title: 'Bring the owner in', // NEW (Cybertruck: Have More Fun)
+      body: "When the owner, the architect or the inspector stops by, they sit down in an office that shows your company runs a tight job. It's the room where the client meeting happens, so it's finished to look the part.", // NEW on SOURCE (messaging report)
+      media: { src: shoot.wsInteriorPremium, alt: 'Inside a SPOG Workstation, wood walls, dark cabinets and warm strip lighting along the ceiling', position: '50% 50%' },
     },
-  ],
-  fine: 'Two finished Workstations shown. Your SPOG contact works out the layout with you.', // NEW
+  ] as Card[],
 };
 
-// ---------------------------------------------------------------- who it's for (Fleet's "for" lines)
+// ---------------------------------------------------------------- Take it anywhere (Cybertruck: Take on Any Terrain, with its drive modes)
 
-export const uses = {
-  heading: ['Run a job site', 'or work from the road.'], // NEW
-  items: [
+export const anywhere = {
+  heading: ['Take it', 'anywhere.'], // NATE
+  sub: 'Solar power and heat and AC come built in, Starlink is one add-on away, and the whole office hitches up and tows, so you stay comfortable and connected wherever the job is.', // NEW
+  lead: { video: '/images/ws2-anywhere-loop.mp4', poster: '/images/ws2-anywhere-loop.jpg', alt: 'Drone view of a SPOG Workstation on tow behind an SUV on a snowy mountain road' } as Media, // Nate's new Rivian clip
+  cards: [
     {
-      title: 'Job site office', // NEW
-      body: 'For general contractors, supers and project managers who need a working office from the first day of a project, from daily reports and calls to the client walkthrough.', // NEW on SOURCE (messaging report)
-      src: shoot.wsLotMastSide,
-      alt: 'White SPOG Workstation on an empty lot with its mast raised under a blue sky',
-      position: '42% 50%',
-      // CONFIRM: a Workstation on a real job site would be stronger (Robert's shot list)
+      title: 'Solar power',
+      body: 'Panels across the roof recharge the battery every sunny day, and roof solar comes standard on every Workstation.', // NEW, SOURCE (Product Wiki)
+      media: { video: '/images/ws2-card-solar.mp4', poster: '/images/ws2-card-solar.jpg', alt: 'A solar panel raised on the side of a dark SPOG Workstation, orange light along its edge' },
     },
     {
-      title: 'Mobile office', // NATE (2026-11-19)
-      body: 'For content creators, consultants and digital nomads who want a real desk on the road, with heat and AC, a premium interior and optional Starlink.', // NEW on NATE
-      video: '/images/ws2-remote-loop.mp4', // From Nate's influencer video: the empty wood office, someone at the desk from behind, the monitors. No faces, car or driveway.
-      poster: '/images/ws2-remote-loop.jpg', // CONFIRM the person in it is cleared to appear
-      alt: 'Inside a wood-walled SPOG Workstation, a desk with two monitors and someone at work',
+      title: 'Heat and AC',
+      body: 'Heating and cooling come standard, with a hyper-heating heat pump on the larger Workstations for cold mornings. [HEAT PUMP: which model the 10 and 20 ft get]', // NEW on SOURCE (messaging report). GAP
+      media: { src: shoot.wsHvac, alt: 'Heating and cooling unit in an open side compartment of a white SPOG Workstation', position: '62% 50%' },
     },
-  ],
+    {
+      title: 'Stay connected',
+      body: 'Add Starlink and the office has internet wherever you park it, even on rural lots where phones lose signal. The super sends the daily report from the desk, and the phone rings when the client calls.', // NEW, NATE's direction
+      media: { src: shoot.cargoStarlinkCard, alt: 'Starlink dish on top of a SPOG mast against a blue sky', position: '50% 30%' },
+    },
+    {
+      title: 'Hitch up and go',
+      body: 'The office tows to the next job, so you skip the delivery and pickup fees a rented office charges each way.', // NEW on SOURCE (messaging report)
+      media: { video: '/images/ws2-card-tow.mp4', poster: '/images/ws2-card-tow.jpg', alt: 'A dark SPOG Workstation parked on a hilltop with snowy mountains behind it' }, // Nate's mountain shot
+    },
+  ] as Card[],
+  stats: [
+    ['[WEIGHT] lbs', 'Weight'], // GAP
+    ['10 or 20 ft', 'Length'], // NATE
+    ['[TOW VEHICLE]', 'Tows behind'], // GAP
+  ] as [string, string][],
 };
 
-// ---------------------------------------------------------------- what it replaces (approved brand line)
+// ---------------------------------------------------------------- Your office on the road (Cybertruck: The Future of Travel Is Autonomous)
 
-export const equation = {
-  heading: ['One trailer.', 'Three problems solved.'], // SOURCE (brand kit, approved)
-  sub: 'The office, the power and the security, in one tow.', // SOURCE (current /workstation)
-  parts: [
-    { icon: 'desk', title: 'Site office', body: 'Built-in desks, a finished interior and heat and AC as standard.' }, // SOURCE (Product Wiki, brand kit)
-    { icon: 'battery', title: 'Generator', body: 'Roof solar and 5 to 40 kWh of battery run the office.' }, // SOURCE (Product Wiki)
-    { icon: 'camera', title: 'Security', body: 'A mast with lights and cameras watches the site after the crew leaves.' }, // NATE (standard, 2026-11-19)
-  ],
-  result: { label: 'Equals', body: 'All three in one tow.' }, // SOURCE (current /workstation)
+export const road = {
+  heading: ['Your office', 'on the road.'], // NEW
+  body: 'The same office works for creators, consultants, digital nomads and anyone who runs a business from the road. Park it at a job, a campsite or your own driveway, open the door and get to work.', // NEW on NATE
+  media: { video: '/images/ws2-road-loop.mp4', poster: '/images/ws2-road-loop.jpg', alt: 'Someone at work at a desk with two monitors inside a wood-walled SPOG Workstation, seen from behind' } as Media, // Nate's Workstation Interior video and the influencer footage. No faces or cars.
 };
 
-// ---------------------------------------------------------------- built and serviced (Semi "Service your fleet")
+// ---------------------------------------------------------------- Built to last (Cybertruck: Designed to Be the Safest Truck on the Road)
 
 export const built = {
-  heading: ['Built in Middletown,', 'serviced on your site.'], // NEW
-  body: 'Our own crew welds, wires and tests every Workstation in Middletown, New York. If something needs work, we diagnose it remotely and send our mobile service fleet to your site.', // NEW on SOURCE (Warranty Policy, Objections & FAQ)
-  video: '/images/about-shop-loop.mp4', // Nate's warehouse fly-through and the welder on the shop floor (homepage About band)
-  poster: '/images/about-shop-loop.jpg',
-  stats: [
-    ['3 years', 'Limited structural warranty'], // SOURCE (Warranty Policy)
-    ['1 year', 'Limited parts warranty'], // SOURCE (Warranty Policy)
-    ['On site', 'Mobile service fleet'], // SOURCE (Warranty Policy)
-  ] as [string, string][],
+  heading: ['Built to last', 'on the job site.'], // NEW
+  sub: 'Other companies cut corners with staples and glue. Every Workstation is engineered, welded and wired by our own crew.', // NATE's line (Cargo 2)
+  cards: [
+    {
+      title: 'Built in Middletown, NY',
+      body: 'Our own crew welds, wires and finishes every Workstation in our shop in Middletown, New York, USA. Book a demo and see one being built.', // NEW
+      media: { video: '/images/about-shop-loop.mp4', poster: '/images/about-shop-loop.jpg', alt: 'Flying through the SPOG shop in Middletown, New York, past a welder at work' },
+    },
+    {
+      title: 'Certified and tested',
+      body: 'The wiring, battery, solar and outlets are designed together and tested as one system, and every Workstation is certified to [CERTIFICATION 1] and [CERTIFICATION 2].', // NEW on SOURCE (Objections & FAQ). GAP
+      media: { src: shoot.engineeringCad, alt: 'A SPOG engineer working on a trailer frame in CAD', position: '30% 50%' }, // Wanted: a testing or inspection shot
+    },
+    {
+      title: 'Service on site', // (Cybertruck: Full Self-Driving slot)
+      body: 'If something needs work, we diagnose it remotely and send our mobile service fleet to your site. Every Workstation carries a 3-year limited structural warranty and a 1-year limited parts warranty.', // SOURCE (Warranty Policy)
+      media: { src: shoot.wsFlagShop, alt: 'A white SPOG Workstation in the Middletown shop under an American flag', position: '62% 50%' }, // Wanted: a service truck on a site
+    },
+  ] as Card[],
+};
+
+// ---------------------------------------------------------------- Add what you need (Cybertruck: Add What You Need)
+
+export const options = {
+  heading: ['Add what', 'you need.'], // NEW
+  sub: 'Pick the extras that fit your crew, and your SPOG contact will confirm what fits your build.', // NEW
+  items: [
+    { icon: 'desk', name: 'Office desks', line: 'Add desks when more of your team works out of the trailer.' },
+    { icon: 'plug', name: 'Refrigerator and microwave', line: 'Keep lunch and cold drinks in the office so nobody has to drive into town.' },
+    { icon: 'wifi', name: 'Starlink', line: 'Satellite internet comes installed on the trailer and ready to use.' },
+    { icon: 'pulse', name: 'Cellular router', line: 'A router gives you fast internet on sites where the cell signal is strong.' },
+    { icon: 'screen', name: 'TV or monitor', line: 'Put the drawings and the schedule up on a big screen for site meetings.' },
+    { icon: 'check', name: 'Whiteboard', line: 'Plan the week where the whole crew can see it.' },
+    { icon: 'tag', name: 'Company logo and colors', line: "Put your company's name on the trailer at the front of every job." },
+    { icon: 'fuel', name: 'Generator hookup', line: 'Plug in a generator as a backup through a long stretch of cloudy days.' },
+  ], // NEW lines, options SOURCE (options sheet, Product Wiki)
+};
+
+// ---------------------------------------------------------------- Power anything (Cybertruck: Power Anything With Cybertruck)
+
+/** The shared run-time tool. 30 kWh is off because it isn't on the options sheet. It opens on 40 kWh so its tiles don't repeat the 20 kWh figures above them. */
+export const runtime: ProductPage = {
+  ...productPages.workstation,
+  power: { batteries: [5, 10, 20, 40], defaultBattery: 40, devices: ['computer', 'lightTower', 'saw', 'welder'] },
+};
+export const power = {
+  heading: 'Power anything with Workstation.', // NATE
+  intro: 'Pick a battery size and see how long it runs the lights, laptops and equipment on your site.', // NEW
+  figures: [
+    ['Laptop and Wi-Fi, 20 kWh', '5+ days'],
+    ['Light tower, 20 kWh', '20 hrs'],
+    ['MIG welder, 20 kWh', '6.7 hrs'],
+  ] as [string, string][], // SOURCE (SPOG runtime guide, via runtime.ts)
+};
+
+// ---------------------------------------------------------------- case study (Rivian Fleet: "Helping Amazon Electrify at Scale")
+
+export const caseStudy = {
+  heading: 'Ground control for Joby Aviation.', // NEW
+  image: '/images/ws2-joby.jpg', // Joby gave permission (Nate, 2026-11-20)
+  alt: 'A white SPOG trailer branded Joby Autonomy ground control station, parked beside an aircraft outside a hangar',
+  rows: [
+    ['The need', "A mobile ground control station for Joby Autonomy's flight program, able to set up on the flight line and run on its own power."],
+    ['What we built', 'A custom SPOG trailer to their specs, with entry steps, a side door and full Joby branding.'],
+    ['The result', 'The trailer served as ground control for the aircraft, running all analytics and communications and tracking the plane at all times. It never needed an outside power source.'],
+  ] as [string, string][], // NATE (Notion, 2026-11-20)
 };
 
 // ---------------------------------------------------------------- specs, close and FAQ
@@ -280,14 +251,17 @@ export const specs = {
   rows: [
     ['Type', 'Site office trailer'], // NEW
     ['Length', '10 or 20 ft'], // NATE
+    ['Weight', '[WEIGHT] lbs'], // GAP
+    ['Frame', 'Welded steel'], // NATE
     ['Battery storage', '5 to 40 kWh'], // SOURCE (Product Wiki)
     ['Roof solar', 'Standard'], // SOURCE (Product Wiki)
+    ['Outlets', '120, 208 or 240 V, inside and outside'], // NATE (same as Cargo)
     ['Heating and cooling', 'Standard'], // NATE, SOURCE (brand kit)
-    ['Security mast', 'Standard, with lights and cameras'], // NATE (2026-11-19). CONFIRM every size
+    ['Security', '6 ft mast with work lights and a camera, standard. 28 ft mast, 360 camera and horn, optional'], // NATE (2026-11-20)
     ['Interior', 'White composite or premium wood, with built-in desks'], // SOURCE (Product Wiki)
     ['Floor', 'Insulated vinyl'], // SOURCE (Product Wiki)
     ['Internet', 'Starlink or a cellular router, optional'], // SOURCE (Product Wiki, options sheet)
-    ['Buy or rent', 'Both'], // SOURCE (Product Wiki). CONFIRM rental is offered publicly
+    ['Certifications', '[CERTIFICATION 1] and [CERTIFICATION 2]'], // GAP
     ['Warranty', '1-year limited parts, 3-year limited structural'], // SOURCE (Warranty Policy)
     ['Service', 'Remote diagnosis and a mobile service fleet'], // SOURCE (Warranty Policy)
     ['Built in', 'Middletown, New York'], // SOURCE
@@ -296,36 +270,24 @@ export const specs = {
 };
 
 export const close = {
-  heading: 'Run the job from day one.', // SOURCE (messaging report one-liner, trimmed)
-  body: 'See a Workstation up close and get your questions answered.', // NEW, as on Cargo 2
+  heading: 'Run the job from day one.', // SOURCE (messaging report one-liner)
+  body: 'See a Workstation up close and get your questions answered.', // NEW
 };
 
-/** Six Workstation questions. The run-time answer is honest until winter run time is tested. */
+/** Only what the page doesn't already answer (v3). */
 export const faqs = [
   {
     q: 'Will the battery run the heat and AC all day?', // SOURCE (messaging report objection)
-    a: "It depends on the battery size, the weather and how the office is used. Book a demo and we'll walk you through the run time for your site and season.", // NEW. CONFIRM: swap in tested winter and summer run times when they exist
+    a: "It depends on the battery size, the weather and how the office is used. Book a demo and we'll walk you through the run time for your site and season.", // NEW
     link: { label: 'Book a demo', href: '/demo' },
   },
   {
-    q: 'Is the security mast included?', // NEW
-    a: 'Yes, a telescopic mast with work lights and cameras comes standard on the Workstation.', // NATE (2026-11-19). CONFIRM every size
+    q: 'Can I rent a Workstation instead of buying one?', // SOURCE (messaging report)
+    a: 'Yes, Workstations can be bought or rented. Ask your SPOG contact about rental terms for your project.', // SOURCE (Product Wiki). Nate to confirm renting is ready
   },
   {
-    q: 'Can I get internet on a site with no cell service?', // SOURCE (messaging report)
-    a: 'Yes, add Starlink for rural sites, or a cellular router where the signal is strong.', // NEW, options SOURCE
-  },
-  {
-    q: 'Can I add a generator hookup?', // NEW
-    a: 'Yes, a generator hookup is available as an option if you want a backup.', // NEW, from Nate's photo label "Optional generator hookup". CONFIRM
-  },
-  {
-    q: 'Can I rent a Workstation instead of buying one?', // SOURCE (messaging report, Most Aware)
-    a: 'Yes, Workstations can be bought or rented. Ask your SPOG contact about rental terms for your project.', // SOURCE (Product Wiki). CONFIRM rental terms are ready
+    q: 'Can I see one first?', // NEW
+    a: 'Yes, book an in-person demo or a video call, or call the shop at 1 (855) 720-2290.', // NEW
     link: { label: 'Book a demo', href: '/demo' },
-  },
-  {
-    q: 'What happens if something needs repair?', // SOURCE (homepage FAQ question)
-    a: 'Every Workstation comes with a 3-year limited structural warranty and a 1-year limited parts warranty. We diagnose problems remotely, and our mobile service fleet repairs on site.', // SOURCE (Warranty Policy)
   },
 ];

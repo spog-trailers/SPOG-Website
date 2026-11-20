@@ -1,0 +1,24 @@
+---
+import { caseStudy } from '../../data/workstation2Page';
+/**
+ * The Joby Aviation case study, after the full-width "Helping Amazon Electrify at Scale" band on
+ * Rivian's Fleet page: the photo full bleed, the need, what we built and the result over a dark
+ * scrim. Nate has Joby's permission (2026-11-20). Words are his.
+ */
+---
+<section id="case" aria-label="Case study, Joby Aviation" class="grain relative flex min-h-[88vh] items-end overflow-hidden bg-night pb-20 pt-40 text-white max-[640px]:min-h-0 max-[640px]:pb-14 max-[640px]:pt-[62vw]">
+  <img src={caseStudy.image} srcset={`${caseStudy.image.replace('.jpg', '-1200.jpg')} 1200w, ${caseStudy.image} 2400w`} sizes="100vw" alt={caseStudy.alt} loading="lazy" class="absolute inset-0 size-full object-cover object-[60%_50%] max-[640px]:h-[70vw] max-[640px]:object-[62%_50%]" />
+  <div class="absolute inset-0 z-[1] bg-[linear-gradient(to_right,rgb(0_0_0/.92)_0%,rgb(0_0_0/.8)_34%,rgb(0_0_0/0)_62%),linear-gradient(to_top,rgb(0_0_0/.75)_0%,rgb(0_0_0/0)_45%)] max-[640px]:bg-[linear-gradient(to_bottom,rgb(5_5_5/0)_0%,rgb(5_5_5/0)_40vw,#050505_70vw)]"></div>
+
+  <div class="wrap relative z-[3] w-full">
+    <h2 class="m-0 max-w-[620px] t-h2 text-white">{caseStudy.heading}</h2>
+    <dl class="m-0 mt-10 max-w-[480px]">
+      {caseStudy.rows.map(([k, v]) => (
+        <div class="border-t border-white/20 py-5 first:border-t-0 first:pt-0">
+          <dt class="t-label text-gold">{k}</dt>
+          <dd class="m-0 mt-2 t-body-sm text-white/85">{v}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>

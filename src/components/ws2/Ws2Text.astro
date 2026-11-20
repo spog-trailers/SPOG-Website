@@ -1,0 +1,14 @@
+---
+/**
+ * Copy text with its [BRACKET] gaps marked. Gaps are facts Joe still has to supply (weight, tow
+ * vehicle, certifications). They show on the draft on purpose, highlighted so nobody mistakes them
+ * for finished copy. Fill the fact in workstation2Page.ts and the highlight goes away by itself.
+ */
+interface Props { text: string }
+const parts = Astro.props.text.split(/(\[[^\]]+\])/);
+---
+{parts.map((p) => (p.startsWith('[') && p.endsWith(']') ? <span class="ws2-gap">{p}</span> : p))}
+
+<style is:global>
+  .ws2-gap { padding: 0 .2em; border-bottom: 1.5px dashed currentColor; border-radius: 3px; background: rgb(238 161 20 / .2); }
+</style>

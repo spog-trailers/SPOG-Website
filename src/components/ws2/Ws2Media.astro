@@ -1,0 +1,15 @@
+---
+import { srcset } from '../../data/content';
+import type { Media } from '../../data/workstation2Page';
+/**
+ * A photo or a looping video. Videos load nothing up front (preload none) and play only while
+ * they're on screen, through the page's [data-ws2-video] script. With reduced motion the poster stays.
+ */
+interface Props { media: Media; class?: string; sizes?: string }
+const { media, class: cls = '', sizes = '(max-width: 900px) 100vw, 640px' } = Astro.props;
+---
+{media.video ? (
+  <video data-ws2-video src={media.video} poster={media.poster} muted loop playsinline preload="none" aria-label={media.alt} class={cls}></video>
+) : (
+  <img src={media.src} srcset={srcset(media.src!)} sizes={sizes} alt={media.alt} loading="lazy" class={cls} style={`object-position:${media.position ?? '50% 50%'}`} />
+)}

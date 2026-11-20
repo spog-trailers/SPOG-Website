@@ -1,0 +1,28 @@
+---
+import Ws2Card from './Ws2Card.astro';
+import Ws2Media from './Ws2Media.astro';
+import WorkTitle from '../work/WorkTitle.astro';
+import { comfort } from '../../data/workstation2Page';
+/**
+ * "Tough on the outside, comfortable on the inside.", one-to-one with the Cybertruck section of
+ * the same name: the line on the finishes, the empty wood office running large (Nate's interior
+ * video), then two cards. It's the page's one warm dark chapter, so the wood and the lighting read rich.
+ * Keeps the id "inside" for the section bar.
+ */
+---
+<section id="inside" aria-label="Tough on the outside, comfortable on the inside" class="ws2-warm pb-[130px] pt-[140px] text-bone max-[640px]:pb-20 max-[640px]:pt-24">
+  <div class="wrap">
+    <div class="max-w-[980px]">
+      <WorkTitle lines={comfort.heading} tone="dark" />
+      <p class="mb-0 mt-6 max-w-[640px] t-body text-bone/75">{comfort.sub}</p>
+    </div>
+    <Ws2Media media={comfort.lead} sizes="(max-width: 1392px) 100vw, 1248px" class="mt-14 block aspect-[16/9] w-full rounded-[22px] bg-panel object-cover max-[640px]:mt-10 max-[640px]:aspect-[4/3]" />
+    <div class="mt-14 grid grid-cols-[repeat(2,minmax(0,1fr))] gap-6 max-[900px]:grid-cols-[minmax(0,1fr)] max-[900px]:gap-12 max-[640px]:mt-12">
+      {comfort.cards.map((c) => <Ws2Card card={c} aspect="aspect-[3/2]" tone="dark" />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .ws2-warm { background: radial-gradient(ellipse 90% 70% at 70% 0%, #1d1a16 0%, #0d0c0b 60%, #0a0a0b 100%); }
+</style>

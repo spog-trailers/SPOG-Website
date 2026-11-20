@@ -1,0 +1,17 @@
+---
+import Ws2Media from './Ws2Media.astro';
+import Ws2Text from './Ws2Text.astro';
+import type { Card } from '../../data/workstation2Page';
+/**
+ * One feature card, after the Cybertruck page: the photo or clip on top, a plain title, then two
+ * full sentences. Used by every card section on /workstation-2.
+ */
+interface Props { card: Card; aspect?: string; tone?: 'light' | 'dark'; sizes?: string }
+const { card, aspect = 'aspect-[4/5]', tone = 'light', sizes } = Astro.props;
+const dark = tone === 'dark';
+---
+<article class="min-w-0">
+  <Ws2Media media={card.media} sizes={sizes} class:list={['block w-full rounded-[18px] object-cover', aspect, dark ? 'bg-panel' : 'bg-stone-2']} />
+  <h3 class:list={['m-0 mt-6 t-h3', dark ? 'text-white' : 'text-coal']}>{card.title}</h3>
+  <p class:list={['mb-0 mt-2 max-w-[560px] t-body-sm', dark ? 'text-bone/72' : 'text-ink-soft']}><Ws2Text text={card.body} /></p>
+</article>

@@ -1,29 +1,22 @@
 ---
+import Ws2Card from './Ws2Card.astro';
+import WorkTitle from '../work/WorkTitle.astro';
 import { built } from '../../data/workstation2Page';
 /**
- * Built and serviced, after Semi's "Service Your Fleet": who builds it and who shows up when
- * something needs work, set over Nate's shop fly-through. Only the facts already confirmed for
- * Cargo 2 (the Warranty Policy and Nate). The video loads and plays only while the band is on
- * screen (the page's [data-ws2-video] script); the poster stays for reduced motion.
+ * "Built to last on the job site.", after Cybertruck's "Designed to Be the Safest Truck on the
+ * Road" and its three cards: built in Middletown, certified and tested (certifications bracketed
+ * until Joe names them), and service on site in the slot where Cybertruck has Full Self-Driving.
+ * Keeps the id "built".
  */
 ---
-<section id="built" aria-label="Built and serviced by SPOG" class="grain relative flex min-h-[86vh] items-end overflow-hidden bg-night pb-20 pt-40 text-white max-[640px]:min-h-[80svh] max-[640px]:pb-14 max-[640px]:pt-28">
-  <video data-ws2-video src={built.video} poster={built.poster} muted loop playsinline preload="none" aria-label="Flying through the SPOG shop in Middletown, New York, past a welder at work" class="absolute inset-0 size-full object-cover brightness-[.62] saturate-[.9]"></video>
-  <div class="absolute inset-0 z-[1] bg-[linear-gradient(to_top,rgb(0_0_0/.88)_0%,rgb(0_0_0/.45)_40%,rgb(0_0_0/.1)_70%),linear-gradient(to_bottom,#0a0a0b_0%,rgb(10_10_11/0)_18%)]"></div>
-
-  <div class="wrap relative z-[3] w-full">
-    <h2 class="m-0 max-w-[900px] t-h1">
-      {built.heading.map((l, i) => <Fragment>{i > 0 && <Fragment><br class="max-[640px]:hidden" /><span class="min-[641px]:hidden"> </span></Fragment>}{l}</Fragment>)}
-    </h2>
-    <p class="mb-0 mt-6 max-w-[560px] t-body text-white/80">{built.body}</p>
-    <dl class="m-0 mt-12 grid grid-cols-[repeat(3,minmax(0,1fr))] border-t border-white/25 max-[640px]:mt-9 max-[640px]:grid-cols-[minmax(0,1fr)]">
-      {built.stats.map(([v, k]) => (
-        <div class="flex flex-col-reverse gap-2 pt-6 not-first:border-l not-first:border-white/20 not-first:pl-10 max-[640px]:flex-row-reverse max-[640px]:items-baseline max-[640px]:justify-between max-[640px]:py-4 max-[640px]:not-first:border-l-0 max-[640px]:not-first:border-t max-[640px]:not-first:pl-0">
-          <dt class="t-label text-white/65">{k}</dt>
-          <dd class="m-0 t-h2 normal-case">{v}</dd>
-        </div>
-      ))}
-    </dl>
+<section id="built" aria-label="Built to last on the job site" class="bg-black pb-[130px] pt-[140px] text-bone max-[640px]:pb-20 max-[640px]:pt-24">
+  <div class="wrap">
+    <div class="max-w-[980px]">
+      <WorkTitle lines={built.heading} tone="dark" />
+      <p class="mb-0 mt-6 max-w-[640px] t-body text-bone/75">{built.sub}</p>
+    </div>
+    <div class="mt-14 grid grid-cols-[repeat(3,minmax(0,1fr))] gap-5 max-[1000px]:grid-cols-[minmax(0,1fr)] max-[1000px]:gap-12 max-[640px]:mt-12">
+      {built.cards.map((c) => <Ws2Card card={c} aspect="aspect-[4/3]" tone="dark" sizes="(max-width: 1000px) 100vw, 420px" />)}
+    </div>
   </div>
 </section>
-
