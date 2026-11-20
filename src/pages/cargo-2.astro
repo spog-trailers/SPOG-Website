@@ -7,6 +7,7 @@ import Cargo2Tour from '../components/cargo2/Cargo2Tour.astro';
 import Cargo2Replaces from '../components/cargo2/Cargo2Replaces.astro';
 import Cargo2Power from '../components/cargo2/Cargo2Power.astro';
 import ProductSize from '../components/product/ProductSize.astro';
+import WorkPhoto from '../components/work/WorkPhoto.astro';
 import Cargo2Close from '../components/cargo2/Cargo2Close.astro';
 import Ws2Features from '../components/ws2/Ws2Features.astro';
 import Ws2Anywhere from '../components/ws2/Ws2Anywhere.astro';
@@ -17,7 +18,7 @@ import Footer from '../components/sections/Footer.astro';
 import MobileBar from '../components/sections/MobileBar.astro';
 import { productPages } from '../data/productPages';
 import { footerColumns } from '../data/content';
-import { anywhere, built, demo, design, faqs, meta, options, overview, specs, subnavLinks } from '../data/cargo2Page';
+import { anywhere, band, built, demo, design, faqs, meta, options, overview, specs, subnavLinks } from '../data/cargo2Page';
 // This page has no walkthrough form, so the footer's Contact link goes to the demo page.
 const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, href]) => [label, href === '#walkthrough' ? demo.href : href]) }));
 ---
@@ -46,6 +47,7 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
     See how it works for you L (3D model of the real Cargo)
     Spend less on fuel D (heading and burn rate in one row, then one panel: fuel number and two points) [Model Y: More Affordable Than a Gas Car]
     Take it anywhere L (white, no lead photo, three wider cards, weight/length/axle row) [Take on Any Terrain]
+    Photo band P ("Haul your gear. Run your job." over the low-sun aerial; Nate 2026-11-20 asked for one to break up the look)
     Built for whatever the job site brings D (in the page container: frame photo, then designed and tested, the warranty in the center, insulation) [Designed to Be the Safest Truck]
     Add what you need L (white, three-card photo carousel with the 28 ft tower and camera, four tiles, builder) [Add What You Need]
     Size and specs D (the to-scale drawing with a pickup and the length picker from the retired /cargo, Nate 2026-11-20,
@@ -62,6 +64,7 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
   <Cargo2Tour />
   <Cargo2Replaces />
   <Ws2Anywhere heading={anywhere.heading} sub={anywhere.sub} lead={anywhere.lead} cards={anywhere.cards} stats={anywhere.stats} wide />
+  <WorkPhoto id="band" image={band.image} alt={band.alt} position={band.position} heading={band.heading} />
   <Ws2Built heading={built.heading} sub={built.sub} lead={built.lead} cards={built.cards} contained />
   <Ws2Options heading={options.heading} sub={options.sub} cards={options.cards} more={options.more} link={options.link} />
   <ProductSize page={productPages.cargo} look="work" rows={specs.rows} fine={specs.fine} note="Have a question about a spec? Ask on your demo." />

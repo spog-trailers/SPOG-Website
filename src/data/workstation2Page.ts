@@ -26,6 +26,7 @@
  * (as on Cargo 2) until Nate says to show them. People power lights and laptops more than they charge
  * tools. Joby gave permission for the case study.
  */
+import type { Feature } from './features';
 import { shoot } from './content';
 import { tour as cargoTour } from './cargo2Page';
 import { productPages, type ProductPage } from './productPages';
@@ -109,6 +110,41 @@ export const overview = {
     },
   ] as Card[],
 };
+
+/** Photo band (Nate, 2026-11-20: a giant photo with a little text, like /workstation's). */
+export const band = {
+  image: shoot.wsBand,
+  alt: 'A white SPOG Workstation with its light mast raised, parked in front of a warehouse',
+  position: '62% 55%',
+  heading: 'Powering the Builders of America.', // SOURCE (tagline)
+};
+
+/**
+ * The overview in the card look of /workstation's "Power, heat and air" section (Nate, 2026-11-20):
+ * tall cards with the name and one short line on the photo or video, and a "+" that opens a panel
+ * with the card's two sentences and the numbers. Built from `overview.cards` so the approved bodies
+ * stay in one place. The short lines are NEW. Numbers SOURCE (price sheet 2026-11-20).
+ */
+const lines: Record<string, { line: string; stats?: [string, string][] }> = {
+  'Bring the whole team': { line: 'An office the whole crew can work from.', stats: [['Length', '10 or 20 ft'], ['Desk', 'One built in, standard']] },
+  'Power on tap': { line: 'Outlets inside and out, on stored solar power.', stats: [['Battery', '5 to 20 kWh'], ['Outlets', 'Up to 4 outside and 8 inside']] },
+  'Make it yours': { line: 'Laid out around how your team works.', stats: [['Interior', 'White composite, or premium wood on the 20 ft']] },
+  'Lock down the site': { line: 'A camera and a light high over the lot.', stats: [['Tower', '28 ft, on the 20 ft'], ['Camera', 'AI or regular, same price']] },
+  'Throw the job at it': { line: 'A welded steel frame under the whole office.', stats: [['Frame', 'Welded steel'], ['Warranty', '3-year limited structural']] },
+};
+export const overviewFeatures: Feature[] = overview.cards.map((c, i) => {
+  const extra = lines[c.title];
+  return {
+    id: `ws-${i + 1}`,
+    title: c.title,
+    line: extra?.line ?? '',
+    image: c.media.video ? c.media.poster : c.media.src,
+    video: c.media.video,
+    alt: c.media.alt,
+    position: c.media.position,
+    panel: { intro: c.body, stats: extra?.stats },
+  };
+});
 
 // ---------------------------------------------------------------- 3D tour (no Cybertruck twin), placed by Nate after the overview
 

@@ -1,5 +1,6 @@
 ---
 import Eyebrow from '../ui/Eyebrow.astro';
+import Ws2Media from '../ws2/Ws2Media.astro';
 import Icon from '../ui/Icon.astro';
 import WorkTitle from '../work/WorkTitle.astro';
 import type { Feature } from '../../data/features';
@@ -15,6 +16,9 @@ import { small, srcset } from '../../data/content';
  * tone: section background, "light" (white) or "dark" (black). The panel is always white.
  * Every instance scopes its queries to its own root, so several can share a page.
  * Slot "kicker": optional markup in place of the small label above the heading (brand look).
+ * sub: an optional line under a work-look heading. tone "stone" is the light gray background.
+ * A feature with `video` plays it on the card face while it's on screen (Nate, 2026-11-20, for
+ * /workstation-2's overview), with `image` as its poster and the panel photo.
  */
 interface Props {
   id: string;
@@ -23,9 +27,10 @@ interface Props {
   heading: string[];
   features: Feature[];
   look?: 'work' | 'brand';
-  tone?: 'light' | 'dark';
+  tone?: 'light' | 'dark' | 'stone';
+  sub?: string;
 }
-const { id, label, kicker, heading, features, look = 'brand', tone = 'light' } = Astro.props;
+const { id, label, kicker, heading, features, look = 'brand', tone = 'light', sub } = Astro.props;
 const dark = tone === 'dark';
 const work = look === 'work';
 const edge = 'px-[max(36px,calc((100vw_-_1320px)/2_+_36px))] scroll-px-[max(36px,calc((100vw_-_1320px)/2_+_36px))] max-[640px]:px-5 max-[640px]:scroll-px-5';
@@ -34,10 +39,13 @@ const ctrl = dark
   ? 'border-white/25 text-white hover:border-white disabled:opacity-30'
   : 'border-coal/20 text-coal hover:border-coal disabled:opacity-30';
 ---
-<section id={id} aria-label={label} data-fc class:list={['overflow-hidden pb-[110px] pt-[120px] max-[640px]:pb-16 max-[640px]:pt-20', dark ? 'bg-black text-bone' : 'bg-white text-ink']}>
+<section id={id} aria-label={label} data-fc class:list={['overflow-hidden pb-[110px] pt-[120px] max-[640px]:pb-16 max-[640px]:pt-20', dark ? 'bg-black text-bone' : tone === 'stone' ? 'bg-stone text-ink' : 'bg-white text-ink']}>
   <div class="wrap">
     {work ? (
-      <WorkTitle lines={heading} tone={dark ? 'dark' : 'light'} />
+      <div>
+        <WorkTitle lines={heading} tone={dark ? 'dark' : 'light'} />
+        {sub && <p class:list={['mb-0 mt-6 max-w-[640px] t-body', dark ? 'text-bone/75' : 'text-ink-soft']}>{sub}</p>}
+      </div>
     ) : (
       <div>
         {Astro.slots.has('kicker') ? <slot name="kicker" /> : <Eyebrow gold={kicker} />}
@@ -58,7 +66,9 @@ const ctrl = dark
           aria-label={`${f.title}. ${f.line} Open details`}
           class="group relative block aspect-[2/3] w-[min(470px,80vw)] cursor-pointer overflow-hidden rounded-[18px] border-0 bg-coal p-0 text-left text-white outline-offset-4 focus-visible:outline-2 focus-visible:outline-gold"
         >
-          {f.image ? (
+          {f.video ? (
+            <Ws2Media media={{ video: f.video, poster: f.image, alt: '' }} class="absolute inset-0 size-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(.2,.6,.2,1)] group-hover:scale-[1.045]" />
+          ) : f.image ? (
             <img src={small(f.image)} alt="" loading="lazy" class="absolute inset-0 size-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(.2,.6,.2,1)] group-hover:scale-[1.045]" style={`object-position:${f.position ?? '50% 50%'}`} />
           ) : (
             <span aria-hidden="true" class="fc-plate absolute inset-0">

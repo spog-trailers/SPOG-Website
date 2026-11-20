@@ -6,7 +6,8 @@ import Cargo2Tour from '../components/cargo2/Cargo2Tour.astro';
 import Cargo2Specs from '../components/cargo2/Cargo2Specs.astro';
 import Cargo2Close from '../components/cargo2/Cargo2Close.astro';
 import Ws2Hero from '../components/ws2/Ws2Hero.astro';
-import Ws2Features from '../components/ws2/Ws2Features.astro';
+import FeatureCards from '../components/features/FeatureCards.astro';
+import WorkPhoto from '../components/work/WorkPhoto.astro';
 import Ws2Comfort from '../components/ws2/Ws2Comfort.astro';
 import Ws2Anywhere from '../components/ws2/Ws2Anywhere.astro';
 import Ws2Road from '../components/ws2/Ws2Road.astro';
@@ -18,7 +19,7 @@ import Faq from '../components/sections/Faq.astro';
 import Footer from '../components/sections/Footer.astro';
 import MobileBar from '../components/sections/MobileBar.astro';
 import { footerColumns } from '../data/content';
-import { close, demo, design, faqs, meta, runtime, specs, subnavLinks, tour, tourStandIn } from '../data/workstation2Page';
+import { band, close, demo, design, faqs, meta, overview, overviewFeatures, runtime, specs, subnavLinks, tour, tourStandIn } from '../data/workstation2Page';
 // This page has no walkthrough form, so the footer's Contact link goes to the demo page.
 const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, href]) => [label, href === '#walkthrough' ? demo.href : href]) }));
 ---
@@ -38,10 +39,11 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
   Order, the Cybertruck section each one mirrors, and the rhythm (never two photo sections next to
   each other; sections with inset media on a plain background don't count as photo sections):
     Hero P (Rivian drone clip, name, Nate's line, buttons, three numbers, "Starting at $18,500")  Cybertruck hero
-    Redefining the site office L (stone, five swipe cards)                   Redefining the Pickup Truck
+    Redefining the site office L (stone, five tall cards in /workstation's feature card look: name and line on the photo or video, + opens the detail; Nate 2026-11-20)   Redefining the Pickup Truck
     See how it works for you L (3D tour, Cargo model as a stand-in)          Nate's call, no Cybertruck twin
     Tough on the outside, comfortable on the inside D (warm, interior video)  same section, one-to-one
     Take it anywhere L (white, rural sunset photo, four cards, number row)  Take on Any Terrain
+    Photo band P ("Powering the Builders of America." over the drone shot with the mast up; Nate 2026-11-20)
     Your office on the road L (stone, clip and words)                        The Future of Travel Is Autonomous
     Built to last on the job site D (three cards)                            Designed to Be the Safest Truck
     Add what you need L (white, three photo cards, four tiles)               Add What You Need
@@ -56,10 +58,11 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
   <Nav cta={design} />
   <ProductSubnav page={runtime} links={subnavLinks} buttons={[demo, design]} />
   <Ws2Hero />
-  <Ws2Features />
+  <FeatureCards id="overview" label="Redefining the site office" kicker="" heading={overview.heading} sub={overview.sub} features={overviewFeatures} look="work" tone="stone" />
   <Cargo2Tour tour={tour} design={design} standIn={tourStandIn} />
   <Ws2Comfort />
   <Ws2Anywhere />
+  <WorkPhoto id="band" image={band.image} alt={band.alt} position={band.position} heading={band.heading} />
   <Ws2Road />
   <Ws2Built />
   <Ws2Options />

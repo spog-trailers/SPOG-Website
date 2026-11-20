@@ -69,6 +69,8 @@ export const shoot = {
   cargoSolar: '/images/cargo2-solar.jpg', // 53: high drone, five panels across the roof
   cargoSolarCard: '/images/cargo2-solar-card.jpg',
   cargoFrame: '/images/cargo2-frame.jpg', // Nate 2026-11-19 (Steel Frames.png): a steel floor frame with its crossmembers on the shop floor, more frames behind
+  cargoBand: '/images/cargo2-band.jpg', // Black Cargo 44: low-sun aerial on the lot, the Cargo 2 photo band (2026-11-20)
+  wsBand: '/images/ws2-band.jpg', // Website Photos A013C0293: the white 20 ft Workstation with its mast up in front of the warehouse, the Workstation 2 photo band (2026-11-20)
   cargoPowerWide: '/images/cargo2-power-wide.jpg', // Better Interior 60, wide 2.2:1 crop: battery units on both platforms (Cargo 2 power section, 2026-11-20)
   cargoInsulation: '/images/cargo2-insulation.jpg', // Nate 2026-11-19 (Image.png): steel frame wrapped in rigid foam board in the shop. The boards carry Owens Corning's Pink Panther.
   cargoInsulationCard: '/images/cargo2-insulation-card.jpg',

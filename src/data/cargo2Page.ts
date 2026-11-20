@@ -170,6 +170,15 @@ export const anywhere = {
   ] as [string, string][],
 };
 
+// ---------------------------------------------------------------- photo band (Nate, 2026-11-20: a giant photo with a little text, like /workstation's)
+
+export const band = {
+  image: shoot.cargoBand,
+  alt: 'A black SPOG Cargo on an empty lot at sunset, seen from above, solar panels across its roof',
+  position: '55% 60%',
+  heading: 'Haul your gear. Run your job.', // SOURCE (approved signature line, brand kit)
+};
+
 // ---------------------------------------------------------------- built (Cybertruck: Designed to Be the Safest Truck on the Road)
 
 export const built = {

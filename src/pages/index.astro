@@ -6,6 +6,8 @@ import ProofStrip from '../components/home2/ProofStrip.astro';
 import LineupScroll from '../components/home2/LineupScroll.astro';
 import SolutionCards from '../components/home2/SolutionCards.astro';
 import Statement from '../components/sections/Statement.astro';
+import ProductPower from '../components/product/ProductPower.astro';
+import { productPages } from '../data/productPages';
 import FeatureCards from '../components/features/FeatureCards.astro';
 import FutureLineup from '../components/home2/FutureLineup.astro';
 import AboutBand from '../components/home2/AboutBand.astro';
@@ -27,7 +29,7 @@ import { hero, madeOf, values, footerColumns, navLinks, faqs, statement } from '
 
   Order and rhythm (never two photo sections next to each other):
     Hero P (background video), Proof strip D (thin, with the US flag), Lineup L L D (sticky scroll,
-    Event at night) with the "See our future lineup" strip D, Solutions L (photo, video, photo cards), Statement P ("Bring your own power." over the snow tow video),
+    Event at night) with the "See our future lineup" strip D, Solutions L (photo, video, photo cards), What it runs D (the battery picker and run times from /workstation, Nate 2026-11-20), Statement P ("Bring your own power." over the snow tow video),
     What SPOG is made of D (feature cards), Our future lineup L (Garage, Disaster Relief, Camper),
     About P, FAQ L (from the old homepage), Close D
   Cut at Nate's call: Built different, Guarantee, How it works and the run-time sheet.
@@ -50,6 +52,9 @@ import { hero, madeOf, values, footerColumns, navLinks, faqs, statement } from '
   <ProofStrip />
   <LineupScroll />
   <SolutionCards />
+  <!-- "What it runs." from /workstation (Nate, 2026-11-20): pick a battery size and see the run times. The Workstation's
+       battery stops and devices (5 to 20 kWh, the same range as Cargo). No run-time sheet link, the homepage has no #sheet. -->
+  <ProductPower page={productPages.workstation} look="work" sheet={false} />
   <Statement eyebrow={null} words={statement.words} video={statement.video} poster={statement.poster} numbers={statement.numbers} lazy />
   <FeatureCards id="values" label={madeOf.label} kicker="" heading={madeOf.heading} features={values} tone="dark">
     <p slot="kicker" aria-label={`SPOG stands for ${madeOf.stands.join(' ')}`} class="m-0 flex flex-wrap items-center gap-x-[1.2em] gap-y-1 t-label text-mute">

@@ -13,6 +13,8 @@ export interface Feature {
   /** One short outcome line under the name, as on Pebble's cards. */
   line: string;
   image?: string;
+  /** A looping video for the card face, played only while on screen (Ws2Media). `image` is its poster and the panel photo. */
+  video?: string;
   alt?: string;
   position?: string;
   /** No-photo card: a large line icon (from `icons` in content.ts) or a mark set in type. */
