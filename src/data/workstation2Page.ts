@@ -138,7 +138,7 @@ export const anywhere = {
     {
       title: 'Solar power',
       body: 'Panels across the roof recharge the battery every sunny day, and roof solar comes standard on every Workstation.', // NEW, SOURCE (Product Wiki)
-      media: { video: '/images/ws2-card-solar.mp4', poster: '/images/ws2-card-solar.jpg', alt: 'A solar panel raised on the side of a dark SPOG Workstation, orange light along its edge' },
+      media: { src: '/images/ws2-card-roof.jpg', alt: 'Solar panels across the roof of a SPOG Workstation, seen from above' }, // Cropped from Nate's aerial photo (ws-aerial-mast), as approved in the doc
     },
     {
       title: 'Heat and AC',

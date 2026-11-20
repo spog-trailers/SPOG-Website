@@ -1,5 +1,6 @@
 ---
 import WorkTitle from '../work/WorkTitle.astro';
+import Ws2Text from '../ws2/Ws2Text.astro';
 import { srcset } from '../../data/content';
 import { specs as cargoSpecs } from '../../data/cargo2Page';
 // Another page can pass its own specs (/workstation-2). Cargo 2 uses the default.
@@ -22,7 +23,7 @@ const { specs = cargoSpecs } = Astro.props;
           {specs.rows.map(([label, value]) => (
             <div class="grid grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] gap-6 border-b border-line py-[18px] first:pt-0 max-[480px]:grid-cols-[minmax(0,1fr)] max-[480px]:gap-1">
               <dt class="t-fine text-mute">{label}</dt>
-              <dd class="m-0 t-body-sm font-semibold text-white">{value}</dd>
+              <dd class="m-0 t-body-sm font-semibold text-white"><Ws2Text text={value} /></dd>
             </div>
           ))}
         </dl>
