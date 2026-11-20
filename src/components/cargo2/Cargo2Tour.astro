@@ -1,7 +1,7 @@
 ---
 import WorkTitle from '../work/WorkTitle.astro';
 import { PAINTS } from '../../scripts/configurator/data';
-import { design, tour } from '../../data/cargo2Page';
+import * as cargo from '../../data/cargo2Page';
 /**
  * "Take a tour" (Rivian) on a Tesla-style studio plate: the configurator's 3D Cargo with no option
  * panel. Drag it around, jump to a view, open the doors, step inside and try the 12 colors.
@@ -12,7 +12,14 @@ import { design, tour } from '../../data/cargo2Page';
  * JavaScript or WebGL, a still of the same model holds the spot.
  * The background stays light on purpose: the canvas is see-through and the ground shadow is a
  * soft black, so it needs a light plate behind it.
+ *
+ * Props (optional, Cargo 2 uses the defaults): another page can pass its own copy and button, and a
+ * `standIn` note, shown as a dashed tag over the model while it stands in for another trailer
+ * (/workstation-2 shows the Cargo model until the Workstation model exists).
  */
+type Link = { label: string; href: string };
+interface Props { tour?: typeof cargo.tour; design?: Link; standIn?: string }
+const { tour = cargo.tour, design = cargo.design, standIn } = Astro.props;
 const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border border-[#cfd0d2] bg-white/70 px-4 t-label text-ink transition-colors hover:border-[#8f9195] aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-white';
 ---
 <section id="tour" aria-label="Take a tour of the Cargo" data-hide-mobilebar class="overflow-hidden bg-[linear-gradient(to_bottom,#efefef_0%,#f7f7f7_45%,#ffffff_100%)] pb-[110px] pt-[120px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
@@ -24,6 +31,7 @@ const pill = 'h-[38px] cursor-pointer whitespace-nowrap rounded-full border bord
   <div class="relative mx-auto mt-6 h-[clamp(360px,64vh,740px)] max-w-[1640px] max-[640px]:h-[min(62svh,460px)]">
     <div data-tour-stage class="absolute inset-y-0 inset-x-6 cursor-grab overflow-hidden rounded-[22px] active:cursor-grabbing max-[640px]:inset-x-3"></div>
     <img data-tour-poster src={tour.poster} alt="Computer-generated model of the black 20 ft SPOG Cargo" class="pointer-events-none absolute inset-0 m-auto max-h-[80%] max-w-[86%] object-contain mix-blend-multiply transition-opacity duration-700" />
+    {standIn && <p class="pointer-events-none absolute left-10 top-4 z-[2] m-0 max-w-[340px] rounded-[10px] border border-dashed border-ink/35 bg-white/80 px-4 py-3 t-fine text-ink backdrop-blur-[6px] max-[640px]:left-6 max-[640px]:right-6">{standIn}</p>}
   </div>
 
   <div class="wrap">

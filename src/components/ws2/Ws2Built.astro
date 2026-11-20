@@ -4,7 +4,7 @@ import { built } from '../../data/workstation2Page';
  * Built and serviced, after Semi's "Service Your Fleet": who builds it and who shows up when
  * something needs work, set over Nate's shop fly-through. Only the facts already confirmed for
  * Cargo 2 (the Warranty Policy and Nate). The video loads and plays only while the band is on
- * screen; the poster stays for reduced motion.
+ * screen (the page's [data-ws2-video] script); the poster stays for reduced motion.
  */
 ---
 <section id="built" aria-label="Built and serviced by SPOG" class="grain relative flex min-h-[86vh] items-end overflow-hidden bg-night pb-20 pt-40 text-white max-[640px]:min-h-[80svh] max-[640px]:pb-14 max-[640px]:pt-28">
@@ -27,17 +27,3 @@ import { built } from '../../data/workstation2Page';
   </div>
 </section>
 
-<script>
-  // Shared by every [data-ws2-video] on the page (this band and the mobile office card).
-  const vids = [...document.querySelectorAll<HTMLVideoElement>('[data-ws2-video]')];
-  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (vids.length && !still && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      for (const e of entries) {
-        const v = e.target as HTMLVideoElement;
-        if (e.isIntersecting) { v.preload = 'auto'; v.play().catch(() => {}); } else v.pause();
-      }
-    }, { rootMargin: '200px 0px' });
-    vids.forEach((v) => io.observe(v));
-  }
-</script>

@@ -5,8 +5,10 @@ import ProductSubnav from '../components/product/ProductSubnav.astro';
 import ProductPower from '../components/product/ProductPower.astro';
 import WorkEquation from '../components/work/WorkEquation.astro';
 import Cargo2Specs from '../components/cargo2/Cargo2Specs.astro';
+import Cargo2Tour from '../components/cargo2/Cargo2Tour.astro';
 import Cargo2Close from '../components/cargo2/Cargo2Close.astro';
 import Ws2Hero from '../components/ws2/Ws2Hero.astro';
+import Ws2Features from '../components/ws2/Ws2Features.astro';
 import Ws2Standard from '../components/ws2/Ws2Standard.astro';
 import Ws2Chapter from '../components/ws2/Ws2Chapter.astro';
 import Ws2Inside from '../components/ws2/Ws2Inside.astro';
@@ -16,7 +18,7 @@ import Faq from '../components/sections/Faq.astro';
 import Footer from '../components/sections/Footer.astro';
 import MobileBar from '../components/sections/MobileBar.astro';
 import { footerColumns } from '../data/content';
-import { close, demo, design, equation, faqs, hero, internet, meta, power, runtime, security, specs, subnavLinks } from '../data/workstation2Page';
+import { close, demo, design, equation, faqs, hero, internet, meta, power, runtime, security, specs, subnavLinks, tour, tourStandIn } from '../data/workstation2Page';
 // This page has no walkthrough form, so the footer's Contact link goes to the demo page.
 const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, href]) => [label, href === '#walkthrough' ? demo.href : href]) }));
 ---
@@ -31,42 +33,64 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
   How it differs from Cargo 2: Cargo 2 is a page about choosing (swipe cards, an options checklist,
   a 3D tour). Workstation arrives with power, heat and AC and the security mast as standard, so this
   page is a run of chapters (Cybertruck, Model S): heading, one paragraph, big inset media, a stat
-  row. Standard and optional equipment is listed once (R2), the interior is the one warm dark
-  chapter, the two buyers each get a card (Rivian Fleet), and service closes the story (Semi).
+  row. It opens with a row of video cards for the key features (Cybertruck's video carousel, Nate
+  asked for it), standard and optional equipment is listed once near the end (R2), the interior is
+  the one warm dark chapter, the two buyers each get a card (Rivian Fleet), and service closes the
+  story (Semi). The 3D tour is Cargo 2's, with the Cargo model standing in for now (Nate).
 
   Order and rhythm (never two photo sections next to each other; chapters use inset media on a
   plain background, so they don't count as photo sections):
     Hero P (drone video, name, line, buttons, three facts)
-    Comes standard L (stone, navy cut-out, includes and optional lists)
+    Key features L (stone, a swipe row of 4:5 video cards)
     Power L (white, inset roof photo, stat row)
     What it runs D (the shared run-time tool, battery only)
     Security L (white, two inset photos)
     Internet L (stone, photo left, words right)
+    Take a tour L (light studio plate, the Cargo model as a stand-in, tagged as one)
     Inside D (warm dark, two real interiors)
     Who it's for L (white, two tall cards, one video)
     What it replaces L (stone, the approved "One trailer. Three problems solved." sum)
     Built and serviced P (shop fly-through, warranty and service facts)
+    Comes standard L (stone, navy cut-out, includes and optional lists)
     Specs D, Close D, FAQ L, Footer D
-  The 3D model goes in Inside once the Workstation 360 shoot exists.
-  Keep the ids top, overview, power, runtime, security, internet, inside, uses, replaces, built,
-  specs, cta and faq: the section bar, the phone bar and links in the copy point at them.
+  Swap the Workstation model into Take a tour once the 360 shoot exists, and drop the stand-in tag.
+  Keep the ids top, overview, power, runtime, security, internet, tour, inside, uses, replaces,
+  built, standard, specs, cta and faq: the section bar, the phone bar and links point at them.
 -->
 <Base title={meta.title} description={meta.description} noindex>
   <Nav cta={design} />
   <ProductSubnav page={runtime} links={subnavLinks} buttons={[demo, design]} />
   <Ws2Hero />
-  <Ws2Standard />
+  <Ws2Features />
   <Ws2Chapter id="power" label="Power" layout="wide" heading={power.heading} body={power.body} media={[power.media]} stats={power.stats} />
   <ProductPower page={runtime} look="work" id="runtime" keys={['Battery']} sheet={false} />
   <Ws2Chapter id="security" label="Security" layout="pair" heading={security.heading} body={security.body} media={security.media} />
   <Ws2Chapter id="internet" label="Internet" layout="split" tone="stone" heading={internet.heading} body={internet.body} media={[internet.media]} note={internet.note} />
+  <Cargo2Tour tour={tour} design={design} standIn={tourStandIn} />
   <Ws2Inside />
   <Ws2Uses />
   <WorkEquation equation={equation} name={hero.name} />
   <Ws2Built />
+  <Ws2Standard />
   <Cargo2Specs specs={specs} />
   <Cargo2Close close={close} demo={demo} design={design} />
   <Faq items={faqs} heading="Questions about Workstation." />
   <Footer columns={footer} />
   <MobileBar cta={design} />
 </Base>
+
+<script>
+  // Every [data-ws2-video] on the page (feature cards, the mobile office card, the shop band) loads
+  // and plays only while it's on screen, and pauses when it leaves. Reduced motion keeps the posters.
+  const vids = [...document.querySelectorAll<HTMLVideoElement>('[data-ws2-video]')];
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (vids.length && !still && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        const v = e.target as HTMLVideoElement;
+        if (e.isIntersecting) { v.preload = 'auto'; v.play().catch(() => {}); } else v.pause();
+      }
+    }, { rootMargin: '200px 0px', threshold: 0.2 });
+    vids.forEach((v) => io.observe(v));
+  }
+</script>

@@ -1,0 +1,67 @@
+---
+import Icon from '../ui/Icon.astro';
+import WorkTitle from '../work/WorkTitle.astro';
+import { small } from '../../data/content';
+import { features } from '../../data/workstation2Page';
+/**
+ * Key features as a row of video cards (Nate, 2026-11-19), after Cybertruck's video carousel
+ * right under its hero ("Bring It All", "Power On Tap") and the video cards on rivian.com.
+ * It's a different card from Cargo 2's: the clip plays in the card and the words sit under it,
+ * with no panel to open. The chapters further down go deeper on power, security and internet.
+ * Videos load and play only while a card is on screen (the page's [data-ws2-video] script).
+ * A card without footage yet shows its photo. Under 900px, and whenever the row is wider than
+ * the page, it swipes with the arrows.
+ */
+const edge = 'px-[max(36px,calc((100vw_-_1320px)/2_+_36px))] scroll-px-[max(36px,calc((100vw_-_1320px)/2_+_36px))] max-[640px]:px-5 max-[640px]:scroll-px-5';
+const ctrl = 'flex size-11 cursor-pointer items-center justify-center rounded-full border-[1.5px] border-coal/20 bg-transparent text-coal hover:border-coal disabled:opacity-30';
+---
+<section id="overview" aria-label="Key features" data-ws2-feat class="overflow-hidden bg-stone pb-[110px] pt-[120px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
+  <div class="wrap flex items-end justify-between gap-8">
+    <WorkTitle lines={features.heading} />
+    <div class="flex shrink-0 gap-2 max-[640px]:hidden" data-ws2-feat-ctrl>
+      <button type="button" data-ws2-step="-1" aria-label="Previous" disabled class={ctrl}><svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg></button>
+      <button type="button" data-ws2-step="1" aria-label="Next" class={ctrl}><svg viewBox="0 0 24 24" class="size-4 fill-none stroke-current stroke-2" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg></button>
+    </div>
+  </div>
+
+  <ul data-ws2-feat-track class:list={['no-scrollbar m-0 mt-14 flex list-none snap-x snap-mandatory gap-4 overflow-x-auto p-0 max-[640px]:mt-10 max-[640px]:gap-3', edge]}>
+    {features.cards.map((c) => (
+      <li class="w-[min(400px,78vw)] shrink-0 snap-start">
+        <div class="relative aspect-[4/5] overflow-hidden rounded-[18px] bg-coal">
+          {c.video ? (
+            <video data-ws2-video src={c.video} poster={c.poster} muted loop playsinline preload="none" aria-label={c.alt} class="absolute inset-0 size-full object-cover"></video>
+          ) : (
+            <img src={small(c.poster)} alt={c.alt} loading="lazy" class="absolute inset-0 size-full object-cover" style={`object-position:${c.position ?? '50% 50%'}`} />
+          )}
+        </div>
+        <h3 class="m-0 mt-6 flex items-center gap-3 t-h3 text-coal">
+          <Icon name={c.icon} class="size-7 shrink-0 stroke-coal stroke-[1.6]" />{c.title}
+        </h3>
+        <p class="mb-0 mt-2 pr-4 t-body-sm text-ink-soft">{c.line}</p>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ws2-feat]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('[data-ws2-feat-track]')!;
+    const [prev, next] = [...root.querySelectorAll<HTMLButtonElement>('[data-ws2-step]')];
+    const ctrl = root.querySelector<HTMLElement>('[data-ws2-feat-ctrl]')!;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const step = () => {
+      const items = track.children;
+      return items[1] ? (items[1] as HTMLElement).offsetLeft - (items[0] as HTMLElement).offsetLeft : track.clientWidth;
+    };
+    const sync = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      ctrl.style.visibility = max <= 2 ? 'hidden' : '';
+      prev.disabled = track.scrollLeft <= 2;
+      next.disabled = track.scrollLeft >= max - 2;
+    };
+    [prev, next].forEach((b) => b.addEventListener('click', () => track.scrollBy({ left: Number(b.dataset.ws2Step) * step(), behavior: reduce ? 'auto' : 'smooth' })));
+    track.addEventListener('scroll', sync, { passive: true });
+    addEventListener('resize', sync);
+    sync();
+  });
+</script>

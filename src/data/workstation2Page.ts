@@ -31,6 +31,7 @@
  *   - Every size is a "Workstation trailer". No edition names.
  */
 import { shoot } from './content';
+import { tour as cargoTour } from './cargo2Page';
 import { productPages, type ProductPage } from './productPages';
 
 export const meta = {
@@ -63,11 +64,69 @@ export const subnavLinks: [string, string][] = [
   ['Power', '#power'],
   ['Security', '#security'],
   ['Internet', '#internet'],
+  ['Tour', '#tour'],
   ['Inside', '#inside'],
-  ['Uses', '#uses'],
   ['Specs', '#specs'],
   ['FAQ', '#faq'],
 ];
+
+// ---------------------------------------------------------------- key features (video cards, Nate 2026-11-19)
+
+/**
+ * Nate asked for a card section that shows off the key features, ideally with video. Order follows
+ * what the buyer cares about (Nate): power, security, connectivity, comfort, then quality.
+ * Videos are 4:5 loops cut from Nate's footage (forward then back, slowed and smoothed where needed).
+ * Cards with a photo are waiting on footage: the mast going up at night and the heat and AC running
+ * (both on the shot list).
+ */
+type Card = { id: string; icon: string; title: string; line: string; poster: string; alt: string; video?: string; position?: string };
+export const features: { heading: string[]; cards: Card[] } = {
+  heading: ['Built around the people', 'who run the job.'], // NEW, on the messaging report's "the super, PM or owner is the hero"
+  cards: [
+    {
+      id: 'solar', icon: 'sun', title: 'Solar power',
+      line: 'Solar panels charge the battery that runs the lights, outlets, heat and AC and internet.', // NEW, facts SOURCE (messaging report)
+      video: '/images/ws2-card-solar.mp4', poster: '/images/ws2-card-solar.jpg', // From Nate's influencer video. CONFIRM the tilt-up side panel ships on the 10 and 20 ft
+      alt: 'A solar panel raised on the side of a dark SPOG Workstation, orange light along its edge',
+    },
+    {
+      id: 'security', icon: 'camera', title: 'Security mast',
+      line: 'Work lights and cameras rise over the site after the crew goes home.', // NEW on NATE (standard)
+      poster: shoot.wsMastTall, position: '50% 30%', // Video wanted: the mast going up at night (shot list)
+      alt: 'SPOG Workstation on a lot with its telescopic mast fully raised',
+    },
+    {
+      id: 'starlink', icon: 'wifi', title: 'Starlink',
+      line: 'Optional Starlink keeps the office online on rural sites with no cell signal.', // NEW, SOURCE (messaging report)
+      poster: shoot.cargoStarlinkCard, position: '50% 30%',
+      alt: 'Starlink dish on top of a SPOG mast against a blue sky',
+    },
+    {
+      id: 'climate', icon: 'climate', title: 'Heat and AC',
+      line: 'Heating and cooling come standard for the people who work in the office all day.', // NATE (standard), SOURCE (messaging report)
+      poster: shoot.wsHvac, position: '62% 50%', // Video wanted: the heat and AC running inside (shot list)
+      alt: 'Heating and cooling unit in an open side compartment of a white SPOG Workstation',
+    },
+    {
+      id: 'interior', icon: 'desk', title: 'Premium interior',
+      line: 'Wood walls, warm lighting and room for your screens, plans and client meetings.', // NEW
+      video: '/images/ws2-card-interior.mp4', poster: '/images/ws2-card-interior.jpg', // From Nate's influencer video (the wall screen and wood slats)
+      alt: 'A wall screen showing a SPOG trailer inside a wood-walled SPOG Workstation',
+    },
+    {
+      id: 'tow', icon: 'truck', title: 'Moves with the job',
+      line: 'It rides on its own trailer frame, so the office tows to the next site with you.', // NEW on SOURCE (messaging report: "tow on a trailer frame and move with the job")
+      video: '/images/ws2-card-tow.mp4', poster: '/images/ws2-card-tow.jpg', // Nate's "Mountain Shot", cropped to keep the pickup out
+      alt: 'A dark SPOG Workstation parked on a hilltop with snowy mountains behind it',
+    },
+    {
+      id: 'built', icon: 'shield', title: 'Built in Middletown',
+      line: 'Welded, wired and tested by our own crew in Middletown, NY, USA.', // NEW on SOURCE (Objections & FAQ), place NATE (Cargo 2)
+      video: '/images/cargo2-weld-loop.mp4', poster: '/images/cargo2-weld-loop.jpg', // Same welding loop as Cargo 2
+      alt: 'A welder joining a steel trailer frame in the SPOG shop',
+    },
+  ],
+};
 
 // ---------------------------------------------------------------- comes standard (R2 "Includes" and "Optional")
 
@@ -123,6 +182,16 @@ export const internet = {
   media: { src: shoot.wsStarlink, alt: 'Starlink dish on a SPOG mast against a blue sky', position: '50% 45%' },
   note: 'Starlink and the cellular router are options.', // NEW
 };
+
+// ---------------------------------------------------------------- 3D tour (stand-in)
+
+/** The Cargo 2 tour, with the Cargo model standing in until the Workstation model exists (Nate, 2026-11-19). */
+export const tour = {
+  ...cargoTour,
+  heading: ['See how it works', 'for you.'], // NATE (Cargo 2)
+  extras: 'Shown with optional heat and AC, an office desk and tie-down track on the walls.',
+};
+export const tourStandIn = 'This is the Cargo model, standing in until the Workstation model is built from the 360 shoot.'; // NEW, PLACEHOLDER (Nate asked for the Cargo model for now)
 
 // ---------------------------------------------------------------- inside (Model S "interior" and R2 "Take a closer look")
 
