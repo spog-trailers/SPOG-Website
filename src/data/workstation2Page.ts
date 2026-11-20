@@ -82,7 +82,7 @@ export const standard = {
     { icon: 'climate', name: 'Heating and cooling' }, // NATE, SOURCE (brand kit)
     { icon: 'camera', name: 'Security mast with lights and cameras' }, // NATE (2026-11-19). CONFIRM on every size, and which cameras ship
     { icon: 'desk', name: 'Built-in desks' }, // SOURCE (Product Wiki)
-    { icon: 'house', name: 'Insulated walls and vinyl floor' }, // SOURCE (Product Wiki, messaging report)
+    { icon: 'house', name: 'Insulated vinyl floor' }, // SOURCE (Product Wiki). CONFIRM insulated walls on every size (the messaging report says the larger Workstations are fully insulated)
     { icon: 'check', name: 'White composite or premium wood interior' }, // SOURCE (Product Wiki). CONFIRM whether wood is an upgrade
   ],
   optional: ['Starlink', 'Cellular router', 'TV or monitor', 'Refrigerator and microwave', 'Company logo and colors', 'Generator hookup'], // SOURCE (Product Wiki, options sheet, Nate's photo labels). CONFIRM the options sheet applies to Workstation
@@ -98,7 +98,7 @@ export const power = {
   stats: [
     ['5 to 40 kWh', 'Battery storage'], // SOURCE (Product Wiki)
     ['Standard', 'Roof solar'], // SOURCE (Product Wiki)
-    ['Not needed', 'Utility hookup'], // SOURCE (brand kit, "No utility hookup, no generator noise.")
+    ['Standard', 'Heat and AC'], // NATE, SOURCE (brand kit). No "hookup not needed" claim until winter run time is tested
   ] as [string, string][],
 };
 
@@ -110,7 +110,7 @@ export const runtime: ProductPage = {
 
 export const security = {
   heading: ['Lights and cameras', 'over your site at night.'], // NEW
-  body: "A telescopic mast comes standard on every Workstation. It raises work lights and dome cameras above the site, so you can keep an eye on the job and the trailer after the crew goes home.", // NEW on NATE (standard, 2026-11-19). CONFIRM every size, and the camera setup that ships
+  body: "A telescopic mast comes standard on the Workstation. It raises work lights and dome cameras above the site, so you can keep an eye on the job and the trailer after the crew goes home.", // NEW on NATE (standard, 2026-11-19). CONFIRM every size, and the camera setup that ships
   media: [
     { src: shoot.wsWarehouseMast, alt: 'White SPOG Workstation in the Middletown shop with its security mast raised', position: '58% 50%', caption: 'Raised on a Workstation in the Middletown shop' }, // NEW captions
     { src: shoot.wsSecurityMast, alt: 'Work lights and two dome cameras on top of a SPOG security mast', position: '50% 45%', caption: 'Work lights and dome cameras' },
@@ -132,7 +132,7 @@ export const internet = {
  */
 export const inside = {
   heading: ['An office you can', 'bring the client into.'], // NEW, built on SOURCE (messaging report: "looks professional when the client or the inspector walks in")
-  body: 'Your super spends the whole day in here, and owners, clients and inspectors walk through it, so every Workstation is insulated, heated and cooled and finished like a real office. Pick the interior that fits your company.', // NEW
+  body: 'Your super spends the whole day in here, and owners, clients and inspectors walk through it, so every Workstation is heated and cooled and finished like a real office. Pick the interior that fits your company.', // NEW
   builds: [
     {
       name: 'White composite', // SOURCE (Product Wiki)
@@ -181,7 +181,7 @@ export const equation = {
   heading: ['One trailer.', 'Three problems solved.'], // SOURCE (brand kit, approved)
   sub: 'The office, the power and the security, in one tow.', // SOURCE (current /workstation)
   parts: [
-    { icon: 'desk', title: 'Site office', body: 'Built-in desks, an insulated interior and heat and AC as standard.' }, // SOURCE (Product Wiki, brand kit)
+    { icon: 'desk', title: 'Site office', body: 'Built-in desks, a finished interior and heat and AC as standard.' }, // SOURCE (Product Wiki, brand kit)
     { icon: 'battery', title: 'Generator', body: 'Roof solar and 5 to 40 kWh of battery run the office.' }, // SOURCE (Product Wiki)
     { icon: 'camera', title: 'Security', body: 'A mast with lights and cameras watches the site after the crew leaves.' }, // NATE (standard, 2026-11-19)
   ],
