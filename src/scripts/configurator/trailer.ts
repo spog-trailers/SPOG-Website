@@ -3,29 +3,41 @@
  * black 20 ft (_photos-original/2026-11-17/Black Cargo Trailer). It's modeled in code, not CAD,
  * so treat it as a close stand-in until real 3D files exist.
  *
+ * Sizes follow SPOG's price sheet (2026-11-20, see dims.ts): the 10 ft is 6.5 ft wide and the
+ * 20 ft is 8 ft wide, and both run two axles. The 10 ft is drawn from the same parts, scaled down.
+ *
  * Units are feet. Axes: +x is the front (V nose and tongue), +y is up, +z is the curb side.
  *   Curb side (+z):   entry door with a window, right behind the nose.
- *   Street side (-z): sliding window over the axles, two-door storage hatch low at the front.
+ *   Street side (-z): sliding window over the axles, a low two-door equipment compartment at the
+ *                     front (it holds the AC or an air compressor, never call it storage).
  *   Rear (-x):        barn doors with twin chrome lock bars, four oval tail lights.
  *   Nose:             two flat panels with a black tread-plate stone guard, spare on the tongue.
- *   Wheels:           under the body, outer faces flush with the walls, in aluminum radius fenders.
+ *   Wheels:           two axles under the body, outer faces flush with the walls, in aluminum radius fenders.
  *   Roof:             silver, with solar panels laid across it and a low vent over the nose.
  * The body is hollow with a finished interior, so the doors can open and the camera can go inside.
  * The inside follows Nate's Better Interior photos (same folder, rebuilt 2026-11-19): glossy white
  * wall panels with faint seams, a black diamond-plate angle where walls meet the ceiling, two rows of
- * black-rimmed puck lights, a smooth charcoal rubber floor, a white nose wall with the heat and AC
+ * black-rimmed puck lights, a smooth charcoal vinyl floor, a white nose wall with the climate control
  * head and a single-panel closet door, and open-cage battery units on the low white platforms that
- * box in the wheels.
+ * box in the wheels. Every Cargo has the built-in front corner work desk, so it's always drawn.
+ * Add-ons on the roof and tongue follow the price sheet: the 6 ft telescopic light (a light only)
+ * and, on the 20 ft only, the 28 ft light tower with one camera, lights and a horn.
+ * // SOURCE (price sheet 2026-11-20) and NATE (2026-11-20 answers)
  */
 import * as THREE from 'three';
-import { FLOOR, H, NOSE, PANEL_ACROSS, PANEL_ALONG, PANEL_PITCH, ROOF, W, WALL, axleCenter, sideLength, tandem } from './dims';
+import { FLOOR, NOSE, PANEL_ALONG, PANEL_PITCH, WALL, axleCenter, gearFor, heightFor, panelAcross, roofFor, sideLength, widthFor } from './dims';
 
-/** What the buyer picked. The options are the ones on SPOG's customization sheet (see data.ts). */
+/**
+ * What the buyer picked. The options follow SPOG's price sheet (2026-11-20) plus the extras Nate
+ * kept that aren't on it (see data.ts). Cabinets, shelving, overhead storage, the small security
+ * cameras and the horn and strobe system were removed. // NATE (2026-11-20 answers)
+ */
 export interface TrailerConfig {
   length: number;
   paint: string;
   paintDark: boolean;
   matte: boolean;
+  /** 5 kWh battery units, 1 to 4 (20 kWh is the most on any model). */
   batteryModules: number;
   doorsOpen: boolean;
   /** Logo spots as a sorted, comma-joined list: noseLeft, noseRight, left, right, rear. */
@@ -33,12 +45,11 @@ export interface TrailerConfig {
   brand: string;
   /** Width over height of the logo art, so the decal keeps its shape. */
   logoAspect: number;
+  /** Climate control (heating and cooling), the wall head on the nose wall. */
   hvac: boolean;
+  /** EXTRA desks, beyond the built-in front corner desk every Cargo has. */
   desks: number;
   benchLength: number;
-  cabinets: number;
-  shelving: boolean;
-  overhead: boolean;
   whiteboard: boolean;
   tv: boolean;
   fridge: boolean;
@@ -48,9 +59,10 @@ export interface TrailerConfig {
   etrackFloor: boolean;
   starlink: boolean;
   cellular: boolean;
-  mast: boolean;
-  cameras: boolean;
-  audio: boolean;
+  /** The 6 ft telescopic light at the nose: work lights only, no camera. */
+  light6: boolean;
+  /** The 28 ft light tower with one camera, lights and a horn. 20 ft only, so it's ignored on the 10 ft. */
+  tower: boolean;
 }
 
 type Mat = THREE.Material;
@@ -170,10 +182,11 @@ function seeded(seed: number) {
 }
 
 /**
- * Charcoal rubber floor, as in the Better Interior photos (2026-11-19): smooth and matte, with a
- * fine speckle and a few soft scuffs. No coin pattern, which the real floor doesn't have.
+ * Charcoal vinyl floor: smooth and matte, with a fine speckle and a few soft scuffs, the look of the
+ * Better Interior photos (2026-11-19). Every model gets vinyl flooring (Nate, 2026-11-20: the sheet's
+ * plywood and the earlier "rubber floor" were both wrong). // NATE (2026-11-20 answers)
  */
-function rubberFloorTexture() {
+function vinylFloorTexture() {
   return canvasTexture(256, 256, (c) => {
     const rnd = seeded(7);
     c.fillStyle = '#2c2d30';
@@ -359,11 +372,11 @@ export function createMaterials() {
     steel: new THREE.MeshStandardMaterial({ color: '#3a3d42', roughness: 0.45, metalness: 0.7 }),
     benchTop: new THREE.MeshStandardMaterial({ map: planks, color: '#d8ccbc', roughness: 0.6, metalness: 0 }),
     // Interior, rebuilt from the Better Interior photos (2026-11-19): glossy white wall panels with
-    // faint seams, a white ceiling, a smooth charcoal rubber floor and open-slot black E-track.
+    // faint seams, a white ceiling, a smooth charcoal vinyl floor and open-slot black E-track.
     liner: new THREE.MeshStandardMaterial({ color: '#f2f3f2', roughness: 0.3, metalness: 0.02, envMapIntensity: 0.85 }),
     joint: new THREE.MeshStandardMaterial({ color: '#a9abaf', roughness: 0.5, metalness: 0.2, transparent: true, opacity: 0.2 }),
     ceiling: new THREE.MeshStandardMaterial({ color: '#eceeed', roughness: 0.48, metalness: 0.02, side: THREE.DoubleSide, envMapIntensity: 0.75 }),
-    floor: new THREE.MeshStandardMaterial({ map: tile(rubberFloorTexture(), 3.2), roughness: 0.62, metalness: 0, envMapIntensity: 0.6 }),
+    floor: new THREE.MeshStandardMaterial({ map: tile(vinylFloorTexture(), 3.2), roughness: 0.62, metalness: 0, envMapIntensity: 0.6 }),
     etrack: new THREE.MeshStandardMaterial({ map: tile(etrackTexture(), 1 / 6, 5 / 12), roughness: 0.42, metalness: 0.45 }),
     cage: new THREE.MeshStandardMaterial({ color: '#b7babe', roughness: 0.42, metalness: 0.72 }),
     module: new THREE.MeshStandardMaterial({ color: '#e7e8e6', roughness: 0.55, metalness: 0.05 }),
@@ -527,7 +540,7 @@ function archBand(len: number, bottom: number, top: number, r: number, t: number
  * a flat flange on the wall around it. Local x is centered on the arch, the wall's outer face is
  * at z = 0 and +z points outward.
  */
-function archTrim(m: Materials, len: number, bottom: number, top: number) {
+function archTrim(m: Materials, len: number, bottom: number, top: number, flange = 0.2) {
   const g = new THREE.Group();
   const part = (shape: THREE.Shape, depth: number, z: number) => {
     const p = new THREE.Mesh(new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 20 }), m.aluminum);
@@ -538,7 +551,8 @@ function archTrim(m: Materials, len: number, bottom: number, top: number) {
   };
   part(archBand(len, bottom, top, ARCH_R, 0.06), 0.34, -0.24); // lines the arch
   part(archBand(len + 0.08, bottom, top + 0.04, ARCH_R + 0.04, 0.1), 0.06, 0.04); // rolled edge
-  part(archBand(len + 0.4, bottom, top + 0.2, ARCH_R + 0.2, 0.2), 0.035, 0.002); // flange on the wall
+  // flange on the wall, 0.2 ft wide as built, narrower on the 10 ft so it clears the rear corner and the door
+  part(archBand(len + flange * 2, bottom, top + flange, ARCH_R + flange, flange), 0.035, 0.002);
   return g;
 }
 
@@ -556,12 +570,19 @@ export interface TrailerParts {
   skipped: string[];
   /** True when something stands well above the roof, so the camera backs off. */
   tall: boolean;
+  /** Height of the highest part off the ground, in feet, so the camera can back off far enough. */
+  top: number;
   dispose: () => void;
 }
 
 export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   const g = new THREE.Group();
   const L = cfg.length;
+  // Width, height and running gear depend on the length (dims.ts). // SOURCE (price sheet 2026-11-20)
+  const W = widthFor(L);
+  const H = heightFor(L);
+  const ROOF = roofFor(L);
+  const gear = gearFor(L);
   const S = sideLength(L);
   const xr = -L / 2;          // rear face
   const xf = L / 2 - NOSE;    // where the flat sides meet the nose
@@ -578,10 +599,11 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   // Running gear first, because the wheel arches cut into the floor and the side walls. The wheels
   // sit under the body with their outer faces flush with the walls, inside aluminum radius fenders,
   // and a boxed wheel well covers each set inside: the low white platforms the batteries stand on
-  // in the Better Interior photos. Nate corrected the outboard wheels on 2026-11-20.
+  // in the Better Interior photos. Nate corrected the outboard wheels on 2026-11-20. Every size
+  // runs two axles, the 10 ft too (price sheet, 2026-11-20). // SOURCE (price sheet 2026-11-20)
   const axleX = xf - axleCenter(L);
-  const axles = tandem(L) ? [axleX - 1.2, axleX + 1.2] : [axleX];
-  const fenderLen = tandem(L) ? 5.3 : 2.9;
+  const axles = [axleX - gear.spread, axleX + gear.spread];
+  const fenderLen = gear.fender;
   const archX0 = axleX - fenderLen / 2;
   const archX1 = axleX + fenderLen / 2;
   const archTop = TIRE_R * 2 + 0.1;
@@ -650,8 +672,10 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   sideWall(xr, xf, -1);
 
   // ------------------------------------------------------------ curb-side wall (+z), with the door opening
-  const dw = 2.9;
-  const dh = 5.85;
+  // 35 in wide on the 20 ft as built, 30 in on the 10 ft so the two axles fit behind it (dims.ts).
+  // The opening keeps the same header under the roof on both heights.
+  const dw = gear.door;
+  const dh = H - 1.25;
   const doorFront = xf - 0.14;
   const doorRear = doorFront - dw;
   const doorBottom = FLOOR + 0.6;
@@ -672,7 +696,8 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   {
     const panel = box(dw - 0.04, dh - 0.04, 0.09, paintOut('pz', 'nz'), -dw / 2, dh / 2, 0);
     sideDoor.add(panel);
-    const gw = 1.7, gh = 2.7, gy = dh - 0.5 - gh / 2;
+    // 1.7 ft glass on the 35 in door as built, narrower on the 10 ft's 30 in door so it clears the lever
+    const gw = dw - 1.2, gh = 2.7, gy = dh - 0.5 - gh / 2;
     const glassFrame = frame(gw + 0.16, gh + 0.16, 0.08, 0.03, m.black);
     glassFrame.position.set(-dw / 2, gy, 0.055);
     sideDoor.add(glassFrame, plane(gw, gh, m.glass, -dw / 2, gy, 0.052));
@@ -729,10 +754,11 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   for (const sz of [1, -1]) g.add(cyl(0.08, H, m.trim, xf, yc, sz * (W / 2 - 0.03)));
 
   // ------------------------------------------------------------ side trim, seams and markers
+  const winBottom = ROOF - 1.05 - 2.0 - 0.1; // bottom of the street-side window's frame (see below)
   for (const sz of [1, -1]) {
     g.add(box(S, 0.3, 0.035, m.trim, xr + S / 2, ROOF - 0.15, sz * out));
     // bottom rail, broken by the wheel arch and its fender flange
-    const a0 = archX0 - 0.22, a1 = archX1 + 0.22;
+    const a0 = archX0 - gear.flange - 0.02, a1 = archX1 + gear.flange + 0.02;
     g.add(box(a0 - xr, 0.26, 0.035, m.trim, (xr + a0) / 2, FLOOR + 0.13, sz * out));
     g.add(box(xf - a1, 0.26, 0.035, m.trim, (a1 + xf) / 2, FLOOR + 0.13, sz * out));
     g.add(box(0.2, H, 0.035, m.trim, xr + 0.1, yc, sz * out));
@@ -750,9 +776,12 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     if (sz < 0) logo.rotation.y = Math.PI;
     g.add(logo);
     if (spots.has(sz > 0 ? 'right' : 'left')) {
+      // Kept between the top of the fender and the bottom of the street-side window, on both sides
+      // so they match. On the shorter 10 ft the window comes lower, so the decal sits lower too.
       const room = Math.min(S * 0.5, 9);
-      const bh = Math.min(2.2, room / aspect);
-      const brand = plane(bh * aspect, bh, m.brand, xr + 0.9 + room / 2, FLOOR + 3.25, sz * (W / 2 + 0.012));
+      const bh = Math.min(2.2, room / aspect, winBottom - 0.15 - (archTop + gear.flange + 0.1));
+      const by = Math.min(FLOOR + 3.25, winBottom - 0.15 - bh / 2);
+      const brand = plane(bh * aspect, bh, m.brand, xr + 0.9 + room / 2, by, sz * (W / 2 + 0.012));
       if (sz < 0) brand.rotation.y = Math.PI;
       g.add(brand);
     }
@@ -789,8 +818,12 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     win.add(innerFrame, plane(ww, wh, m.daylight, 0, 0, WALL + 0.01), box(0.05, wh, 0.03, m.black, 0, 0, WALL + 0.014));
     g.add(win);
   }
+  // The equipment compartment, low at the front of the street side (it holds the AC or an air
+  // compressor, so it's never called storage).
+  const hw = Math.min(4.4, S * 0.3);
+  const hatchRear = xf - 0.22 - hw;
   {
-    const hw = Math.min(4.4, S * 0.3), hh = 2.1;
+    const hh = 2.1;
     const hatch = new THREE.Group();
     hatch.position.set(xf - 0.22 - hw / 2, FLOOR + 0.42 + hh / 2, -out);
     const outer = frame(hw, hh, 0.09, 0.05, m.aluminum);
@@ -810,7 +843,7 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   for (const sz of [1, -1]) {
     g.add(box(0.14, H, post, rearFace, xr + 0.07, yc, sz * (W / 2 - post / 2)));
     g.add(box(0.03, H, 0.14, m.trim, xr - 0.01, yc, sz * (W / 2 - 0.07)));
-    for (const ly of [FLOOR + 1.63, FLOOR + 5.45]) {
+    for (const ly of [FLOOR + 1.63, ROOF - 1.65]) {
       const light = ovalLight(m, 0.2, 0.5);
       light.position.set(xr - 0.02, ly, sz * (W / 2 - 0.45));
       g.add(light);
@@ -867,13 +900,14 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
 
   // ------------------------------------------------------------ roof: solar, vent
   const count = Math.floor((S - 0.15) / PANEL_PITCH);
+  const across = panelAcross(L); // narrower on the 6.5 ft roof, so the panels clear its edges
   if (count > 0) {
     const run = count * PANEL_PITCH;
     for (const sz of [1, -1]) g.add(box(run, 0.07, 0.12, m.aluminum, xr + 0.12 + run / 2, ROOF + 0.035, sz * 2.3));
     for (let i = 0; i < count; i++) {
       const px = xr + 0.12 + PANEL_PITCH * (i + 0.5);
-      g.add(box(PANEL_ALONG, 0.11, PANEL_ACROSS, m.pvFrame, px, ROOF + 0.125, 0));
-      const top = plane(PANEL_ACROSS, PANEL_ALONG, m.pvTop, px, ROOF + 0.183, 0);
+      g.add(box(PANEL_ALONG, 0.11, across, m.pvFrame, px, ROOF + 0.125, 0));
+      const top = plane(across, PANEL_ALONG, m.pvTop, px, ROOF + 0.183, 0);
       top.rotation.x = -Math.PI / 2;
       top.rotation.z = Math.PI / 2;
       top.receiveShadow = true;
@@ -890,7 +924,7 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   }
 
   // ------------------------------------------------------------ running gear
-  for (const sz of [1, -1]) g.add(box(S - 0.4, 0.3, 0.24, m.chassis, xr + S / 2 + 0.5, FLOOR - 0.15, sz * 2.3));
+  for (const sz of [1, -1]) g.add(box(S - 0.4, 0.3, 0.24, m.chassis, xr + S / 2 + 0.5, FLOOR - 0.15, sz * (W / 2 - 1.2)));
   for (const ax of axles) {
     g.add(cyl(0.12, wz * 2 - 0.3, m.chassis, ax, TIRE_R, 0, 'z', 12));
     for (const sz of [1, -1]) {
@@ -901,18 +935,27 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     }
   }
   for (const sz of [1, -1]) {
-    const f = archTrim(m, fenderLen, FLOOR, archTop);
+    const f = archTrim(m, fenderLen, FLOOR, archTop, gear.flange);
     f.position.set(axleX, 0, sz > 0 ? W / 2 : -W / 2);
     if (sz < 0) f.rotation.y = Math.PI;
     g.add(f);
-    // tread plate behind the fender ends, as in the photos
-    for (const e of [-1, 1]) g.add(box(0.5, 0.75, 0.03, m.trim, axleX + e * (fenderLen / 2 + 0.25), FLOOR + 0.37, sz * out));
+    // Tread plate behind the fender ends, as in the photos, 0.5 ft wide where there's room. On the
+    // 10 ft the arch runs close to the rear corner, the door and the equipment compartment, so a
+    // plate that would run into them is left off.
+    const rearRoom = archX0 - (xr + 0.2);
+    const aheadRoom = (sz > 0 ? doorRear - 0.1 : hatchRear - 0.02) - archX1;
+    for (const [e, room] of [[-1, rearRoom], [1, aheadRoom]] as const) {
+      const pw = Math.min(0.5, room);
+      if (pw < 0.35) continue;
+      g.add(box(pw, 0.75, 0.03, m.trim, e > 0 ? archX1 + pw / 2 : archX0 - pw / 2, FLOOR + 0.37, sz * out));
+    }
   }
 
   // ------------------------------------------------------------ tongue, jack, spare
   const hitch = tip + 3.3;
+  const tongueZ = W / 2 - 1.0; // where the tongue rails meet the frame, 2.5 ft off center on the 7 ft body as first built
   for (const sz of [1, -1]) {
-    const x0 = xf - 0.6, z0 = sz * 2.5;
+    const x0 = xf - 0.6, z0 = sz * tongueZ;
     const len = Math.hypot(hitch - x0, z0);
     const rail = box(len, 0.3, 0.2, m.chassis, (x0 + hitch) / 2, FLOOR - 0.16, z0 / 2);
     rail.rotation.y = Math.atan2(z0, hitch - x0);
@@ -933,7 +976,7 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     // The spare stands on a bracket on the street-side tongue rail, just ahead of the point of the
     // nose, as in photos 15 and 36. It used to sit beside the nose and clipped into it (Nate, 2026-11-20).
     const sx = tip + 0.5;
-    const railZ = 2.5 * (hitch - sx) / (hitch - (xf - 0.6)); // the rail's distance off center here
+    const railZ = tongueZ * (hitch - sx) / (hitch - (xf - 0.6)); // the rail's distance off center here
     const sz0 = railZ + 0.45;
     const sy = FLOOR + 1.05;
     const spare = wheel(m);
@@ -943,53 +986,83 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     g.add(box(0.16, sy - FLOOR + 0.25, 0.16, m.chassis, sx, (FLOOR + sy + 0.25) / 2, -(sz0 - 0.38)));
     g.add(box(0.5, 0.12, 0.42, m.chassis, sx, FLOOR + 0.04, -(railZ + 0.12)));
   }
-  // ------------------------------------------------------------ connectivity and security
-  if (cfg.cameras) {
-    // standard cameras: one on each rear corner and one on the nose
-    const cam = (x: number, y: number, z: number, yaw: number) => {
-      const c = new THREE.Group();
-      c.position.set(x, y, z);
-      c.rotation.y = yaw;
-      c.add(box(0.12, 0.12, 0.12, m.equipment, 0, 0, 0));
-      const body = cyl(0.085, 0.42, m.equipment, 0.26, -0.08, 0, 'x', 16);
-      body.rotation.z = Math.PI / 2 + 0.3;
-      c.add(body);
-      const lens = cyl(0.06, 0.02, m.glass, 0.46, -0.14, 0, 'x', 16);
-      lens.rotation.z = Math.PI / 2 + 0.3;
-      c.add(lens);
-      g.add(c);
-    };
-    cam(xr - 0.08, ROOF - 0.75, W / 2 - 0.28, Math.PI);
-    cam(xr - 0.08, ROOF - 0.75, -(W / 2 - 0.28), Math.PI);
-    cam(tip + 0.02, ROOF - 0.75, 0, 0);
-  }
+  // ------------------------------------------------------------ lights, tower and connectivity
+  // NATE (2026-11-20 answers) and SOURCE (price sheet 2026-11-20). The only camera on any Cargo is
+  // the one on the 28 ft tower. The small corner cameras and the horn and strobe system are gone.
   const mastX = tip + 0.42;
-  const mastTop = ROOF + 6.2;
-  if (cfg.mast) {
-    // AI job site camera system: the telescoping mast at the nose with two dome cameras under a
-    // crossbar and work lights above it, as on the Workstation photos (ws-starlink.jpg).
-    g.add(box(0.55, 0.5, 0.55, m.chassis, mastX, FLOOR + 0.1, 0));
-    g.add(cyl(0.2, 5.2, m.black, mastX, FLOOR + 2.8, 0, 'y', 16));
-    g.add(cyl(0.15, 5.0, m.black, mastX, FLOOR + 7.4, 0, 'y', 16));
-    g.add(cyl(0.1, mastTop - (FLOOR + 9.6), m.black, mastX, (mastTop + FLOOR + 9.6) / 2, 0, 'y', 14));
-    for (const by of [FLOOR + 2.2, ROOF - 0.6]) g.add(box(0.5, 0.12, 0.3, m.black, tip + 0.18, by, 0));
-    const cy = mastTop - 1.5;
-    g.add(box(0.14, 0.14, 2.6, m.black, mastX, cy, 0));
+  const hasTower = cfg.tower && L >= 20; // the 28 ft tower is offered on the 20 ft only
+  // Both can be picked. Then they stand side by side on the tongue, the tower on the street side,
+  // clear of each other's heads and of the spare.
+  const lightZ = hasTower ? 0.95 : 0;
+  const towerZ = cfg.light6 ? -0.95 : 0;
+  const lightTop = ROOF + 6.2;
+  /**
+   * A brace from the mast back to the nose, low and high. Each one runs to the nose face at its own
+   * z, so the braces still touch the V when the light and the tower stand side by side.
+   */
+  const braces = (z: number) => {
+    const face = tip - (NOSE * Math.abs(z)) / (W / 2) - 0.02;
+    const len = mastX - face;
+    for (const by of [FLOOR + 2.2, ROOF - 0.6]) g.add(box(len, 0.12, 0.3, m.black, (mastX + face) / 2, by, z));
+  };
+  if (cfg.light6) {
+    // The 6 ft telescopic light: the same telescoping mast at the nose as on the Workstation photos
+    // (ws-starlink.jpg), with work lights on a crossbar and no camera. It lights the lot at night
+    // and lets the crew keep working after the sun goes down.
+    g.add(box(0.55, 0.5, 0.55, m.chassis, mastX, FLOOR + 0.1, lightZ));
+    g.add(cyl(0.2, 5.2, m.black, mastX, FLOOR + 2.8, lightZ, 'y', 16));
+    g.add(cyl(0.15, 5.0, m.black, mastX, FLOOR + 7.4, lightZ, 'y', 16));
+    g.add(cyl(0.1, lightTop - (FLOOR + 9.6), m.black, mastX, (lightTop + FLOOR + 9.6) / 2, lightZ, 'y', 14));
+    braces(lightZ);
+    const cy = lightTop - 1.5;
+    g.add(box(0.14, 0.14, 2.6, m.black, mastX, cy, lightZ));
     for (const sz of [1, -1]) {
-      g.add(cyl(0.05, 0.5, m.black, mastX, cy - 0.3, sz * 1.1, 'y', 10));
-      g.add(cyl(0.3, 0.3, m.graphite, mastX, cy - 0.6, sz * 1.1, 'y', 20));
-      const dome = new THREE.Mesh(new THREE.SphereGeometry(0.3, 20, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), m.glass);
-      dome.position.set(mastX, cy - 0.75, sz * 1.1);
-      dome.castShadow = true;
-      g.add(dome);
-      g.add(box(0.5, 0.55, 0.75, m.black, mastX, cy + 0.45, sz * 0.75));
-      g.add(box(0.03, 0.42, 0.62, m.lamp, mastX + 0.26, cy + 0.45, sz * 0.75));
+      g.add(box(0.5, 0.55, 0.75, m.black, mastX, cy + 0.45, lightZ + sz * 0.75));
+      g.add(box(0.03, 0.42, 0.62, m.lamp, mastX + 0.26, cy + 0.45, lightZ + sz * 0.75));
     }
   }
+  // The 28 ft light tower: a heavier four-stage mast than the 6 ft light, with a light bar, one
+  // camera and a horn at the top. Drawn fully raised to 28 ft, and the camera backs off to fit it
+  // (liftFor in scene.ts). // SOURCE (price sheet 2026-11-20)
+  const towerTop = 28;
+  if (hasTower) {
+    const z = towerZ;
+    g.add(box(0.75, 0.55, 0.75, m.chassis, mastX, FLOOR + 0.1, z));
+    const stages: [number, number, number][] = [[0.26, FLOOR + 0.35, 13.0], [0.2, 12.6, 18.5], [0.15, 18.1, 23.5], [0.11, 23.1, towerTop]];
+    for (const [r, y1, y2] of stages) {
+      g.add(cyl(r, y2 - y1, m.black, mastX, (y1 + y2) / 2, z, 'y', 18));
+      g.add(cyl(r + 0.04, 0.16, m.graphite, mastX, y2 - 0.08, z, 'y', 18)); // collar at the top of each stage
+    }
+    braces(z);
+    // light bar: a crossbar with two lamp heads on each side, facing forward
+    const by = towerTop - 0.3;
+    g.add(box(0.16, 0.16, 3.0, m.black, mastX, by, z));
+    for (const oz of [-1.25, -0.6, 0.6, 1.25]) {
+      g.add(box(0.45, 0.5, 0.55, m.black, mastX, by + 0.38, z + oz));
+      g.add(box(0.03, 0.38, 0.45, m.lamp, mastX + 0.24, by + 0.38, z + oz));
+    }
+    // the camera, on a short arm in front of the mast under the light bar
+    const camY = towerTop - 1.15;
+    g.add(box(0.42, 0.08, 0.1, m.black, mastX + 0.25, camY + 0.2, z));
+    g.add(cyl(0.24, 0.24, m.graphite, mastX + 0.45, camY + 0.05, z, 'y', 20));
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(0.24, 20, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), m.glass);
+    dome.position.set(mastX + 0.45, camY - 0.07, z);
+    dome.castShadow = true;
+    g.add(dome);
+    // the horn, lower on the mast, facing forward
+    const hornY = towerTop - 2.1;
+    g.add(box(0.36, 0.08, 0.12, m.black, mastX + 0.2, hornY + 0.2, z));
+    const horn = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.26, 0.5, 22), m.equipment);
+    horn.rotation.z = Math.PI / 2; // narrow end at the mast, bell facing forward
+    horn.position.set(mastX + 0.55, hornY, z);
+    horn.castShadow = true;
+    g.add(horn);
+  }
   if (cfg.starlink) {
-    // The dish rides on top of the mast when there is one, else on a short pole over the nose.
+    // The dish rides on top of the 6 ft light when there is one, as on the Workstation photos,
+    // else on a short pole over the nose. Starlink can go on Cargo (Nate, 2026-11-20).
     const dish = new THREE.Group();
-    if (cfg.mast) dish.position.set(mastX, mastTop + 0.22, 0);
+    if (cfg.light6) dish.position.set(mastX, lightTop + 0.22, lightZ);
     else {
       g.add(cyl(0.06, 1.3, m.black, xf + 1.45, ROOF + 0.65, 0, 'y', 12));
       dish.position.set(xf + 1.45, ROOF + 1.4, 0);
@@ -1003,33 +1076,21 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     g.add(cyl(0.28, 0.14, m.black, xf + 0.32, ROOF + 0.07, 2.3, 'y', 24));
     g.add(cyl(0.02, 0.9, m.black, xf + 0.32, ROOF + 0.55, 2.3, 'y', 8));
   }
-  if (cfg.audio) {
-    // horn and strobe on a bracket at the front street-side corner
-    const ax = xf - 0.9;
-    const az = -(W / 2 + 0.3);
-    g.add(box(0.5, 0.08, 0.6, m.black, ax, ROOF - 0.62, az));
-    const horn = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.3, 0.6, 22), m.equipment);
-    horn.rotation.x = Math.PI / 2;
-    horn.position.set(ax, ROOF - 0.95, az - 0.12);
-    horn.castShadow = true;
-    g.add(horn, cyl(0.12, 0.1, m.black, ax, ROOF - 0.54, az - 0.1, 'y', 16));
-    const strobe = new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), m.amber);
-    strobe.scale.y = 1.4;
-    strobe.position.set(ax, ROOF - 0.5, az - 0.1);
-    g.add(strobe);
-  }
 
   // ------------------------------------------------------------ interior
   // Rebuilt from Nate's Better Interior photos (2026-11-19). A flat white wall closes off the nose,
-  // with the heat and AC head high on its street half and a white single-panel closet door on its
-  // curb half. Glossy white wall panels with faint seams every 4 ft, a black diamond-plate angle
+  // with the climate control head high on its street half and a white single-panel closet door on
+  // its curb half. Glossy white wall panels with faint seams every 4 ft, a black diamond-plate angle
   // where the walls meet the ceiling, two rows of round puck lights with black rims, and a smooth
-  // charcoal rubber floor. The battery units stand mid-length on low white platforms.
+  // charcoal vinyl floor. The battery units stand mid-length on low white platforms. Sizes that
+  // depend on the body's width and height follow it, so the 10 ft fits the same pieces.
   const px = xf - 0.06;
   g.add(box(0.12, H - 0.26, W - WALL * 2, faces(m.edge, { nx: m.liner, px: m.liner }), px, yc, 0));
   {
     // closet door: one recessed panel, three black hinges on the curb edge, a round black knob
-    const dz = 1.85, dw2 = 2.5, dh2 = 6.65;
+    // 6.65 ft tall on the 20 ft as built, shorter on the lower 10 ft. It keeps the same distance
+    // from the curb wall at any width.
+    const dz = zi - 1.53, dw2 = 2.5, dh2 = H - 0.45;
     g.add(box(0.05, dh2 + 0.2, dw2 + 0.3, m.board, px - 0.07, y0 + dh2 / 2 + 0.05, dz));
     g.add(box(0.04, dh2, dw2, m.board, px - 0.11, y0 + dh2 / 2, dz));
     g.add(box(0.012, dh2 - 1.0, dw2 - 0.7, m.module, px - 0.13, y0 + dh2 / 2 + 0.05, dz));
@@ -1048,9 +1109,10 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   g.add(box(0.26, 0.035, W - WALL * 2 - 0.06, m.trim, px - 0.19, bandY - 0.018, 0));
   // puck lights: two rows of round lights with black rims, about one every 3 ft (six a row on the 20 ft)
   const perRow = Math.max(2, Math.round(S / 3));
+  const puckZ = W / 2 - 1.9; // 1.6 ft off center on the 7 ft body as first built
   for (let i = 0; i < perRow; i++) for (const sz of [1, -1]) {
     const lx = xr + (S * (i + 0.5)) / perRow;
-    g.add(cyl(0.31, 0.03, m.black, lx, bandY - 0.015, sz * 1.6, 'y', 32), cyl(0.255, 0.036, m.lamp, lx, bandY - 0.02, sz * 1.6, 'y', 32));
+    g.add(cyl(0.31, 0.03, m.black, lx, bandY - 0.015, sz * puckZ, 'y', 32), cyl(0.255, 0.036, m.lamp, lx, bandY - 0.02, sz * puckZ, 'y', 32));
   }
   const glow = S > 12 ? [xr + S * 0.2, xr + S * 0.5, xr + S * 0.8] : [xr + S * 0.5];
   for (const lx of glow) {
@@ -1067,8 +1129,9 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
   }
   for (let x = xr + 4; x < xf - 0.6; x += 4) g.add(box(0.025, 0.01, W - WALL * 2 - 0.6, m.joint, x, bandY - 0.006, 0));
   if (cfg.hvac) {
-    // the wall-mounted indoor head, high on the street half of the nose wall, just under the trim
-    const hz = -1.75;
+    // Climate control: the wall-mounted indoor head, high on the street half of the nose wall, just
+    // under the trim, the same distance from the street wall at any width.
+    const hz = -(zi - 1.63);
     const hy = bandY - 0.34 - 0.18 - 0.475;
     g.add(box(0.6, 0.95, 2.65, m.module, px - 0.36, hy, hz));
     g.add(box(0.04, 0.82, 2.55, m.board, px - 0.67, hy + 0.04, hz));
@@ -1087,7 +1150,7 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     const unit = 1.55;
     const ph = 1.0; // platform height over the floor, clear of the tires
     const x0 = archX0;
-    let left = cfg.batteryModules;
+    let left = Math.max(1, Math.min(4, Math.round(cfg.batteryModules) || 1)); // 5 to 20 kWh. // SOURCE (price sheet 2026-11-20)
     for (const wall of [-1, 1]) {
       const room = Math.max(0, Math.floor((wallEnd[wall] - x0 - 0.5) / unit));
       const n = Math.min(wall < 0 ? Math.ceil(left / 2) : left, room, 4);
@@ -1103,9 +1166,11 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
       // the platform splits the wall into a stretch behind it and one in front of it
       free[wall] = [[xr + 0.6, x0 - 0.9], [x0 + len + 0.3, wallEnd[wall]]].filter(([a, b]) => b - a > 0.5) as [number, number][];
       if (!n) continue;
-      // a duplex outlet on the wall just behind the platform
-      g.add(box(0.24, 0.38, 0.02, m.board, x0 - 0.45, y0 + 1.3, wall * (zi - 0.01)));
-      for (const oy of [1.21, 1.39]) g.add(box(0.1, 0.06, 0.012, m.graphite, x0 - 0.45, y0 + oy, wall * (zi - 0.022)));
+      // a duplex outlet on the wall just behind the platform, where there's wall behind it (not on the 10 ft)
+      if (x0 - 0.6 > xr + 0.2) {
+        g.add(box(0.24, 0.38, 0.02, m.board, x0 - 0.45, y0 + 1.3, wall * (zi - 0.01)));
+        for (const oy of [1.21, 1.39]) g.add(box(0.1, 0.06, 0.012, m.graphite, x0 - 0.45, y0 + oy, wall * (zi - 0.022)));
+      }
       for (let i = 0; i < n; i++) {
         // open aluminum cage around a white module, red terminal caps and cable on top
         const u = new THREE.Group();
@@ -1172,7 +1237,56 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     }
   };
 
-  // A tabletop host for the microwave: the counter first, then cabinets, then the fridge.
+  /** Takes the longest free stretch on the preferred wall, then the other wall, at up to `max` and at least `min` long. */
+  const placeFit = (max: number, min: number, prefer: 1 | -1, label: string) => {
+    for (const wall of [prefer, -prefer]) {
+      const run = free[wall].filter(([a, b]) => b - a >= min - 0.01).sort((p, q) => (q[1] - q[0]) - (p[1] - p[0]))[0];
+      if (!run) continue;
+      const len = Math.min(max, run[1] - run[0]);
+      const x = run[0] + len / 2;
+      run[0] += len + 0.25;
+      return { slot: slotAt(x, wall), len };
+    }
+    skipped.push(label);
+    return null;
+  };
+  /** As built: a black top on a solid white base, 2 ft deep, at desk height. */
+  const drawDesk = (d: THREE.Group, len: number) => {
+    const depth = 2.0;
+    d.add(box(len + 0.04, 0.09, depth + 0.06, m.top, 0, 2.48, depth / 2 + 0.01));
+    d.add(box(len - 0.06, 2.43, depth - 0.12, m.equipment, 0, 1.215, (depth - 0.12) / 2));
+    for (const gx of [-len * 0.3, len * 0.3]) d.add(box(0.22, 0.012, 0.1, m.graphite, gx, 2.53, 0.35));
+  };
+
+  // The built-in front corner work desk, standard on every Cargo, so it's always drawn.
+  // SOURCE (price sheet 2026-11-20)
+  // On the 20 ft it's as built: from the batteries to the nose wall on the street side, as long as
+  // the wall allows, up to 6.5 ft. On the 10 ft the battery platform leaves only about 2 ft of that
+  // wall, so the desk turns and runs across the street half of the nose wall instead, in the same
+  // front corner, under the climate control head and clear of the closet door.
+  {
+    const room = frontRoom();
+    if (room >= 3.5) {
+      const len = Math.min(6.5, room);
+      const d = placeFront(len, 'the corner desk');
+      if (d) drawDesk(d, len);
+    } else {
+      const depth = 2.0;
+      const closetEdge = zi - 2.93; // the street-side edge of the closet door's frame
+      const len = Math.min(3.2, closetEdge - 0.1 - (-zi + 0.05));
+      const d = new THREE.Group();
+      d.position.set(px - 0.06, y0, -zi + 0.05 + len / 2);
+      d.rotation.y = -Math.PI / 2; // out from the nose wall, toward the rear
+      g.add(d);
+      drawDesk(d, len);
+      // the desk now fills the front of the street wall
+      const run = free[-1][free[-1].length - 1];
+      if (run) run[1] = Math.min(run[1], px - 0.06 - depth - 0.25);
+      free[-1] = free[-1].filter(([a, b]) => b - a > 0.5);
+    }
+  }
+
+  // A tabletop host for the microwave: the counter first, then the fridge.
   let host: { slot: THREE.Group; x: number; top: number; depth: number } | null = null;
 
   if (cfg.benchLength) {
@@ -1186,35 +1300,13 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
       for (const ox of [-0.8, 0.8]) b.add(box(0.36, 0.22, 0.03, m.equipment, ox, 3.34, 0.08));
     }
   }
-  if (cfg.shelving) {
-    const len = S > 12 ? 3.6 : 2.6;
-    const r = place(len, -1, 'the shelving');
-    if (r) {
-      const depth = 1.5;
-      for (const ex of [-1, 1]) for (const ez of [0.08, depth - 0.08]) r.add(box(0.1, 5.2, 0.1, m.steel, ex * (len / 2 - 0.05), 2.6, ez));
-      for (const sy of [0.5, 1.9, 3.3, 4.7]) r.add(box(len, 0.07, depth, m.steel, 0, sy, depth / 2));
-      for (let i = 0; i < 3; i++) r.add(box(0.9, 0.62, 1.05, i === 1 ? m.gold : m.graphite, -len / 2 + 0.7 + i * ((len - 1.4) / 2), 2.26, 0.72));
-    }
-  }
+  // Extra desks, beyond the standard one. On the 2026-11-20 call Alessandro described them going
+  // beside the battery platforms, so each takes the longest free stretch of wall, the curb side
+  // first: 4.5 ft where there's room, never under 2.5 ft. The 10 ft has no free wall left for one.
+  // NATE (2026-11-20 answers)
   for (let i = 0; i < cfg.desks; i++) {
-    // As built: a long black top on a solid white base, from the batteries to the nose wall on the
-    // street side. It runs as long as the wall allows, up to 6.5 ft (about 4 ft on the 10 ft).
-    const room = frontRoom();
-    const len = i === 0 ? (room >= 3.5 ? Math.min(6.5, room) : 4.5) : 4.5;
-    const d = i === 0 ? placeFront(len, cfg.desks > 1 ? 'an office desk' : 'the office desk') : place(len, -1, 'an office desk');
-    if (!d) continue;
-    const depth = 2.0;
-    d.add(box(len + 0.04, 0.09, depth + 0.06, m.top, 0, 2.48, depth / 2 + 0.01));
-    d.add(box(len - 0.06, 2.43, depth - 0.12, m.equipment, 0, 1.215, (depth - 0.12) / 2));
-    for (const gx of [-len * 0.3, len * 0.3]) d.add(box(0.22, 0.012, 0.1, m.graphite, gx, 2.53, 0.35));
-  }
-  if (cfg.cabinets) {
-    const len = cfg.cabinets * 2.4;
-    const c = place(len, 1, cfg.cabinets > 1 ? 'the cabinets' : 'the cabinet');
-    if (c) {
-      casework(c, len, 1.9, 3.0, cfg.cabinets * 2);
-      host = { slot: c, x: -len / 2 + 1.2, top: 3.11, depth: 1.9 };
-    }
+    const d = placeFit(4.5, 2.5, 1, cfg.desks > 1 ? 'an extra desk' : 'the extra desk');
+    if (d) drawDesk(d.slot, d.len);
   }
   if (cfg.counter) {
     const c = place(4, 1, 'the refreshment counter');
@@ -1255,21 +1347,8 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     }
   }
 
-  // Wall-hung pieces on the curb side: overhead storage along the top, then the board and screen.
+  // Wall-hung pieces on the curb side: the whiteboard and the screen.
   const wallRun = doorRear - xr - 1.6;
-  if (cfg.overhead) {
-    const len = Math.min(8, doorRear - xr - 1.2);
-    const c = new THREE.Group();
-    c.position.set(xr + 0.7 + len / 2, ROOF - 0.12, zi);
-    const doors = Math.max(2, Math.round(len / 2));
-    c.add(box(len, 1.4, 1.15, m.equipment, 0, -0.7, -0.575));
-    for (let i = 0; i < doors; i++) {
-      const cx = -len / 2 + (len / doors) * (i + 0.5);
-      c.add(box(len / doors - 0.06, 1.3, 0.03, m.board, cx, -0.7, -1.165));
-      c.add(box(0.3, 0.04, 0.04, m.black, cx, -1.22, -1.19));
-    }
-    g.add(c);
-  }
   if (cfg.whiteboard) {
     const w = Math.min(4, wallRun * 0.46);
     const h = Math.min(2.0, w * 0.62);
@@ -1297,7 +1376,7 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     }
   }
   if (cfg.etrackFloor) {
-    for (const sz of [1, -1]) g.add(box(S - 2.4, 0.03, 0.26, m.track, xr + (S - 2.4) / 2 + 0.5, y0 + 0.016, sz * 1.15));
+    for (const sz of [1, -1]) g.add(box(S - 2.4, 0.03, 0.26, m.track, xr + (S - 2.4) / 2 + 0.5, y0 + 0.016, sz * (W / 2 - 2.35)));
   }
 
   // Center the body (not the tongue) on the origin so it turns about its middle.
@@ -1305,7 +1384,7 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     solar: new THREE.Vector3(xr + S * 0.42, ROOF + 0.2, 0.6),
     door: new THREE.Vector3(doorRear + dw / 2, FLOOR, W / 2),
     power: new THREE.Vector3(xf + NOSE * 0.55, ROOF, (W / 2) * 0.45),
-    wheels: new THREE.Vector3(axleX - 1.2, 0.5, wz + 0.3),
+    wheels: new THREE.Vector3(axleX - gear.spread, 0.5, wz + 0.3),
   };
 
   return {
@@ -1314,7 +1393,8 @@ export function buildTrailer(cfg: TrailerConfig, m: Materials): TrailerParts {
     ramp: null,
     sideDoor,
     skipped,
-    tall: cfg.mast,
+    tall: cfg.light6 || hasTower,
+    top: hasTower ? towerTop + 0.4 : cfg.light6 ? lightTop + 0.3 : ROOF + 1.5,
     rampAngle: Math.PI / 2 + Math.asin(Math.min(1, doorY / (openH - 0.03))),
     anchors,
     dispose() {

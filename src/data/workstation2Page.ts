@@ -13,10 +13,18 @@
  *            Warranty Policy, the Trailer Customization Options sheet or the SPOG runtime guide
  *   NEW      written for this page and approved by Nate in the Notion doc (v3)
  *   GAP      a [BRACKET] fact Joe still has to supply. Brackets show on the page on purpose.
+ *            None are left after the 2026-11-20 facts pass.
  *
- * Facts from Nate's comments: the 6 ft mast with work lights and a camera is standard, the 28 ft
- * mast, a 360 camera and a horn are options. Outlets are 120, 208 or 240 V, as on Cargo. People
- * power lights and laptops more than they charge tools. Joby gave permission for the case study.
+ * Facts pass (2026-11-20): rewritten to SPOG's external price sheet of 2026-11-20 and Nate's answers
+ * to questions about it, which overrule the earlier notes here. Base prices $18,500 (10 ft) and
+ * $75,000 (20 ft), shown with Nate's approval. Battery 5 kWh (10 ft) or 10 kWh (20 ft), up to 20 kWh.
+ * 120 V on the 10 ft, 120 and 208 V on the 20 ft, no 240 V. Heating and cooling standard, a hyper-
+ * heating heat pump on the 20 ft. No security mast comes standard: the 6 ft telescopic light (a light
+ * only, no camera) is an add-on on both sizes, and the 28 ft light tower package (an AI or a regular
+ * camera, a light and a horn) is 20 ft only. No 360 camera, no cameras on the 10 ft. Shelving,
+ * cabinets and overhead storage are gone. Vinyl floor on every size. Add-on prices stay off the page
+ * (as on Cargo 2) until Nate says to show them. People power lights and laptops more than they charge
+ * tools. Joby gave permission for the case study.
  */
 import { shoot } from './content';
 import { tour as cargoTour } from './cargo2Page';
@@ -24,7 +32,7 @@ import { productPages, type ProductPage } from './productPages';
 
 export const meta = {
   title: 'SPOG Workstation | Solar power site office trailer', // SOURCE (current /workstation)
-  description: 'The SPOG Workstation is a site office trailer with its own solar power, climate control and a security mast, built on a welded steel frame in Middletown, New York, in 10 or 20 ft.', // NEW
+  description: 'The SPOG Workstation is a site office trailer with its own solar power and climate control, built on a welded steel frame in Middletown, New York, in 10 or 20 ft.', // NEW, security mast dropped because it's an add-on now (NATE, 2026-11-20 answers)
 };
 
 /** Workstation has no builder yet, so "Design yours" opens the build request form with Workstation picked. */
@@ -39,13 +47,13 @@ export type Card = { title: string; body: string; media: Media };
 
 export const hero = {
   name: 'Workstation',
-  line: 'Your site office shows up with its own solar power, climate control and a security mast, so you can run the job without relying on anyone else.', // NATE (Notion, 2026-11-20), "climate control" for "heat and AC" (Meeting with Alessandro and Joe, 2026-11-20)
-  price: null as string | null, // Ask Nate before showing a price (see CLAUDE.md)
+  line: 'Your site office shows up with its own solar power and climate control, so you can run the job without relying on anyone else.', // NATE (Notion, 2026-11-20), "climate control" for "heat and AC" (Meeting with Alessandro and Joe, 2026-11-20). "And a security mast" dropped, the mast is an add-on (NATE, 2026-11-20 answers)
+  price: 'Starting at $18,500' as string | null, // NATE (2026-11-20 answers), SOURCE (price sheet 2026-11-20: the 10 ft Workstation base price)
   video: '/images/ws2-hero-rivian.mp4', // Nate's Rivian clip (2026-11-20), the drone following the tow through the snow
   poster: '/images/ws2-hero-rivian.jpg',
   alt: 'Drone view of a SPOG Workstation on tow behind an SUV on a snowy mountain road',
   stats: [
-    ['Battery', '5 to 40 kWh'], // SOURCE (Product Wiki)
+    ['Battery', '5 to 20 kWh'], // SOURCE (price sheet 2026-11-20: 5 or 10 kWh base, 20 kWh max, no 40 kWh)
     ['Length', '10 or 20 ft'], // NATE
     ['Structural warranty', '3-year'], // SOURCE (Warranty Policy)
   ] as [string, string][],
@@ -70,27 +78,29 @@ export const overview = {
   cards: [
     {
       title: 'Bring the whole team', // NEW (Cybertruck: Bring It All)
-      body: 'Up to 20 ft of finished office gives your super, PM and the subs room to work, with built-in desks and storage for plans, laptops and files. Daily reports, plan reviews and calls all happen in one place.', // NEW
+      body: 'Up to 20 ft of finished office gives your super, PM and the subs room to work, with a built-in work desk for plans, laptops and files. Daily reports, plan reviews and calls all happen in one place.', // NEW. One built-in desk SOURCE (price sheet 2026-11-20). Storage dropped: shelving, cabinets and overhead storage are removed (NATE, 2026-11-20 answers). Extra desks are a tile in Add what you need
       media: { src: shoot.wsInteriorOffice, alt: 'Inside a SPOG Workstation, white walls, built-in desks and monitors on a blue accent wall', position: '45% 50%' },
     },
     {
       title: 'Power on tap', // NEW (Cybertruck: Power On Tap)
-      body: 'Up to 40 kWh of battery storage runs 120, 208 or 240 V outlets inside the office and on the outside of the trailer. Plug in work lights on the lot and the laptops, printers and monitors at the desks, and the battery runs all of it on stored solar power.', // NEW, voltages NATE (same as Cargo)
+      body: 'Every Workstation has 120 V outlets inside the office and on the outside of the trailer, and the 20 ft adds 208 V. Plug in work lights on the lot and the laptops, printers and monitors in the office, and the battery runs all of it on stored solar power.', // NEW. Voltages SOURCE (price sheet 2026-11-20: 120 V on the 10 ft, 120 and 208 V on the 20 ft, no 240 V). Battery sizes live in the Power section, outlet counts in Specs, so each is said once
       // Stand-in: SPOG's battery units, photographed in the black Cargo (the same system). Wanted (shot list): the batteries in a Workstation, and work lights plugged into the outside outlet.
       media: { src: shoot.cargoStorageCard, alt: 'SPOG battery units standing on a low platform inside a trailer', position: '50% 60%' },
     },
     {
       title: 'Make it yours', // NEW (Cybertruck: Full Range of Motion)
-      body: 'Every Workstation is built to order, so the inside is laid out around how your team works. Pick the finish, the furniture and where everything goes with your SPOG contact.', // NEW
+      body: 'Every Workstation is built to order, so the inside is laid out around how your team works. Pick the furniture, the screens and where everything goes with your SPOG contact.', // NEW. "The finish" dropped (2026-11-20 facts pass): the finish choice is 20 ft only and the comfort section says it
       // A push-in through the door into the empty office, from the influencer video (65 to 70 s), recut
       // 2026-11-20 because Nate found the wall screen crop poor. A real layout or walkthrough shot would still be stronger.
       media: { video: '/images/ws2-card-interior.mp4', poster: '/images/ws2-card-interior.jpg', alt: 'Moving through the door of a SPOG Workstation into a wood-walled office with a desk, two monitors and a chair' },
     },
     {
       title: 'Lock down the site', // NEW (Cybertruck: Lockable Storage), NATE's direction ("the full security system is what makes it unique")
-      body: "A 6 ft mast with work lights and a camera comes standard and keeps watch over the site after the crew goes home. Step up to the optional 28 ft mast to see more of the lot, and add a 360 camera and a horn that scares off anyone who shouldn't be there.", // NEW, facts NATE (2026-11-20)
-      // Wanted: a night video of the mast going up with the lights on.
-      media: { src: shoot.wsSecurityMast, alt: 'Work lights and two dome cameras on top of a SPOG security mast', position: '50% 45%' },
+      body: "Add the 28 ft light tower package to a 20 ft Workstation, and a security camera and a light watch the lot from high above after the crew goes home. Pick an AI camera or a regular one for the same price, and the horn scares off anyone who shouldn't be there.", // NEW. Facts SOURCE (price sheet 2026-11-20: the 28 ft light tower package, 20 ft only) and NATE (2026-11-20 answers: AI or regular camera, same price; no mast comes standard; no 360 camera; no cameras on the 10 ft)
+      // The tower lives here and nowhere else on the page (it left the Add what you need carousel in the
+      // 2026-11-20 facts pass, so it's said once). The 6 ft telescopic light, a light only, is a tile there.
+      // Nate's raised-tower photo (ws2-opt-tower), cropped to the trailer and the mast. Wanted: a night video of the tower going up with the light on.
+      media: { src: shoot.wsOptTower, alt: 'A white SPOG Workstation on an empty lot with its 28 ft light tower raised', position: '54% 50%' },
     },
     {
       title: 'Throw the job at it', // NEW (Cybertruck: Throw Anything at It)
@@ -105,6 +115,7 @@ export const overview = {
 export const tour = {
   ...cargoTour,
   heading: ['See how it works', 'for you.'], // NATE (Cargo 2)
+  extras: 'Shown with optional E-track on the walls.', // NEW (2026-11-20 facts pass): overrides Cargo 2's line, because climate control is standard on every Workstation (price sheet 2026-11-20)
 };
 export const tourStandIn = 'This is the Cargo model, standing in until the Workstation model is built from the 360 shoot.'; // NEW, PLACEHOLDER (Nate: "Cargo 3d model for now")
 
@@ -112,7 +123,7 @@ export const tourStandIn = 'This is the Cargo model, standing in until the Works
 
 export const comfort = {
   heading: ['Tough on the outside,', 'comfortable on the inside.'], // NATE (Cybertruck's line)
-  sub: 'The outside is built for the job site, and the inside is a premium office. Choose wood walls with warm strip lighting and dark cabinets, or bright white composite, both on insulated vinyl floors.', // NEW, finishes SOURCE (Product Wiki)
+  sub: 'The outside is built for the job site, and the inside is a premium office, insulated through the walls, floor and ceiling and finished with a vinyl floor. On the 20 ft, pick wood walls with warm strip lighting or bright white composite at no extra cost, and the 10 ft comes in white composite.', // NEW. Facts SOURCE (price sheet 2026-11-20: insulation, the 20 ft's free choice of white composite or premium wood, the 10 ft's white composite) and NATE (2026-11-20 answers: vinyl on every model). "Dark cabinets" dropped, cabinets are removed
   lead: { video: '/images/ws2-comfort-loop.mp4', poster: '/images/ws2-comfort-loop.jpg', alt: 'The empty wood-walled office inside a SPOG Workstation, a desk and two monitors under warm light' } as Media, // Nate's Workstation Interior video, the empty office
   cards: [
     {
@@ -124,7 +135,8 @@ export const comfort = {
     {
       title: 'Bring the owner in', // NEW (Cybertruck: Have More Fun)
       body: "When the owner, the architect or the inspector stops by, they sit down in an office that shows your company runs a tight job. It's the room where the client meeting happens, so it's finished to look the part.", // NEW on SOURCE (messaging report)
-      media: { src: shoot.wsInteriorPremium, alt: 'Inside a SPOG Workstation, wood walls, dark cabinets and warm strip lighting along the ceiling', position: '50% 50%' },
+      // CONFIRM: the photo still shows dark cabinets, which are no longer offered (NATE, 2026-11-20 answers).
+      media: { src: shoot.wsInteriorPremium, alt: 'Inside a SPOG Workstation, wood walls and warm strip lighting along the ceiling', position: '50% 50%' },
     },
   ] as Card[],
 };
@@ -133,23 +145,23 @@ export const comfort = {
 
 export const anywhere = {
   heading: ['Take it', 'anywhere.'], // NATE
-  sub: 'Solar power and climate control come built in, Starlink is one add-on away, and the whole office hitches up and tows, so you stay comfortable and connected wherever the job is.', // NEW
+  sub: "Wherever the job takes you, the office comes along and is ready to work the day it lands.", // NEW (2026-11-20 facts pass, review fix). The intro no longer previews the cards, so solar, climate control, Starlink and towing are each said once, in their own card below
   lead: { src: shoot.wsRuralSunset, alt: 'A dark SPOG Workstation at sunset beside a farm field, its solar awning open', position: '50% 55%' } as Media, // The Rivian clip moved to the hero (Nate, 2026-11-20)
   cards: [
     {
       title: 'Solar power',
-      body: 'Panels across the roof recharge the battery every sunny day, and roof solar comes standard on every Workstation.', // NEW, SOURCE (Product Wiki)
+      body: 'Every Workstation comes with roof solar that charges the battery, 900 W of panels on the 10 ft and 2,800 W on the 20 ft.', // NEW. Watts SOURCE (price sheet 2026-11-20)
       media: { src: '/images/ws2-card-roof.jpg', alt: 'Solar panels across the roof of a SPOG Workstation, seen from above' }, // Cropped from Nate's aerial photo (ws-aerial-mast), as approved in the doc
     },
     {
       title: 'Climate control',
-      body: 'Heating and cooling come standard, with a hyper-heating heat pump on the larger Workstations for cold mornings. [HEAT PUMP: which model the 10 and 20 ft get]', // NEW on SOURCE (messaging report). GAP
+      body: 'Heating and cooling come standard on every Workstation, and the 20 ft has a hyper-heating heat pump for cold mornings.', // NEW on SOURCE (messaging report). [HEAT PUMP] gap filled from the price sheet (2026-11-20): heating and cooling included on both sizes, a hyper-heating heat pump on the 20 ft
       media: { src: shoot.wsHvac, alt: 'Heating and cooling unit in an open side compartment of a white SPOG Workstation', position: '62% 50%' },
     },
     {
       title: 'Stay connected',
-      body: 'Add Starlink and the office has internet wherever you park it, even on rural lots where phones lose signal. The super sends the daily report from the desk, and the phone rings when the client calls.', // NEW, NATE's direction
-      media: { src: shoot.cargoStarlinkCard, alt: 'Starlink dish on top of a SPOG mast against a blue sky', position: '50% 30%' },
+      body: 'Add Starlink and we install the dish on the trailer, so the office has internet even on rural lots where phones lose signal. You set up your own Starlink plan, and the super sends the daily report from the desk.', // NEW, NATE's direction. Dish and install included, plan set up by the buyer NATE (2026-11-20 answers). The one place Starlink is sold on the page (its options tile is gone)
+      media: { src: '/images/cargo2-starlink-dish-card.jpg', alt: 'Starlink dish on top of a SPOG mast against a blue sky', position: '50% 50%' }, // SOURCE (2026-11-20 facts pass): the crop above the dome cameras, as on Cargo 2
     },
     {
       title: 'Hitch up and go',
@@ -158,9 +170,9 @@ export const anywhere = {
     },
   ] as Card[],
   stats: [
-    ['[WEIGHT] lbs', 'Weight'], // GAP
+    ['7,000 or 14,000 lbs', 'Max loaded weight'], // SOURCE (price sheet 2026-11-20: GVWR 7,000 lbs on the 10 ft, 14,000 lbs on the 20 ft), NATE (2026-11-20 answers: show the weight)
     ['10 or 20 ft', 'Length'], // NATE
-    ['[TOW VEHICLE]', 'Tows behind'], // GAP
+    ['Dual axle', 'On both sizes'], // SOURCE (price sheet 2026-11-20). Replaces the tow vehicle gap: the page never claims what vehicle can tow it
   ] as [string, string][],
 };
 
@@ -200,18 +212,15 @@ export const built = {
 
 /**
  * Laid out like Cybertruck's "Add What You Need" (Nate, 2026-11-20): the options with a photo run as
- * a carousel of large cards, and the rest sit underneath as small tiles. The 28 ft security tower
- * replaced the whiteboard at Nate's request.
+ * a carousel of large cards, and the rest sit underneath as small tiles. Facts pass (2026-11-20): the
+ * 28 ft tower card Nate added here moved to the Lock down the site card, so security is said once (as
+ * on Cargo 2). The 6 ft telescopic light took the Starlink tile's place (Starlink is sold in Take it
+ * anywhere), which keeps the tile row at four. Add-on prices stay off the page until Nate says.
  */
 export const options = {
   heading: ['Add what', 'you need.'], // NEW
   sub: 'Pick the extras that fit your crew, and your SPOG contact will confirm what fits your build.', // NEW
   cards: [
-    {
-      title: '28 ft security tower', // NATE (2026-11-20)
-      body: 'A taller telescopic mast lifts the work lights and cameras 28 ft over the site, so one trailer can watch more of the lot after the crew goes home.', // NEW, facts NATE
-      media: { src: shoot.wsOptTower, alt: 'A white SPOG Workstation on an empty lot with its 28 ft security mast raised', position: '50% 45%' },
-    },
     {
       title: 'TV or monitor',
       body: 'Put the drawings and the schedule up on a big screen for site meetings.', // NEW
@@ -229,19 +238,23 @@ export const options = {
     },
   ] as Card[],
   more: [
-    { icon: 'desk', name: 'Office desks', line: 'Add desks when more of your team works out of the trailer.' },
-    { icon: 'plug', name: 'Refrigerator and microwave', line: 'Keep lunch and cold drinks in the office so nobody has to drive into town.' },
-    { icon: 'wifi', name: 'Starlink', line: 'Satellite internet comes installed on the trailer and ready to use.' },
-    { icon: 'pulse', name: 'Cellular router', line: 'A router gives you fast internet on sites where the cell signal is strong.' },
-  ], // NEW lines, options SOURCE (options sheet, Product Wiki)
+    { icon: 'desk', name: 'Office desks', line: 'Add desks when more of your team works out of the trailer.' }, // NEW, extra desks NATE (2026-11-20 answers, from Alessandro)
+    { icon: 'plug', name: 'Refrigerator and microwave', line: 'Keep lunch and cold drinks in the office so nobody has to drive into town.' }, // NEW
+    { icon: 'sun', name: '6 ft telescopic light', line: 'A light on a 6 ft mast lights up the lot at night, which helps keep the site secure and lets the crew keep working after the sun goes down.' }, // NEW. SOURCE (price sheet 2026-11-20: an add-on on both sizes), NATE (2026-11-20 answers: a light only, no camera, good for security and for working after dark)
+    { icon: 'pulse', name: 'Cellular router', line: 'A router gives you fast internet on sites where the cell signal is strong.' }, // NEW
+  ], // options SOURCE (options sheet, Product Wiki, price sheet 2026-11-20)
 };
 
 // ---------------------------------------------------------------- Power anything (Cybertruck: Power Anything With Cybertruck)
 
-/** Battery sizes and devices for the run-time list. 30 kWh is off because it isn't on the options sheet. */
+/**
+ * Battery sizes and devices for the run-time list. Sizes follow the price sheet (2026-11-20): 5 kWh on
+ * the 10 ft, 10 kWh on the 20 ft, adding 5 kWh at a time up to 20 kWh. The list opens on 10 kWh, the
+ * 20 ft's standard battery.
+ */
 export const runtime: ProductPage = {
   ...productPages.workstation,
-  power: { batteries: [5, 10, 20, 40], defaultBattery: 20, devices: ['computer', 'lightTower', 'saw', 'welder'] },
+  power: { batteries: [5, 10, 15, 20], defaultBattery: 10, devices: ['computer', 'lightTower', 'saw', 'welder'] }, // SOURCE (price sheet 2026-11-20)
 };
 /**
  * Calmer layout (Nate, 2026-11-20, "it just feels kinda busy"): the welding clip on one side, and the
@@ -250,7 +263,7 @@ export const runtime: ProductPage = {
  */
 export const power = {
   heading: ['Power anything', 'with Workstation.'], // NATE
-  intro: 'Pick a battery size and see how long it runs the lights, laptops and equipment on your site.', // NEW
+  intro: 'The 10 ft comes with a 5 kWh battery and the 20 ft with 10 kWh, and either one adds 5 kWh at a time up to 20 kWh. Pick a size and see how long it runs the lights, laptops and equipment on your site.', // NEW. Battery sizes SOURCE (price sheet 2026-11-20)
   media: { video: '/images/ws2-power-weld.mp4', poster: '/images/ws2-power-weld.jpg', alt: 'A welder in a flag-painted helmet at work behind a SPOG trailer' } as Media, // Nate's "Welding Outside" clip, the close-up half (the drone half shows other brands' trucks)
   fine: 'Hours of continuous use on a full battery, one device at a time, with no solar recharge counted. The figures come from the SPOG runtime guide.', // SOURCE (product pages)
 };
@@ -274,25 +287,37 @@ export const specs = {
   heading: ['Workstation', 'at a glance.'], // NEW
   image: '/images/lineup-workstation.webp', // Nate's cut-out, on the light specs section (2026-11-20)
   alt: 'Navy SPOG Workstation trailer with two doors and steps',
+  // Rewritten to the price sheet (2026-11-20), in the same pattern as Cargo 2's table. Every row is
+  // SOURCE (price sheet 2026-11-20) unless marked. No 10 ft height until the research on how the sheet
+  // measures it is done.
   rows: [
     ['Type', 'Site office trailer'], // NEW
-    ['Length', '10 or 20 ft'], // NATE
-    ['Weight', '[WEIGHT] lbs'], // GAP
+    ['Outside size', '10 ft long and 6.5 ft wide, or 20 ft long, 8 ft wide and 8 ft tall'], // SOURCE
+    ['Max loaded weight (GVWR)', '7,000 lbs on the 10 ft, 14,000 lbs on the 20 ft'], // SOURCE, NATE (2026-11-20 answers)
+    ['Axles', 'Dual axle on both sizes'], // SOURCE
     ['Frame', 'Welded steel'], // NATE
-    ['Battery storage', '5 to 40 kWh'], // SOURCE (Product Wiki)
-    ['Roof solar', 'Standard'], // SOURCE (Product Wiki)
-    ['Outlets', '120, 208 or 240 V, inside and outside'], // NATE (same as Cargo)
-    ['Climate control', 'Heating and cooling, standard'], // NATE, SOURCE (brand kit)
-    ['Security', '6 ft mast with work lights and a camera, standard. 28 ft mast, 360 camera and horn, optional'], // NATE (2026-11-20)
-    ['Interior', 'White composite or premium wood, with built-in desks'], // SOURCE (Product Wiki)
-    ['Floor', 'Insulated vinyl'], // SOURCE (Product Wiki)
-    ['Internet', 'Starlink or a cellular router, optional'], // SOURCE (Product Wiki, options sheet)
+    ['Battery', '5 kWh on the 10 ft and 10 kWh on the 20 ft, adding 5 kWh at a time up to 20 kWh'], // SOURCE (no 40 kWh)
+    ['Roof solar', '900 W on the 10 ft, 2,800 W on the 20 ft'], // SOURCE
+    ['Inverter', '3,000 W on the 10 ft, 6,000 W on the 20 ft'], // SOURCE
+    ['Electrical system', '48 V DC, with 120 V on the 10 ft and 120 V and 208 V on the 20 ft'], // SOURCE (no 240 V)
+    ['Outlets', '3 outside and 5 inside on the 10 ft, 4 outside and 8 inside on the 20 ft'], // SOURCE
+    ['Shore power connection', '30, 50 or 100 amp, available on request'], // SOURCE (options sheet). Not on the price sheet but still offered
+    ['Climate control', 'Heating and cooling, standard, with a hyper-heating heat pump on the 20 ft'], // SOURCE, "climate control" (Meeting with Alessandro and Joe, 2026-11-20)
+    ['Insulation', 'Walls, floor and ceiling'], // SOURCE
+    ['Interior walls', 'White composite on the 10 ft. White composite or premium wood on the 20 ft, at no extra cost'], // SOURCE, NATE (2026-11-20 answers: a free choice)
+    ['Floor', 'Insulated vinyl'], // SOURCE, NATE (2026-11-20 answers: vinyl on every model)
+    ['Desk', 'One built-in work desk, in the corner on the 10 ft'], // SOURCE
+    ['Doors', 'Side entry door and rear double doors on the 10 ft, a 36 in entry door and a single rear door on the 20 ft'], // SOURCE, NATE (2026-11-20 answers: the 20 ft's single rear door, as in the blue Workstation photos)
+    ['Window', 'One 60 in wide, 30 in tall window on the 20 ft'], // SOURCE
+    ['Security', '6 ft telescopic light, optional on both sizes. 28 ft light tower package with a camera, a light and a horn, optional on the 20 ft'], // SOURCE, NATE (2026-11-20 answers: nothing standard, no camera on the 6 ft light, no 360 camera)
+    ['Internet', 'Starlink or a cellular router, optional'], // SOURCE (options sheet, price sheet 2026-11-20)
     // ['Certifications', '[CERTIFICATION 1] and [CERTIFICATION 2]'], // held until the NATM inspection passes (Meeting with Alessandro and Joe, 2026-11-20)
     ['Warranty', '1-year limited parts, 3-year limited structural'], // SOURCE (Warranty Policy)
     ['Service', 'Remote diagnosis and a mobile service fleet'], // SOURCE (Warranty Policy)
     ['Built in', 'Middletown, New York'], // SOURCE
+    ['Base price', '$18,500 for the 10 ft, $75,000 for the 20 ft'], // SOURCE, NATE approved showing the sheet's prices (2026-11-20)
   ] as [string, string][],
-  fine: 'Options are for discussion. Availability, pricing and final specifications are confirmed in writing by SPOG.', // SOURCE (options sheet)
+  fine: 'Base prices include everything listed as standard and exclude tax, title, registration and delivery. Availability and final specifications are confirmed in writing by SPOG.', // SOURCE (price sheet 2026-11-20, options sheet), same line as Cargo 2
 };
 
 export const close = {
@@ -303,7 +328,7 @@ export const close = {
 /** Only what the page doesn't already answer (v3). */
 export const faqs = [
   {
-    q: 'Will the battery run the heat and AC all day?', // SOURCE (messaging report objection)
+    q: 'Will the battery run the climate control all day?', // SOURCE (messaging report objection), "climate control" for "heat and AC" (Meeting with Alessandro and Joe, 2026-11-20)
     a: "It depends on the battery size, the weather and how the office is used. Book a demo and we'll walk you through the run time for your site and season.", // NEW
     link: { label: 'Book a demo', href: '/demo' },
   },

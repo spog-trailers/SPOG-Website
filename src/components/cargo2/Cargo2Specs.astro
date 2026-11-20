@@ -9,9 +9,10 @@ interface Props { specs?: { heading: string[]; image: string; alt: string; rows:
 const { specs = cargoSpecs, tone = 'dark' } = Astro.props;
 const light = tone !== 'dark';
 /**
- * Specs, after Tesla's "Model Y Specs": the side profile and one clean table. Only facts the
- * options sheet, the Warranty Policy or Nate confirmed (see cargo2Page.ts). No width, solar
- * watts, payload or lead time until the product team settles them.
+ * Specs, after Tesla's "Model Y Specs": the side profile and one clean table. Cargo 2's rows follow
+ * SPOG's price sheet of 2026-11-20, the Warranty Policy and Nate (see cargo2Page.ts), with the base
+ * prices and the fine print that they exclude tax, title, registration and delivery. No payload, lead
+ * time or 10 ft height (under research). Another page's rows come from that page's data file.
  * Keeps the id "specs" for the section bar.
  */
 ---

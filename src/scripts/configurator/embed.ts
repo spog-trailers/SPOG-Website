@@ -3,8 +3,10 @@
  * Used by the "Take a tour" section on /cargo-2. The page loads this file only when the section
  * comes near, because it pulls in three.js, and stops the drawing when the section leaves.
  *
- * It shows the trailer as built in Nate's photos: black, 20 ft, with the heat and AC head, the
- * desk and the tie-down track that the finished trailer has inside. Colors are the real 12.
+ * It shows the trailer as built in Nate's photos: black, 20 ft, with the climate control head and
+ * the tie-down track that the finished trailer has inside. The built-in corner work desk is standard
+ * on every Cargo (SOURCE price sheet 2026-11-20), so the model always draws it and it is no longer
+ * an option here. The battery is the 20 ft's standard 10 kWh. Colors are the real 12.
  */
 import { TEXT_ASPECT, createController } from './controller';
 import { DEFAULT_BUILD, PAINTS, toTrailerConfig, type BuildState } from './data';
@@ -14,8 +16,8 @@ export { PAINTS };
 
 export function mountViewer(container: HTMLElement) {
   const state: BuildState = structuredClone(DEFAULT_BUILD);
-  state.battery = '20';
-  state.options = ['hvac', 'desk', 'etrackWalls'];
+  state.battery = '10'; // SOURCE price sheet 2026-11-20: the 20 ft's standard battery, so the tour shows the trailer as it comes
+  state.options = ['hvac', 'etrackWalls']; // 2026-11-20: the desk is standard now, so it's not an option
   let doorsOpen = false;
   const config = () => toTrailerConfig(state, { doorsOpen, logoAspect: TEXT_ASPECT });
 

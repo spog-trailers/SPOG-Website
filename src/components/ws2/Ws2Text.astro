@@ -1,8 +1,9 @@
 ---
 /**
- * Copy text with its [BRACKET] gaps marked. Gaps are facts Joe still has to supply (weight, tow
- * vehicle, certifications). They show on the draft on purpose, highlighted so nobody mistakes them
- * for finished copy. Fill the fact in workstation2Page.ts and the highlight goes away by itself.
+ * Copy text with its [BRACKET] gaps marked. Gaps are facts Joe still has to supply. They show on the
+ * draft on purpose, highlighted so nobody mistakes them for finished copy. Fill the fact in the
+ * page's data file and the highlight goes away by itself. /workstation-2 has none left after the
+ * 2026-11-20 price sheet (the certifications are held in a comment until the NATM inspection passes).
  */
 interface Props { text: string }
 const parts = Astro.props.text.split(/(\[[^\]]+\])/);

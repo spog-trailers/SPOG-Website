@@ -35,7 +35,9 @@ export const proof: { badge: string; slots: { who: string; quote?: string; name?
 /**
  * The lineup, after Rivian's homepage: the name set huge behind the trailer, one sentence, one
  * line of facts and two buttons. The trailers are cut out of their photos (see CLAUDE.md).
- * Prices are the starting prices Nate gave on 2026-11-18. Never add or change one without him.
+ * Cargo and Workstation prices are the starting prices on SPOG's external price sheet (2026-11-20),
+ * which Nate approved for the site that day. Event's are the ones he gave on 2026-11-18 (Event is not
+ * on the sheet). Never add or change a price without him.
  *
  * Sizing per panel, in % of the stage (the area above the sentence), so it scales with the screen:
  *   fit:  [width, height] limits for the name's font size      shot: [width, height] limits for the trailer
@@ -51,7 +53,7 @@ export const lineup = {
     {
       id: 'cargo', name: 'Cargo', tone: 'studio' as Tone, href: '/cargo', builder: '/configure/cargo',
       line: 'Haul all your gear, with the power to run your job.', // NATE
-      facts: ['From $10,000', '10 or 20 ft', 'Up to 40 kWh'], // NATE. CONFIRM 40 kWh with Joe (the Product Wiki lists Cargo at 5 to 20 kWh)
+      facts: ['From $15,000', '10 or 20 ft', 'Up to 20 kWh'], // NATE (2026-11-20 answers), price and battery SOURCE (price sheet 2026-11-20: 10 ft $15,000, 20 kWh max)
       image: '/images/lineup-cargo.webp', width: 1509, height: 786, // Nate's image (2026-11-19, 'Cargo trailer transparent background.png'). Its checkerboard was painted in, so Vision cut it out.
       alt: 'Black SPOG Cargo trailer with a side entry door and a spare wheel on the tongue',
       fit: [22, 46], shot: [92, 78], lap: 0.26,
@@ -59,7 +61,7 @@ export const lineup = {
     {
       id: 'workstation', name: 'Workstation', tone: 'studio' as Tone, href: '/workstation', builder: '',
       line: 'The site office that works the day it lands.', // SOURCE. Nate wants a new line (2026-11-18, "sounds so AI"). Ten options went to him in chat.
-      facts: ['From $15,000', '10 or 20 ft', 'Built-in climate control'], // NATE
+      facts: ['From $18,500', '10 or 20 ft', 'Built-in climate control'], // NATE (2026-11-20 answers), price SOURCE (price sheet 2026-11-20: 10 ft $18,500)
       image: '/images/lineup-workstation.webp', width: 1495, height: 838, // Nate's own cut-out (2026-11-19, 'Workstation transparent background.png')
       alt: 'Navy SPOG Workstation trailer with two doors and steps',
       fit: [10.6, 30], shot: [92, 80], lap: 0.42,
@@ -95,9 +97,13 @@ export const solutions: { heading: string[]; cards: Solution[] } = {
     {
       id: 'security', icon: 'camera', title: 'Security',
       line: 'Lock up your gear and leave it on site.', // NEW
-      body: 'Keep your tools in a locked trailer and add cameras and lights that watch the site overnight. Your crew skips the load-out at the end of the day.', // NEW. CONFIRM which cameras ship at V1.
+      // NEW (2026-11-20), facts SOURCE (price sheet 2026-11-20) and NATE (2026-11-20 answers). The 6 ft light has no camera.
+      // The camera (28 ft light tower, 20 ft only) is said once, in the Security panel of "What SPOG is made of".
+      body: 'Your crew skips the load-out at the end of the day. Add a telescopic light to any Cargo or Workstation to keep the lot lit after dark.', // NEW (2026-11-20): no longer repeats the line
       poster: shoot.wsSecurityMast, position: '50% 40%',
-      alt: 'Lights and cameras on the mast of a SPOG trailer', // a night shot of the mast at work would be stronger
+      // CONFIRM with Nate (2026-11-20 facts pass): the copy sells the 6 ft light, which has no camera, but this photo shows the
+      // tower's dome cameras under the lights. No light-only mast shot exists yet; swap when one does (a night shot of it at work).
+      alt: 'Work lights on the telescopic mast of a SPOG trailer', // NATE (2026-11-20 answers: the 6 ft light has no camera)
     },
     {
       id: 'power', icon: 'battery', title: 'Power',
@@ -141,7 +147,8 @@ export const future = {
  * Self-powered statement, in the look of the live homepage's "Pull in. Plug in." band. Nate likes
  * the look and not the copy (2026-11-18). The four pieces light up on scroll and the last turns
  * gold. Background is his snowy drone shot of a Workstation on tow, at 0.75x, smoothed and looped.
- * The live homepage's "100 kWh across the lineup" number is left out (stale).
+ * The live homepage's "100 kWh across the lineup" number is left out (stale). Its "0 gal fuel per day"
+ * was swapped for the 20 ft's roof solar on 2026-11-20, because it read as a winter claim over the snow.
  */
 export const statement = {
   eyebrow: { gold: 'Self-powered', text: 'Solar on board' }, // SOURCE
@@ -149,7 +156,7 @@ export const statement = {
   video: '/images/statement-snow-tow.mp4', poster: '/images/statement-snow-tow.jpg', // a Rivian tows it, check that's fine before launch
   numbers: [
     { label: 'Length up to', value: '20 ft', note: 'built at 10 or 20 ft' }, // NEW wording, Nate's sizes
-    { label: 'Fuel per day', value: '0 gal', note: 'on solar recharge', gold: true }, // SOURCE (live homepage). CONFIRM with Joe, the snow footage makes it read as a winter claim.
+    { label: 'Roof solar up to', value: '2,800W', note: 'on the 20 ft Cargo and Workstation', gold: true }, // SOURCE (price sheet 2026-11-20). Event isn't on the sheet, so the note names the two models it covers. Replaced "0 gal fuel per day", which read as a winter claim over the snow footage.
     { label: 'Structural warranty', value: '3 yrs', note: 'with mobile service' }, // SOURCE
   ],
 };
@@ -188,10 +195,12 @@ export const values: Feature[] = [
     id: 'security',
     title: 'Security',
     line: "Protect what's yours.", // NATE
-    image: shoot.wsSecurityMast,
-    alt: 'Lights and cameras on the mast of a SPOG trailer',
-    position: '50% 40%',
-    panel: { intro: 'Theft is a risk on every job site. Add cameras to any SPOG to keep watch on the trailer, your gear and the site around it.' }, // NATE. CONFIRM which cameras ship at V1.
+    // SOURCE (2026-11-20 facts pass): the raised 28 ft light tower, which the panel describes. Was the shop close-up of a short mast. CONFIRM with Nate.
+    image: shoot.wsOptTower,
+    alt: 'A white SPOG trailer on an empty lot with its 28 ft light tower raised',
+    position: '46% 50%',
+    // First sentence NATE. Second NEW (2026-11-20), facts SOURCE (price sheet 2026-11-20) and NATE (2026-11-20 answers).
+    panel: { intro: 'Theft is a risk on every job site. On a 20 ft Cargo or Workstation, the 28 ft light tower adds a camera that keeps watch on the trailer, your gear and the site around it.' },
   },
   {
     id: 'quality',
@@ -236,7 +245,8 @@ export const about = {
  * The "Design your trailer" tab here is the build request form. Since 2026-11-18 (Nate) the
  * "Design yours" buttons open /configure, and the Cargo ones go straight to /configure/cargo.
  * Workstation and Event have no builder yet, so their buttons open this form with the trailer picked.
- * /configure/cargo still shows sample prices, so real pricing is needed before launch.
+ * /configure/cargo takes its prices from SPOG's price sheet (2026-11-20). Options the sheet doesn't
+ * price show without a price.
  */
 export const close = {
   eyebrow: closing.eyebrow, // SOURCE

@@ -3,9 +3,10 @@ import Heading from '../ui/Heading.astro';
 import { lineupEntry, specRows, type ProductPage } from '../../data/productPages';
 import { drawing, viewBox } from '../../scripts/sizeDrawing';
 
-// Rivian's "Size it up", reworked for trailers: the trailer drawn to scale behind a full-size
-// pickup, so the length reads in a glance. Only the length is labeled. The spec table sits
-// underneath (id="specs").
+// Rivian's "Size it up", reworked for trailers: the trailer drawn to scale with a full-size
+// pickup for reference, so the length reads in a glance. Only the length is labeled. The spec
+// table sits underneath (id="specs"). The pickup is for scale only: never say what vehicle can
+// tow a SPOG (Nate, 2026-11-20). The words say "for reference" and "for scale" for that reason.
 // look="work" sets the heading in the heavy uppercase of the Cargo and Workstation pages.
 interface Props { page: ProductPage; look?: 'default' | 'work' }
 const { page, look = 'default' } = Astro.props;
@@ -21,7 +22,7 @@ const rows = specRows(page.id);
     <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-8">
       <div>
         <Heading class={work ? `text-white ${work}` : "text-white"}>{lengthRange}.</Heading>
-        <p class="mb-0 mt-[18px] max-w-[460px] t-body text-mute">Drawn to scale behind a full-size pickup. Pick a length.</p>
+        <p class="mb-0 mt-[18px] max-w-[460px] t-body text-mute">Drawn to scale with a full-size pickup for reference. Pick a length.</p><!-- NEW (2026-11-20): "for reference", so the drawing makes no tow vehicle claim -->
       </div>
       <div class="flex flex-wrap gap-1.5" role="group" aria-label="Trailer length">
         {lengths.map((l) => (
@@ -46,7 +47,7 @@ const rows = specRows(page.id);
         set:html={drawing(defaultLength, maxLength)}
       />
       <figcaption class="mt-6 flex flex-wrap items-baseline justify-between gap-4 border-t border-line pt-5">
-        <span class="t-fine text-mute"><i class="mr-2 inline-block h-[2px] w-5 bg-[#6b6e75] align-middle"></i>Full-size pickup, about 19 ft</span>
+        <span class="t-fine text-mute"><i class="mr-2 inline-block h-[2px] w-5 bg-[#6b6e75] align-middle"></i>Full-size pickup for scale, about 19 ft</span>
         <span id="size-readout" aria-live="polite" class="t-body-sm font-semibold text-white">
           <i class="mr-2 inline-block h-[2px] w-5 bg-gold align-middle"></i><span data-readout>{defaultLength} ft</span> {p.name}
         </span>

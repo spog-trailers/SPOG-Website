@@ -12,13 +12,25 @@
  * Copy marks:
  *   NATE     his own words, or his pick
  *   SOURCE   an approved line or fact: the Cargo Trailer Messaging Report, the Objections & FAQ doc,
- *            the Warranty Policy, or the Trailer Customization Options sheet (SPOG-D-0001)
+ *            the Warranty Policy, the Trailer Customization Options sheet (SPOG-D-0001), or SPOG's
+ *            external price sheet (2026-11-20)
  *   NEW      written for this page (v3 approved by Nate to go live, 2026-11-20)
+ *   CONFIRM  a line someone still has to sign off
  *   GAP      a [BRACKET] fact Joe still has to supply. Brackets show highlighted on the page on purpose.
+ *            None are left since the 2026-11-20 price sheet and Nate's answers (weight, battery, side door
+ *            and security settled; the tow vehicle dropped, since the page never claims what can tow it).
+ *
+ * Facts pass (2026-11-20). Every spec and price follows SPOG's external price sheet of 2026-11-20 and
+ * Nate's answers to questions about it. Where the older options sheet (SPOG-D-0001) disagrees, the
+ * price sheet wins: no 240 V, battery 5 to 20 kWh, vinyl floor, no shelving, cabinets or overhead
+ * storage, the desk is standard, cameras only on the 20 ft's 28 ft light tower.
  *
  * Rules this page keeps:
- *   - One price only, Nate's "Starting at $10,000" in the hero.
- *   - Only facts the options sheet or Nate confirmed. No solar watts, width, lead time or payload.
+ *   - Prices are the sheet's base prices only, "Starting at $15,000" in the hero and both sizes in
+ *     Specs, with the line that they exclude tax, title, registration and delivery. Add-on prices
+ *     stay in the builder at /configure/cargo, so none are shown here.
+ *   - Only facts from the price sheet, the Warranty Policy or Nate. No 10 ft height (under research),
+ *     no lead time, no payload, and never a claim about what vehicle can tow it.
  *   - The 3D model is labeled computer-generated, and its optional extras are named.
  */
 import { shoot } from './content';
@@ -36,7 +48,7 @@ export const demo = { label: 'Book a demo', href: '/demo' }; // NATE
 export const hero = {
   name: 'Cargo',
   line: 'Haul all your gear, lock it up at night and run your job on solar power, all on a welded steel frame.', // NATE approved (v2)
-  price: 'Starting at $10,000', // NATE (Notion, 2026-11-19: one price under the line, like Rivian)
+  price: 'Starting at $15,000', // NATE (2026-11-20 answers), SOURCE (price sheet 2026-11-20: the 10 ft Cargo). One price under the line, like Rivian (Notion, 2026-11-19)
   image: shoot.cargoHero,
   alt: 'Black SPOG Cargo trailer parked outside the SPOG shop in Middletown, New York',
 };
@@ -61,27 +73,27 @@ export const overview = {
   cards: [
     {
       title: 'Haul it all', // NEW (Cybertruck: Bring It All)
-      body: 'Up to 20 ft of enclosed space holds the tools and materials for the whole job, so nothing gets lost in the shuffle between sites. The rear barn doors swing wide for carts, ladders and gear.', // NEW, "lost in the shuffle" SOURCE (messaging report)
+      body: 'Up to 20 ft of enclosed space holds the tools and materials for the whole job, so nothing gets lost in the shuffle between sites. The rear barn doors swing wide for carts, ladders and gear, and a side entry door lets the crew in without opening up the back.', // NEW, "lost in the shuffle" SOURCE (messaging report). Side door on both sizes SOURCE (price sheet 2026-11-20)
       media: { src: shoot.cargoStorage, alt: 'A black SPOG Cargo with both barn doors swung open, the lit interior behind them', position: '50% 50%' },
     },
     {
       title: 'Power on tap', // NEW (Cybertruck: Power On Tap)
-      body: "Plug full-size corded tools like a table saw into 120, 208 or 240 V outlets, so the crew gets more done than it would on battery tools. At the end of the day, leave the tool batteries charging in the locked trailer, and they're ready when the crew comes back in the morning.", // NEW (Meeting with Alessandro and Joe, 2026-11-20: Joe on corded tools and production, Jay's overnight charging). Voltages SOURCE (options sheet). Battery sizes and shore power live in Specs
+      body: "Plug full-size corded tools like a table saw into the 120 V outlets inside and outside the trailer (the 20 ft adds 208 V), so the crew gets more done than it would on battery tools. At the end of the day, leave the tool batteries charging in the locked trailer, and they're ready when the crew comes back in the morning.", // NEW (Meeting with Alessandro and Joe, 2026-11-20: Joe on corded tools and production, Jay's overnight charging). Voltages SOURCE (price sheet 2026-11-20: 120 V on the 10 ft, 120 and 208 V on the 20 ft, no 240 V). Battery, inverter, outlet counts and shore power live in Specs
       media: { src: '/images/cargo2-battery-card.jpg', alt: 'Two SPOG battery units in their open aluminum cages on a low white platform inside a Cargo' }, // Better Interior 60, cropped to the batteries
     },
     {
       title: 'Set it up your way', // NEW (Cybertruck: Full Range of Motion)
-      body: 'Lay out the inside with shelving, cabinets, overhead storage and a workbench. E-track on the walls and floor takes the fold-down tables, tool holders and straps crews already buy, so every tool has a place and every load stays put.', // NEW, options SOURCE (options sheet), E-track accessories from Joe (Meeting with Alessandro and Joe, 2026-11-20)
+      body: 'Every Cargo comes with a built-in work desk in the front corner for paperwork and a laptop. Add a workbench and E-track on the walls and floor, which takes the fold-down tables, tool holders and straps crews already buy, so every tool has a place and every load stays put.', // NEW. Desk standard SOURCE (price sheet 2026-11-20). Shelving, cabinets and overhead storage removed NATE (2026-11-20 answers). Workbench and E-track still offered (options sheet), E-track accessories from Joe (Meeting with Alessandro and Joe, 2026-11-20)
       media: { src: shoot.cargoEtrackCard, alt: 'E-track rails down the white wall of a SPOG Cargo, with the battery units on their platform', position: '50% 50%' },
     },
     {
       title: 'Lock down the site', // NEW (Cybertruck: Lockable Storage), Nate's security direction from /workstation-2
-      body: "Full-height bars lock the rear doors at night, and you can add security cameras, an AI job site camera system and a horn and strobe that scare off anyone who shouldn't be there. [SECURITY: is the 6 ft mast with work lights and a camera offered on Cargo too?]", // NEW, add-ons SOURCE (options sheet). GAP
+      body: 'Full-height bars lock the rear doors at night. Either size can add a 6 ft telescopic light that lights up the lot and lets the crew keep working after the sun goes down, and the 20 ft can add a 28 ft light tower with a light, a horn and your pick of an AI or a regular security camera.', // NEW (reworded 2026-11-20 review: the tower reads as an add-on, not standard on the 20 ft). Add-ons SOURCE (price sheet 2026-11-20) and NATE (2026-11-20 answers: the 6 ft is a light only, no camera; one camera on the 28 ft tower, AI or regular, same price; no cameras on the 10 ft; no 360 camera, AI camera system or horn and strobe). The 6 ft light and the tower are said here only, nowhere else on the page
       media: { src: shoot.cargoDoorsCard, alt: 'The rear barn doors of a black SPOG Cargo, locked with two full-height bars', position: '50% 50%' },
     },
     {
       title: 'Throw the job at it', // NEW (Cybertruck: Throw Anything at It)
-      body: 'Every Cargo rides on a welded steel frame with steel crossmembers across the floor, built to carry its solar and battery over gravel lots and muddy driveways. Inside, the white composite walls are backed by plywood and the floor is rubber, so the trailer takes the knocks of a working day.', // NATE (steel frame, rubber floor only), Joe (composite panels over plywood, standard), Meeting with Alessandro and Joe, 2026-11-20
+      body: 'Every Cargo rides on a welded steel frame with steel crossmembers across the floor, built to carry its solar and battery over gravel lots and muddy driveways. Inside, plywood backs the white composite walls so they take the knocks of a working day, and the floor is vinyl.', // NATE (steel frame), Joe (composite panels over plywood, standard, Meeting with Alessandro and Joe, 2026-11-20). Vinyl floor NATE (2026-11-20 answers: vinyl on every model, not rubber or plywood)
       media: { video: '/images/cargo2-weld-loop.mp4', poster: '/images/cargo2-weld-loop.jpg', alt: 'A welder joining the steel frame of a SPOG trailer in the Middletown shop' },
     },
   ] as Card[],
@@ -94,7 +106,7 @@ export const tour = {
   heading: ['See how it works', 'for you.'], // NATE (Notion, 2026-11-19)
   views: [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street', 'Street side'], ['top', 'Roof'], ['interior', 'Inside']] as [string, string][],
   model: 'Computer-generated model. The finished trailer may differ.', // NATE asked for this notice (2026-11-18)
-  extras: 'Shown with optional climate control, an office desk and tie-down track on the walls.', // NEW, names the optional items the model shows. "Climate control", never "HVAC" (Meeting with Alessandro and Joe, 2026-11-20)
+  extras: 'Shown with optional climate control and E-track on the walls.', // NEW (2026-11-20 facts pass): names the optional items the model shows. Battery SOURCE (price sheet 2026-11-20: base is 5 kWh on the 10 ft and 10 kWh on the 20 ft, 20 kWh max; embed.ts draws the 20 kWh). The desk is standard now (price sheet 2026-11-20), so it's no longer listed as optional; the "may differ" notice covers its shape. "Climate control", never "HVAC" (Meeting with Alessandro and Joe, 2026-11-20). /workstation-2 spreads this tour, so this line shows there too
   poster: '/images/configure-cargo.jpg',
 };
 
@@ -118,18 +130,18 @@ export const replaces = {
 
 export const anywhere = {
   heading: ['Take it', 'anywhere.'], // NATE (Workstation)
-  sub: 'Solar comes standard, Starlink is one add-on away, and the whole trailer hitches up and tows to the next job with the gear already inside.', // NEW (v3)
+  sub: 'Wherever the next job is, Cargo goes with it, and the crew gets to work from the first hour.', // NEW (2026-11-20 facts pass: solar, Starlink and towing are each said once, in their cards)
   lead: { src: shoot.cargoStatement, alt: 'Low drone view of a black SPOG Cargo outside the SPOG shop, SPOG painted on the bay doors', position: '50% 55%' } as Media,
   cards: [
     {
       title: 'Solar power',
-      body: 'Panels across the roof recharge the battery every sunny day, and roof solar comes standard on every Cargo.', // NEW, SOURCE (options sheet)
+      body: 'Every Cargo comes with solar panels across the roof, 900 W on the 10 ft and 2,800 W on the 20 ft, wired to its battery and inverter.', // NEW, watts SOURCE (price sheet 2026-11-20). No "every sunny day" recharge line (Nate's rule)
       media: { src: shoot.cargoSolar, alt: 'A SPOG Cargo from above, five solar panels across the whole roof', position: '36% 20%' },
     },
     {
       title: 'Stay connected',
-      body: 'Add Starlink and your crew stays online on rural sites where phones lose signal, so the daily report goes out from the job.', // NEW, NATE (Starlink)
-      media: { src: shoot.cargoStarlinkCard, alt: 'Starlink dish on top of a SPOG mast against a blue sky', position: '50% 30%' },
+      body: 'Add Starlink and we install the dish on the trailer (you set up your own Starlink plan), so your crew stays online on rural sites where phones lose signal and the daily report goes out from the job.', // NEW. Starlink on Cargo NATE (2026-11-20 answers), dish and install included, plan by the buyer NATE (2026-11-20 answers)
+      media: { src: '/images/cargo2-starlink-dish-card.jpg', alt: 'Starlink dish on top of a SPOG mast against a blue sky', position: '50% 50%' }, // SOURCE (2026-11-20 facts pass: cropped above the dome cameras). Cut from cargo2-starlink-card.jpg so the dish and lights show and the cameras don't
     },
     {
       title: 'Hitch up and go',
@@ -138,9 +150,9 @@ export const anywhere = {
     },
   ] as Card[],
   stats: [
-    ['[WEIGHT] lbs', 'Weight'], // GAP
+    ['Up to 9,500 lbs', 'Max loaded weight'], // SOURCE (price sheet 2026-11-20, GVWR: 7,000 lbs on the 10 ft, 9,500 lbs on the 20 ft; both sizes in Specs). NATE (2026-11-20 answers: show the weight)
     ['10 or 20 ft', 'Length'], // NATE
-    ['[TOW VEHICLE]', 'Tows behind'], // GAP
+    ['Dual axle', 'On both sizes'], // SOURCE (price sheet 2026-11-20). Replaced the tow vehicle stat: never claim what vehicle can tow it
   ] as [string, string][],
 };
 
@@ -148,7 +160,7 @@ export const anywhere = {
 
 export const built = {
   heading: ['Built for whatever', 'the job site brings.'], // NATE (2026-11-19)
-  sub: 'Other companies cut corners with staples and glue, and most cargo trailers go without insulation. Every Cargo has insulated walls and roof, and every SPOG is designed and built by our own crew in Middletown, New York, from welding to wiring.', // NATE, insulation added from Meeting with Alessandro and Joe, 2026-11-20. CONFIRM "most cargo trailers go without insulation" (Joe said regular cargo trailers aren't insulated)
+  sub: 'Other companies cut corners with staples and glue, and most cargo trailers go without insulation. Every Cargo is insulated in the walls, floor and ceiling, and every SPOG is designed and built by our own crew in Middletown, New York, from welding to wiring.', // NATE, insulation from Meeting with Alessandro and Joe, 2026-11-20. Walls, floor and ceiling SOURCE (price sheet 2026-11-20). CONFIRM "most cargo trailers go without insulation" (Joe said regular cargo trailers aren't insulated)
   lead: { src: shoot.cargoFrame, alt: 'A welded steel trailer floor frame with steel crossmembers on the floor of the SPOG shop', position: '50% 72%' } as Media, // Nate's photo (2026-11-19)
   cards: [
     {
@@ -166,20 +178,21 @@ export const built = {
 
 // ---------------------------------------------------------------- Add what you need (Cybertruck: Add What You Need)
 
-/** Large photo cards, small tiles, then the builder, which has the full options list (it replaced v2's checklist). */
+/**
+ * Large photo cards, small tiles, then the builder, which has the full options list and the add-on
+ * prices (it replaced v2's checklist). Facts pass 2026-11-20: the Office desk card is gone because the
+ * desk is standard (Set it up your way says so), Starlink lives in Take it anywhere and the lights and
+ * tower in Lock down the site, so the carousel is two cards. Extra desks took the Whiteboard tile's
+ * place (the whiteboard is still in the builder) to keep the tile row at four.
+ */
 export const options = {
   heading: ['Add what', 'you need.'], // NEW (v3)
   sub: 'Pick the extras that fit your crew, or build your exact Cargo in the builder.', // NEW (v3)
   cards: [
     {
       title: 'Climate control', // Meeting with Alessandro and Joe, 2026-11-20
-      body: 'Add heating and cooling, and the trailer becomes a place to warm up, cool off or take a call out of the weather.', // NEW, option SOURCE (options sheet)
+      body: 'Add heating and cooling, and the trailer becomes a place to warm up, cool off or take a call out of the weather.', // NEW, option SOURCE (price sheet 2026-11-20, an add-on on both Cargo sizes)
       media: { src: shoot.cargoHvac, alt: 'Inside a SPOG Cargo, a heating and cooling unit on the wall over the desk', position: '50% 35%' },
-    },
-    {
-      title: 'Office desk',
-      body: 'Add a desk for paperwork, plans and a laptop, so the trailer works as a small office between jobs.', // NEW, option SOURCE (options sheet)
-      media: { src: shoot.cargoInterior, alt: 'A long black-topped desk down the wall of a SPOG Cargo, battery units behind it', position: '50% 62%' },
     },
     {
       title: "Your company's look",
@@ -188,11 +201,11 @@ export const options = {
     },
   ] as Card[],
   more: [
-    { icon: 'pulse', name: 'Cellular router', line: 'A router gives you fast internet on sites where the cell signal is strong.' },
+    { icon: 'desk', name: 'Extra desks', line: 'Add desks when more of the crew does paperwork in the trailer.' }, // NEW, NATE (2026-11-20 answers: extra desks, from Alessandro)
     { icon: 'plug', name: 'Refrigerator and microwave', line: 'Keep lunch and cold drinks on site so nobody has to drive into town.' },
     { icon: 'screen', name: 'TV or monitor', line: 'Put the drawings and the schedule up on a big screen.' },
-    { icon: 'check', name: 'Whiteboard', line: 'Plan the week where the whole crew can see it.' },
-  ], // NEW lines, options SOURCE (options sheet)
+    { icon: 'pulse', name: 'Cellular router', line: 'A router gives you fast internet on sites where the cell signal is strong.' },
+  ], // NEW lines, options SOURCE (options sheet, still offered per the 2026-11-20 facts, no sheet price)
   link: { label: 'See every option in the builder', href: '/configure/cargo' }, // NEW
 };
 
@@ -202,22 +215,31 @@ export const specs = {
   heading: ['Cargo', 'at a glance.'], // NEW
   image: '/images/lineup-cargo.webp', // Nate's cut-out, on the light specs section (v3)
   alt: 'Black SPOG Cargo trailer with solar on the roof',
+  // Rewritten to the price sheet (2026-11-20). Every row is SOURCE (price sheet 2026-11-20) unless marked.
   rows: [
     ['Type', 'Enclosed cargo trailer'], // NATE (2026-11-19)
-    ['Length', '10 or 20 ft'], // NATE
-    ['Weight', '[WEIGHT] lbs'], // GAP
+    ['Outside size', '10 ft long and 6.5 ft wide, or 20 ft long, 8 ft wide and 8 ft 2 in tall'], // SOURCE. The 10 ft height is held until the research on how it's measured is done
+    ['Max loaded weight (GVWR)', '7,000 lbs on the 10 ft, 9,500 lbs on the 20 ft'], // SOURCE, NATE (2026-11-20 answers)
+    ['Axles', 'Dual axle on both sizes'], // SOURCE
     ['Frame', 'Welded steel'], // NATE (2026-11-19)
-    ['Standard on every trailer', 'Roof solar panels, battery storage, and insulated roof and walls'], // SOURCE (options sheet)
-    ['Battery storage', '5, 10, 20 or 40 kWh, or other'], // SOURCE (options sheet). CONFIRM 40 kWh on Cargo
-    ['Output voltage', '120 V, 208 V, 240 V'], // SOURCE (options sheet)
-    ['Shore power connection', '30, 50 or 100 amp'], // SOURCE (options sheet)
-    ['Doors', 'Large rear barn doors. Side entry door on the 20 ft shown'], // SOURCE (options sheet, Product Wiki). CONFIRM the side door on the 10 ft
-    ['Interior', 'White composite wall panels over plywood, rubber floor'], // Joe and NATE (Meeting with Alessandro and Joe, 2026-11-20): composite panels standard on every trailer, rubber floor only
+    ['Battery', '5 kWh on the 10 ft and 10 kWh on the 20 ft, adding 5 kWh at a time up to 20 kWh'], // SOURCE (no 40 kWh)
+    ['Roof solar', '900 W on the 10 ft, 2,800 W on the 20 ft'], // SOURCE
+    ['Inverter', '3,000 W on the 10 ft, 6,000 W on the 20 ft'], // SOURCE
+    ['Electrical system', '48 V DC, with 120 V on the 10 ft and 120 V and 208 V on the 20 ft'], // SOURCE (no 240 V)
+    ['Outlets', '3 outside and 5 inside'], // SOURCE (both Cargo sizes)
+    ['Shore power connection', '30, 50 or 100 amp'], // SOURCE (options sheet). Not on the price sheet but still offered, unpriced (2026-11-20 facts)
+    ['Insulation', 'Walls, floor and ceiling'], // SOURCE
+    ['Interior walls', 'White composite panels over plywood'], // SOURCE, plywood from Joe (Meeting with Alessandro and Joe, 2026-11-20)
+    ['Floor', 'Vinyl'], // NATE (2026-11-20 answers: vinyl on every model, the sheet's plywood is wrong)
+    ['Desk', 'One built-in work desk in the front corner'], // SOURCE
+    ['Doors', 'Side entry door and rear barn doors on both sizes'], // SOURCE
+    ['Climate control', 'Heating and cooling, optional on both sizes'], // SOURCE
     ['Warranty', '1-year limited parts, 3-year limited structural'], // SOURCE (Warranty Policy)
     ['Service', 'Remote diagnosis and a mobile service fleet'], // SOURCE (Warranty Policy)
     ['Built in', 'Middletown, New York'], // SOURCE
+    ['Base price', '$15,000 for the 10 ft, $50,000 for the 20 ft'], // SOURCE, NATE approved showing the sheet's prices (2026-11-20)
   ] as [string, string][],
-  fine: 'Options are for discussion. Availability, pricing and final specifications are confirmed in writing by SPOG.', // SOURCE (options sheet)
+  fine: 'Base prices include everything listed as standard and exclude tax, title, registration and delivery. Availability and final specifications are confirmed in writing by SPOG.', // SOURCE (price sheet 2026-11-20, options sheet)
 };
 
 // ---------------------------------------------------------------- close and FAQ

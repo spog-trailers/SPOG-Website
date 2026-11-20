@@ -7,13 +7,16 @@
  *
  * The trailer is a 3D model built in code from Nate's photos of the finished black 20 ft Cargo.
  * The OPTIONS are real: they follow SPOG's "Trailer Customization Options" sheet (SPOG-D-0001)
- * and the color list Nate sent, in the sheet's order and mostly its words. The PRICES are samples,
- * except "From $10,000". See src/scripts/configurator/data.ts. Nothing is sent anywhere and no
- * payment is taken. Not indexed.
+ * and the color list Nate sent, in the sheet's order and mostly its words. The PRICES are real
+ * since 2026-11-20 (SOURCE price sheet 2026-11-20, approved by Nate): Cargo 10 $15,000, Cargo 20
+ * $50,000, battery steps, climate control, Starlink, the 6 ft light and the 28 ft tower. Options
+ * the sheet doesn't price show as Quoted and stay out of the total. There is no deposit or delivery
+ * fee (the old sample numbers were removed). See src/scripts/configurator/data.ts. Nothing is sent
+ * anywhere and no payment is taken. Not indexed.
  */
 import Base from '../../layouts/Base.astro';
 import { img, phone } from '../../data/content';
-import { BATTERIES, BENCH_LENGTHS, CONNECT, DELIVERY_FEE, DEPOSIT, INTERIOR, LOGO_SPOTS, PAINTS, SHORE, SIZES, TOOLS, VOLTS, moneyTotal, type Option } from '../../scripts/configurator/data';
+import { BATTERIES, BENCH_LENGTHS, CONNECT, INTERIOR, LOGO_SPOTS, PAINTS, SHORE, SIZES, TOOLS, TOWER_CAMERAS, moneyTotal, type Option } from '../../scripts/configurator/data';
 
 const card = 'mt-3 rounded-[10px] bg-[#f4f4f4] px-6 pb-6 pt-5 max-[480px]:px-5';
 const h2 = 'm-0 text-[22px] font-semibold tracking-[-.02em] text-ink';
@@ -32,22 +35,23 @@ const check = '<svg viewBox="0 0 24 24" class="size-3 fill-none stroke-current s
 const chip = 'cursor-pointer rounded-full border border-[#cfd0d2] bg-transparent px-3 py-1.5 text-[12.5px] font-semibold text-ink hover:border-[#8f9195] aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-white';
 const mini = 'grid size-[34px] cursor-pointer place-items-center rounded-[6px] border border-[#cfd0d2] bg-white text-[16px] font-semibold text-ink hover:border-[#8f9195] disabled:cursor-not-allowed disabled:opacity-35';
 const groups = (list: Option[]) => [...new Set(list.map((o) => o.group))].map((g) => ({ name: g, items: list.filter((o) => o.group === g) }));
-// Options that take a quantity or a size once they're checked.
-const details: Record<string, { kind: 'count' | 'length'; key: string; label: string }> = {
-  desk: { kind: 'count', key: 'desks', label: 'Quantity' },
-  cabinets: { kind: 'count', key: 'cabinets', label: 'Quantity' },
+// Options that take a quantity, a size or a choice once they're checked.
+// 2026-11-20 (price sheet): cabinets are gone, the extra desk replaces the old desk add-on, the tower picks its camera.
+const details: Record<string, { kind: 'count' | 'length' | 'camera'; key: string; label: string }> = {
+  extraDesk: { kind: 'count', key: 'desks', label: 'Quantity' },
   bench: { kind: 'length', key: 'benchLength', label: 'Length' },
+  tower: { kind: 'camera', key: 'towerCamera', label: 'Camera' }, // NATE 2026-11-20: AI camera or regular security camera, same price
 };
 
 const callouts = [
   { id: 'solar', label: 'Solar roof', text: 'Panels across the roof charge the battery while you work.', dir: 'up', len: 84 },
-  { id: 'power', label: 'Power system', text: 'The inverter sits in the nose. The battery units stand along the walls inside.', dir: 'up', len: 52 },
+  { id: 'power', label: 'Power system', text: 'The battery and inverter are built in and run the outlets inside and out.', dir: 'up', len: 52 }, // NEW 2026-11-20 (facts only)
   { id: 'door', label: 'Side entry door', text: 'Walk in from the curb side without opening the rear.', dir: 'down', len: 96 },
   { id: 'wheels', label: 'Wheels and fenders', text: 'Black machined wheels under brushed aluminum fenders.', dir: 'down', len: 64 },
 ];
 const views = [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street', 'Street side'], ['top', 'Roof'], ['interior', 'Interior']];
 ---
-<Base title="Design your Cargo | SPOG Trailers" description="Design a SPOG Cargo trailer in 3D. Concept configurator with sample pricing." noindex>
+<Base title="Design your Cargo | SPOG Trailers" description="Design a SPOG Cargo trailer in 3D and see the price as you build it." noindex>
   <div id="cfg" data-step="design" class="group/cfg min-h-screen bg-white text-ink">
     <!-- Top bar -->
     <header class="fixed inset-x-0 top-0 z-40 flex h-[56px] items-center justify-between bg-white px-7 max-[640px]:px-4">
@@ -56,7 +60,7 @@ const views = [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street'
         <a href="/configure" class="text-[12.5px] font-semibold text-ink-soft no-underline hover:text-ink">&larr; All trailers</a>
       </div>
       <div class="flex items-center gap-5 text-[12.5px] text-ink-soft">
-        <span class="rounded-full bg-[#f4f4f4] px-3 py-1 font-semibold max-[640px]:hidden">Concept. Sample pricing.</span>
+        <span class="rounded-full bg-[#f4f4f4] px-3 py-1 font-semibold max-[899px]:hidden">Prices exclude tax, title, registration and delivery.</span><!-- SOURCE price sheet 2026-11-20, replaces the sample-pricing badge -->
         <a href={phone.href} class="font-semibold text-ink no-underline hover:underline">{phone.display}</a>
       </div>
     </header>
@@ -103,7 +107,7 @@ const views = [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street'
         <!-- ============ Design ============ -->
         <div data-panel="design">
           <h1 class="m-0 text-center text-[40px] font-semibold leading-[1.1] tracking-[-.03em] text-ink">Cargo</h1>
-          <p class="mb-0 mt-2 text-center text-[13.5px] text-ink-soft">Est. build time <span data-out="lead" class="font-semibold text-ink"></span></p>
+          {/* The estimated build time was removed on 2026-11-20: no source gives a lead time. */}
 
           <section data-section data-view="front" class={`${card} mt-7`}>
             <dl class="m-0 grid grid-cols-[repeat(3,1fr)] gap-3">
@@ -113,13 +117,14 @@ const views = [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street'
             </dl>
             <div class="mt-5 grid gap-2">
               {SIZES.map((s) => (
-                <button type="button" data-opt="length" data-value={s.ft} data-go="front" aria-pressed="false" disabled={!!s.soon} class={`${choice} items-center justify-between`}>
-                  <span><span class="block text-[14.5px] font-semibold">{s.name}</span><span class="block text-[13px] text-ink-soft">{s.soon || s.note}</span></span>
-                  {s.price !== null && <span class="text-[14.5px] font-semibold">{moneyTotal(s.price)}</span>}
+                <button type="button" data-opt="length" data-value={s.ft} data-go="front" aria-pressed="false" class={`${choice} items-center justify-between`}>
+                  <span><span class="block text-[14.5px] font-semibold">{s.name}</span><span class="block text-[13px] text-ink-soft">{s.note}</span></span>
+                  <span class="text-[14.5px] font-semibold">{moneyTotal(s.price)}</span>
                 </button>
               ))}
             </div>
-            <p class="mb-0 mt-3 text-[12.5px] text-ink-soft">Standard on every trailer: roof solar panels, battery storage, and insulated roof and walls.</p>
+            {/* SOURCE price sheet 2026-11-20 Included list. Solar and battery are in the stats and Power, the desk is in Interior. Vinyl floor per NATE 2026-11-20. */}
+            <p class="mb-0 mt-3 text-[12.5px] text-ink-soft">Every Cargo is insulated in the walls, floor and ceiling, with white composite walls over plywood, a vinyl floor, a side entry door and rear double doors.</p>
           </section>
 
           <section data-section data-view="front" class={card}>
@@ -155,24 +160,22 @@ const views = [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street'
           <section data-section data-view="interior" class={card}>
             <h2 class={h2}>Power</h2>
             <div class={`${row} mt-4`}><span data-out="name-battery" class={name}></span><span data-out="price-battery"></span></div>
-            <p class={`${sub} m-0`}>Energy stored on board.</p>
-            <div class="mt-2.5 grid grid-cols-[repeat(5,1fr)] gap-1.5">
-              {BATTERIES.map((b) => <button type="button" data-opt="battery" data-value={b.id} data-go="interior" aria-pressed="false" class={`${seg} max-[420px]:text-[12px]`}>{b.id === 'other' ? 'Other' : `${b.kwh} kWh`}</button>)}
-            </div>
-            <div id="battery-other-wrap" class="mt-2 hidden"><label for="battery-other" class={label}>How many kWh?</label><input id="battery-other" type="number" min="1" max="200" inputmode="numeric" class={field} /></div>
-
-            <div class={`${row} mt-6`}><span class={name}>Output voltage</span><span data-out="price-volts"></span></div>
-            <p class={`${sub} m-0`}>The voltage at the outlets. Check all you need.</p>
-            <div class="mt-2.5 grid grid-cols-[repeat(3,1fr)] gap-1.5">
-              {VOLTS.map((v) => <button type="button" data-toggle="volts" data-value={v.id} aria-pressed="false" class={seg}>{v.name}</button>)}
+            <p data-out="battery-sub" class={`${sub} m-0`}></p>
+            {/* SOURCE price sheet 2026-11-20: 5 kWh steps up to 20 kWh. Steps below the length's base are greyed out by ui.ts. */}
+            <div class="mt-2.5 grid grid-cols-[repeat(4,1fr)] gap-1.5">
+              {BATTERIES.map((b) => <button type="button" data-opt="battery" data-value={b.id} data-go="interior" aria-pressed="false" class={`${seg} max-[420px]:text-[12px]`}>{b.kwh} kWh</button>)}
             </div>
 
+            {/* SOURCE price sheet 2026-11-20: voltage is set by the length (no 240 V), so it's shown as included, not picked. */}
+            <div class={`${row} mt-6`}><span class={name}>Inverter and outlets</span><span>Included</span></div>
+            <p data-out="power-included" class={`${sub} m-0`}></p>
+
+            {/* NATE 2026-11-20: shore power stays available but isn't on the price sheet, so it's quoted. */}
             <div class={`${row} mt-6`}><span class={name}>Shore power connection</span><span data-out="price-shore"></span></div>
-            <p class={`${sub} m-0`}>Plug-in size for site or grid power.</p>
+            <p class={`${sub} m-0`}>Pick the plug-in size for site or grid power. Your SPOG contact prices it with your build.</p> {/* NEW 2026-11-20, full sentences */}
             <div class="mt-2.5 grid grid-cols-[repeat(3,1fr)] gap-1.5">
               {SHORE.map((v) => <button type="button" data-opt="shore" data-value={v.id} aria-pressed="false" class={seg}>{v.name}</button>)}
             </div>
-            <p class="mb-0 mt-4 text-[12.5px] text-ink-soft">Power options depend on trailer length. Your SPOG contact will confirm what fits your trailer.</p>
 
             <div class="mt-6 rounded-[8px] bg-white px-4 pb-4 pt-3.5">
               <p class="m-0 text-[14px] font-semibold">What runs on a normal day?</p>
@@ -182,20 +185,24 @@ const views = [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street'
               <div class="mt-4 h-[6px] overflow-hidden rounded-full bg-[#e6e6e6]"><i data-out="run-bar" class="block h-full rounded-full bg-gold transition-[width] duration-500"></i></div>
               <p data-out="run-head" class="mb-0 mt-2.5 text-[14px] font-semibold"></p>
               <p data-out="run-detail" class={`${sub} m-0`}></p>
-              <p class="mb-0 mt-2 text-[11.5px] text-ink-soft">A rough sample estimate: full battery, four sun hours, no plug-in.</p>
+              <p class="mb-0 mt-2 text-[11.5px] text-ink-soft">A rough estimate with a full battery, four hours of sun and nothing plugged in. Tool draws are typical figures.</p>
             </div>
           </section>
 
           {[
             { title: 'Interior', intro: 'What you would like built in or installed inside.', view: 'interior', list: INTERIOR },
-            { title: 'Connectivity and security', intro: 'How the trailer gets online and how the site is monitored.', view: 'street', list: CONNECT },
+            { title: 'Connectivity and security', intro: 'How the trailer gets online, and how it lights up the site after dark.', view: 'street', list: CONNECT }, // NEW 2026-11-20, the 6 ft light is a light only
           ].map((sec) => (
             <section data-section data-view={sec.view} class={card}>
               <h2 class={h2}>{sec.title}</h2>
               <p class={`${sub} mb-0`}>{sec.intro}</p>
+              {/* SOURCE price sheet 2026-11-20: one built-in front corner work desk is standard on every Cargo. */}
+              {sec.list === INTERIOR && (
+                <div class={`${row} mt-5 rounded-[6px] bg-white px-4 py-[13px]`}><span><span class="block font-semibold">Built-in corner work desk</span><span class={`${sub} block`}>In the front corner of every Cargo.</span></span><span class="shrink-0">Included</span></div>
+              )}
               {groups(sec.list).map((grp) => (
                 <Fragment>
-                  <h3 class="mb-0 mt-5 text-[11.5px] font-semibold uppercase tracking-[.14em] text-ink-soft">{grp.name}</h3>
+                  <h3 class="mb-0 mt-5 text-[13px] font-semibold text-ink-soft">{grp.name}</h3>
                   <div class="mt-2 grid gap-2">
                     {grp.items.map((a) => (
                       <Fragment>
@@ -212,9 +219,13 @@ const views = [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street'
                                 <span data-out={`count-${details[a.id].key}`} class="w-5 text-center font-semibold"></span>
                                 <button type="button" data-step={details[a.id].key} data-delta="1" aria-label="One more" class={mini}>+</button>
                               </span>
-                            ) : (
+                            ) : details[a.id].kind === 'length' ? (
                               <span class="flex gap-1.5">
                                 {BENCH_LENGTHS.map((ft) => <button type="button" data-opt="benchLength" data-value={ft} data-go="interior" aria-pressed="false" class={`${seg} h-[34px] px-3`}>{ft} ft</button>)}
+                              </span>
+                            ) : (
+                              <span class="flex gap-1.5">
+                                {TOWER_CAMERAS.map((c) => <button type="button" data-opt="towerCamera" data-value={c.id} data-go="street" aria-pressed="false" class={`${seg} h-[34px] px-3`}>{c.name}</button>)}
                               </span>
                             )}
                           </div>
@@ -229,15 +240,14 @@ const views = [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street'
 
           <!-- Summary -->
           <section id="summary" data-section data-view="front" class="mt-10 px-1">
-            <p class="m-0 text-center text-[22px] font-semibold tracking-[-.02em]">Est. build time: <span data-out="lead"></span></p>
-            <details class="group mt-3 text-center">
+            <details class="group text-center">
               <summary class="inline-flex cursor-pointer list-none items-center gap-1.5 text-[13.5px] font-semibold text-ink [&::-webkit-details-marker]:hidden">Show pricing details<svg viewBox="0 0 24 24" class="size-3.5 fill-none stroke-current stroke-[2.4] transition-transform group-open:rotate-180"><path d="M5 9l7 7 7-7" /></svg></summary>
               <ul data-out="lines" class="m-0 mt-4 grid list-none gap-2 p-0 text-left text-[13.5px]"></ul>
             </details>
-            <div class="mt-6 flex items-baseline justify-between text-[20px] font-semibold tracking-[-.02em]"><span>Est. purchase price</span><span data-out="vehicle"></span></div>
-            <p class="m-0 mt-1 text-[12.5px] text-ink-soft">Sample pricing. Taxes, registration and delivery are extra. <span data-out="quoted"></span></p>
-            <div class="mt-5 flex items-baseline justify-between text-[20px] font-semibold tracking-[-.02em]"><span>Due today</span><span>{moneyTotal(DEPOSIT)}</span></div>
-            <p class="m-0 mt-1 text-[12.5px] text-ink-soft">A refundable deposit holds your build. Availability, pricing and final specifications are confirmed in writing by SPOG.</p>
+            {/* SOURCE price sheet 2026-11-20. The sample deposit and "Due today" were removed. */}
+            <div class="mt-6 flex items-baseline justify-between text-[20px] font-semibold tracking-[-.02em]"><span>Purchase price</span><span data-out="vehicle"></span></div>
+            <p class="m-0 mt-1 text-[12.5px] text-ink-soft">Prices exclude tax, title, registration and delivery. <span data-out="quoted"></span></p>
+            <p class="m-0 mt-2 text-[12.5px] text-ink-soft">Availability and final specifications are confirmed in writing by SPOG.</p>
             <button type="button" data-goto="order" class={`${primary} mt-6 w-full`}>Order now</button>
             <button type="button" id="share" class="mt-3 w-full cursor-pointer border-0 bg-transparent text-[13.5px] font-semibold text-ink underline underline-offset-4">Copy a link to this build</button>
           </section>
@@ -256,7 +266,7 @@ const views = [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street'
                 <span class="flex-1"><span class="flex justify-between gap-3 text-[14px] font-semibold"><span>Pick up in Middletown, NY</span><span class="font-normal">Included</span></span><span class={`${sub} block`}>We walk you through the trailer at the shop.</span></span>
               </button>
               <button type="button" data-opt="delivery" data-value="delivery" aria-pressed="false" class={choice}>
-                <span class="flex-1"><span class="flex justify-between gap-3 text-[14px] font-semibold"><span>Delivered to your site</span><span class="font-normal">{moneyTotal(DELIVERY_FEE)}</span></span><span class={`${sub} block`}>Sample flat rate.</span></span>
+                <span class="flex-1"><span class="flex justify-between gap-3 text-[14px] font-semibold"><span>Delivered to your site</span><span class="font-normal">Quoted</span></span><span class={`${sub} block`}>Your SPOG contact prices delivery to your site.</span></span>
               </button>
             </div>
             <div id="zip-wrap" class="mt-3 hidden"><label for="zip" class={label}>Delivery ZIP code</label><input id="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" class={field} /></div>
@@ -275,11 +285,11 @@ const views = [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street'
 
           <section class="mt-8 px-1">
             <ul class="m-0 grid list-none gap-2 p-0 text-[14px]">
-              <li class="flex justify-between"><span>Trailer</span><span data-out="vehicle"></span></li>
+              {/* 2026-11-20: the sample delivery fee, total and deposit were removed. Delivery is quoted. */}
+              <li class="flex justify-between text-[20px] font-semibold tracking-[-.02em]"><span>Purchase price</span><span data-out="vehicle"></span></li>
               <li class="flex justify-between"><span>Delivery</span><span data-out="delivery"></span></li>
-              <li class="flex justify-between text-[18px] font-semibold"><span>Est. total</span><span data-out="total"></span></li>
-              <li class="mt-2 flex justify-between text-[20px] font-semibold tracking-[-.02em]"><span>Due today</span><span>{moneyTotal(DEPOSIT)}</span></li>
             </ul>
+            <p class="m-0 mt-2 text-[12.5px] text-ink-soft">Prices exclude tax, title, registration and delivery.</p>
             <button type="submit" form="order-form" class={`${primary} mt-6 w-full`}>Place order</button>
             <p class="m-0 mt-3 text-center text-[12.5px] text-ink-soft">This is a concept. No payment is taken and nothing is sent.</p>
           </section>
@@ -287,9 +297,8 @@ const views = [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street'
 
         <!-- ============ Done ============ -->
         <div data-panel="done" hidden>
-          <p class="m-0 text-[12.5px] font-semibold uppercase tracking-[.16em] text-ink-soft">Build saved</p>
-          <h1 class="mb-0 mt-3 text-[32px] font-semibold leading-[1.1] tracking-[-.03em]">Your Cargo is designed.</h1>
-          <p class="mb-0 mt-3 text-[15px] leading-[1.55] text-ink-soft">On the real site this is where the deposit is taken and the build goes to the shop. For now, this code and the link in your address bar hold the design.</p>
+          <h1 class="m-0 text-[32px] font-semibold leading-[1.1] tracking-[-.03em]">Your Cargo is designed.</h1>
+          <p class="mb-0 mt-3 text-[15px] leading-[1.55] text-ink-soft">On the live site this is where your build goes to the shop. For now, this code and the link in your address bar hold the design.</p>
           <div class={`${card} mt-6`}>
             <p class="m-0 text-[12.5px] text-ink-soft">Build code</p>
             <p data-out="code" class="m-0 mt-1 text-[24px] font-semibold tracking-[-.01em]"></p>
@@ -309,7 +318,7 @@ const views = [['front', 'Front'], ['side', 'Side'], ['rear', 'Rear'], ['street'
         <p class="m-0 truncate text-[12.5px] text-ink-soft max-[640px]:hidden" data-out="summary"></p>
       </div>
       <div class="flex shrink-0 items-center gap-7 max-[640px]:gap-4">
-        <div class="text-right"><p class="m-0 text-[22px] font-semibold leading-[1.1] tracking-[-.02em] max-[640px]:text-[18px]" data-out="vehicle"></p><p class="m-0 text-[12px] text-ink-soft">Sample price</p></div>
+        <div class="text-right"><p class="m-0 text-[22px] font-semibold leading-[1.1] tracking-[-.02em] max-[640px]:text-[18px]" data-out="vehicle"></p><p class="m-0 text-[12px] text-ink-soft">Purchase price</p></div>
         <button type="button" data-goto="order" class={`${primary} group-data-[step=order]/cfg:hidden group-data-[step=done]/cfg:hidden max-[640px]:px-5`}>Order now</button>
       </div>
     </div>

@@ -2,20 +2,23 @@
  * Page wiring for the Cargo configurator: build state, option buttons, the price bar, camera
  * views that follow the section you're in, the callouts pinned to the model, and the order steps.
  * The build is saved in the URL hash so it can be shared. ZIP, contact details and an uploaded
- * logo file never go there.
+ * logo file never go there. Old links that name removed options (shelving, cabinets, overhead
+ * storage, the old camera and audio systems, 240 V, a 35 ft or 40 kWh build) still open: unknown
+ * ids are dropped and the rest is pulled back inside the rules (2026-11-20, price sheet update).
  */
 import { TEXT_ASPECT, createController } from './controller';
 import {
-  BATTERIES, CONNECT, DEFAULT_BUILD, INTERIOR, LOGO_PRICE, LOGO_SPOTS, MAX_CABINETS, MAX_DESKS, PAINTS, SHORE, SIZES, VOLTS,
-  batteryKwh, buildCode, enforceRules, has, leadTime, money, moneyTotal, optionPrice, runtime, solarPanels, summaryLine, toTrailerConfig, totals,
+  CONNECT, DEFAULT_BUILD, INTERIOR, LOGO_PRICE, LOGO_SPOTS, MAX_DESKS, PAINTS, SHORE, BATTERY_MAX, BATTERY_STEP_PRICE,
+  batteryKwh, batteryPrice, buildCode, enforceRules, fits, has, money, moneyTotal, optionPrice, runtime, sizeOf, summaryLine, toTrailerConfig, totals, voltsLabel,
   type BuildState,
 } from './data';
 import { VIEW_ORDER, createStage, type ViewName } from './scene';
 
 type Step = 'design' | 'order' | 'done';
-type ListKey = 'logoSpots' | 'volts' | 'options' | 'tools';
-const SHARED: (keyof BuildState)[] = ['length', 'paint', 'logoSpots', 'brandText', 'lettering', 'letteringText', 'battery', 'batteryOther', 'volts', 'shore', 'options', 'desks', 'benchLength', 'cabinets', 'tools'];
-const COUNT_MAX: Record<string, number> = { desks: MAX_DESKS, cabinets: MAX_CABINETS };
+type ListKey = 'logoSpots' | 'options' | 'tools';
+// 2026-11-20 (price sheet): volts, batteryOther and cabinets are gone from the link, towerCamera is new.
+const SHARED: (keyof BuildState)[] = ['length', 'paint', 'logoSpots', 'brandText', 'lettering', 'letteringText', 'battery', 'shore', 'options', 'desks', 'benchLength', 'towerCamera', 'tools'];
+const COUNT_MAX: Record<string, number> = { desks: MAX_DESKS };
 
 function loadState(): BuildState {
   const state: BuildState = structuredClone(DEFAULT_BUILD);
@@ -78,7 +81,6 @@ export function initConfigurator() {
   // ---------------------------------------------------------------- render
   const brandInput = byId<HTMLInputElement>('brand-text');
   const letteringInput = byId<HTMLInputElement>('lettering-text');
-  const otherInput = byId<HTMLInputElement>('battery-other');
   const logoFile = byId<HTMLInputElement>('logo-file');
   const logoClear = byId('logo-clear');
   const logoAll = byId('logo-all');
@@ -105,37 +107,41 @@ export function initConfigurator() {
       d.classList.toggle('flex', on);
     });
     $$<HTMLButtonElement>('[data-step]').forEach((b) => {
-      const key = b.dataset.step as 'desks' | 'cabinets';
+      const key = b.dataset.step as 'desks';
       const next = state[key] + Number(b.dataset.delta);
       b.disabled = next < 1 || next > COUNT_MAX[key];
     });
     out('count-desks', String(state.desks));
-    out('count-cabinets', String(state.cabinets));
+    const size = sizeOf(state.length);
 
     // exterior
     out('name-paint', (PAINTS.find((p) => p.id === state.paint) ?? PAINTS[0]).name);
     const spots = state.logoSpots.length;
-    out('price-logo', spots ? moneyTotal(spots * LOGO_PRICE) : `${moneyTotal(LOGO_PRICE)} a spot`);
+    out('price-logo', LOGO_PRICE === null ? money(null) : spots ? moneyTotal(spots * LOGO_PRICE) : `${moneyTotal(LOGO_PRICE)} a spot`);
     logoAll.setAttribute('aria-pressed', String(spots === LOGO_SPOTS.length));
     byId('logo-fields').classList.toggle('hidden', !spots);
     sync(brandInput, state.brandText);
     letteringInput.classList.toggle('hidden', !state.lettering);
     sync(letteringInput, state.letteringText);
 
-    // power
+    // power (SOURCE price sheet 2026-11-20): the battery starts at the size's base, voltage is set by the length
     const kwh = batteryKwh(state);
-    const bat = BATTERIES.find((b) => b.id === state.battery) ?? BATTERIES[0];
     out('name-battery', `${kwh} kWh battery`);
-    out('price-battery', money(bat.price));
-    byId('battery-other-wrap').classList.toggle('hidden', state.battery !== 'other');
-    if (document.activeElement !== otherInput) sync(otherInput, String(state.batteryOther));
-    out('price-volts', money(VOLTS.filter((v) => state.volts.includes(v.id)).reduce((sum, v) => sum + v.price, 0)));
+    out('price-battery', money(batteryPrice(state)));
+    out('battery-sub', `The ${size.ft} ft comes with ${size.baseKwh} kWh. Each extra 5 kWh is ${moneyTotal(BATTERY_STEP_PRICE)}, up to ${BATTERY_MAX} kWh.`);
+    $$<HTMLButtonElement>('[data-opt="battery"]').forEach((b) => { b.disabled = Number(b.dataset.value) < size.baseKwh; });
+    out('power-included', `A ${size.inverterW.toLocaleString()} W inverter on a 48 V DC system, with ${voltsLabel(state)} outlets, ${size.outletsOut} outside and ${size.outletsIn} inside.`);
     out('price-shore', money((SHORE.find((x) => x.id === state.shore) ?? SHORE[0]).price));
-    [...INTERIOR, ...CONNECT].forEach((o) => out(`price-opt-${o.id}`, moneyTotal(optionPrice(state, o))));
+    // Options priced by length show this length's price. One that doesn't fit this length is greyed out with the reason.
+    [...INTERIOR, ...CONNECT].forEach((o) => {
+      const ok = fits(state, o);
+      out(`price-opt-${o.id}`, ok ? money(optionPrice(state, o)) : `${o.only} ft only`);
+      $$<HTMLButtonElement>(`[data-toggle="options"][data-value="${o.id}"]`).forEach((b) => { b.disabled = !ok; });
+    });
 
     out('stat-length', `${state.length} ft`);
     out('stat-battery', `${kwh} kWh`);
-    out('stat-solar', `${solarPanels(state)} panels`);
+    out('stat-solar', `${size.solarW.toLocaleString()} W`);
 
     const run = runtime(state);
     $$('[data-out="run-bar"]').forEach((el) => { el.style.width = `${Math.round(run.coverage * 100)}%`; });
@@ -146,12 +152,10 @@ export function initConfigurator() {
     const lines = t.lines.map((l) => `<li class="flex justify-between gap-4"><span>${escapeHtml(l.label)}</span><span class="shrink-0 text-ink-soft">${money(l.price)}</span></li>`).join('');
     $$('[data-out="lines"]').forEach((el) => { el.innerHTML = lines; });
     out('vehicle', moneyTotal(t.vehicle));
-    out('quoted', t.quoted ? 'Items marked Quoted are priced separately.' : '');
-    out('delivery', t.delivery ? moneyTotal(t.delivery) : 'Included');
-    out('total', moneyTotal(t.total));
-    out('lead', leadTime(state));
+    out('quoted', t.quoted ? 'Items marked Quoted are priced by your SPOG contact and are not in this total.' : '');
+    out('delivery', state.delivery === 'delivery' ? money(null) : 'Included');
     out('summary', summaryLine(state));
-    out('title', (SIZES.find((s) => s.ft === state.length) ?? SIZES[1]).name);
+    out('title', size.name);
     out('code', buildCode(state));
     zipWrap.classList.toggle('hidden', state.delivery !== 'delivery');
 
@@ -219,10 +223,15 @@ export function initConfigurator() {
     if (!b || b.disabled) return;
     const d = b.dataset;
     let added = true;
-    if (d.opt) {
+    if (d.opt === 'length') {
+      // NEW 2026-11-20: a battery left at the old size's base follows the new size's base, so a
+      // length change never adds a $2,500 upgrade the buyer didn't pick. A real upgrade is kept.
+      const atBase = batteryKwh(state) === sizeOf(state.length).baseKwh;
+      state.length = Number(d.value);
+      if (atBase) state.battery = String(sizeOf(state.length).baseKwh);
+    } else if (d.opt) {
       const key = d.opt as keyof BuildState;
       (state as any)[key] = typeof state[key] === 'number' ? Number(d.value) : d.value;
-      if (key === 'battery' && d.value === 'other') setTimeout(() => otherInput.focus(), 0);
     } else if (d.toggle) {
       const list = state[d.toggle as ListKey];
       const i = list.indexOf(d.value!);
@@ -232,7 +241,7 @@ export function initConfigurator() {
       state.lettering = !state.lettering;
       if (state.lettering) setTimeout(() => letteringInput.focus(), 0);
     } else if (d.step) {
-      const key = d.step as 'desks' | 'cabinets';
+      const key = d.step as 'desks';
       state[key] += Number(d.delta);
     } else if (b === logoAll) {
       state.logoSpots = state.logoSpots.length === LOGO_SPOTS.length ? [] : LOGO_SPOTS.map((l) => l.id);
@@ -247,10 +256,6 @@ export function initConfigurator() {
   });
   brandInput.addEventListener('input', () => { state.brandText = brandInput.value; render(); });
   letteringInput.addEventListener('input', () => { state.letteringText = letteringInput.value; render(); });
-  otherInput.addEventListener('input', () => {
-    const n = Number(otherInput.value);
-    if (Number.isFinite(n) && n > 0) { state.batteryOther = Math.min(200, Math.round(n)); render(); }
-  });
 
   // The buyer's own logo art. It's read in the browser and never uploaded or saved in the link.
   function setLogo(image: HTMLImageElement | null) {

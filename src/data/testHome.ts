@@ -17,7 +17,8 @@
  * Coming-next trailers get no specs and no Reserve, only "Get first word".
  *
  * The v1 showcase data further down (cargo, workstation, event, garage, relief, camper) feeds
- * the held Show* components, kept as starting points for the product pages.
+ * the held Show* components, kept as starting points for the product pages. Their Workstation
+ * lines follow SPOG's price sheet and Nate's answers (2026-11-20).
  */
 import { img, products, nextUp, guarantees, shoot } from './content';
 import type { Feature } from './features';
@@ -144,14 +145,14 @@ export const firstWordDialog = {
 export const cargo = {
   lane: 'For the job site', // NEW
   body: 'Pull into the driveway and the saws, lights and chargers run off the trailer.', // SOURCE (useCases, residential)
-  plate: [...product('cargo').stats, ['Lead time', '2 weeks']] as [string, string][], // SOURCE
+  plate: [...product('cargo').stats, ['Axles', 'Dual']] as [string, string][], // SOURCE (price sheet 2026-11-20). The old "Lead time: 2 weeks" isn't on the sheet, cut.
 };
 
 export const workstation = {
   lane: 'For the job site', // NEW
-  body: 'Heat, AC, desks and optional Starlink ride on the trailer. The super runs the job from day one instead of waiting on a generator hookup.', // SOURCE (useCases, office)
-  inside: 'Desks, storage and a display inside', // NEW, from the Workstation specs
-  plate: [...product('workstation').stats, ['Heat and AC', 'Standard']] as [string, string][], // SOURCE
+  body: 'Climate control, a built-in work desk and optional Starlink ride on the trailer. The super runs the job from day one instead of waiting on a generator hookup.', // SOURCE (useCases, office, as fixed to the price sheet 2026-11-20)
+  inside: 'A built-in work desk inside', // NEW (2026-11-20), SOURCE (price sheet 2026-11-20). Storage and the standard display came off.
+  plate: [...product('workstation').stats, ['Climate control', 'Standard']] as [string, string][], // SOURCE (price sheet 2026-11-20), "climate control" NATE (2026-11-20 answers)
 };
 
 // ---------- Event. Night, light from the screen, wide thin type, a marquee of the nights it runs.

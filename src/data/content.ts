@@ -168,7 +168,7 @@ export const useCases = [
   },
   {
     id: 'office', tab: 'Site office', title: 'The office that works the day it lands',
-    body: 'Heat, AC, desks and optional Starlink ride on the trailer. The super runs the job from day one instead of waiting on a generator hookup.',
+    body: 'Climate control, a built-in work desk and optional Starlink ride on the trailer. The super runs the job from day one instead of waiting on a generator hookup.', // one desk standard SOURCE (price sheet 2026-11-20), "climate control" NATE (2026-11-20 answers)
     cta: 'See Workstation', href: '/workstation', image: img.office, alt: 'Inside a SPOG Workstation',
   },
   // PLACEHOLDER: Events copy needs approval. Photo is a real SPOG movie night from spogtrailers.com.
@@ -190,21 +190,24 @@ export const useCases = [
 ];
 
 // fit: font size of the giant name on phones, in % of the card width, so each name spans the card.
-// PLACEHOLDER: Workstation "8 to 40 ft" and "racking" in the Cargo specs (see CLAUDE.md).
+// Cargo and Workstation numbers follow SPOG's external price sheet (2026-11-20) and Nate's answers
+// to it the same day: 10 or 20 ft, 5 to 20 kWh, roof solar 900W on the 10 ft and 2,800W on the 20 ft.
+// Event is not on the sheet, so its row is unchanged.
+// The spec key "Climate control" is read by workstationPage.ts (spec('Climate control')). Rename both together.
 export const products = [
   {
     id: 'cargo', name: 'Cargo', fit: 26, badge: 'For the crew', tag: 'Haul the tools. Power the job.',
     image: img.cargo34, alt: 'SPOG Cargo trailer with solar roof and light mast', position: '50% 30%',
-    stats: [['Battery', '5 to 20 kWh'], ['Solar up to', '3,360W'], ['Length', '8 to 24 ft']],
-    specs: [['Inside', 'Corner desk, racking'], ['Heat and AC', 'Option'], ['Lead time', '2 weeks']],
+    stats: [['Battery', '5 to 20 kWh'], ['Solar up to', '2,800W'], ['Length', '10 or 20 ft']], // SOURCE (price sheet 2026-11-20)
+    specs: [['Inside', 'Corner work desk'], ['Climate control', 'Option']], // SOURCE (price sheet 2026-11-20, "climate control" per Nate). The old site's "Lead time: 2 weeks" was cut 2026-11-20 (not on the sheet).
     cta: 'Reserve Cargo',
   },
   {
     id: 'workstation', name: 'Workstation', fit: 12.4, badge: 'For the site office', tag: 'The office that works the day it lands.',
     // PHOTO: this render shows a door decal that breaks the naming rule. Reshoot or retouch before launch.
     image: img.workstationStudio, alt: 'SPOG Workstation trailer with a full solar roof', position: '50% 50%',
-    stats: [['Battery', '5 to 40 kWh'], ['Solar up to', '5,600W'], ['Length', '8 to 40 ft']],
-    specs: [['Inside', 'Desks, storage, display'], ['Heat and AC', 'Standard'], ['Internet', 'Starlink option']],
+    stats: [['Battery', '5 to 20 kWh'], ['Solar up to', '2,800W'], ['Length', '10 or 20 ft']], // SOURCE (price sheet 2026-11-20)
+    specs: [['Inside', 'Built-in work desk'], ['Climate control', 'Standard'], ['Internet', 'Starlink option']], // SOURCE (price sheet 2026-11-20). Storage and the display came off, because shelving, cabinets and overhead storage are gone and the TV or monitor is an add-on.
     cta: 'Reserve Workstation',
   },
   {
@@ -246,7 +249,7 @@ export const story = {
 
 export const highlights = [
   { image: img.cardWing, alt: 'Solar wing folded open on a SPOG trailer', title: 'Solar on board', body: 'The battery refills while you work.' },
-  { image: img.office, alt: 'Inside a SPOG Workstation office', title: 'A real site office', body: 'Heat, AC and a desk from day one.' },
+  { image: img.office, alt: 'Inside a SPOG Workstation office', title: 'A real site office', body: 'Climate control and a desk from day one.' }, // NATE (2026-11-20 answers: "climate control")
   { image: img.cardSide, alt: 'Side of a SPOG trailer with spare tire and gear rail', title: 'Built to haul', body: 'Gear rail, spare and storage bays.' },
   { image: img.cargo34, alt: 'SPOG Cargo trailer', title: 'Cargo', body: "The crew's tools and power, one tow.", studio: true },
   { image: img.cardOpenWall, alt: 'SPOG trailer with its side wall opened', title: 'Opens up', body: 'Work out of the side in good weather.' },
@@ -258,7 +261,8 @@ export const hotspots = [
   { label: 'Solar wing', title: 'Solar wing', body: 'Folds out on site to catch more sun. Folds flat to tow.', left: 59, top: 28, image: img.cardWing },
   { label: 'Spare', title: 'Full-size spare', body: 'Mounted where you can reach it on the shoulder.', left: 39, top: 48, image: img.cardSide },
   { label: 'Gear rail', title: 'Gear rail', body: 'Hang tools and cords on the outside wall.', left: 55, top: 62 },
-  { label: 'Storage bays', title: 'Storage bays', body: 'Lockable bays under the floor line.', left: 51, top: 71 },
+  // NATE (2026-11-19): the low compartment holds equipment (the AC or an air compressor), never storage. Renamed 2026-11-20.
+  { label: 'Equipment bay', title: 'Equipment bay', body: 'This compartment holds equipment like the climate control unit or an air compressor.', left: 51, top: 71 },
   { label: 'Open-wall office', title: 'Open-wall office', body: 'The side opens up for work in good weather.', left: 74, top: 52, image: img.cardOpenWall },
 ];
 
@@ -278,8 +282,8 @@ export const guarantees = [
 export const steps = [
   { n: '01', title: 'Walkthrough', body: 'We bring a trailer to your site and run your tools off it.', link: { label: 'Book a walkthrough', href: '#walkthrough' } },
   { n: '02', title: 'Spec it', body: 'Pick the size and battery that fit your crew and your load.' },
-  { n: '03', title: 'Reserve', body: 'A deposit locks your build slot in Middletown.', key: true, cta: 'Reserve' },
-  { n: '04', title: 'Hook up and go', body: 'Standard Cargo trailers ship in two weeks.' },
+  { n: '03', title: 'Reserve', body: 'Your deposit starts your build in Middletown.', key: true, cta: 'Reserve' }, // NEW (2026-11-20): no "slot" framing
+  { n: '04', title: 'Hook up and go', body: 'Hitch up your trailer and take it to the job.' }, // NEW (2026-11-20): the two-week lead time isn't on the price sheet, cut
 ];
 
 // Closing section. Repeats the hero promise. No special-offer framing (no slots, no scarcity, no perks).
@@ -289,7 +293,7 @@ export const closing = {
   heading: ['Built for', 'the work day.'],
   points: [
     'A walkthrough on your site before any deposit',
-    'Your deposit locks a build slot in our Middletown shop',
+    'Built to order in our Middletown shop', // NEW (2026-11-20): no "slot" framing
     '3-year structural warranty and mobile service',
   ],
   cta: 'Reserve yours',
@@ -301,7 +305,7 @@ export const closing = {
   },
   sheet: {
     title: 'Not ready yet? Get the run-time sheet.',
-    body: "Every tool we've tested, on every battery size, in February. One page, sent to your inbox.",
+    body: 'Run times for common tools on every battery size. One page, sent to your inbox.', // NEW (2026-11-20). Winter claim ("in February") and the testing claim cut.
     cta: 'Send it',
   },
 };
@@ -314,11 +318,11 @@ export const faqs = [
   },
   {
     q: 'Which trailer fits what I need?',
-    a: "Cargo hauls the crew's tools and powers the job. Workstation is a site office with heat, AC and desks from day one. Event brings quiet power to your event. All three run on the same power system.",
+    a: "Cargo hauls the crew's tools and powers the job. Workstation is a site office with climate control and a built-in work desk from day one. Event brings quiet power to your event. All three run on the same power system.", // Workstation half SOURCE (price sheet 2026-11-20: one desk standard), "climate control" NATE (2026-11-20 answers)
   },
   {
     q: 'How long will it run my tools?',
-    a: "It depends on the tools and the battery size. The run-time sheet lists every tool we've tested on every battery size.",
+    a: 'It depends on the tools and the battery size. The run-time sheet lists run times for common tools on every battery size.', // NEW (2026-11-20): testing claim cut, matches the sheet copy
     link: { label: 'Get the run-time sheet', href: '#sheet' },
   },
   {
@@ -327,7 +331,9 @@ export const faqs = [
   },
   {
     q: 'How fast can I get one?',
-    a: 'Standard Cargo trailers ship in two weeks. For Workstation and custom builds, your deposit locks a build slot in our Middletown shop.',
+    // NEW (2026-11-20): the two-week lead time isn't on the price sheet, and "build slot" is banned framing.
+    a: "It depends on the trailer and the build. Book a demo and we'll give you a date for yours.",
+    link: { label: 'Book a demo', href: '/demo' },
   },
   {
     q: 'Where do you work?',

@@ -32,15 +32,20 @@ const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, hre
   fuel savings section and Nate's build heading. v2's click-to-open cards and options checklist are gone
   (the builder at /configure/cargo has the full list).
 
+  Facts pass (2026-11-20): every spec and price follows SPOG's price sheet of 2026-11-20 and Nate's
+  answers (Cargo from $15,000, 20 ft $50,000, no 240 V, 5 to 20 kWh, vinyl floor, standard corner desk,
+  cameras only on the 20 ft's 28 ft light tower, max loaded weight instead of a tow vehicle). See
+  src/data/cargo2Page.ts.
+
   Order (Cybertruck or Tesla section in brackets) and rhythm (never two photo sections next to each other;
   sections with inset media on a plain background don't count as photo sections):
     Hero P (real photo, name, line, buttons, starting price)                     [Cybertruck hero]
     Redefining the job site trailer L (stone, five swipe cards)                  [Redefining the Pickup Truck]
     See how it works for you L (3D model of the real Cargo)
-    Spend less on fuel D (fuel number and three tiles)                           [Model Y: More Affordable Than a Gas Car]
-    Take it anywhere L (white, drone photo, three cards, number row)            [Take on Any Terrain]
+    Spend less on fuel D (fuel number and two tiles)                             [Model Y: More Affordable Than a Gas Car]
+    Take it anywhere L (white, drone photo, three cards, weight/length/axle row) [Take on Any Terrain]
     Built for whatever the job site brings D (frame photo, two wide cards)      [Designed to Be the Safest Truck]
-    Add what you need L (white, photo carousel, tiles, link to the builder)     [Add What You Need]
+    Add what you need L (white, two-card photo carousel, four tiles, builder)    [Add What You Need]
     Specs L (stone, Cargo cut-out, so it reads apart from the white options above), Close D, FAQ L, Footer D
   Keep the ids top, overview, tour, savings, anywhere, built, options, specs, cta and faq: the section
   bar, the phone bar and links point at them.

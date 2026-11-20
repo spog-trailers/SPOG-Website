@@ -9,9 +9,8 @@ import { close, hero } from '../../data/home2';
  * A link with data-trailer="Cargo" also picks that trailer in both forms. From another page, use
  * /?trailer=Cargo#design (the product pages' "Design yours" does). The query is dropped once read.
  *
- * "Design your trailer" here is the build request form. The Cargo has a builder at /configure/cargo,
- * so this form mostly serves Workstation and Event. (Older note:) point it at the configurator once real
- * pricing is approved (/configure/cargo still runs on made-up sample prices).
+ * "Design your trailer" here is the build request form. The Cargo builder at /configure/cargo uses SPOG's
+ * price sheet (2026-11-20). Workstation and Event have no builder yet, so this form serves them.
  * Keep the ids cta, design and walkthrough so Nav, MobileBar and the lineup keep working.
  */
 const field = 'w-full rounded-[10px] border border-panel-line bg-black px-4 py-[14px] text-[16px] text-white placeholder:text-[#8a8a8a] focus-visible:border-gold';

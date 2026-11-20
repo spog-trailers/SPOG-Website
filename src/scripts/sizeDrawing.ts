@@ -1,20 +1,25 @@
 /**
  * Side-elevation line drawing for the "Size it up" section on product pages.
- * A full-size pickup (about 19 ft) tows the trailer, both drawn to the same scale, so the
- * trailer grows as the visitor picks a length. Pure string output so it runs on the server
+ * A full-size pickup (about 19 ft) drawn beside the trailer for scale, both at the same scale, so the
+ * trailer grows as the visitor picks a length. The trailer stands unhitched on its tongue jack, with
+ * a gap to the pickup, so the drawing makes no tow claim (2026-11-20). Pure string output so it runs on the server
  * (first paint) and in the browser (length changes).
  *
- * Only the length is real. Heights, axle counts and panel layout are drawn for looks and are
- * never labeled. Units: feet, ground at y = 0, x grows toward the back of the rig.
+ * Only the length is real. Heights and panel layout are drawn for looks and are never labeled.
+ * Axles: two up to 24 ft, since every Cargo and Workstation is dual axle (price sheet 2026-11-20).
+ * The pickup is there for scale only. The site never says what vehicle can tow a SPOG (Nate, 2026-11-20).
+ * Units: feet, ground at y = 0, x grows toward the back of the rig.
  */
 
 const TOP = 10.4; // highest point drawn, in feet
 const BOTTOM = -2.4; // room under the ground for the dimension line
 const S = 10; // svg units per foot
 const TRUCK_LEN = 19.3;
-const HITCH_X = 20.1;
+const HITCH_X = 20.1; // end of the pickup's receiver
+const GAP = 3; // open ground between the pickup and the trailer's coupler, so the two stand apart (2026-11-20)
 const TONGUE = 3.8;
-export const BOX_X = HITCH_X + TONGUE; // where the trailer box starts
+const COUPLER_X = TRUCK_LEN + GAP; // front of the trailer's tongue, resting on its jack
+export const BOX_X = COUPLER_X + TONGUE; // where the trailer box starts
 const FLOOR = 1.5;
 const BOX_H = 7.2;
 
@@ -52,12 +57,15 @@ function trailer(L: number) {
   const nose = P([[x0 + 1.6, FLOOR], [x0 + 1.6, top]]);
   const plate = P([[x0, 3.9], [x0 + 1.6, 3.9]]);
   const rear = P([[x1 - 0.3, FLOOR + 0.3], [x1 - 0.3, top - 0.3]]);
-  const tongue = P([[HITCH_X, 1.9], [x0, FLOOR + 0.1]]);
+  // Unhitched: the tongue ends on a jack standing on the ground, not on the pickup's ball (2026-11-20).
+  const tongue = P([[COUPLER_X, 1.9], [x0, FLOOR + 0.1]]);
+  const jx = COUPLER_X + 0.9;
+  const jack = `${P([[jx, 2.5], [jx, 0.12]])} ${P([[jx - 0.35, 0.06], [jx + 0.35, 0.06]])}`;
 
   // running gear
-  const axles = L <= 8 ? 1 : L <= 24 ? 2 : 3;
+  const axles = L <= 24 ? 2 : 3; // SOURCE (price sheet 2026-11-20): every Cargo and Workstation is dual axle, the 10 ft too
   const spacing = 2.75;
-  const center = x0 + L * (axles === 1 ? 0.6 : 0.56);
+  const center = x0 + L * 0.56;
   const first = center - ((axles - 1) * spacing) / 2;
   const wheelX = Array.from({ length: axles }, (_, i) => first + i * spacing);
   const fa = wheelX[0] - 1.45;
@@ -80,7 +88,7 @@ function trailer(L: number) {
     `<rect x="${X(start + i * (panel + gap))}" y="${Y(top + 0.26)}" width="${X(panel)}" height="${X(0.22)}"/>`,
   ).join('');
 
-  return `<g class="sd-trailer"><path d="${tongue}"/><path d="${box}"/><path d="${nose}"/><path d="${plate}"/><path d="${rear}"/>${door}<path d="${fender}"/>${wheels}</g><g class="sd-solar">${panels}</g>`;
+  return `<g class="sd-trailer"><path d="${tongue}"/><path d="${jack}"/><path d="${box}"/><path d="${nose}"/><path d="${plate}"/><path d="${rear}"/>${door}<path d="${fender}"/>${wheels}</g><g class="sd-solar">${panels}</g>`;
 }
 
 function dimension(L: number) {

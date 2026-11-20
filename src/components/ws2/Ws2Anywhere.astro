@@ -5,10 +5,11 @@ import Ws2Text from './Ws2Text.astro';
 import WorkTitle from '../work/WorkTitle.astro';
 import { anywhere as wsAnywhere, type Card, type Media } from '../../data/workstation2Page';
 /**
- * "Take it anywhere.", after Cybertruck's "Take on Any Terrain": the line, Nate's Rivian clip
- * running large, four cards in the place of Cybertruck's drive modes (solar power, heat and AC,
- * Starlink, hitch up and go), then the number row where Cybertruck puts 0 to 60, towing and power.
- * The weight and tow vehicle are bracketed gaps until Joe supplies them.
+ * "Take it anywhere.", after Cybertruck's "Take on Any Terrain": the line, a large lead photo (the
+ * rural sunset on /workstation-2), four cards in the place of Cybertruck's drive modes (solar power,
+ * climate control, Starlink, hitch up and go), then the number row where Cybertruck puts 0 to 60,
+ * towing and power. On /workstation-2 that row is max loaded weight, length and dual axle (price
+ * sheet 2026-11-20). It never claims what vehicle can tow the trailer. The row holds three numbers.
  * Props (optional): Cargo 2 passes its own copy and three cards. /workstation-2 uses the defaults.
  */
 interface Props { heading?: string[]; sub?: string; lead?: Media; cards?: Card[]; stats?: [string, string][] }

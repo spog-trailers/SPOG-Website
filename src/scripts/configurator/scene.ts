@@ -8,6 +8,10 @@
  *     so it's darkest under the tires and follows open doors.
  *   - Ambient occlusion darkens the creases where parts meet (wider screens only, for speed).
  *   - The studio the paint reflects has a horizon and tall light panels (studioEnvironment).
+ *
+ * The framing follows the trailer's size: the 10 ft is narrower and lower than the 20 ft (dims.ts,
+ * price sheet 2026-11-20), and the camera backs off further for the 6 ft light and further still
+ * for the 28 ft light tower.
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -17,7 +21,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { HorizontalBlurShader } from 'three/addons/shaders/HorizontalBlurShader.js';
 import { VerticalBlurShader } from 'three/addons/shaders/VerticalBlurShader.js';
-import { FLOOR, H, W, axleCenter, NOSE } from './dims';
+import { FLOOR, NOSE, axleCenter, heightFor, roofFor, widthFor } from './dims';
 import { interiorView } from './trailer';
 
 export type ViewName = 'front' | 'side' | 'rear' | 'street' | 'top' | 'wheels' | 'interior';
@@ -218,6 +222,14 @@ export function createStage(container: HTMLElement, options: StageOptions = {}) 
   // ---------------------------------------------------------------- sizing
   let trailerLength = 20;
   let tall = false; // a mast stands well above the roof, so the camera backs off and aims higher
+  let tallTop = 0; // height of the highest part off the ground, in feet. // SOURCE (price sheet 2026-11-20): the 28 ft tower
+  /**
+   * How far to back off for what stands above the roof. 1 is the 6 ft light, as tuned before. The
+   * 28 ft tower, drawn fully raised, needs about four and a half times that. The divisor is set so
+   * the tower's light bar stays in frame on a 16:9 stage as well as on a phone.
+   */
+  // SOURCE (price sheet 2026-11-20): the tower is 28 ft, drawn at full height.
+  const liftFor = () => (tall ? Math.max(1, 1 + (tallTop - roofFor(trailerLength) - 6.6) / 3.8) : 0);
   const resize = () => {
     const w = container.clientWidth || 1;
     const h = container.clientHeight || 1;
@@ -244,7 +256,7 @@ export function createStage(container: HTMLElement, options: StageOptions = {}) 
       controls.rotateSpeed = -0.35; // drag the room, not the camera
     } else {
       controls.minDistance = 13;
-      controls.maxDistance = 90;
+      controls.maxDistance = 140; // room to back off for the 28 ft tower on a tall, narrow phone stage
       controls.minPolarAngle = 0.12;
       controls.maxPolarAngle = Math.PI * 0.492;
       controls.enableZoom = allowZoom;
@@ -260,7 +272,10 @@ export function createStage(container: HTMLElement, options: StageOptions = {}) 
     }
     const v = VIEWS[name];
     const narrow = Math.max(1, 1.5 / camera.aspect);
-    const lift = tall && name !== 'wheels' ? 1 : 0;
+    const lift = name !== 'wheels' ? liftFor() : 0;
+    // The 10 ft is 6.5 ft wide and lower, the 20 ft 8 ft wide. // SOURCE (price sheet 2026-11-20)
+    const W = widthFor(trailerLength);
+    const H = heightFor(trailerLength);
     const r = (19 + trailerLength * 0.6) * (1 + lift * 0.24) * distance * v.zoom * (name === 'wheels' ? Math.sqrt(narrow) : narrow);
     const az = THREE.MathUtils.degToRad(v.az);
     const el = THREE.MathUtils.degToRad(v.el);
@@ -301,9 +316,10 @@ export function createStage(container: HTMLElement, options: StageOptions = {}) 
     if (!userMoved) setView(currentView, true);
   }
 
-  function setTall(v: boolean) {
-    if (v === tall) return;
+  function setTall(v: boolean, top = 0) {
+    if (v === tall && top === tallTop) return;
     tall = v;
+    tallTop = top;
     if (!userMoved) setView(currentView, currentView === 'interior');
   }
 
