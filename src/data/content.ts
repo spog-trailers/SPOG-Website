@@ -86,6 +86,8 @@ export const shoot = {
   cargoStorageCard: '/images/cargo2-storage-card.jpg', // Better Interior 60: E-track down both walls, batteries on their platforms
   cargoHvac: '/images/cargo2-hvac.jpg', // Better Interior 66: wall-mounted heating and cooling unit over the desk, closet door at the nose
   cargoHvacCard: '/images/cargo2-hvac-card.jpg',
+  cargoInterior: '/images/cargo2-interior.jpg', // Better Interior 62: the long black-topped desk down the curb wall, batteries behind it, barn doors open
+  cargoInteriorCard: '/images/cargo2-interior-card.jpg', // Better Interior 63: the desk, the window and the battery units
 };
 
 /** The 1200 px copy of a photo from `shoot`, for cards and phones. Older images have none. */

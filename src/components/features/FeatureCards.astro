@@ -112,8 +112,10 @@ const ctrl = dark
         <article data-fc-panel={f.id} hidden aria-labelledby={`${id}-${f.id}-title`}>
           <header class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-end gap-x-14 gap-y-5 px-14 pb-11 pt-16 max-[860px]:grid-cols-[minmax(0,1fr)] max-[640px]:px-6 max-[640px]:pb-8 max-[640px]:pt-20">
             <div>
-              <span class="flex items-center gap-3 t-label text-ink-soft"><i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>{f.line}</span>
+              <!-- The card's line sits under the name, like a subhead (Nate, 2026-11-19). The gold bar stays as the accent over the name. -->
+              <i class="block h-[3px] w-[26px] bg-gold" aria-hidden="true"></i>
               <h3 id={`${id}-${f.id}-title`} tabindex="-1" class="m-0 mt-4 text-coal outline-none t-h2">{f.title}</h3>
+              <p class="m-0 mt-3 max-w-[440px] t-lead text-ink">{f.line}</p>
             </div>
             <p class="m-0 max-w-[460px] t-body text-ink-soft">{f.panel.intro}</p>
           </header>

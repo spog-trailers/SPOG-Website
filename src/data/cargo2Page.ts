@@ -61,13 +61,13 @@ export const subnavLinks: [string, string][] = [
 /** One card per thing a contractor is buying, after Tesla's "Meet Model Y" cards (v2). */
 export const featuresHead = {
   kicker: 'Get to know Cargo',
-  heading: ['Power, security and storage', 'in one enclosed trailer.'], // NEW (v2)
+  heading: ['Solar power, security and storage', 'in one enclosed trailer.'], // NEW (v2), "Solar power" NATE (2026-11-19)
 };
 
 export const features: Feature[] = [
   {
     id: 'power',
-    title: 'Power',
+    title: 'Solar power', // NATE (2026-11-19), matches the heading
     line: 'Free power wherever you go.', // NATE (Notion, 2026-11-19)
     image: shoot.cargoSolarCard,
     alt: 'SPOG Cargo from above, solar panels across the whole roof',
@@ -101,9 +101,23 @@ export const features: Feature[] = [
     alt: 'Inside a SPOG Cargo, E-track down both walls and battery units on low platforms',
     position: '50% 50%',
     panel: {
-      intro: 'Up to 20 ft of enclosed space holds your tools and materials between jobs, so nothing gets lost in the shuffle. Large rear barn doors open wide for carts and gear, and you can lay out the inside with shelving, cabinets, a workbench and E-track to fit how your crew works.', // NEW. "Lost in the shuffle" from the messaging report, options SOURCE
+      intro: 'Up to 20 ft of enclosed space holds your tools and materials between jobs, so nothing gets lost in the shuffle. Large rear barn doors open wide for carts and gear, and shelving, cabinets, overhead storage and E-track keep everything in its place.', // NEW. "Lost in the shuffle" from the messaging report, options SOURCE. The workbench moved to the Custom interior card
       media: { src: shoot.cargoStorage, alt: 'A black SPOG Cargo with both barn doors swung open, the lit interior behind them', width: 2400, height: 1600 },
       stats: [['Length', '10 or 20 ft'], ['Doors', 'Rear barn doors, plus a side door on the 20 ft shown']], // NATE, SOURCE. CONFIRM the side door on the 10 ft
+    },
+  },
+  {
+    id: 'interior',
+    title: 'Custom interior', // NEW, Nate asked for a catch-all interior card (2026-11-19)
+    line: 'Add a desk, a workbench or a fridge and set up the inside the way your crew works.', // NEW
+    image: shoot.cargoInteriorCard,
+    alt: 'Inside a SPOG Cargo, a long black-topped desk under the window and battery units behind it',
+    position: '50% 50%',
+    panel: {
+      intro: 'Pick what goes inside from an office desk, a workbench, a whiteboard, a TV or monitor, a refrigerator, a microwave and a refreshment counter, and your SPOG contact will work out the layout with you.', // NEW, options SOURCE (options sheet)
+      media: { src: shoot.cargoInterior, alt: 'A long black-topped desk down the wall of a SPOG Cargo, battery units behind it and the barn doors open', width: 2400, height: 1600 },
+      points: [{ title: 'Pick what you need', body: 'Interior pieces are add-ons, and your SPOG contact will confirm what fits your build.' }], // NEW, follows Nate's approved wording on the other cards
+      link: { label: 'See all the options', href: '#options' },
     },
   },
   {
@@ -153,7 +167,7 @@ export const features: Feature[] = [
 
 /** Build quality, the thread that ties the cards together (Nate, v2). Facts only. */
 export const build = {
-  heading: ['Built to take a beating', 'on the job site.'], // NEW, Nate's words ("can get, frankly, beat up")
+  heading: ['Built for whatever', 'the job site brings.'], // NATE (2026-11-19)
   body: 'Other companies cut corners with staples and glue. Every SPOG is designed and built by our own crew in Middletown, New York, from welding to wiring.', // NATE
   hero: { src: shoot.cargoFrame, alt: 'A welded steel trailer floor frame with steel crossmembers on the floor of the SPOG shop', position: '50% 72%' }, // Nate's photo (2026-11-19)
   rows: [
@@ -164,7 +178,7 @@ export const build = {
       video: '/images/cargo2-weld-loop.mp4', poster: '/images/cargo2-weld-loop.jpg', // Nate's "welding on the ground" clip, half speed, smoothed and looped (2026-11-19)
     },
     {
-      title: 'Designed and tested in Middletown',
+      title: 'Designed and tested in Middletown, NY, USA', // NATE (2026-11-19)
       body: 'We draw the frame in CAD, and the wiring, battery, solar and outlets are designed together and tested before it leaves the shop.', // NEW, built on SOURCE (Objections & FAQ)
       src: shoot.engineeringCad, alt: 'A SPOG engineer working on a trailer frame in CAD', position: '30% 50%',
     },
