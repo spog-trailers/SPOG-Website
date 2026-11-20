@@ -1,6 +1,10 @@
 ---
 import { phone } from '../../data/content';
-import { close, demo, design } from '../../data/cargo2Page';
+import * as cargo from '../../data/cargo2Page';
+// Another page can pass its own copy and links (/workstation-2). Cargo 2 uses the defaults.
+type Link = { label: string; href: string };
+interface Props { close?: { heading: string; body: string }; demo?: Link; design?: Link }
+const { close = cargo.close, demo = cargo.demo, design = cargo.design } = Astro.props;
 /**
  * The close: the promise once more and the two ways forward. Keeps the id "cta", which the phone
  * action bar watches so it doesn't sit on top of these buttons.

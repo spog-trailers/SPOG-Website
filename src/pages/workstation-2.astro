@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/sections/Nav.astro';
+import ProductSubnav from '../components/product/ProductSubnav.astro';
+import ProductPower from '../components/product/ProductPower.astro';
+import WorkEquation from '../components/work/WorkEquation.astro';
+import Cargo2Specs from '../components/cargo2/Cargo2Specs.astro';
+import Cargo2Close from '../components/cargo2/Cargo2Close.astro';
+import Ws2Hero from '../components/ws2/Ws2Hero.astro';
+import Ws2Standard from '../components/ws2/Ws2Standard.astro';
+import Ws2Chapter from '../components/ws2/Ws2Chapter.astro';
+import Ws2Inside from '../components/ws2/Ws2Inside.astro';
+import Ws2Uses from '../components/ws2/Ws2Uses.astro';
+import Ws2Built from '../components/ws2/Ws2Built.astro';
+import Faq from '../components/sections/Faq.astro';
+import Footer from '../components/sections/Footer.astro';
+import MobileBar from '../components/sections/MobileBar.astro';
+import { footerColumns } from '../data/content';
+import { close, demo, design, equation, faqs, hero, internet, meta, power, runtime, security, specs, subnavLinks } from '../data/workstation2Page';
+// This page has no walkthrough form, so the footer's Contact link goes to the demo page.
+const footer = footerColumns.map((c) => ({ ...c, links: c.links.map(([label, href]) => [label, href === '#walkthrough' ? demo.href : href]) }));
+---
+<!--
+  WORKSTATION 2 (draft, 2026-11-19). Nate's new pass on the Workstation sales page, built after
+  Cargo 2 but on purpose not shaped like it. /workstation is untouched. Linked as "Workstation 2"
+  in the nav and footer. Not indexed while it's a draft.
+  Copy, sources and approval marks live in src/data/workstation2Page.ts. Research: Tesla Model S,
+  Model X, Cybertruck and Semi, Rivian R1S, R1T, R2 and Fleet (2026-11-19), plus
+  docs/product-page-teardown-workstation-2026-11-17.md.
+
+  How it differs from Cargo 2: Cargo 2 is a page about choosing (swipe cards, an options checklist,
+  a 3D tour). Workstation arrives with power, heat and AC and the security mast as standard, so this
+  page is a run of chapters (Cybertruck, Model S): heading, one paragraph, big inset media, a stat
+  row. Standard and optional equipment is listed once (R2), the interior is the one warm dark
+  chapter, the two buyers each get a card (Rivian Fleet), and service closes the story (Semi).
+
+  Order and rhythm (never two photo sections next to each other; chapters use inset media on a
+  plain background, so they don't count as photo sections):
+    Hero P (drone video, name, line, buttons, three facts)
+    Comes standard L (stone, navy cut-out, includes and optional lists)
+    Power L (white, inset roof photo, stat row)
+    What it runs D (the shared run-time tool, battery only)
+    Security L (white, two inset photos)
+    Internet L (stone, photo left, words right)
+    Inside D (warm dark, two real interiors)
+    Who it's for L (white, two tall cards, one video)
+    What it replaces L (stone, the approved "One trailer. Three problems solved." sum)
+    Built and serviced P (shop fly-through, warranty and service facts)
+    Specs D, Close D, FAQ L, Footer D
+  The 3D model goes in Inside once the Workstation 360 shoot exists.
+  Keep the ids top, overview, power, runtime, security, internet, inside, uses, replaces, built,
+  specs, cta and faq: the section bar, the phone bar and links in the copy point at them.
+-->
+<Base title={meta.title} description={meta.description} noindex>
+  <Nav cta={design} />
+  <ProductSubnav page={runtime} links={subnavLinks} buttons={[demo, design]} />
+  <Ws2Hero />
+  <Ws2Standard />
+  <Ws2Chapter id="power" label="Power" layout="wide" heading={power.heading} body={power.body} media={[power.media]} stats={power.stats} />
+  <ProductPower page={runtime} look="work" id="runtime" keys={['Battery']} sheet={false} />
+  <Ws2Chapter id="security" label="Security" layout="pair" heading={security.heading} body={security.body} media={security.media} />
+  <Ws2Chapter id="internet" label="Internet" layout="split" tone="stone" heading={internet.heading} body={internet.body} media={[internet.media]} note={internet.note} />
+  <Ws2Inside />
+  <Ws2Uses />
+  <WorkEquation equation={equation} name={hero.name} />
+  <Ws2Built />
+  <Cargo2Specs specs={specs} />
+  <Cargo2Close close={close} demo={demo} design={design} />
+  <Faq items={faqs} heading="Questions about Workstation." />
+  <Footer columns={footer} />
+  <MobileBar cta={design} />
+</Base>

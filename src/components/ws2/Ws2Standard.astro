@@ -1,0 +1,51 @@
+---
+import Icon from '../ui/Icon.astro';
+import WorkTitle from '../work/WorkTitle.astro';
+import { standard } from '../../data/workstation2Page';
+/**
+ * "Comes standard", after the "Includes" and "Optional" lists on Rivian's R2 trim cards. Cargo 2
+ * sells its add-ons card by card. Workstation arrives with the essentials, so this section says
+ * that once, next to Nate's cut-out of the navy Workstation on a studio gray plate.
+ * id "overview" is the first stop in the section bar.
+ */
+---
+<section id="overview" aria-label="What comes standard" class="bg-stone pb-[120px] pt-[130px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
+  <div class="wrap">
+    <div class="max-w-[980px]">
+      <WorkTitle lines={standard.heading} />
+      <p class="mb-0 mt-6 max-w-[620px] t-body text-ink-soft">{standard.body}</p>
+    </div>
+
+    <div class="mt-14 grid grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] items-center gap-x-14 gap-y-10 max-[1000px]:grid-cols-[minmax(0,1fr)] max-[640px]:mt-10">
+      <div class="ws2-plate flex aspect-[4/3] items-center justify-center rounded-[22px] px-[6%] max-[640px]:aspect-[5/4]">
+        <img src={standard.image} width={standard.imageSize[0]} height={standard.imageSize[1]} alt={standard.alt} loading="lazy" class="ws2-cutout block h-auto w-full" />
+      </div>
+
+      <div>
+        <h3 class="m-0 t-h3 text-coal">Comes standard</h3>
+        <ul class="m-0 mt-5 grid list-none grid-cols-[minmax(0,1fr)] p-0">
+          {standard.includes.map((it) => (
+            <li class="flex items-center gap-4 border-t border-stone-2 py-4">
+              <Icon name={it.icon} class="size-7 shrink-0 stroke-coal stroke-[1.5]" />
+              <span class="t-body-sm font-semibold text-coal">{it.name}</span>
+            </li>
+          ))}
+        </ul>
+
+        <h3 class="m-0 mt-10 t-h3 text-coal">Add if you need it</h3>
+        <ul class="m-0 mt-5 flex list-none flex-wrap gap-2 p-0">
+          {standard.optional.map((o) => (
+            <li class="rounded-full border border-[#cfcdc9] bg-paper px-4 py-2 t-label text-ink">{o}</li>
+          ))}
+        </ul>
+        <p class="mb-0 mt-6 t-fine text-ink-soft">{standard.fine}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Studio gray behind the cut-out, the same light as the homepage lineup, with a soft floor shadow. */
+  .ws2-plate { background: radial-gradient(ellipse 72% 62% at 50% 44%, #f1f0ee 0%, #dcdad7 56%, #c9c7c4 100%); }
+  .ws2-cutout { filter: drop-shadow(0 26px 18px rgb(0 0 0 / .22)); }
+</style>

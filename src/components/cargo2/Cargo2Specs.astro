@@ -1,7 +1,10 @@
 ---
 import WorkTitle from '../work/WorkTitle.astro';
 import { srcset } from '../../data/content';
-import { specs } from '../../data/cargo2Page';
+import { specs as cargoSpecs } from '../../data/cargo2Page';
+// Another page can pass its own specs (/workstation-2). Cargo 2 uses the default.
+interface Props { specs?: { heading: string[]; image: string; alt: string; rows: [string, string][]; fine: string } }
+const { specs = cargoSpecs } = Astro.props;
 /**
  * Specs, after Tesla's "Model Y Specs": the side profile and one clean table. Only facts the
  * options sheet, the Warranty Policy or Nate confirmed (see cargo2Page.ts). No width, solar

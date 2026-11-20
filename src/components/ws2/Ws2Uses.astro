@@ -1,0 +1,30 @@
+---
+import WorkTitle from '../work/WorkTitle.astro';
+import { srcset } from '../../data/content';
+import { uses } from '../../data/workstation2Page';
+/**
+ * Who it's for, after the "for" line on each model card on Rivian's Fleet page. None of the
+ * reference pages uses buyer tabs, so the two uses Nate named sit side by side as tall cards,
+ * each with a plain title and one line on who it serves. The mobile office card plays a short
+ * loop from Nate's video, only while it's on screen.
+ */
+---
+<section id="uses" aria-label="Who it's for" class="bg-white pb-[120px] pt-[130px] text-ink max-[640px]:pb-16 max-[640px]:pt-20">
+  <div class="wrap">
+    <WorkTitle lines={uses.heading} />
+
+    <div class="mt-14 grid grid-cols-[repeat(2,minmax(0,1fr))] gap-5 max-[900px]:grid-cols-[minmax(0,1fr)] max-[900px]:gap-12 max-[640px]:mt-10">
+      {uses.items.map((u) => (
+        <article>
+          {u.video ? (
+            <video data-ws2-video src={u.video} poster={u.poster} muted loop playsinline preload="none" aria-label={u.alt} class="block aspect-[4/5] w-full rounded-[22px] bg-night object-cover"></video>
+          ) : (
+            <img src={u.src} srcset={srcset(u.src!)} sizes="(max-width: 900px) 100vw, 640px" alt={u.alt} loading="lazy" class="block aspect-[4/5] w-full rounded-[22px] bg-stone-2 object-cover" style={`object-position:${u.position ?? '50% 50%'}`} />
+          )}
+          <h3 class="m-0 mt-6 t-h3 text-coal">{u.title}</h3>
+          <p class="mb-0 mt-2 max-w-[540px] t-body-sm text-ink-soft">{u.body}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

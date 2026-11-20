@@ -7,16 +7,18 @@ import { formatHours, runHours } from '../../scripts/runtime';
 // section shows what the battery runs. Figures are SPOG's own runtime guide, shown as stat
 // tiles instead of bars because they range from under 2 hours to hundreds.
 // look="work" sets the heading in the heavy uppercase of the Cargo and Workstation pages.
-interface Props { page: ProductPage; look?: 'default' | 'work' }
-const { page, look = 'default' } = Astro.props;
+// id and keys are optional: /workstation-2 moves the section to #runtime and shows only the battery figure.
+// sheet: false hides the run-time sheet link on pages without the #sheet form.
+interface Props { page: ProductPage; look?: 'default' | 'work'; id?: string; keys?: string[]; sheet?: boolean }
+const { page, look = 'default', id = 'power', keys = ['Battery', 'Solar up to'], sheet = true } = Astro.props;
 const work = look === 'work' ? 'font-black! uppercase leading-[.92]! tracking-[0em]!' : '';
 const p = lineupEntry(page.id);
-const headline = (p.stats as [string, string][]).filter(([k]) => k === 'Battery' || k === 'Solar up to');
+const headline = (p.stats as [string, string][]).filter(([k]) => keys.includes(k));
 const { batteries, defaultBattery } = page.power;
 const list = page.power.devices.map((id) => ({ id, ...devices[id] }));
 const cols = list.length === 4 ? 'grid-cols-[repeat(4,1fr)] max-[1100px]:grid-cols-[repeat(2,1fr)]' : 'grid-cols-[repeat(3,1fr)] max-[900px]:grid-cols-[repeat(2,1fr)]';
 ---
-<section id="power" aria-label="Power" class="bg-black py-[130px] text-bone max-[640px]:py-20">
+<section id={id} aria-label="Power" class="bg-black py-[130px] text-bone max-[640px]:py-20">
   <div class="wrap">
     <div class="grid grid-cols-[repeat(2,1fr)] items-end gap-14 max-[900px]:grid-cols-[repeat(1,1fr)] max-[900px]:gap-10">
       <div>
@@ -27,7 +29,7 @@ const cols = list.length === 4 ? 'grid-cols-[repeat(4,1fr)] max-[1100px]:grid-co
         {headline.map(([k, v]) => (
           <div class="pr-10 pt-5 not-first:border-l not-first:border-line not-first:pl-10 max-[560px]:w-full max-[560px]:pr-0 max-[560px]:not-first:border-l-0 max-[560px]:not-first:border-t max-[560px]:not-first:pl-0">
             <dt class="t-label text-mute">{k}</dt>
-            <dd class="text-steel m-0 mt-2 whitespace-nowrap t-h2">{v}</dd>
+            <dd class="text-steel m-0 mt-2 whitespace-nowrap t-h2 normal-case">{v}</dd>
           </div>
         ))}
       </dl>
@@ -65,7 +67,7 @@ const cols = list.length === 4 ? 'grid-cols-[repeat(4,1fr)] max-[1100px]:grid-co
 
     <p class="mb-0 mt-7 max-w-[820px] t-fine text-mute">
       Hours of continuous use on a full battery, one device at a time, with no solar recharge counted. The figures come from the SPOG runtime guide.
-      <a href="#sheet" class="whitespace-nowrap font-semibold text-bone underline underline-offset-4 hover:text-white">Get the run-time sheet &rarr;</a>
+      {sheet && <a href="#sheet" class="whitespace-nowrap font-semibold text-bone underline underline-offset-4 hover:text-white">Get the run-time sheet &rarr;</a>}
     </p>
   </div>
 </section>

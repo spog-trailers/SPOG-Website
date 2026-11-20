@@ -103,6 +103,7 @@ export const navLinks = [
   { label: 'Cargo', href: '/cargo' },
   { label: 'Cargo 2', href: '/cargo-2' }, // TEMPORARY: the new Cargo page draft (2026-11-19). Remove once Nate picks a version.
   { label: 'Workstation', href: '/workstation' },
+  { label: 'Workstation 2', href: '/workstation-2' }, // TEMPORARY: the new Workstation page draft (2026-11-19). Remove once Nate picks a version.
   { label: 'Event', href: '/event' },
   { label: 'Future lineup', href: '/#future' },
   { label: 'FAQ', href: '/#faq' },
@@ -344,7 +345,7 @@ export const runSheet = [
  * Contact opens the walkthrough form, which every page has. PLACEHOLDER: every "#" is a page that isn't built yet.
  */
 export const footerColumns = [
-  { title: 'Trailers', links: [['Cargo', '/cargo'], ['Cargo 2', '/cargo-2'], ['Workstation', '/workstation'], ['Event', '/event'], ['Future lineup', '/#future']] },
+  { title: 'Trailers', links: [['Cargo', '/cargo'], ['Cargo 2', '/cargo-2'], ['Workstation', '/workstation'], ['Workstation 2', '/workstation-2'], ['Event', '/event'], ['Future lineup', '/#future']] },
   { title: 'Company', links: [['About', '/#built'], ['Reviews', '#'], ['Become a Dealer', '#']] },
   { title: 'Support', links: [['FAQ', '/#faq'], ['Contact', '#walkthrough'], ['Warranty', '#'], ['Blog', '#']] },
 ];
