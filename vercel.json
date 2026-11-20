@@ -1,0 +1,6 @@
+{
+  "redirects": [
+    { "source": "/cargo", "destination": "/cargo-2", "permanent": false },
+    { "source": "/cargo/", "destination": "/cargo-2", "permanent": false }
+  ]
+}
